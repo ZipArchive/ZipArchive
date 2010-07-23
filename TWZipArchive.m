@@ -20,23 +20,25 @@
 @implementation TWZipArchive
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination {
-	return [self unzipFileAtPath:path toDestination:destination overwrite:YES password:nil];
+	return [self unzipFileAtPath:path toDestination:destination overwrite:YES password:nil error:nil];
 }
 
-+ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password {
++ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password error:(NSError **)error {
 	// Begin opening
 	zipFile zip = unzOpen((const char*)[path UTF8String]);	
 	if (zip == NULL) {
+		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"failed to open zip file" forKey:NSLocalizedDescriptionKey];
+		*error = [NSError errorWithDomain:@"TWZipArchiveErrorDomain" code:-1 userInfo:userInfo];
 		return NO;
 	}
 	
 	unz_global_info  globalInfo = {0};
-	if (unzGetGlobalInfo(zip, &globalInfo) == UNZ_OK) {
-		NSLog(@"%d entries in the zip file", globalInfo.number_entry);
-	}
+	unzGetGlobalInfo(zip, &globalInfo);
 	
 	// Begin unzipping
 	if (unzGoToFirstFile(zip) != UNZ_OK) {
+		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"failed to open first file in zip file" forKey:NSLocalizedDescriptionKey];
+		*error = [NSError errorWithDomain:@"TWZipArchiveErrorDomain" code:-2 userInfo:userInfo];
 		return NO;
 	}
 	
