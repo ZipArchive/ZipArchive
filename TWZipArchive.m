@@ -28,7 +28,9 @@
 	zipFile zip = unzOpen((const char*)[path UTF8String]);	
 	if (zip == NULL) {
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"failed to open zip file" forKey:NSLocalizedDescriptionKey];
-		*error = [NSError errorWithDomain:@"TWZipArchiveErrorDomain" code:-1 userInfo:userInfo];
+		if (error) {
+			*error = [NSError errorWithDomain:@"TWZipArchiveErrorDomain" code:-1 userInfo:userInfo];
+		}
 		return NO;
 	}
 	
@@ -38,7 +40,9 @@
 	// Begin unzipping
 	if (unzGoToFirstFile(zip) != UNZ_OK) {
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"failed to open first file in zip file" forKey:NSLocalizedDescriptionKey];
-		*error = [NSError errorWithDomain:@"TWZipArchiveErrorDomain" code:-2 userInfo:userInfo];
+		if (error) {
+			*error = [NSError errorWithDomain:@"TWZipArchiveErrorDomain" code:-2 userInfo:userInfo];
+		}
 		return NO;
 	}
 	
