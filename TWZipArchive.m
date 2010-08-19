@@ -1,23 +1,23 @@
 //
-//  TWZipArchive.mm
-//  TWZipArchive
+//  SSZipArchive.m
+//  SSZipArchive
 //
 //  Created by Sam Soffes on 7/21/10.
-//  Copyright Tasteful Works 2010. All rights reserved.
+//  Copyright Sam Soffes 2010. All rights reserved.
 //
 
-#import "TWZipArchive.h"
+#import "SSZipArchive.h"
 #include "minizip/zip.h"
 #include "minizip/unzip.h"
 #import "zlib.h"
 #import "zconf.h"
 
-@interface TWZipArchive (PrivateMethods)
+@interface SSZipArchive (PrivateMethods)
 + (NSDate *)_dateFor1980;
 @end
 
 
-@implementation TWZipArchive
+@implementation SSZipArchive
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination {
 	return [self unzipFileAtPath:path toDestination:destination overwrite:YES password:nil error:nil];
@@ -29,7 +29,7 @@
 	if (zip == NULL) {
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"failed to open zip file" forKey:NSLocalizedDescriptionKey];
 		if (error) {
-			*error = [NSError errorWithDomain:@"TWZipArchiveErrorDomain" code:-1 userInfo:userInfo];
+			*error = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-1 userInfo:userInfo];
 		}
 		return NO;
 	}
@@ -41,7 +41,7 @@
 	if (unzGoToFirstFile(zip) != UNZ_OK) {
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"failed to open first file in zip file" forKey:NSLocalizedDescriptionKey];
 		if (error) {
-			*error = [NSError errorWithDomain:@"TWZipArchiveErrorDomain" code:-2 userInfo:userInfo];
+			*error = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-2 userInfo:userInfo];
 		}
 		return NO;
 	}

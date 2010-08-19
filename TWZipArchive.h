@@ -1,15 +1,15 @@
 //
-//  TWZipArchive.h
-//  TWZipArchive
+//  SSZipArchive.h
+//  SSZipArchive
 //
 //  Created by Sam Soffes on 7/21/10.
-//  Copyright Tasteful Works 2010. All rights reserved.
+//  Copyright Sam Soffes 2010. All rights reserved.
 //
 //  Based on ZipArchive by aish
 //  http://code.google.com/p/ziparchive
 //
 
-@interface TWZipArchive : NSObject {
+@interface SSZipArchive : NSObject {
 
 }
 
