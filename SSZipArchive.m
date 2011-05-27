@@ -119,7 +119,7 @@
 		if (fp) {
 			fclose(fp);
 			
-			// Set the orignal datetime property
+			// Set the original datetime property
 			if (fileInfo.dosDate != 0) {
 				NSDate *orgDate = [[NSDate alloc] initWithTimeInterval:(NSTimeInterval)fileInfo.dosDate  sinceDate:nineteenEighty];
 				NSDictionary *attr = [NSDictionary dictionaryWithObject:orgDate forKey:NSFileModificationDate];
