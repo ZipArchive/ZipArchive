@@ -11,6 +11,8 @@ Currently it only supports unzipping. In the future, creating zip files will be 
 
 ## Usage
 
-    NSString *path = @"path_to_your_zip_file";
-    NSString *destination = @"path_to_the_folder_where_you_want_it_unzipped";
-    [SSZipArchive unzipFileAtPath:path toDestination:destination];
+```objective-c
+NSString *path = @"path_to_your_zip_file";
+NSString *destination = @"path_to_the_folder_where_you_want_it_unzipped";
+[SSZipArchive unzipFileAtPath:path toDestination:destination];
+```
