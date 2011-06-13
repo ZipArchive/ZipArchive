@@ -9,9 +9,7 @@
 //  http://code.google.com/p/ziparchive
 //
 
-@interface SSZipArchive : NSObject {
-
-}
+@interface SSZipArchive : NSObject
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination;
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password error:(NSError **)error;
