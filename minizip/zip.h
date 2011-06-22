@@ -1,7 +1,7 @@
 /* zip.h -- IO for compress .zip files using zlib
-   Version 1.01e, February 12th, 2005
+   Version 1.01h, December 28th, 2009
 
-   Copyright (C) 1998-2005 Gilles Vollant
+   Copyright (C) 1998-2009 Gilles Vollant
 
    This unzip package allow creates .ZIP file, compatible with PKZip 2.04g
      WinZip, InfoZip tools and compatible.
@@ -191,8 +191,7 @@ extern int ZEXPORT zipOpenNewFileInZip3 OF((zipFile file,
                                             int memLevel,
                                             int strategy,
                                             const char* password,
-                                            uLong crcForCtypting));
-
+                                            uLong crcForCrypting));
 /*
   Same than zipOpenNewFileInZip2, except
     windowBits,memLevel,,strategy : see parameter strategy in deflateInit2
@@ -200,6 +199,29 @@ extern int ZEXPORT zipOpenNewFileInZip3 OF((zipFile file,
     crcForCtypting : crc of file to compress (needed for crypting)
  */
 
+extern int ZEXPORT zipOpenNewFileInZip4 OF((zipFile file,
+                                            const char* filename,
+                                            const zip_fileinfo* zipfi,
+                                            const void* extrafield_local,
+                                            uInt size_extrafield_local,
+                                            const void* extrafield_global,
+                                            uInt size_extrafield_global,
+                                            const char* comment,
+                                            int method,
+                                            int level,
+                                            int raw,
+                                            int windowBits,
+                                            int memLevel,
+                                            int strategy,
+                                            const char* password,
+                                            uLong crcForCrypting,
+                                            uLong versionMadeBy,
+                                            uLong flagBase));
+/*
+  Same than zipOpenNewFileInZip4, except
+    versionMadeBy : value for Version made by field
+    flag : value for flag field (compression level info will be added)
+ */
 
 extern int ZEXPORT zipWriteInFileInZip OF((zipFile file,
                        const void* buf,
