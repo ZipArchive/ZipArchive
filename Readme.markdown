@@ -16,3 +16,7 @@ NSString *path = @"path_to_your_zip_file";
 NSString *destination = @"path_to_the_folder_where_you_want_it_unzipped";
 [SSZipArchive unzipFileAtPath:path toDestination:destination];
 ```
+
+## License
+
+SSZipArchive is licensed under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE). [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.01h is also included and is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
