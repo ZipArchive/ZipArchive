@@ -65,7 +65,6 @@
 		}
 		
 		// Reading data and write to file
-		int read;
 		unz_file_info fileInfo;
 		memset(&fileInfo, 0, sizeof(unz_file_info));
 		
@@ -109,10 +108,10 @@
 		
 		FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
 		while (fp) {
-			read = unzReadCurrentFile(zip, buffer, 4096);
+			int readBytes = unzReadCurrentFile(zip, buffer, 4096);
 
-			if (read > 0) {
-				fwrite(buffer, read, 1, fp );
+			if (readBytes > 0) {
+				fwrite(buffer, readBytes, 1, fp );
 			} else {
 				break;
 			}

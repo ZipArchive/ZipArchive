@@ -1070,10 +1070,10 @@ extern int ZEXPORT zipWriteInFileInZip (file, buf, len)
     return err;
 }
 
-extern int ZEXPORT zipCloseFileInZipRaw (file, uncompressed_size, crc32)
+extern int ZEXPORT zipCloseFileInZipRaw (file, uncompressed_size, crc32ForFile)
     zipFile file;
     uLong uncompressed_size;
-    uLong crc32;
+    uLong crc32ForFile;
 {
     zip_internal* zi;
     uLong compressed_size;
@@ -1124,7 +1124,7 @@ extern int ZEXPORT zipCloseFileInZipRaw (file, uncompressed_size, crc32)
 
     if (!zi->ci.raw)
     {
-        crc32 = (uLong)zi->ci.crc32;
+        crc32ForFile = (uLong)zi->ci.crc32;
         uncompressed_size = (uLong)zi->ci.stream.total_in;
     }
     compressed_size = (uLong)zi->ci.stream.total_out;
@@ -1132,7 +1132,7 @@ extern int ZEXPORT zipCloseFileInZipRaw (file, uncompressed_size, crc32)
     compressed_size += zi->ci.crypt_header_size;
 #    endif
 
-    ziplocal_putValue_inmemory(zi->ci.central_header+16,crc32,4); /*crc*/
+    ziplocal_putValue_inmemory(zi->ci.central_header+16,crc32ForFile,4); /*crc*/
     ziplocal_putValue_inmemory(zi->ci.central_header+20,
                                 compressed_size,4); /*compr size*/
     if (zi->ci.stream.data_type == Z_ASCII)
@@ -1153,7 +1153,7 @@ extern int ZEXPORT zipCloseFileInZipRaw (file, uncompressed_size, crc32)
             err = ZIP_ERRNO;
 
         if (err==ZIP_OK)
-            err = ziplocal_putValue(&zi->z_filefunc,zi->filestream,crc32,4); /* crc 32, unknown */
+            err = ziplocal_putValue(&zi->z_filefunc,zi->filestream,crc32ForFile,4); /* crc 32, unknown */
 
         if (err==ZIP_OK) /* compressed size, unknown */
             err = ziplocal_putValue(&zi->z_filefunc,zi->filestream,compressed_size,4);
