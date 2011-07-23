@@ -34,7 +34,7 @@
 		return NO;
 	}
 	
-	unz_global_info  globalInfo = {0};
+	unz_global_info  globalInfo = {0ul, 0ul};
 	unzGetGlobalInfo(zip, &globalInfo);
 	
 	// Begin unzipping
@@ -65,8 +65,9 @@
 		}
 		
 		// Reading data and write to file
-		int read;
-		unz_file_info fileInfo = {0};
+		unz_file_info fileInfo;
+		memset(&fileInfo, 0, sizeof(unz_file_info));
+		
 		ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
 		if (ret != UNZ_OK) {
 			success = NO;
@@ -107,10 +108,10 @@
 		
 		FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
 		while (fp) {
-			read = unzReadCurrentFile(zip, buffer, 4096);
+			int readBytes = unzReadCurrentFile(zip, buffer, 4096);
 
-			if (read > 0) {
-				fwrite(buffer, read, 1, fp );
+			if (readBytes > 0) {
+				fwrite(buffer, readBytes, 1, fp );
 			} else {
 				break;
 			}
