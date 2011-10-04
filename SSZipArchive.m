@@ -3,7 +3,7 @@
 //  SSZipArchive
 //
 //  Created by Sam Soffes on 7/21/10.
-//  Copyright Sam Soffes 2010. All rights reserved.
+//  Copyright (c) Sam Soffes 2010-2011. All rights reserved.
 //
 
 #import "SSZipArchive.h"
@@ -12,16 +12,19 @@
 #import "zlib.h"
 #import "zconf.h"
 
-@interface SSZipArchive (PrivateMethods)
+@interface SSZipArchive ()
 + (NSDate *)_dateFor1980;
 @end
 
 
 @implementation SSZipArchive
 
+#pragma mark - Unzipping
+
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination {
 	return [self unzipFileAtPath:path toDestination:destination overwrite:YES password:nil error:nil];
 }
+
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password error:(NSError **)error {
 	// Begin opening
@@ -145,6 +148,8 @@
 	return success;
 }
 
+
+#pragma mark - Private
 
 + (NSDate *)_dateFor1980 {
 	NSDateComponents *comps = [[NSDateComponents alloc] init];

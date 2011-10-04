@@ -3,11 +3,10 @@
 //  SSZipArchive
 //
 //  Created by Sam Soffes on 7/21/10.
-//  Copyright Sam Soffes 2010. All rights reserved.
+//  Copyright (c) Sam Soffes 2010-2011. All rights reserved.
 //
-//  Based on ZipArchive by aish
-//  http://code.google.com/p/ziparchive
-//
+
+#import <Foundation/Foundation.h>
 
 @interface SSZipArchive : NSObject
 
