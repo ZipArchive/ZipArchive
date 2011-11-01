@@ -31,6 +31,10 @@
 	
 	testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
 	STAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
+	
+//	zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"LargeArchive" ofType:@"zip"];
+//	outputPath = [[self _cachesPath] stringByAppendingPathComponent:@"large"];
+//	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
 }
 
 

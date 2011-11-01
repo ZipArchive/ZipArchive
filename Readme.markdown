@@ -1,6 +1,6 @@
 # SSZipArchive
 
-SSZipArchive is a simple utility class for unzipping files based on [ZipArchive](http://code.google.com/p/ziparchive) by aish.
+SSZipArchive is a simple utility class for unzipping files originally based on [ZipArchive](http://code.google.com/p/ziparchive) by aish.
 
 Currently it only supports unzipping. In the future, creating zip files will be supported.
 
@@ -11,7 +11,7 @@ Currently it only supports unzipping. In the future, creating zip files will be 
 
 ## Usage
 
-```objective-c
+``` objective-c
 NSString *path = @"path_to_your_zip_file";
 NSString *destination = @"path_to_the_folder_where_you_want_it_unzipped";
 [SSZipArchive unzipFileAtPath:path toDestination:destination];
@@ -19,4 +19,4 @@ NSString *destination = @"path_to_the_folder_where_you_want_it_unzipped";
 
 ## License
 
-SSZipArchive is licensed under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE).  A slightly modified version of [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.01h is also included and is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
+SSZipArchive is licensed under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE).  A slightly modified version of [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.1 is also included and is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
