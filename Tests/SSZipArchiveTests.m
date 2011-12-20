@@ -11,21 +11,32 @@
 
 @interface SSZipArchiveTests ()
 - (NSString *)_cachesPath;
+- (NSString *)_createOutputPath;
 @end
 
 @implementation SSZipArchiveTests
 
+- (void)testBasicZipping {
+	NSString *outputPath = [self _createOutputPath];
+    
+    NSArray *inputPaths = [NSArray arrayWithObjects:
+                           [outputPath stringByAppendingPathComponent:@"Readme.markdown"],
+                           [outputPath stringByAppendingPathComponent:@"LICENSE"],
+                           nil];
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+    [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
+ 
+	NSFileManager *fileManager = [NSFileManager defaultManager];        
+	STAssertTrue([fileManager fileExistsAtPath:archivePath], @"Archive created");    
+}
+
 - (void)testBasicUnzipping {
 	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
-	NSString *outputPath = [[self _cachesPath] stringByAppendingPathComponent:@"basic"];
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if (![fileManager fileExistsAtPath:outputPath]) {
-		[fileManager createDirectoryAtPath:outputPath withIntermediateDirectories:YES attributes:nil error:nil];
-	}
+	NSString *outputPath = [self _createOutputPath];
 	
 	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
 	
+	NSFileManager *fileManager = [NSFileManager defaultManager];    
 	NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
 	STAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
 	
@@ -39,6 +50,19 @@
 
 
 #pragma mark - Private
+
+- (NSString *)_createOutputPath {
+	NSString *outputPath = [[self _cachesPath] stringByAppendingPathComponent:@"basic"];
+    
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if (![fileManager fileExistsAtPath:outputPath]) {
+		[fileManager createDirectoryAtPath:outputPath withIntermediateDirectories:YES attributes:nil error:nil];
+	}
+    
+//    NSLog(@"outputPath: %@", outputPath);
+    
+    return outputPath;
+}
 
 - (NSString *)_cachesPath {
 	return [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]

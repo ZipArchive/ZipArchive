@@ -7,10 +7,25 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "minizip/zip.h"
 
-@interface SSZipArchive : NSObject
+@interface SSZipArchive : NSObject {
+@private
+    NSString *_path;
+    zipFile _zip;    
+}
 
+// Unzip
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination;
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password error:(NSError **)error;
+
+// Zip
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)filenames;
+
+- (id)initWithPath:(NSString *)path;
+- (BOOL)open;
+- (BOOL)writeFile:(NSString *)path;
+- (BOOL)writeData:(NSData *)data filename:(NSString *)filename;
+- (BOOL)close;
 
 @end
