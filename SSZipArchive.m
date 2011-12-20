@@ -148,6 +148,128 @@
 	return success;
 }
 
+#pragma mark - unzip
+
+#define CHUNK 16384
+
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths {
+    
+    BOOL success = NO;
+    
+    SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
+    if ([zipArchive open]) {
+        
+        for (NSString *path in paths) {
+            [zipArchive writeFile:path];
+        }
+        
+        success = [zipArchive close];        
+    }
+    [zipArchive release];
+    
+    return success;
+}
+
+- (id)initWithPath:(NSString *)path
+{
+    self = [super init];
+    if (self) {
+        _path = [path copy];
+        // Initialization code here.
+    }
+    
+    return self;
+}
+
+- (void)dealloc {
+    [_path release];
+    [super dealloc];
+}
+
+- (BOOL)open {
+    
+    NSAssert((_zip == NULL), @"Attempting open an archive which is already open");    
+    
+    _zip = zipOpen([_path UTF8String], APPEND_STATUS_CREATE);
+    
+    return (NULL != _zip);
+}
+
+- (BOOL)writeFile:(NSString *)path {
+    NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");     
+    
+    FILE *input = fopen([path UTF8String], "r");
+    if (NULL == input) {
+        return NO;
+    }
+    
+    zipOpenNewFileInZip(_zip, 
+                        [[path lastPathComponent] UTF8String],
+                        NULL, 
+                        NULL, 
+                        0, 
+                        NULL, 
+                        0, 
+                        NULL, 
+                        Z_DEFLATED, 
+                        Z_DEFAULT_COMPRESSION);
+    
+    void *buffer = malloc(CHUNK);
+    unsigned int len = 0;
+    
+    while (!feof(input)) { 
+        len = (unsigned int) fread(buffer, 1, CHUNK, input);            
+        zipWriteInFileInZip(_zip, buffer, len);
+    }
+    
+    zipCloseFileInZip(_zip);
+    
+    free(buffer);    
+    
+    return YES;
+}
+
+- (BOOL)writeData:(NSData *)data filename:(NSString *)filename {
+    NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");     
+    NSAssert((data != NULL), @"Nil data"); 
+    
+    zipOpenNewFileInZip(_zip, 
+                        [filename UTF8String],
+                        NULL, 
+                        NULL, 
+                        0, 
+                        NULL, 
+                        0, 
+                        NULL, 
+                        Z_DEFLATED, 
+                        Z_DEFAULT_COMPRESSION);
+    
+    void *buffer = malloc(CHUNK);
+    unsigned int offset = 0;
+    NSUInteger length = [data length];    
+    unsigned int chunk_length;
+    
+    while (offset < length) { 
+        chunk_length = MIN(CHUNK, ((unsigned int) length)-offset);
+        [data getBytes:&buffer range:NSMakeRange(offset, chunk_length)];
+        zipWriteInFileInZip(_zip, buffer, chunk_length);
+        offset += chunk_length;
+    }
+    
+    zipCloseFileInZip(_zip);
+    
+    free(buffer);  
+    
+    return YES;    
+}
+
+- (BOOL)close {    
+    NSAssert((_zip != NULL), @"Attempting to close an archive which was never opened");
+    
+    zipClose(_zip, NULL);
+    
+    return YES;    
+}
 
 #pragma mark - Private
 
