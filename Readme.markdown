@@ -1,6 +1,6 @@
 # SSZipArchive
 
-SSZipArchive is a simple utility class for unzipping files originally based on [ZipArchive](http://code.google.com/p/ziparchive) by aish. Features:
+SSZipArchive is a simple utility class for zipping and unzipping files. Features:
 
 * Unzipping zip files
 * Unzipping password protected zip files
@@ -37,4 +37,4 @@ SSZipArchive is licensed under the [MIT license](https://github.com/samsoffes/ss
 
 ## Thanks
 
-Thanks [aish](http://code.google.com/p/ziparchive) for creating [ZipArchive](http://code.google.com/p/ziparchive), Johnnie Walker ([@randomsequence](https://github.com/randomsequence)) for implementing creation support, and John Engelhart ([@johnezang](https://github.com/johnezang)) for his help along the way.
+Thanks [aish](http://code.google.com/p/ziparchive) for creating [ZipArchive](http://code.google.com/p/ziparchive) which SSZipArchive is based on, Johnnie Walker ([@randomsequence](https://github.com/randomsequence)) for implementing creation support, and John Engelhart ([@johnezang](https://github.com/johnezang)) for all his amazing help along the way.
