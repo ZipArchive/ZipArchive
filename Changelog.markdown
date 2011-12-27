@@ -1,5 +1,11 @@
 # SSZipArchive Changelog
 
+### Version 0.1.2
+
+[Released December 26, 2011](https://github.com/samsoffes/sskeychain/tree/0.1.2)
+
+* Add creation support. Thanks Johnnie Walker ([@randomsequence](https://github.com/randomsequence))!
+
 ### Version 0.1.1
 
 [Released October 31, 2011](https://github.com/samsoffes/sskeychain/tree/0.1.1)

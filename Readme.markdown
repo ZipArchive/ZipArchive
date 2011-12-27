@@ -1,8 +1,13 @@
 # SSZipArchive
 
-SSZipArchive is a simple utility class for unzipping files originally based on [ZipArchive](http://code.google.com/p/ziparchive) by aish.
+SSZipArchive is a simple utility class for unzipping files originally based on [ZipArchive](http://code.google.com/p/ziparchive) by aish. Features:
 
-Currently it only supports unzipping. In the future, creating zip files will be supported.
+* Unzipping zip files
+* Unzipping password protected zip files
+* Creating zip files
+* Appending to zip files
+* Zipping files
+* Zipping NSData with a filename
 
 ## Adding to your project
 
@@ -12,11 +17,24 @@ Currently it only supports unzipping. In the future, creating zip files will be 
 ## Usage
 
 ``` objective-c
-NSString *path = @"path_to_your_zip_file";
-NSString *destination = @"path_to_the_folder_where_you_want_it_unzipped";
-[SSZipArchive unzipFileAtPath:path toDestination:destination];
+// Unzipping
+NSString *zipPath = @"path_to_your_zip_file";
+NSString *destinationPath = @"path_to_the_folder_where_you_want_it_unzipped";
+[SSZipArchive unzipFileAtPath:zipPath toDestination:destinationPath];
+
+// Zipping
+NSString *zippedPath = @"path_where_you_want_the_file_created";
+NSArray *inputPaths = [NSArray arrayWithObjects:
+                       [[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"],
+                       [[NSBundle mainBundle] pathForResource:@"photo2" ofType:@"jpg"]
+                       nil];
+[SSZipArchive createZipFileAtPath:zippedPath withFilesAtPaths:inputPaths];
 ```
 
 ## License
 
 SSZipArchive is licensed under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE).  A slightly modified version of [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.1 is also included and is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
+
+## Thanks
+
+Thanks [aish](http://code.google.com/p/ziparchive) for creating [ZipArchive](http://code.google.com/p/ziparchive), Johnnie Walker ([@randomsequence](https://github.com/randomsequence)) for implementing creation support, and John Engelhart ([@johnezang](https://github.com/johnezang)) for his help along the way.

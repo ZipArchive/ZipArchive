@@ -11,28 +11,27 @@
 
 @interface SSZipArchiveTests ()
 - (NSString *)_cachesPath;
-- (NSString *)_createOutputPath;
 @end
 
 @implementation SSZipArchiveTests
 
-- (void)testBasicZipping {
-	NSString *outputPath = [self _createOutputPath];
-    
-    NSArray *inputPaths = [NSArray arrayWithObjects:
-                           [outputPath stringByAppendingPathComponent:@"Readme.markdown"],
-                           [outputPath stringByAppendingPathComponent:@"LICENSE"],
-                           nil];
-    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
-    [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
- 
-	NSFileManager *fileManager = [NSFileManager defaultManager];        
-	STAssertTrue([fileManager fileExistsAtPath:archivePath], @"Archive created");    
+- (void)testZipping {
+	NSString *outputPath = [self _cachesPath];
+	NSArray *inputPaths = [NSArray arrayWithObjects:
+						   [outputPath stringByAppendingPathComponent:@"Readme.markdown"],
+						   [outputPath stringByAppendingPathComponent:@"LICENSE"],
+	nil];
+	NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+	[SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
+
+	// TODO: Make sure the files are actually unzipped. They are, but the test should be better.
+	STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
 }
 
-- (void)testBasicUnzipping {
+
+- (void)testUnzipping {
 	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
-	NSString *outputPath = [self _createOutputPath];
+	NSString *outputPath = [self _cachesPath];
 	
 	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
 	
@@ -43,6 +42,8 @@
 	testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
 	STAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 	
+	// Commented out to avoid checking in several gig file into the repository. Simply add a file named
+	// `LargeArchive.zip` to the project and uncomment out these lines to test.
 //	zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"LargeArchive" ofType:@"zip"];
 //	outputPath = [[self _cachesPath] stringByAppendingPathComponent:@"large"];
 //	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
@@ -50,19 +51,6 @@
 
 
 #pragma mark - Private
-
-- (NSString *)_createOutputPath {
-	NSString *outputPath = [[self _cachesPath] stringByAppendingPathComponent:@"basic"];
-    
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if (![fileManager fileExistsAtPath:outputPath]) {
-		[fileManager createDirectoryAtPath:outputPath withIntermediateDirectories:YES attributes:nil error:nil];
-	}
-    
-//    NSLog(@"outputPath: %@", outputPath);
-    
-    return outputPath;
-}
 
 - (NSString *)_cachesPath {
 	return [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]

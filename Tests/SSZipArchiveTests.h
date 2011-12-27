@@ -10,4 +10,7 @@
 
 @interface SSZipArchiveTests : SenTestCase
 
+- (void)testZipping;
+- (void)testUnzipping;
+
 @end

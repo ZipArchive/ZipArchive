@@ -9,11 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "minizip/zip.h"
 
-@interface SSZipArchive : NSObject {
-@private
-    NSString *_path;
-    zipFile _zip;    
-}
+@interface SSZipArchive : NSObject
 
 // Unzip
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination;
