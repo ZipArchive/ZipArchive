@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "minizip/zip.h"
 
 @interface SSZipArchive : NSObject
 

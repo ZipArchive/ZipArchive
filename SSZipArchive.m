@@ -194,6 +194,20 @@
 }
 
 
+- (void)zipInfo:(zip_fileinfo*)zipInfo setDate:(NSDate*)date
+{
+    NSCalendar* currCalendar = [NSCalendar currentCalendar];
+    uint flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+    NSDateComponents* dc = [currCalendar components:flags fromDate:date];
+    zipInfo->tmz_date.tm_sec = [dc second];
+    zipInfo->tmz_date.tm_min = [dc minute];
+    zipInfo->tmz_date.tm_hour = [dc hour];
+    zipInfo->tmz_date.tm_mday = [dc day];
+    zipInfo->tmz_date.tm_mon = [dc month] - 1;
+    zipInfo->tmz_date.tm_year = [dc year];
+}
+
+
 - (BOOL)writeFile:(NSString *)path {
 	NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
 
@@ -219,28 +233,22 @@
 
 
 - (BOOL)writeData:(NSData *)data filename:(NSString *)filename {
-	NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
-	NSAssert((data != NULL), @"Nil data");
+    if (!_zip) {
+		return NO;
+    }
+    if (!data) {
+		return NO;
+    }
+    zip_fileinfo zipInfo = {0};
+    [self zipInfo:&zipInfo setDate:[NSDate date]];
 
-	zipOpenNewFileInZip(_zip, [filename UTF8String], NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+	zipOpenNewFileInZip(_zip, [filename UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
 
-	void *buffer = malloc(CHUNK);
-	unsigned int offset = 0;
-	NSUInteger length = [data length];
-	unsigned int chunk_length = 0;
-
-	while (offset < length) { 
-		chunk_length = MIN(CHUNK, ((unsigned int) length)-offset);
-		[data getBytes:&buffer range:NSMakeRange(offset, chunk_length)];
-		zipWriteInFileInZip(_zip, buffer, chunk_length);
-		offset += chunk_length;
-	}
+    zipWriteInFileInZip(_zip, data.bytes, data.length);
 
 	zipCloseFileInZip(_zip);
-	free(buffer);
 	return YES;
 }
-
 
 - (BOOL)close {    
 	NSAssert((_zip != NULL), @"Attempting to close an archive which was never opened");
