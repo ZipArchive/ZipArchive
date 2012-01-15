@@ -71,6 +71,8 @@
 	unsigned char buffer[4096] = {0};
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
+	if([delegate respondsToSelector:@selector(zipArchiveWillUnzipFile:globalInfo:)])
+		[delegate zipArchiveWillUnzipFile:path globalInfo:globalInfo];
 	
 	NSInteger currentFileNumber = 0;
 	do {
@@ -96,7 +98,9 @@
 			break;
 		}
 		
-		[delegate zipArchiveWillUnzipFileNumber:currentFileNumber fromFile:path fileInfo:fileInfo];
+		if([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileNumber:outOf:fromFile:fileInfo:)])
+			[delegate zipArchiveWillUnzipFileNumber:currentFileNumber outOf:(NSInteger)globalInfo.number_entry
+										   fromFile:path fileInfo:fileInfo];
 		
 		char *filename = (char *)malloc(fileInfo.size_filename + 1);
 		unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
