@@ -28,12 +28,22 @@
 
 #pragma mark - Unzipping
 
-+ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination {
-	return [self unzipFileAtPath:path toDestination:destination overwrite:YES password:nil error:nil];
++ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination
+{
+	return [self unzipFileAtPath:path toDestination:destination delegate:nil];
+}
+
++ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password error:(NSError **)error
+{
+	return [self unzipFileAtPath:path toDestination:destination overwrite:overwrite password:password error:error delegate:nil];
+}
+
++ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination delegate:(id<SSZipArchiveDelegate>)delegate {
+	return [self unzipFileAtPath:path toDestination:destination overwrite:YES password:nil error:nil delegate:delegate];
 }
 
 
-+ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password error:(NSError **)error {
++ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password error:(NSError **)error delegate:(id<SSZipArchiveDelegate>)delegate {
 	// Begin opening
 	zipFile zip = unzOpen((const char*)[path UTF8String]);	
 	if (zip == NULL) {
@@ -61,7 +71,10 @@
 	unsigned char buffer[4096] = {0};
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSDate *nineteenEighty = [self _dateFor1980];
+	if([delegate respondsToSelector:@selector(zipArchiveWillUnzipFile:globalInfo:)])
+		[delegate zipArchiveWillUnzipFile:path globalInfo:globalInfo];
 	
+	NSInteger currentFileNumber = 0;
 	do {
 		if ([password length] == 0) {
 			ret = unzOpenCurrentFile(zip);
@@ -84,6 +97,10 @@
 			unzCloseCurrentFile(zip);
 			break;
 		}
+		
+		if([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileNumber:outOf:fromFile:fileInfo:)])
+			[delegate zipArchiveWillUnzipFileNumber:currentFileNumber outOf:(NSInteger)globalInfo.number_entry
+										   fromFile:path fileInfo:fileInfo];
 		
 		char *filename = (char *)malloc(fileInfo.size_filename + 1);
 		unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
@@ -147,6 +164,8 @@
 		
 		unzCloseCurrentFile( zip );
 		ret = unzGoToNextFile( zip );
+		
+		currentFileNumber++;
 	} while(ret == UNZ_OK && UNZ_OK != UNZ_END_OF_LIST_OF_FILE);
 	
 	// Close
