@@ -12,7 +12,8 @@
 
 @protocol SSZipArchiveDelegate <NSObject>
 
+@optional
 - (void)zipArchiveWillUnzipFile:(NSString *)path globalInfo:(unz_global_info)header;
-- (void)zipArchiveWillUnzipFileNumber:(NSInteger)number fromFile:(NSString *)path fileInfo:(unz_file_info)header;
+- (void)zipArchiveWillUnzipFileNumber:(NSInteger)number outOf:(NSInteger)total fromFile:(NSString *)path fileInfo:(unz_file_info)header;
 
 @end
