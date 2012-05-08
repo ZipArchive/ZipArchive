@@ -9,7 +9,7 @@
 #import "SSZipArchiveTests.h"
 #import "SSZipArchive.h"
 
-@interface SSZipArchiveTests ()
+@interface SSZipArchiveTests () <SSZipArchiveDelegate>
 - (NSString *)_cachesPath;
 @end
 
@@ -33,9 +33,9 @@
 	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
 	NSString *outputPath = [self _cachesPath];
 	
-	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
+	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
 	
-	NSFileManager *fileManager = [NSFileManager defaultManager];    
+	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
 	STAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
 	
@@ -47,6 +47,23 @@
 //	zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"LargeArchive" ofType:@"zip"];
 //	outputPath = [[self _cachesPath] stringByAppendingPathComponent:@"large"];
 //	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
+}
+
+
+#pragma mark - Delegate
+
+- (void)zipArchiveWillUnzipArchiveAtPath:(NSString *)path globalInfo:(unz_global_info)globalInfo {
+	NSLog(@"zipArchiveWillUnzipArchiveAtPath: `%@` globalInfo:", path);
+}
+
+
+- (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
+	NSLog(@"zipArchiveWillUnzipFileAtIndex: `%ld` totalFiles: `%ld` unzippedPath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
+}
+
+
+- (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
+	NSLog(@"zipArchiveDidUnzipFileAtIndex: `%ld` totalFiles: `%ld` unzippedPath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
 }
 
 

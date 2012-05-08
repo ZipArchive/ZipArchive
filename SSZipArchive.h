@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SSZipArchiveDelegate.h"
+#include "minizip/unzip.h"
+
+@protocol SSZipArchiveDelegate;
 
 @interface SSZipArchive : NSObject
 
@@ -26,5 +28,16 @@
 - (BOOL)writeFile:(NSString *)path;
 - (BOOL)writeData:(NSData *)data filename:(NSString *)filename;
 - (BOOL)close;
+
+@end
+
+
+@protocol SSZipArchiveDelegate <NSObject>
+
+@optional
+
+- (void)zipArchiveWillUnzipArchiveAtPath:(NSString *)path globalInfo:(unz_global_info)globalInfo;
+- (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
+- (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
 
 @end

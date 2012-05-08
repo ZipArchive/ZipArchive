@@ -8,7 +8,6 @@
 
 #import "SSZipArchive.h"
 #include "minizip/zip.h"
-#include "minizip/unzip.h"
 #import "zlib.h"
 #import "zconf.h"
 
@@ -67,13 +66,19 @@
 	}
 	
 	BOOL success = YES;
-	int ret;
+	int ret = 0;
 	unsigned char buffer[4096] = {0};
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
 	if([delegate respondsToSelector:@selector(zipArchiveWillUnzipFile:globalInfo:)])
 		[delegate zipArchiveWillUnzipFile:path globalInfo:globalInfo];
 	
+	// Message delegate
+	if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:globalInfo:)]) {
+		[delegate zipArchiveWillUnzipArchiveAtPath:path globalInfo:globalInfo];
+	}
+	
+	NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
 	NSInteger currentFileNumber = 0;
 	do {
 		if ([password length] == 0) {
@@ -98,9 +103,11 @@
 			break;
 		}
 		
-		if([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileNumber:outOf:fromFile:fileInfo:)])
-			[delegate zipArchiveWillUnzipFileNumber:currentFileNumber outOf:(NSInteger)globalInfo.number_entry
-										   fromFile:path fileInfo:fileInfo];
+		// Message delegate
+		if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
+			[delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
+										 archivePath:path fileInfo:fileInfo];
+		}
 		
 		char *filename = (char *)malloc(fileInfo.size_filename + 1);
 		unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
@@ -132,10 +139,9 @@
         if (nil != err) {
             NSLog(@"[SSZipArchive] Error: %@", err.localizedDescription);
         }
-		
+
         [directoriesModificationDates addObject: [NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"path", modDate, @"modDate", nil]];
-		
-		
+
         if ([fileManager fileExistsAtPath:fullPath] && !isDirectory && !overwrite) {
 			unzCloseCurrentFile(zip);
 			ret = unzGoToNextFile(zip);
@@ -172,6 +178,12 @@
 		
 		unzCloseCurrentFile( zip );
 		ret = unzGoToNextFile( zip );
+		
+		// Message delegate
+		if ([delegate respondsToSelector:@selector(zipArchiveDidUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
+			[delegate zipArchiveDidUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
+										 archivePath:path fileInfo:fileInfo];
+		}
 		
 		currentFileNumber++;
 	} while(ret == UNZ_OK && UNZ_OK != UNZ_END_OF_LIST_OF_FILE);
@@ -325,7 +337,7 @@
 	
 	NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *components = [[NSDateComponents alloc] init];
-	
+
     NSAssert(0xFFFFFFFF == (kYearMask | kMonthMask | kDayMask | kHourMask | kMinuteMask | kSecondMask), @"[SSZipArchive] MSDOS date masks don't add up");
 	    
     [components setYear:1980 + ((msdosDateTime & kYearMask) >> 25)];
