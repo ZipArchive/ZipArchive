@@ -6,17 +6,24 @@
 //  Copyright (c) 2011 Sam Soffes. All rights reserved.
 //
 
-#import "SSZipArchiveTests.h"
 #import "SSZipArchive.h"
+#import <SenTestingKit/SenTestingKit.h>
 
-@interface SSZipArchiveTests () <SSZipArchiveDelegate>
-- (NSString *)_cachesPath;
+@interface SSZipArchiveTests : SenTestCase <SSZipArchiveDelegate>
+
+- (NSString *)_cachesPath:(NSString *)directory;
+
 @end
 
 @implementation SSZipArchiveTests
 
+- (void)setUp {
+	[[NSFileManager defaultManager] removeItemAtPath:[self _cachesPath:nil] error:nil];
+}
+
+
 - (void)testZipping {
-	NSString *outputPath = [self _cachesPath];
+	NSString *outputPath = [self _cachesPath:@"Zipped"];
 	NSArray *inputPaths = [NSArray arrayWithObjects:
 						   [outputPath stringByAppendingPathComponent:@"Readme.markdown"],
 						   [outputPath stringByAppendingPathComponent:@"LICENSE"],
@@ -31,7 +38,7 @@
 
 - (void)testUnzipping {
 	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
-	NSString *outputPath = [self _cachesPath];
+	NSString *outputPath = [self _cachesPath:@"Regular"];
 	
 	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
 	
@@ -41,42 +48,73 @@
 	
 	testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
 	STAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
-		
-	// Commented out to avoid checking in several gig file into the repository. Simply add a file named
-	// `LargeArchive.zip` to the project and uncomment out these lines to test.
-//	zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"LargeArchive" ofType:@"zip"];
-//	outputPath = [[self _cachesPath] stringByAppendingPathComponent:@"large"];
-//	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
 }
 
 
-#pragma mark - Delegate
+- (void)testUnzippingWithPassword {
+	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestPasswordArchive" ofType:@"zip"];
+	NSString *outputPath = [self _cachesPath:@"Password"];
+	
+	NSError *error = nil;
+	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:@"passw0rd" error:&error delegate:self];
+	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
+	STAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
+	
+	testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
+	STAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
+}
+
+
+// Commented out to avoid checking in several gig file into the repository. Simply add a file named
+// `LargeArchive.zip` to the project and uncomment out these lines to test.
+//
+//- (void)testUnzippingLargeFiles {
+//	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"LargeArchive" ofType:@"zip"];
+//	NSString *outputPath = [self _cachesPath:@"Large"];
+//	
+//	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
+//}
+
+
+#pragma mark - SSZipArchiveDelegate
 
 - (void)zipArchiveWillUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo {
-	NSLog(@"zipArchiveWillUnzipArchiveAtPath: `%@` zipInfo:", path);
+	NSLog(@"*** zipArchiveWillUnzipArchiveAtPath: `%@` zipInfo:", path);
 }
 
 
 - (void)zipArchiveDidUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo unzippedPath:(NSString *)unzippedPath {
-	NSLog(@"zipArchiveDidUnzipArchiveAtPath: `%@` zipInfo: unzippedPath: `%@`", path, unzippedPath);
+	NSLog(@"*** zipArchiveDidUnzipArchiveAtPath: `%@` zipInfo: unzippedPath: `%@`", path, unzippedPath);
 }
 
 
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-	NSLog(@"zipArchiveWillUnzipFileAtIndex: `%ld` totalFiles: `%ld` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
+	NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%ld` totalFiles: `%ld` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
 }
 
 
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-	NSLog(@"zipArchiveDidUnzipFileAtIndex: `%ld` totalFiles: `%ld` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
+	NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%ld` totalFiles: `%ld` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
 }
 
 
 #pragma mark - Private
 
-- (NSString *)_cachesPath {
-	return [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
-			stringByAppendingPathComponent:@"com.samsoffes.ssziparchive.tests"];
+- (NSString *)_cachesPath:(NSString *)directory {
+	NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
+					   stringByAppendingPathComponent:@"com.samsoffes.ssziparchive.tests"];
+	if (directory) {
+		path = [path stringByAppendingPathComponent:directory];
+	}
+	
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if (![fileManager fileExistsAtPath:path]) {
+		[fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+	}
+	
+	return path;
 }
 
 @end
