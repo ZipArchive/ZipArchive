@@ -194,17 +194,16 @@
 }
 
 
-- (void)zipInfo:(zip_fileinfo*)zipInfo setDate:(NSDate*)date
-{
-    NSCalendar* currCalendar = [NSCalendar currentCalendar];
+- (void)zipInfo:(zip_fileinfo*)zipInfo setDate:(NSDate*)date {
+    NSCalendar *currentCalendar = [NSCalendar currentCalendar];
     uint flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
-    NSDateComponents* dc = [currCalendar components:flags fromDate:date];
-    zipInfo->tmz_date.tm_sec = [dc second];
-    zipInfo->tmz_date.tm_min = [dc minute];
-    zipInfo->tmz_date.tm_hour = [dc hour];
-    zipInfo->tmz_date.tm_mday = [dc day];
-    zipInfo->tmz_date.tm_mon = [dc month] - 1;
-    zipInfo->tmz_date.tm_year = [dc year];
+    NSDateComponents *components = [currentCalendar components:flags fromDate:date];
+    zipInfo->tmz_date.tm_sec = (unsigned int)components.second;
+    zipInfo->tmz_date.tm_min = (unsigned int)components.minute;
+    zipInfo->tmz_date.tm_hour = (unsigned int)components.hour;
+    zipInfo->tmz_date.tm_mday = (unsigned int)components.day;
+    zipInfo->tmz_date.tm_mon = (unsigned int)components.month - 1;
+    zipInfo->tmz_date.tm_year = (unsigned int)components.year;
 }
 
 
@@ -244,7 +243,7 @@
 
 	zipOpenNewFileInZip(_zip, [filename UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
 
-    zipWriteInFileInZip(_zip, data.bytes, data.length);
+    zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
 
 	zipCloseFileInZip(_zip);
 	return YES;
