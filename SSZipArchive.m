@@ -15,7 +15,7 @@
 #define CHUNK 16384
 
 @interface SSZipArchive ()
-+ (NSDate *)_dateFor1980;
++ (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime;
 @end
 
 
@@ -60,7 +60,7 @@
 	int ret;
 	unsigned char buffer[4096] = {0};
 	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSDate *nineteenEighty = [self _dateFor1980];
+	NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
 	
 	do {
 		if ([password length] == 0) {
@@ -102,15 +102,24 @@
 			strPath = [strPath stringByReplacingOccurrencesOfString:@"\\" withString:@"/"];
 		}
 		
-		NSString* fullPath = [destination stringByAppendingPathComponent:strPath];
+		NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
+		NSError *err = nil;
+        NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+        NSDictionary *directoryAttr = [NSDictionary dictionaryWithObjectsAndKeys:modDate, NSFileCreationDate, modDate, NSFileModificationDate, nil];
 		
 		if (isDirectory) {
-			[fileManager createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:nil error:nil];
+			[fileManager createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:directoryAttr  error:&err];
 		} else {
-			[fileManager createDirectoryAtPath:[fullPath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:nil];
+			[fileManager createDirectoryAtPath:[fullPath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:directoryAttr error:&err];
 		}
+        if (nil != err) {
+            NSLog(@"[SSZipArchive] Error: %@", err.localizedDescription);
+        }
 		
-		if ([fileManager fileExistsAtPath:fullPath] && !isDirectory && !overwrite) {
+        [directoriesModificationDates addObject: [NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"path", modDate, @"modDate", nil]];
+		
+		
+        if ([fileManager fileExistsAtPath:fullPath] && !isDirectory && !overwrite) {
 			unzCloseCurrentFile(zip);
 			ret = unzGoToNextFile(zip);
 			continue;
@@ -132,16 +141,15 @@
 			
 			// Set the original datetime property
 			if (fileInfo.dosDate != 0) {
-				NSDate *orgDate = [[NSDate alloc] initWithTimeInterval:(NSTimeInterval)fileInfo.dosDate  sinceDate:nineteenEighty];
+				NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
 				NSDictionary *attr = [NSDictionary dictionaryWithObject:orgDate forKey:NSFileModificationDate];
 				
 				if (attr) {
 					if ([fileManager setAttributes:attr ofItemAtPath:fullPath error:nil] == NO) {
 						// Can't set attributes 
-						NSLog(@"Failed to set attributes");
+						NSLog(@"[SSZipArchive] Failed to set attributes");
 					}
 				}
-				[orgDate release];
 			}
 		}
 		
@@ -151,6 +159,23 @@
 	
 	// Close
 	unzClose(zip);
+	
+	// The process of decompressing the .zip archive causes the modification times on the folders
+    // to be set to the present time. So, when we are done, they need to be explicitly set.
+    // set the modification date on all of the directories.
+    NSError * err = nil;
+    for (NSDictionary * d in directoriesModificationDates) {
+        if (![[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[d objectForKey:@"modDate"], NSFileModificationDate, nil] ofItemAtPath:[d objectForKey:@"path"] error:&err]) {
+            NSLog(@"[SSZipArchive] Set attributes failed for directory: %@.", [d objectForKey:@"path"]);
+        }
+        if (err) {
+            NSLog(@"[SSZipArchive] Error setting directory file modification date attribute: %@",err.localizedDescription);
+        }
+    }
+	
+#if !__has_feature(objc_arc)
+	[directoriesModificationDates release];
+#endif
 	
 	return success;
 }
@@ -167,7 +192,10 @@
 		}
 		success = [zipArchive close];        
 	}
+	
+#if !__has_feature(objc_arc)
 	[zipArchive release];
+#endif
 
 	return success;
 }
@@ -181,10 +209,12 @@
 }
 
 
+#if !__has_feature(objc_arc)
 - (void)dealloc {
-	[_path release];
+    [_path release];
 	[super dealloc];
 }
+#endif
 
 
 - (BOOL)open {    
@@ -249,8 +279,9 @@
 	return YES;
 }
 
+
 - (BOOL)close {    
-	NSAssert((_zip != NULL), @"Attempting to close an archive which was never opened");
+	NSAssert((_zip != NULL), @"[SSZipArchive] Attempting to close an archive which was never opened");
 	zipClose(_zip, NULL);
 	return YES;
 }
@@ -258,16 +289,40 @@
 
 #pragma mark - Private
 
-+ (NSDate *)_dateFor1980 {
-	NSDateComponents *comps = [[NSDateComponents alloc] init];
-	[comps setDay:1];
-	[comps setMonth:1];
-	[comps setYear:1980];
-	NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-	NSDate *date = [gregorian dateFromComponents:comps];
+// Format from http://newsgroups.derkeiler.com/Archive/Comp/comp.os.msdos.programmer/2009-04/msg00060.html
+// Two consecutive words, or a longword, YYYYYYYMMMMDDDDD hhhhhmmmmmmsssss
+// YYYYYYY is years from 1980 = 0
+// sssss is (seconds/2).
+//
+// 3658 = 0011 0110 0101 1000 = 0011011 0010 11000 = 27 2 24 = 2007-02-24
+// 7423 = 0111 0100 0010 0011 - 01110 100001 00011 = 14 33 2 = 14:33:06
++ (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime {
+	static const UInt32 kYearMask = 0xFE000000;
+	static const UInt32 kMonthMask = 0x1E00000;
+	static const UInt32 kDayMask = 0x1F0000;
+	static const UInt32 kHourMask = 0xF800;
+	static const UInt32 kMinuteMask = 0x7E0;
+	static const UInt32 kSecondMask = 0x1F;
 	
-	[comps release];
+	NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+	
+    NSAssert(0xFFFFFFFF == (kYearMask | kMonthMask | kDayMask | kHourMask | kMinuteMask | kSecondMask), @"[SSZipArchive] MSDOS date masks don't add up");
+	    
+    [components setYear:1980 + ((msdosDateTime & kYearMask) >> 25)];
+    [components setMonth:(msdosDateTime & kMonthMask) >> 21];
+    [components setDay:(msdosDateTime & kDayMask) >> 16];
+    [components setHour:(msdosDateTime & kHourMask) >> 11];
+    [components setMinute:(msdosDateTime & kMinuteMask) >> 5];
+    [components setSecond:(msdosDateTime & kSecondMask) * 2];
+    
+    NSDate *date = [NSDate dateWithTimeInterval:0 sinceDate:[gregorian dateFromComponents:components]];
+	
+#if !__has_feature(objc_arc)
 	[gregorian release];
+	[components release];
+#endif
+	
 	return date;
 }
 
