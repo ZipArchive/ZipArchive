@@ -1,5 +1,11 @@
 # SSZipArchive Changelog
 
+### Unreleased
+
+* Add unzipping delegate
+* Fix unzipping with passwords
+* Fix modified at dates
+
 ### Version 0.1.2
 
 [Released December 26, 2011](https://github.com/samsoffes/sskeychain/tree/0.1.2)
