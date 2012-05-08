@@ -8,11 +8,14 @@ SSZipArchive is a simple utility class for zipping and unzipping files. Features
 * Appending to zip files
 * Zipping files
 * Zipping NSData with a filename
+* Works in ARC and non-ARC projects
 
 ## Adding to your project
 
 1. Add `SSZipArchive.h`, `SSZipArchive.m`, and `minizip` to your project.
 2. Add the `libz` library to your target
+
+You don't need to do anything regarding ARC. SSZipArchive will detect if you're not using ARC and add the required memory management code.
 
 ## Usage
 
