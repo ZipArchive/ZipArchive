@@ -70,15 +70,12 @@
 	unsigned char buffer[4096] = {0};
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
-	if([delegate respondsToSelector:@selector(zipArchiveWillUnzipFile:globalInfo:)])
-		[delegate zipArchiveWillUnzipFile:path globalInfo:globalInfo];
 	
 	// Message delegate
-	if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:globalInfo:)]) {
-		[delegate zipArchiveWillUnzipArchiveAtPath:path globalInfo:globalInfo];
+	if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:zipInfo:)]) {
+		[delegate zipArchiveWillUnzipArchiveAtPath:path zipInfo:globalInfo];
 	}
 	
-	NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
 	NSInteger currentFileNumber = 0;
 	do {
 		if ([password length] == 0) {
@@ -207,6 +204,11 @@
 #if !__has_feature(objc_arc)
 	[directoriesModificationDates release];
 #endif
+	
+	// Message delegate
+	if (success && [delegate respondsToSelector:@selector(zipArchiveDidUnzipArchiveAtPath:zipInfo:unzippedPath:)]) {
+		[delegate zipArchiveDidUnzipArchiveAtPath:path zipInfo:globalInfo unzippedPath:destination];
+	}
 	
 	return success;
 }

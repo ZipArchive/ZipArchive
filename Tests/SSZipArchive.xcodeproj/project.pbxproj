@@ -17,6 +17,7 @@
 		B215FB6A143AD576003AC546 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = B215FB53143AD460003AC546 /* unzip.c */; };
 		B215FB6B143AD576003AC546 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = B215FB55143AD460003AC546 /* zip.c */; };
 		B215FB6D143AD6FF003AC546 /* TestArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = B215FB6C143AD6FF003AC546 /* TestArchive.zip */; };
+		B23FCC751558EEBE0026375C /* Views.zip in Resources */ = {isa = PBXBuildFile; fileRef = B23FCC741558EEBE0026375C /* Views.zip */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		B215FB61143AD514003AC546 /* SSZipArchiveTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchiveTests.m; sourceTree = "<group>"; };
 		B215FB64143AD527003AC546 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		B215FB6C143AD6FF003AC546 /* TestArchive.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = TestArchive.zip; sourceTree = "<group>"; };
+		B23FCC741558EEBE0026375C /* Views.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Views.zip; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 		B215FB5E143AD505003AC546 /* SSZipArchiveTests */ = {
 			isa = PBXGroup;
 			children = (
+				B23FCC741558EEBE0026375C /* Views.zip */,
 				B215FB60143AD514003AC546 /* SSZipArchiveTests.h */,
 				B215FB61143AD514003AC546 /* SSZipArchiveTests.m */,
 				B215FB5F143AD514003AC546 /* SSZipArchiveTests-Info.plist */,
@@ -174,6 +177,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B215FB6D143AD6FF003AC546 /* TestArchive.zip in Resources */,
+				B23FCC751558EEBE0026375C /* Views.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
