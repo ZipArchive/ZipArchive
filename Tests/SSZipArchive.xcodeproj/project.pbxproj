@@ -17,6 +17,7 @@
 		B215FB6A143AD576003AC546 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = B215FB53143AD460003AC546 /* unzip.c */; };
 		B215FB6B143AD576003AC546 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = B215FB55143AD460003AC546 /* zip.c */; };
 		B215FB6D143AD6FF003AC546 /* TestArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = B215FB6C143AD6FF003AC546 /* TestArchive.zip */; };
+		B2283D5D155AD80F00F9395A /* Unicode.zip in Resources */ = {isa = PBXBuildFile; fileRef = B2283D5C155AD80F00F9395A /* Unicode.zip */; };
 		B23FCC7F1558F1B70026375C /* TestPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = B23FCC7E1558F1B70026375C /* TestPasswordArchive.zip */; };
 		C5AE4E64155A12760045F3ED /* IncorrectHeaders.zip in Resources */ = {isa = PBXBuildFile; fileRef = C5AE4E63155A12760045F3ED /* IncorrectHeaders.zip */; };
 		C5AE4E6D155A8B010045F3ED /* SymbolicLink.zip in Resources */ = {isa = PBXBuildFile; fileRef = C5AE4E6C155A8B010045F3ED /* SymbolicLink.zip */; };
@@ -41,6 +42,7 @@
 		B215FB61143AD514003AC546 /* SSZipArchiveTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchiveTests.m; sourceTree = "<group>"; };
 		B215FB64143AD527003AC546 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		B215FB6C143AD6FF003AC546 /* TestArchive.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = TestArchive.zip; sourceTree = "<group>"; };
+		B2283D5C155AD80F00F9395A /* Unicode.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Unicode.zip; sourceTree = "<group>"; };
 		B23FCC7E1558F1B70026375C /* TestPasswordArchive.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = TestPasswordArchive.zip; sourceTree = "<group>"; };
 		C5AE4E63155A12760045F3ED /* IncorrectHeaders.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = IncorrectHeaders.zip; sourceTree = "<group>"; };
 		C5AE4E6C155A8B010045F3ED /* SymbolicLink.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = SymbolicLink.zip; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 		B215FB5E143AD505003AC546 /* SSZipArchiveTests */ = {
 			isa = PBXGroup;
 			children = (
+				B2283D5C155AD80F00F9395A /* Unicode.zip */,
 				B215FB61143AD514003AC546 /* SSZipArchiveTests.m */,
 				B215FB5F143AD514003AC546 /* SSZipArchiveTests-Info.plist */,
 				C5AE4E63155A12760045F3ED /* IncorrectHeaders.zip */,
@@ -184,6 +187,7 @@
 				B23FCC7F1558F1B70026375C /* TestPasswordArchive.zip in Resources */,
 				C5AE4E64155A12760045F3ED /* IncorrectHeaders.zip in Resources */,
 				C5AE4E6D155A8B010045F3ED /* SymbolicLink.zip in Resources */,
+				B2283D5D155AD80F00F9395A /* Unicode.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
