@@ -105,11 +105,36 @@
 			[delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
 										 archivePath:path fileInfo:fileInfo];
 		}
-		
+        
 		char *filename = (char *)malloc(fileInfo.size_filename + 1);
 		unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
 		filename[fileInfo.size_filename] = '\0';
-		
+        
+        //
+        // NOTE
+        // I used the ZIP spec from here:
+        // http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+        //
+        // ...to deduce this method of detecting whether the file in the ZIP is a symbolic link.
+        // If it is, it is listed as a directory but has an uncompressed data size greater than
+        // zero (real directories have it equal to 0) and the included, uncompressed data is the
+        // symbolic link path.
+        //
+        
+        const uLong ZipDirectoryVersion = 10;
+        const uLong ZipCompressionMethodStore = 0;
+        
+        BOOL fileIsSymbolicLink = NO;
+        
+        if((fileInfo.version_needed == ZipDirectoryVersion) && // Is it a directory?
+           (fileInfo.compression_method == ZipCompressionMethodStore) && // Is it compressed?
+           (fileInfo.compressed_size > 0)) // Is there any data there?
+        {
+            fileIsSymbolicLink = YES;
+        }
+        
+        //NSLog(@"\"%s\" is symbolic link? %@", filename, fileIsSymbolicLink ? @"Yes." : @"No.");
+           
 		// Check if it contains directory
 		NSString *strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
 		BOOL isDirectory = NO;
@@ -137,41 +162,72 @@
             NSLog(@"[SSZipArchive] Error: %@", err.localizedDescription);
         }
 
-        [directoriesModificationDates addObject: [NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"path", modDate, @"modDate", nil]];
+        if(!fileIsSymbolicLink)
+            [directoriesModificationDates addObject: [NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"path", modDate, @"modDate", nil]];
 
         if ([fileManager fileExistsAtPath:fullPath] && !isDirectory && !overwrite) {
 			unzCloseCurrentFile(zip);
 			ret = unzGoToNextFile(zip);
 			continue;
 		}
-		
-		FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
-		while (fp) {
-			int readBytes = unzReadCurrentFile(zip, buffer, 4096);
+        
+		if(!fileIsSymbolicLink)
+        {
+            FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
+            while (fp) {
+                int readBytes = unzReadCurrentFile(zip, buffer, 4096);
 
-			if (readBytes > 0) {
-				fwrite(buffer, readBytes, 1, fp );
-			} else {
-				break;
-			}
-		}
-		
-		if (fp) {
-			fclose(fp);
-			
-			// Set the original datetime property
-			if (fileInfo.dosDate != 0) {
-				NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
-				NSDictionary *attr = [NSDictionary dictionaryWithObject:orgDate forKey:NSFileModificationDate];
-				
-				if (attr) {
-					if ([fileManager setAttributes:attr ofItemAtPath:fullPath error:nil] == NO) {
-						// Can't set attributes 
-						NSLog(@"[SSZipArchive] Failed to set attributes");
-					}
-				}
-			}
-		}
+                if (readBytes > 0) {
+                    fwrite(buffer, readBytes, 1, fp );
+                } else {
+                    break;
+                }
+            }
+            
+            if (fp) {
+                fclose(fp);
+                
+                // Set the original datetime property
+                if (fileInfo.dosDate != 0) {
+                    NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+                    NSDictionary *attr = [NSDictionary dictionaryWithObject:orgDate forKey:NSFileModificationDate];
+                    
+                    if (attr) {
+                        if ([fileManager setAttributes:attr ofItemAtPath:fullPath error:nil] == NO) {
+                            // Can't set attributes 
+                            NSLog(@"[SSZipArchive] Failed to set attributes");
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            // Get the path for the symbolic link
+            
+            NSURL* symlinkURL = [NSURL fileURLWithPath:fullPath];
+            NSMutableString* destinationPath = [NSMutableString string];
+            
+            int bytesRead = 0;
+            while((bytesRead = unzReadCurrentFile(zip, buffer, 4096)) > 0)
+            {
+                buffer[bytesRead] = 0;
+                [destinationPath appendString:[NSString stringWithUTF8String:(const char*)buffer]];
+            }
+            
+            //NSLog(@"Symlinking to: %@", destinationPath);
+            
+            NSURL* destinationURL = [NSURL fileURLWithPath:destinationPath];
+            
+            // Create the symbolic link
+            NSError* symlinkError = nil;
+            [fileManager createSymbolicLinkAtURL:symlinkURL withDestinationURL:destinationURL error:&symlinkError];
+            
+            if(symlinkError != nil)
+            {
+                NSLog(@"Failed to create symbolic link at \"%@\" to \"%@\". Error: %@", symlinkURL.absoluteString, destinationURL.absoluteString, symlinkError.localizedDescription);
+            }
+        }
 		
 		unzCloseCurrentFile( zip );
 		ret = unzGoToNextFile( zip );
