@@ -96,7 +96,7 @@
     NSError* error = nil;
     NSString* symlinkPath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlink error:&error];
     
-    bool symbolicLinkPersists = ([symlinkPath isEqualToString:@"/Applications/GitHub.app"]) && (error == nil);
+    bool symbolicLinkPersists = ((symlinkPath != nil) && [symlinkPath isEqualToString:@"/Applications/GitHub.app"]) && (error == nil);
     
     STAssertTrue(symbolicLinkPersists, @"Symbolic links should persist from the original archive to the outputted files.");
 }
@@ -116,22 +116,22 @@
 #pragma mark - SSZipArchiveDelegate
 
 - (void)zipArchiveWillUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo {
-	//NSLog(@"*** zipArchiveWillUnzipArchiveAtPath: `%@` zipInfo:", path);
+	NSLog(@"*** zipArchiveWillUnzipArchiveAtPath: `%@` zipInfo:", path);
 }
 
 
 - (void)zipArchiveDidUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo unzippedPath:(NSString *)unzippedPath {
-	//NSLog(@"*** zipArchiveDidUnzipArchiveAtPath: `%@` zipInfo: unzippedPath: `%@`", path, unzippedPath);
+	NSLog(@"*** zipArchiveDidUnzipArchiveAtPath: `%@` zipInfo: unzippedPath: `%@`", path, unzippedPath);
 }
 
 
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-	//NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%ld` totalFiles: `%ld` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
+	NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%ld` totalFiles: `%ld` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
 }
 
 
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-	//NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%ld` totalFiles: `%ld` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
+	NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%ld` totalFiles: `%ld` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
 }
 
 
