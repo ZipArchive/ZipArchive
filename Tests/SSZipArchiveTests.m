@@ -152,17 +152,16 @@
 	return path;
 }
 
-- (NSString *)_calculateMD5Digest:(NSData *)data
-{
-    unsigned char buffer[CC_MD5_DIGEST_LENGTH];
-    CC_MD5([data bytes], [data length], buffer);
-    
-    NSMutableString* digest = [NSMutableString string];
-    
-    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; ++i)
-        [digest appendFormat:@"%02x", buffer[i]];
-    
-    return digest;
+
+// Taken from https://github.com/samsoffes/sstoolkit/blob/master/SSToolkit/NSData+SSToolkitAdditions.m
+- (NSString *)_calculateMD5Digest:(NSData *)data {
+	unsigned char digest[CC_MD5_DIGEST_LENGTH], i;
+	CC_MD5(data.bytes, (unsigned int)data.length, digest);
+	NSMutableString *ms = [NSMutableString string];
+	for (i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+		[ms appendFormat: @"%02x", (int)(digest[i])];
+	}
+	return [ms copy];
 }
 
 @end
