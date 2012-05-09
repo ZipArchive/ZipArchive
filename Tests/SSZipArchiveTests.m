@@ -8,10 +8,13 @@
 
 #import "SSZipArchive.h"
 #import <SenTestingKit/SenTestingKit.h>
+#import <CommonCrypto/CommonDigest.h>
 
 @interface SSZipArchiveTests : SenTestCase <SSZipArchiveDelegate>
 
 - (NSString *)_cachesPath:(NSString *)directory;
+
+- (NSString *)_calculateMD5Digest:(NSData *)data;
 
 @end
 
@@ -66,6 +69,21 @@
 	STAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
 
+- (void)testUnzippingTruncatedFileFix {
+    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IncorrectHeaders" ofType:@"zip"];
+    NSString* outputPath = [self _cachesPath:@"IncorrectHeaders"];
+    
+    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
+    
+    NSString* intendedReadmeTxtMD5 = @"31ac96301302eb388070c827447290b5";
+    
+    NSString* filePath = [outputPath stringByAppendingPathComponent:@"IncorrectHeaders/Readme.txt"];
+    NSData* data = [NSData dataWithContentsOfFile:filePath];
+    
+    NSString* actualReadmeTxtMD5 = [self _calculateMD5Digest:data];
+    STAssertTrue([actualReadmeTxtMD5 isEqualToString:intendedReadmeTxtMD5], @"Readme.txt MD5 digest should match original.");
+}
+
 
 // Commented out to avoid checking in several gig file into the repository. Simply add a file named
 // `LargeArchive.zip` to the project and uncomment out these lines to test.
@@ -115,6 +133,19 @@
 	}
 	
 	return path;
+}
+
+- (NSString *)_calculateMD5Digest:(NSData *)data
+{
+    unsigned char buffer[CC_MD5_DIGEST_LENGTH];
+    CC_MD5([data bytes], [data length], buffer);
+    
+    NSMutableString* digest = [NSMutableString string];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; ++i)
+        [digest appendFormat:@"%02x", buffer[i]];
+    
+    return digest;
 }
 
 @end
