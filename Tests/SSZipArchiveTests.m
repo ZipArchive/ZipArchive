@@ -70,50 +70,35 @@
 }
 
 - (void)testUnzippingTruncatedFileFix {
-    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IncorrectHeaders" ofType:@"zip"];
-    NSString *outputPath = [self _cachesPath:@"IncorrectHeaders"];
+    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IncorrectHeaders" ofType:@"zip"];
+    NSString* outputPath = [self _cachesPath:@"IncorrectHeaders"];
     
     [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
     
-    NSString *intendedReadmeTxtMD5 = @"31ac96301302eb388070c827447290b5";
+    NSString* intendedReadmeTxtMD5 = @"31ac96301302eb388070c827447290b5";
     
-    NSString *filePath = [outputPath stringByAppendingPathComponent:@"IncorrectHeaders/Readme.txt"];
-    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    NSString* filePath = [outputPath stringByAppendingPathComponent:@"IncorrectHeaders/Readme.txt"];
+    NSData* data = [NSData dataWithContentsOfFile:filePath];
     
-    NSString *actualReadmeTxtMD5 = [self _calculateMD5Digest:data];
+    NSString* actualReadmeTxtMD5 = [self _calculateMD5Digest:data];
     STAssertTrue([actualReadmeTxtMD5 isEqualToString:intendedReadmeTxtMD5], @"Readme.txt MD5 digest should match original.");
 }
 
 - (void)testUnzippingWithSymlinkedFileInside {
     
-    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"SymbolicLink" ofType:@"zip"];
-    NSString *outputPath = [self _cachesPath:@"SymbolicLink"];
+    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"SymbolicLink" ofType:@"zip"];
+    NSString* outputPath = [self _cachesPath:@"SymbolicLink"];
     
     [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
     
-    NSString *testSymlink = [outputPath stringByAppendingPathComponent:@"SymbolicLink/GitHub.app"];
+    NSString* testSymlink = [outputPath stringByAppendingPathComponent:@"SymbolicLink/GitHub.app"];
     
-    NSError *error = nil;
-    NSString *symlinkPath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlink error:&error];
+    NSError* error = nil;
+    NSString* symlinkPath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlink error:&error];
     
     bool symbolicLinkPersists = ((symlinkPath != nil) && [symlinkPath isEqualToString:@"/Applications/GitHub.app"]) && (error == nil);
     
     STAssertTrue(symbolicLinkPersists, @"Symbolic links should persist from the original archive to the outputted files.");
-}
-
-
-- (void)testUnzippingWithUnicodeFilenameInside {
-    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"Unicode" ofType:@"zip"];
-    NSString *outputPath = [self _cachesPath:@"Unicode"];
-	
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
-	
-    bool unicodeFilenameWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:[outputPath stringByAppendingPathComponent:@"Unicode/Accént.txt"]];
-	
-    bool unicodeFolderWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:[outputPath stringByAppendingPathComponent:@"Unicode/Fólder"]];
-	
-    STAssertTrue(unicodeFilenameWasExtracted, @"Files with filenames in unicode should be extracted properly.");
-    STAssertTrue(unicodeFolderWasExtracted, @"Folders with names in unicode should be extracted propertly.");
 }
 
 
