@@ -84,6 +84,23 @@
     STAssertTrue([actualReadmeTxtMD5 isEqualToString:intendedReadmeTxtMD5], @"Readme.txt MD5 digest should match original.");
 }
 
+- (void)testUnzippingWithSymlinkedFileInside {
+    
+    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"SymbolicLink" ofType:@"zip"];
+    NSString* outputPath = [self _cachesPath:@"SymbolicLink"];
+    
+    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
+    
+    NSString* testSymlink = [outputPath stringByAppendingPathComponent:@"SymbolicLink/GitHub.app"];
+    
+    NSError* error = nil;
+    NSString* symlinkPath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlink error:&error];
+    
+    bool symbolicLinkPersists = ((symlinkPath != nil) && [symlinkPath isEqualToString:@"/Applications/GitHub.app"]) && (error == nil);
+    
+    STAssertTrue(symbolicLinkPersists, @"Symbolic links should persist from the original archive to the outputted files.");
+}
+
 
 // Commented out to avoid checking in several gig file into the repository. Simply add a file named
 // `LargeArchive.zip` to the project and uncomment out these lines to test.
