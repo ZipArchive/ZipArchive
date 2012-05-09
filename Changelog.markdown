@@ -1,12 +1,20 @@
 # SSZipArchive Changelog
 
+### Version 0.2.1
+
+[Released May 9, 2012](https://github.com/samsoffes/sskeychain/tree/0.2.1)
+
+* Support for symbolic links — [@jparishy](http://github.com/jparishy)
+* Fix several warnings
+
 ### Version 0.2.0
 
 [Released May 7, 2012](https://github.com/samsoffes/sskeychain/tree/0.2.0)
 
-* Add unzipping delegate
+* Add unzipping delegate — [@uppfinnarn](http://github.com/uppfinnarn)
 * Fix unzipping with passwords
-* Fix modified at dates
+* Fix modified at dates — [@brantsears](http://github.com/brantsears)
+* Fix truncated files. Ignore the zip headers and unzip until there is no more file. — [@jparishy](http://github.com/jparishy)
 
 ### Version 0.1.2
 
