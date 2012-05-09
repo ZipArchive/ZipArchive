@@ -357,7 +357,7 @@
     if (!data) {
 		return NO;
     }
-    zip_fileinfo zipInfo = {0};
+    zip_fileinfo zipInfo = {{0,0,0,0,0,0},0,0,0};
     [self zipInfo:&zipInfo setDate:[NSDate date]];
 
 	zipOpenNewFileInZip(_zip, [filename UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
