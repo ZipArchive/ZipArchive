@@ -1718,10 +1718,24 @@ extern int ZEXPORT unzReadCurrentFile  (unzFile file, voidp buf, unsigned len)
 
     pfile_in_zip_read_info->stream.avail_out = (uInt)len;
 
+    // NOTE:
+    // This bit of code seems to try to set the amount of space in the output buffer based on the
+    // value stored in the headers stored in the .zip file. However, if those values are incorrect
+    // it may result in a loss of data when uncompresssing that file. The compressed data is still
+    // legit and will deflate without knowing the uncompressed code so this tidbit is unnecessary and
+    // may cause issues for some .zip files.
+    //
+    // It's removed in here to fix those issues.
+    //
+    // See: https://github.com/samsoffes/ssziparchive/issues/16
+    //
+    
+    /*
     if ((len>pfile_in_zip_read_info->rest_read_uncompressed) &&
         (!(pfile_in_zip_read_info->raw)))
         pfile_in_zip_read_info->stream.avail_out =
             (uInt)pfile_in_zip_read_info->rest_read_uncompressed;
+     */
 
     if ((len>pfile_in_zip_read_info->rest_read_compressed+
            pfile_in_zip_read_info->stream.avail_in) &&
