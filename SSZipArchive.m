@@ -105,10 +105,27 @@
 			[delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
 										 archivePath:path fileInfo:fileInfo];
 		}
+        
+        struct ZipExtraField
+        {
+            short headerId;
+            short dataSize;
+        };
+        
+        struct ZipExtraField extra = { 0 };
 		
 		char *filename = (char *)malloc(fileInfo.size_filename + 1);
-		unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
+		unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, &extra, sizeof(struct ZipExtraField), NULL, 0);
 		filename[fileInfo.size_filename] = '\0';
+
+        NSLog(@"Filename: %s", filename);
+    
+        //extra.data = (char *)malloc(fileInfo.size_file_extra);
+        //unzGetLocalExtrafield(zip, &extra, sizeof(struct ZipExtraField));
+        
+        NSLog(@"Header ID: %ul", fileInfo.size_file_extra);
+        
+        //NSLog(@"Data: %s", extra.data);
 		
 		// Check if it contains directory
 		NSString *strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
@@ -144,6 +161,8 @@
 			ret = unzGoToNextFile(zip);
 			continue;
 		}
+        
+        NSLog(@"External file attributes: %lu", fileInfo.external_fa);
 		
 		FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
 		while (fp) {
