@@ -20,7 +20,6 @@
 		B23FCC7F1558F1B70026375C /* TestPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = B23FCC7E1558F1B70026375C /* TestPasswordArchive.zip */; };
 		C5AE4E64155A12760045F3ED /* IncorrectHeaders.zip in Resources */ = {isa = PBXBuildFile; fileRef = C5AE4E63155A12760045F3ED /* IncorrectHeaders.zip */; };
 		C5AE4E6D155A8B010045F3ED /* SymbolicLink.zip in Resources */ = {isa = PBXBuildFile; fileRef = C5AE4E6C155A8B010045F3ED /* SymbolicLink.zip */; };
-		C5AE4E70155A96CF0045F3ED /* ZipTest.zip in Resources */ = {isa = PBXBuildFile; fileRef = C5AE4E6F155A96CF0045F3ED /* ZipTest.zip */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,7 +44,6 @@
 		B23FCC7E1558F1B70026375C /* TestPasswordArchive.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = TestPasswordArchive.zip; sourceTree = "<group>"; };
 		C5AE4E63155A12760045F3ED /* IncorrectHeaders.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = IncorrectHeaders.zip; sourceTree = "<group>"; };
 		C5AE4E6C155A8B010045F3ED /* SymbolicLink.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = SymbolicLink.zip; sourceTree = "<group>"; };
-		C5AE4E6F155A96CF0045F3ED /* ZipTest.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = ZipTest.zip; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +118,6 @@
 		B215FB5E143AD505003AC546 /* SSZipArchiveTests */ = {
 			isa = PBXGroup;
 			children = (
-				C5AE4E6F155A96CF0045F3ED /* ZipTest.zip */,
 				B215FB61143AD514003AC546 /* SSZipArchiveTests.m */,
 				B215FB5F143AD514003AC546 /* SSZipArchiveTests-Info.plist */,
 				C5AE4E63155A12760045F3ED /* IncorrectHeaders.zip */,
@@ -187,7 +184,6 @@
 				B23FCC7F1558F1B70026375C /* TestPasswordArchive.zip in Resources */,
 				C5AE4E64155A12760045F3ED /* IncorrectHeaders.zip in Resources */,
 				C5AE4E6D155A8B010045F3ED /* SymbolicLink.zip in Resources */,
-				C5AE4E70155A96CF0045F3ED /* ZipTest.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -86,12 +86,17 @@
 
 - (void)testUnzippingWithSymlinkedFileInside {
     
-    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"ZipTest" ofType:@"zip"];
+    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"SymbolicLink" ofType:@"zip"];
     NSString* outputPath = [self _cachesPath:@"SymbolicLink"];
     
     [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
     
-    BOOL symbolicLinkPersists = NO;
+    NSString* testSymlink = [outputPath stringByAppendingPathComponent:@"SymbolicLink/GitHub.app"];
+    
+    NSError* error = nil;
+    NSString* symlinkPath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlink error:&error];
+    
+    bool symbolicLinkPersists = ([symlinkPath isEqualToString:@"/Applications/GitHub.app"]) && (error == nil);
     
     STAssertTrue(symbolicLinkPersists, @"Symbolic links should persist from the original archive to the outputted files.");
 }
