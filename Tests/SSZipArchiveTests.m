@@ -91,16 +91,35 @@
     
     [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
     
-    NSString* testSymlink = [outputPath stringByAppendingPathComponent:@"SymbolicLink/GitHub.app"];
+    NSString *testSymlinkFolder = [outputPath stringByAppendingPathComponent:@"SymbolicLink/GitHub.app"];
+    NSString *testSymlinkFile = [outputPath stringByAppendingPathComponent:@"SymbolicLink/Icon.icns"];
     
-    NSError* error = nil;
-    NSString* symlinkPath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlink error:&error];
+    NSError *error = nil;
+    NSString *symlinkFolderPath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlinkFolder error:&error];
+    bool symbolicLinkToFolderPersists = ((symlinkFolderPath != nil) && [symlinkFolderPath isEqualToString:@"/Applications/GitHub.app"]) && (error == nil);
     
-    bool symbolicLinkPersists = ((symlinkPath != nil) && [symlinkPath isEqualToString:@"/Applications/GitHub.app"]) && (error == nil);
+    error = nil;
     
-    STAssertTrue(symbolicLinkPersists, @"Symbolic links should persist from the original archive to the outputted files.");
+    NSString *symlinkFilePath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlinkFile error:&error];
+    bool symbolicLinkToFilePersists = ((symlinkFilePath != nil) && [symlinkFilePath isEqualToString:@"/Applications/GitHub.app/Contents/Resources/AppIcon.icns"]) && (error == nil);
+    
+    STAssertTrue(symbolicLinkToFilePersists && symbolicLinkToFolderPersists, @"Symbolic links should persist from the original archive to the outputted files.");
 }
 
+- (void)testUnzippingWithUnicodeFilenameInside {
+    
+    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"Unicode" ofType:@"zip"];
+    NSString* outputPath = [self _cachesPath:@"Unicode"];
+    
+    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
+    
+    bool unicodeFilenameWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:[outputPath stringByAppendingPathComponent:@"Accént.txt"]];
+    
+    bool unicodeFolderWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:[outputPath stringByAppendingPathComponent:@"Fólder/Nothing.txt"]];
+    
+    STAssertTrue(unicodeFilenameWasExtracted, @"Files with filenames in unicode should be extracted properly.");
+    STAssertTrue(unicodeFolderWasExtracted, @"Folders with names in unicode should be extracted propertly.");
+}
 
 // Commented out to avoid checking in several gig file into the repository. Simply add a file named
 // `LargeArchive.zip` to the project and uncomment out these lines to test.

@@ -11,6 +11,8 @@
 #import "zlib.h"
 #import "zconf.h"
 
+#include <sys/stat.h>
+
 #define CHUNK 16384
 
 @interface SSZipArchive ()
@@ -116,22 +118,27 @@
         // http://www.pkware.com/documents/casestudies/APPNOTE.TXT
         //
         // ...to deduce this method of detecting whether the file in the ZIP is a symbolic link.
-        // If it is, it is listed as a directory but has an uncompressed data size greater than
-        // zero (real directories have it equal to 0) and the included, uncompressed data is the
-        // symbolic link path.
+        // If it is, it is listed as a directory but has a data size greater than zero (real 
+        // directories have it equal to 0) and the included, uncompressed data is the symbolic link path.
+        //
+        // ZIP files did not originally include support for symbolic links so the specification
+        // doesn't include anything in them that isn't part of a unix extension that isn't being used
+        // by the archivers we're testing. Most of this is figured out through trial and error and
+        // reading ZIP headers in hex editors. This seems to do the trick though.
         //
         
-        const uLong ZipDirectoryVersion = 10;
         const uLong ZipCompressionMethodStore = 0;
         
         BOOL fileIsSymbolicLink = NO;
         
-        if((fileInfo.version_needed == ZipDirectoryVersion) && // Is it a directory?
-           (fileInfo.compression_method == ZipCompressionMethodStore) && // Is it compressed?
-           (fileInfo.compressed_size > 0)) // Is there any data there?
+        if((fileInfo.compression_method == ZipCompressionMethodStore) && // Is it compressed?
+           (S_ISDIR(fileInfo.external_fa)) && // Is it marked as a directory
+           (fileInfo.compressed_size > 0)) // Is there any data?
         {
             fileIsSymbolicLink = YES;
         }
+        
+        NSLog(@"%s, link: %@, dir: %@", filename, S_ISLNK(fileInfo.external_fa) ? @"Yes" : @"NO", S_ISDIR(fileInfo.external_fa) ? @"Yes" : @"No");
         
         //NSLog(@"\"%s\" is symbolic link? %@", filename, fileIsSymbolicLink ? @"Yes." : @"No.");
            
