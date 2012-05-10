@@ -138,10 +138,6 @@
             fileIsSymbolicLink = YES;
         }
         
-        NSLog(@"%s, link: %@, dir: %@", filename, S_ISLNK(fileInfo.external_fa) ? @"Yes" : @"NO", S_ISDIR(fileInfo.external_fa) ? @"Yes" : @"No");
-        
-        //NSLog(@"\"%s\" is symbolic link? %@", filename, fileIsSymbolicLink ? @"Yes." : @"No.");
-           
 		// Check if it contains directory
 		NSString *strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
 		BOOL isDirectory = NO;
