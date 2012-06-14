@@ -164,10 +164,10 @@
         if (nil != err) {
             NSLog(@"[SSZipArchive] Error: %@", err.localizedDescription);
         }
-
+        
         if(!fileIsSymbolicLink)
             [directoriesModificationDates addObject: [NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"path", modDate, @"modDate", nil]];
-
+        
         if ([fileManager fileExistsAtPath:fullPath] && !isDirectory && !overwrite) {
 			unzCloseCurrentFile(zip);
 			ret = unzGoToNextFile(zip);
@@ -179,7 +179,7 @@
             FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
             while (fp) {
                 int readBytes = unzReadCurrentFile(zip, buffer, 4096);
-
+                
                 if (readBytes > 0) {
                     fwrite(buffer, readBytes, 1, fp );
                 } else {
@@ -238,7 +238,7 @@
 		// Message delegate
 		if ([delegate respondsToSelector:@selector(zipArchiveDidUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
 			[delegate zipArchiveDidUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
-										 archivePath:path fileInfo:fileInfo];
+                                        archivePath:path fileInfo:fileInfo];
 		}
 		
 		currentFileNumber++;
@@ -275,23 +275,35 @@
 
 #pragma mark - Zipping
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths {
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths andDelegate:(id<SSZipArchiveDelegate>)delegate 
+{
 	BOOL success = NO;
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
 	if ([zipArchive open]) {
+        if([delegate respondsToSelector:@selector(zipArchiveWillZipArchiveAtPath:)])
+            dispatch_async(dispatch_get_main_queue(), ^{[delegate zipArchiveWillZipArchiveAtPath:path];});
+        
+        int total = [paths count];
+        int current = 1;
 		for (NSString *path in paths) {
 			[zipArchive writeFile:path];
+            
+            if([delegate respondsToSelector:@selector(zipArchiveDidProgress:on:)])
+                dispatch_async(dispatch_get_main_queue(), ^{[delegate zipArchiveDidProgress:current on:total];});
+            current ++;
 		}
-		success = [zipArchive close];        
+		success = [zipArchive close]; 
+        
+        if([delegate respondsToSelector:@selector(zipArchiveDidZipArchiveAtPath:withSuccess:)])
+            dispatch_async(dispatch_get_main_queue(), ^{[delegate zipArchiveDidZipArchiveAtPath:path withSuccess:success];});
 	}
 	
 #if !__has_feature(objc_arc)
 	[zipArchive release];
 #endif
-
+    
 	return success;
 }
-
 
 - (id)initWithPath:(NSString *)path {
 	if ((self = [super init])) {
@@ -331,22 +343,22 @@
 
 - (BOOL)writeFile:(NSString *)path {
 	NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
-
+    
 	FILE *input = fopen([path UTF8String], "r");
 	if (NULL == input) {
 		return NO;
 	}
-
+    
 	zipOpenNewFileInZip(_zip, [[path lastPathComponent] UTF8String], NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED,
 						Z_DEFAULT_COMPRESSION);
-
+    
 	void *buffer = malloc(CHUNK);
 	unsigned int len = 0;
 	while (!feof(input)) {
 		len = (unsigned int) fread(buffer, 1, CHUNK, input);
 		zipWriteInFileInZip(_zip, buffer, len);
 	}
-
+    
 	zipCloseFileInZip(_zip);
 	free(buffer);
 	return YES;
@@ -362,11 +374,11 @@
     }
     zip_fileinfo zipInfo = {{0,0,0,0,0,0},0,0,0};
     [self zipInfo:&zipInfo setDate:[NSDate date]];
-
+    
 	zipOpenNewFileInZip(_zip, [filename UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
-
+    
     zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
-
+    
 	zipCloseFileInZip(_zip);
 	return YES;
 }
@@ -398,9 +410,9 @@
 	
 	NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *components = [[NSDateComponents alloc] init];
-
+    
     NSAssert(0xFFFFFFFF == (kYearMask | kMonthMask | kDayMask | kHourMask | kMinuteMask | kSecondMask), @"[SSZipArchive] MSDOS date masks don't add up");
-	    
+    
     [components setYear:1980 + ((msdosDateTime & kYearMask) >> 25)];
     [components setMonth:(msdosDateTime & kMonthMask) >> 21];
     [components setDay:(msdosDateTime & kDayMask) >> 16];

@@ -21,8 +21,7 @@
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password error:(NSError **)error delegate:(id<SSZipArchiveDelegate>)delegate;
 
 // Zip
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)filenames;
-
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths andDelegate:(id<SSZipArchiveDelegate>)delegate;
 - (id)initWithPath:(NSString *)path;
 - (BOOL)open;
 - (BOOL)writeFile:(NSString *)path;
@@ -41,5 +40,9 @@
 
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
+
+- (void)zipArchiveWillZipArchiveAtPath:(NSString *)path;
+- (void)zipArchiveDidZipArchiveAtPath:(NSString *)path withSuccess:(BOOL)success;
+- (void)zipArchiveDidProgress:(int)current on:(int)total;
 
 @end
