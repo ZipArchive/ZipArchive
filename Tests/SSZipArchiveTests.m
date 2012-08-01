@@ -7,6 +7,7 @@
 //
 
 #import "SSZipArchive.h"
+#import "CollectingDelegate.h"
 #import <SenTestingKit/SenTestingKit.h>
 #import <CommonCrypto/CommonDigest.h>
 
@@ -131,6 +132,16 @@
 //	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
 //}
 
+-(void)testShouldProvidePathOfUnzippedFileInDelegateCallback {
+    CollectingDelegate *collector = [[CollectingDelegate new] autorelease];
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
+   	NSString *outputPath = [self _cachesPath:@"Regular"];
+
+   	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:collector];
+
+    STAssertEqualObjects([collector.files objectAtIndex:0], @"LICENSE", nil);
+    STAssertEqualObjects([collector.files objectAtIndex:1], @"Readme.markdown", nil);
+}
 
 #pragma mark - SSZipArchiveDelegate
 

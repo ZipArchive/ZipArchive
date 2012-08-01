@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A416BA09CD6A335F551C015 /* CollectingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A416109F75BF6E777908B04 /* CollectingDelegate.m */; };
 		B215FB32143AD3C7003AC546 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B215FB31143AD3C7003AC546 /* SenTestingKit.framework */; };
 		B215FB63143AD514003AC546 /* SSZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B215FB61143AD514003AC546 /* SSZipArchiveTests.m */; };
 		B215FB65143AD527003AC546 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B215FB64143AD527003AC546 /* libz.dylib */; };
@@ -24,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5A416109F75BF6E777908B04 /* CollectingDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectingDelegate.m; sourceTree = "<group>"; };
+		5A4164B83A2827BFD88C3CA1 /* CollectingDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectingDelegate.h; sourceTree = "<group>"; };
 		B215FB18143AD3C7003AC546 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B215FB30143AD3C7003AC546 /* SSZipArchiveTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SSZipArchiveTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B215FB31143AD3C7003AC546 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -120,6 +123,8 @@
 		B215FB5E143AD505003AC546 /* SSZipArchiveTests */ = {
 			isa = PBXGroup;
 			children = (
+				5A416109F75BF6E777908B04 /* CollectingDelegate.m */,
+				5A4164B83A2827BFD88C3CA1 /* CollectingDelegate.h */,
 				B2283D5C155AD80F00F9395A /* Unicode.zip */,
 				B215FB61143AD514003AC546 /* SSZipArchiveTests.m */,
 				B215FB5F143AD514003AC546 /* SSZipArchiveTests-Info.plist */,
@@ -220,6 +225,7 @@
 				B215FB69143AD576003AC546 /* mztools.c in Sources */,
 				B215FB6A143AD576003AC546 /* unzip.c in Sources */,
 				B215FB6B143AD576003AC546 /* zip.c in Sources */,
+				5A416BA09CD6A335F551C015 /* CollectingDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
