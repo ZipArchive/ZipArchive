@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name            = 'SSZipArchive'
-  s.version         = '0.2.2'
+  s.version         = '0.2.3'
   s.summary         = 'Utility class for zipping and unzipping files on iOS and Mac.'
   s.homepage        = 'https://github.com/samsoffes/ssziparchive'
   s.author          = { 'Sam Soffes' => 'sam@samsoff.es' }
