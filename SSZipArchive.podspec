@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.author          = { 'Sam Soffes' => 'sam@samsoff.es' }
   s.source          = { :git => 'https://github.com/samsoffes/ssziparchive.git', :tag => '0.2.2' }
   s.description     = 'SSZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.'
-  s.source_files    = 'SSZipArchive.*', 'minizip/*.{h,c}'
+  s.source_files    = 'SSZipArchive.{h,m}', 'minizip/*.{h,c}'
   s.library         = 'z'
   s.preserve_paths  = ['Tests', '.gitignore']
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
