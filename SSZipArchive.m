@@ -349,6 +349,7 @@
 
 	zipCloseFileInZip(_zip);
 	free(buffer);
+    fclose(input);
 	return YES;
 }
 
