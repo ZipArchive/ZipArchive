@@ -3,7 +3,7 @@
 //  SSZipArchive
 //
 //  Created by Sam Soffes on 7/21/10.
-//  Copyright (c) Sam Soffes 2010-2011. All rights reserved.
+//  Copyright (c) Sam Soffes 2010-2013. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
