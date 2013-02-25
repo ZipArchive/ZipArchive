@@ -1,0 +1,10 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rake (10.0.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rake
