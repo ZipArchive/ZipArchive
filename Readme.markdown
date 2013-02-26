@@ -34,6 +34,12 @@ NSArray *inputPaths = [NSArray arrayWithObjects:
 [SSZipArchive createZipFileAtPath:zippedPath withFilesAtPaths:inputPaths];
 ```
 
+## Tests
+
+Simply, open the Xcode project in the Tests directory and press Command-U to run the tests.
+
+[![Build Status](https://staging.travis-ci.org/soffes/ssziparchive.png?branch=master)](https://staging.travis-ci.org/soffes/ssziparchive)
+
 ## License
 
 SSZipArchive is licensed under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE).  A slightly modified version of [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.1 is also included and is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
