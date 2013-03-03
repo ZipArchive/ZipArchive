@@ -9,7 +9,8 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/soffes/ssziparchive.git', :tag => '0.2.3' }
   s.ios.deployment_target = '4.0'
   s.osx.deployment_target = '10.6'
-  s.source_files = 'SSZipArchive.{h,m}', 'minizip/*.{h,c}'
+  s.source_files = 'SSZipArchive.{h,m}', 'minizip/{crypt,unzip,zip,ioapi_buf,ioapi_mem,ioapi}.{h,c}', 'minizip/aes/*.{h,c}'
   s.preserve_paths = 'minizip'
   s.library      = 'z'
+  s.xcconfig = { "GCC_PREPROCESSOR_DEFINITIONS" => '$(inherited) HAVE_AES=1' }
 end
