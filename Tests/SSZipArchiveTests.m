@@ -26,16 +26,31 @@
 
 
 - (void)testZipping {
-	NSString *outputPath = [self _cachesPath:@"Zipped"];
+    // use extracted files from [-testUnzipping]
+	NSString *inputPath = [self _cachesPath:@"Regular"];
 	NSArray *inputPaths = [NSArray arrayWithObjects:
-						   [outputPath stringByAppendingPathComponent:@"Readme.markdown"],
-						   [outputPath stringByAppendingPathComponent:@"LICENSE"],
+						   [inputPath stringByAppendingPathComponent:@"Readme.markdown"],
+						   [inputPath stringByAppendingPathComponent:@"LICENSE"],
 	nil];
+    
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    
 	NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
 	[SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
 
 	// TODO: Make sure the files are actually unzipped. They are, but the test should be better.
 	STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+}
+
+- (void)testDirectoryZipping {
+    // use Unicode as folder (has a file in root and a file in subfolder)
+    NSString *inputPath = [self _cachesPath:@"Unicode"];
+    
+    NSString *outputPath = [self _cachesPath:@"FolderZipped"];
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"ArchiveWithFolders.zip"];
+    
+    [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputPath];
+    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Folder Archive created");
 }
 
 
