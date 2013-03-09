@@ -293,6 +293,35 @@
 }
 
 
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
+    BOOL success = NO;
+	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
+    
+	if ([zipArchive open]) {
+        // use a local filemanager (queue/thread compatibility)
+        NSFileManager *fileManager = [[NSFileManager alloc] init];
+        NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
+        
+		NSString *fileName;
+        while (fileName = [dirEnumerator nextObject]) {
+            BOOL isDir;
+            NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
+            [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
+            if (!isDir) {
+                [zipArchive writeFileAtPath:fullFilePath withFileName:fileName];
+            }
+        }
+        success = [zipArchive close];
+	}
+	
+#if !__has_feature(objc_arc)
+	[zipArchive release];
+#endif
+    
+	return success;
+}
+
+
 - (id)initWithPath:(NSString *)path {
 	if ((self = [super init])) {
 		_path = [path copy];
@@ -329,27 +358,43 @@
 }
 
 
-- (BOOL)writeFile:(NSString *)path {
-	NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
+- (BOOL)writeFile:(NSString *)path
+{
+    return [self writeFileAtPath:path withFileName:nil];
+}
 
+// supports writing files with logical folder/directory structure
+// *path* is the absolute path of the file that will be compressed
+// *fileName* is the relative name of the file how it is stored within the zip e.g. /folder/subfolder/text1.txt
+- (BOOL)writeFileAtPath:(NSString *)path withFileName:(NSString *)fileName {
+    NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
+    
 	FILE *input = fopen([path UTF8String], "r");
 	if (NULL == input) {
 		return NO;
 	}
-
-	zipOpenNewFileInZip(_zip, [[path lastPathComponent] UTF8String], NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED,
-						Z_DEFAULT_COMPRESSION);
-
+    
+    const char *afileName;
+    if (!fileName) {
+        afileName = [path.lastPathComponent UTF8String];
+    }
+    else {
+        afileName = [fileName UTF8String];
+    }
+    
+    zipOpenNewFileInZip(_zip, afileName, NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+    
 	void *buffer = malloc(CHUNK);
 	unsigned int len = 0;
-	while (!feof(input)) {
+	
+    while (!feof(input))
+    {
 		len = (unsigned int) fread(buffer, 1, CHUNK, input);
 		zipWriteInFileInZip(_zip, buffer, len);
 	}
-
+    
 	zipCloseFileInZip(_zip);
 	free(buffer);
-    fclose(input);
 	return YES;
 }
 
