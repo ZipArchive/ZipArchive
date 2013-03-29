@@ -358,6 +358,27 @@
 }
 
 
+- (void)zipInfo:(zip_fileinfo*)zipInfo setDateFromFile:(NSString*)path {
+    struct stat attrib; // create a file attribute structure
+    stat([path UTF8String], &attrib);   // get the attributes
+    
+    //Permissions need remapping, ignoring
+    //zfi.external_fa = attrib.st_mode;
+    
+    //Fix timezone
+    attrib.st_mtime += [[NSTimeZone systemTimeZone] secondsFromGMT];
+    
+    //Set file date
+    struct tm ptm = *gmtime(&(attrib.st_mtime));
+    zipInfo->dosDate = 0;
+    zipInfo->tmz_date.tm_year = ptm.tm_year;
+    zipInfo->tmz_date.tm_mon  = ptm.tm_mon;
+    zipInfo->tmz_date.tm_mday = ptm.tm_mday;
+    zipInfo->tmz_date.tm_hour = ptm.tm_hour;
+    zipInfo->tmz_date.tm_min  = ptm.tm_min;
+    zipInfo->tmz_date.tm_sec  = ptm.tm_sec;
+}
+
 - (BOOL)writeFile:(NSString *)path
 {
     return [self writeFileAtPath:path withFileName:nil];
@@ -382,7 +403,10 @@
         afileName = [fileName UTF8String];
     }
     
-    zipOpenNewFileInZip(_zip, afileName, NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+    zip_fileinfo zipInfo = {{0,0,0,0,0,0},0,0,0};
+    [self zipInfo:&zipInfo setDateFromFile:path];
+    
+    zipOpenNewFileInZip(_zip, afileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
     
 	void *buffer = malloc(CHUNK);
 	unsigned int len = 0;
