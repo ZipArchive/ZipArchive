@@ -3,13 +3,15 @@
 //  SSZipArchive
 //
 //  Created by Sam Soffes on 7/21/10.
-//  Copyright (c) Sam Soffes 2010-2011. All rights reserved.
+//  Copyright (c) Sam Soffes 2010-2013. All rights reserved.
 //
 
 #import "SSZipArchive.h"
 #include "minizip/zip.h"
 #import "zlib.h"
 #import "zconf.h"
+
+#include <sys/stat.h>
 
 #define CHUNK 16384
 
@@ -105,11 +107,37 @@
 			[delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
 										 archivePath:path fileInfo:fileInfo];
 		}
-		
+        
 		char *filename = (char *)malloc(fileInfo.size_filename + 1);
 		unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
 		filename[fileInfo.size_filename] = '\0';
-		
+        
+        //
+        // NOTE
+        // I used the ZIP spec from here:
+        // http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+        //
+        // ...to deduce this method of detecting whether the file in the ZIP is a symbolic link.
+        // If it is, it is listed as a directory but has a data size greater than zero (real 
+        // directories have it equal to 0) and the included, uncompressed data is the symbolic link path.
+        //
+        // ZIP files did not originally include support for symbolic links so the specification
+        // doesn't include anything in them that isn't part of a unix extension that isn't being used
+        // by the archivers we're testing. Most of this is figured out through trial and error and
+        // reading ZIP headers in hex editors. This seems to do the trick though.
+        //
+        
+        const uLong ZipCompressionMethodStore = 0;
+        
+        BOOL fileIsSymbolicLink = NO;
+        
+        if((fileInfo.compression_method == ZipCompressionMethodStore) && // Is it compressed?
+           (S_ISDIR(fileInfo.external_fa)) && // Is it marked as a directory
+           (fileInfo.compressed_size > 0)) // Is there any data?
+        {
+            fileIsSymbolicLink = YES;
+        }
+        
 		// Check if it contains directory
 		NSString *strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
 		BOOL isDirectory = NO;
@@ -137,41 +165,72 @@
             NSLog(@"[SSZipArchive] Error: %@", err.localizedDescription);
         }
 
-        [directoriesModificationDates addObject: [NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"path", modDate, @"modDate", nil]];
+        if(!fileIsSymbolicLink)
+            [directoriesModificationDates addObject: [NSDictionary dictionaryWithObjectsAndKeys:fullPath, @"path", modDate, @"modDate", nil]];
 
         if ([fileManager fileExistsAtPath:fullPath] && !isDirectory && !overwrite) {
 			unzCloseCurrentFile(zip);
 			ret = unzGoToNextFile(zip);
 			continue;
 		}
-		
-		FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
-		while (fp) {
-			int readBytes = unzReadCurrentFile(zip, buffer, 4096);
+        
+		if(!fileIsSymbolicLink)
+        {
+            FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
+            while (fp) {
+                int readBytes = unzReadCurrentFile(zip, buffer, 4096);
 
-			if (readBytes > 0) {
-				fwrite(buffer, readBytes, 1, fp );
-			} else {
-				break;
-			}
-		}
-		
-		if (fp) {
-			fclose(fp);
-			
-			// Set the original datetime property
-			if (fileInfo.dosDate != 0) {
-				NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
-				NSDictionary *attr = [NSDictionary dictionaryWithObject:orgDate forKey:NSFileModificationDate];
-				
-				if (attr) {
-					if ([fileManager setAttributes:attr ofItemAtPath:fullPath error:nil] == NO) {
-						// Can't set attributes 
-						NSLog(@"[SSZipArchive] Failed to set attributes");
-					}
-				}
-			}
-		}
+                if (readBytes > 0) {
+                    fwrite(buffer, readBytes, 1, fp );
+                } else {
+                    break;
+                }
+            }
+            
+            if (fp) {
+                fclose(fp);
+                
+                // Set the original datetime property
+                if (fileInfo.dosDate != 0) {
+                    NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+                    NSDictionary *attr = [NSDictionary dictionaryWithObject:orgDate forKey:NSFileModificationDate];
+                    
+                    if (attr) {
+                        if ([fileManager setAttributes:attr ofItemAtPath:fullPath error:nil] == NO) {
+                            // Can't set attributes 
+                            NSLog(@"[SSZipArchive] Failed to set attributes");
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            // Get the path for the symbolic link
+            
+            NSURL* symlinkURL = [NSURL fileURLWithPath:fullPath];
+            NSMutableString* destinationPath = [NSMutableString string];
+            
+            int bytesRead = 0;
+            while((bytesRead = unzReadCurrentFile(zip, buffer, 4096)) > 0)
+            {
+                buffer[bytesRead] = 0;
+                [destinationPath appendString:[NSString stringWithUTF8String:(const char*)buffer]];
+            }
+            
+            //NSLog(@"Symlinking to: %@", destinationPath);
+            
+            NSURL* destinationURL = [NSURL fileURLWithPath:destinationPath];
+            
+            // Create the symbolic link
+            NSError* symlinkError = nil;
+            [fileManager createSymbolicLinkAtURL:symlinkURL withDestinationURL:destinationURL error:&symlinkError];
+            
+            if(symlinkError != nil)
+            {
+                NSLog(@"Failed to create symbolic link at \"%@\" to \"%@\". Error: %@", symlinkURL.absoluteString, destinationURL.absoluteString, symlinkError.localizedDescription);
+            }
+        }
 		
 		unzCloseCurrentFile( zip );
 		ret = unzGoToNextFile( zip );
@@ -183,7 +242,7 @@
 		}
 		
 		currentFileNumber++;
-	} while(ret == UNZ_OK && UNZ_OK != UNZ_END_OF_LIST_OF_FILE);
+	} while(ret == UNZ_OK && ret != UNZ_END_OF_LIST_OF_FILE);
 	
 	// Close
 	unzClose(zip);
@@ -218,11 +277,31 @@
 
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths {
 	BOOL success = NO;
+    NSMutableString	*base;
+    
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
 	if ([zipArchive open]) {
+        
+        /*--------------new code--------------*/
+		base = [NSMutableString stringWithCapacity:0];
 		for (NSString *path in paths) {
-			[zipArchive writeFile:path];
+			
+			//extract the base path
+			[base setString:path];
+			if([[base substringFromIndex:([path length]-1)] isEqualToString:@"/"])
+				[base deleteCharactersInRange:NSMakeRange([path length]-1, 1)];
+			[base setString:[base substringToIndex:([base length]-[[path lastPathComponent] length])]];
+			
+			//NSLog(@"base path: %@",base);
+			[zipArchive writeFile:[path lastPathComponent] basePath:base];
 		}
+		/*-----------------------------------*/
+        
+        /*--------------old code-------------*/
+		/*for (NSString *path in paths) {
+			[zipArchive writeFile:path];
+		}*/
+        /*-----------------------------------*/
 		success = [zipArchive close];        
 	}
 	
@@ -230,6 +309,35 @@
 	[zipArchive release];
 #endif
 
+	return success;
+}
+
+
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
+    BOOL success = NO;
+	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
+    
+	if ([zipArchive open]) {
+        // use a local filemanager (queue/thread compatibility)
+        NSFileManager *fileManager = [[NSFileManager alloc] init];
+        NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
+        
+		NSString *fileName;
+        while (fileName = [dirEnumerator nextObject]) {
+            BOOL isDir;
+            NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
+            [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
+            if (!isDir) {
+                [zipArchive writeFileAtPath:fullFilePath withFileName:fileName];
+            }
+        }
+        success = [zipArchive close];
+	}
+	
+#if !__has_feature(objc_arc)
+	[zipArchive release];
+#endif
+    
 	return success;
 }
 
@@ -269,25 +377,112 @@
     zipInfo->tmz_date.tm_year = (unsigned int)components.year;
 }
 
+//Filename is the filename, or folder name, to be added to the zip file
+//and base is the base path of the filename
+//example:
+//	path of file to be added:	/home/test/file.txt
+//	filename should be: file.txt
+//	and base should be:	/home/test (with or without the "/", doesn't matter)
+//
+//to add a folder:
+//	path of the folder to be added:	/home/test/folder/
+//	filename should be: folder (with or without the "/", doesn't matter)
+//	and base should be:	/home/test (with or without the "/", doesn't matter)
+//
 
-- (BOOL)writeFile:(NSString *)path {
+- (BOOL)writeFile:(NSString *)filename basePath:(NSString *)base {
+	NSArray	*components;
+	NSString	*path;
+	BOOL	isDir;
+	int		i;
+	
 	NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
-
+    
+	//NSLog(@"write file: %@",filename);
+	
+	
+	path = [base stringByAppendingPathComponent:filename];	//the actual file (or folder) path
+	
+	if([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir] && isDir){
+		//NSLog(@"idDir");
+		//if is a folder, get its content
+		components = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+		
+		if(![components count]){
+			//if is an empty folder, add an empty one to the zip file
+			zipOpenNewFileInZip(_zip, [[filename stringByAppendingString:@"/"] UTF8String], NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED,Z_DEFAULT_COMPRESSION);
+			i=0;	//just a placeholder for the "buffer" to be passed
+			zipWriteInFileInZip(_zip,&i, 0);
+			zipCloseFileInZip(_zip);
+			return YES;
+		}
+		//otherwise, step through the folder content
+		for(i=0;i<[components count];i++){
+			//and add each file (or subfolder) recursively
+			if(![self writeFile:[filename stringByAppendingPathComponent:[components objectAtIndex:i]] basePath:base])
+				return NO;
+		}
+		return YES;
+	}
+	
+	
+	//NSLog(@"regular file");
 	FILE *input = fopen([path UTF8String], "r");
 	if (NULL == input) {
 		return NO;
 	}
-
-	zipOpenNewFileInZip(_zip, [[path lastPathComponent] UTF8String], NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED,
+	zipOpenNewFileInZip(_zip, [filename UTF8String], NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED,
 						Z_DEFAULT_COMPRESSION);
-
+    
+	
+	
 	void *buffer = malloc(CHUNK);
 	unsigned int len = 0;
 	while (!feof(input)) {
 		len = (unsigned int) fread(buffer, 1, CHUNK, input);
 		zipWriteInFileInZip(_zip, buffer, len);
 	}
+    
+	zipCloseFileInZip(_zip);
+	free(buffer);
+	return YES;
+}
 
+- (BOOL)writeFile:(NSString *)path
+{
+    return [self writeFileAtPath:path withFileName:nil];
+}
+
+// supports writing files with logical folder/directory structure
+// *path* is the absolute path of the file that will be compressed
+// *fileName* is the relative name of the file how it is stored within the zip e.g. /folder/subfolder/text1.txt
+- (BOOL)writeFileAtPath:(NSString *)path withFileName:(NSString *)fileName {
+    NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
+    
+	FILE *input = fopen([path UTF8String], "r");
+	if (NULL == input) {
+		return NO;
+	}
+    
+    const char *afileName;
+    if (!fileName) {
+        afileName = [path.lastPathComponent UTF8String];
+    }
+    else {
+        afileName = [fileName UTF8String];
+    }
+    
+    zipOpenNewFileInZip(_zip, afileName, NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+    
+	void *buffer = malloc(CHUNK);
+	unsigned int len = 0;
+	
+    while (!feof(input))
+    {
+		len = (unsigned int) fread(buffer, 1, CHUNK, input);
+		zipWriteInFileInZip(_zip, buffer, len);
+	}
+    
 	zipCloseFileInZip(_zip);
 	free(buffer);
 	return YES;
@@ -301,7 +496,7 @@
     if (!data) {
 		return NO;
     }
-    zip_fileinfo zipInfo = {0};
+    zip_fileinfo zipInfo = {{0,0,0,0,0,0},0,0,0};
     [self zipInfo:&zipInfo setDate:[NSDate date]];
 
 	zipOpenNewFileInZip(_zip, [filename UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);

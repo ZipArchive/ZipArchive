@@ -3,8 +3,11 @@
 //  SSZipArchive
 //
 //  Created by Sam Soffes on 7/21/10.
-//  Copyright (c) Sam Soffes 2010-2011. All rights reserved.
+//  Copyright (c) Sam Soffes 2010-2013. All rights reserved.
 //
+
+#ifndef _SSZIPARCHIVE_H
+#define _SSZIPARCHIVE_H
 
 #import <Foundation/Foundation.h>
 #include "minizip/unzip.h"
@@ -22,10 +25,12 @@
 
 // Zip
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)filenames;
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath;
 
 - (id)initWithPath:(NSString *)path;
 - (BOOL)open;
 - (BOOL)writeFile:(NSString *)path;
+- (BOOL)writeFile:(NSString *)filename basePath:(NSString *)base;
 - (BOOL)writeData:(NSData *)data filename:(NSString *)filename;
 - (BOOL)close;
 
@@ -43,3 +48,5 @@
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
 
 @end
+
+#endif /* _SSZIPARCHIVE_H */
