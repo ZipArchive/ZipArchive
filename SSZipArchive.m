@@ -382,6 +382,18 @@
         afileName = [fileName UTF8String];
     }
     
+    zip_fileinfo zipInfo = {0};
+
+    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
+    if( attr )
+    {
+      NSDate *fileDate = (NSDate *)[attr objectForKey:NSFileModificationDate];
+      if( fileDate )
+      {
+        [self zipInfo:&zipInfo setDate: fileDate ];
+      }
+    }
+	
     zipOpenNewFileInZip(_zip, afileName, NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
     
 	void *buffer = malloc(CHUNK);
