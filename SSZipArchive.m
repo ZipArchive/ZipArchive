@@ -295,15 +295,17 @@
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
     BOOL success = NO;
+    
+    NSFileManager *fileManager = nil;
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
     
 	if ([zipArchive open]) {
         // use a local filemanager (queue/thread compatibility)
-        NSFileManager *fileManager = [[NSFileManager alloc] init];
+        fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
         
 		NSString *fileName;
-        while (fileName = [dirEnumerator nextObject]) {
+        while ((fileName = [dirEnumerator nextObject])) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
@@ -315,6 +317,7 @@
 	}
 	
 #if !__has_feature(objc_arc)
+    [fileManager release];
 	[zipArchive release];
 #endif
     
@@ -382,7 +385,7 @@
         afileName = [fileName UTF8String];
     }
     
-    zip_fileinfo zipInfo = {0};
+    zip_fileinfo zipInfo = {{0}};
 
     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
     if( attr )
