@@ -385,7 +385,7 @@
         afileName = [fileName UTF8String];
     }
     
-    zip_fileinfo zipInfo = {0};
+    zip_fileinfo zipInfo = {{0}};
 
     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
     if( attr )
