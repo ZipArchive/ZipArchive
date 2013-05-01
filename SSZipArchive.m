@@ -295,11 +295,13 @@
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
     BOOL success = NO;
+    
+    NSFileManager *fileManager = nil;
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
     
 	if ([zipArchive open]) {
         // use a local filemanager (queue/thread compatibility)
-        NSFileManager *fileManager = [[NSFileManager alloc] init];
+        fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
         
 		NSString *fileName;
@@ -315,6 +317,7 @@
 	}
 	
 #if !__has_feature(objc_arc)
+    [fileManager release];
 	[zipArchive release];
 #endif
     
