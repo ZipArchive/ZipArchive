@@ -177,6 +177,9 @@
 		if(!fileIsSymbolicLink)
         {
             FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
+
+            int readBytesTotal = 0;
+            
             while (fp) {
                 int readBytes = unzReadCurrentFile(zip, buffer, 4096);
 
@@ -187,6 +190,14 @@
                 }
             }
             
+            if (readBytesTotal <= 0) {
+                success = NO;
+                
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"failed to unzip file (bad password)" forKey:NSLocalizedDescriptionKey];
+                if (error)
+                    *error = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-3 userInfo:userInfo];
+            }
+
             if (fp) {
                 fclose(fp);
                 
@@ -212,12 +223,20 @@
             NSMutableString* destinationPath = [NSMutableString string];
             
             int bytesRead = 0;
+            int bytesReadTotal = 0;
             while((bytesRead = unzReadCurrentFile(zip, buffer, 4096)) > 0)
             {
                 buffer[bytesRead] = 0;
                 [destinationPath appendString:[NSString stringWithUTF8String:(const char*)buffer]];
             }
             
+            if (bytesReadTotal <= 0) {
+                success = NO;
+                
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"failed to unzip file (bad password)" forKey:NSLocalizedDescriptionKey];
+                if (error)
+                    *error = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-3 userInfo:userInfo];
+            }
             //NSLog(@"Symlinking to: %@", destinationPath);
             
             NSURL* destinationURL = [NSURL fileURLWithPath:destinationPath];
