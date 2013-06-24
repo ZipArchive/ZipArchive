@@ -277,9 +277,23 @@
 
 #pragma mark - Zipping
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths {
++ (BOOL)createZipFileAtPath:(NSString *)path
+           withFilesAtPaths:(NSArray *)filenames {
+    return [SSZipArchive createZipFileAtPath:path
+                            withFilesAtPaths:filenames
+                                 andDelegate:nil];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path
+           withFilesAtPaths:(NSArray *)paths
+                andDelegate:(id<SSZipArchiveDelegate>)delegate {
 	BOOL success = NO;
     BOOL error = NO;
+    BOOL haveProgressCallback = [delegate respondsToSelector:@selector(zipArchiveDidProgress:outOf:)];
+    __block BOOL canceled = true;
+    NSUInteger total = [paths count];
+    NSUInteger completed = 0;
+    
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
 	if ([zipArchive open]) {
 		for (NSString *path in paths) {
@@ -288,14 +302,34 @@
                 error = YES;
                 break;
             }
+            completed++;
+            
+            if (haveProgressCallback)
+            {
+                dispatch_sync(dispatch_get_main_queue(),
+                              ^{
+                                  BOOL shouldContinue = [delegate zipArchiveDidProgress:completed outOf:total];
+                                  canceled = !shouldContinue;
+                              });
+            }
+            
+            if (canceled)
+                break;
 		}
-		success = [zipArchive close] && !error;
+		success = [zipArchive close] && !error && !canceled;
 	}
 	
 #if !__has_feature(objc_arc)
 	[zipArchive release];
 #endif
 
+    if ([delegate respondsToSelector:@selector(zipArchiveDidComplete:)])
+    {
+        dispatch_async(dispatch_get_main_queue(),
+                       ^{[delegate zipArchiveDidComplete:success];}
+                       );
+    }
+    
 	return success;
 }
 
