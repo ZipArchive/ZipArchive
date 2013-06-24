@@ -279,12 +279,17 @@
 
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths {
 	BOOL success = NO;
+    BOOL error = NO;
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
 	if ([zipArchive open]) {
 		for (NSString *path in paths) {
-			[zipArchive writeFile:path];
+			if (![zipArchive writeFile:path])
+            {
+                error = YES;
+                break;
+            }
 		}
-		success = [zipArchive close];        
+		success = [zipArchive close] && !error;
 	}
 	
 #if !__has_feature(objc_arc)
@@ -297,6 +302,7 @@
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
     BOOL success = NO;
+    BOOL error = NO;
     
     NSFileManager *fileManager = nil;
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
@@ -312,10 +318,14 @@
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
             if (!isDir) {
-                [zipArchive writeFileAtPath:fullFilePath withFileName:fileName];
+                if (![zipArchive writeFileAtPath:fullFilePath withFileName:fileName])
+                {
+                    error = YES;
+                    break;
+                }
             }
         }
-        success = [zipArchive close];
+        success = [zipArchive close] && !error;
 	}
 	
 #if !__has_feature(objc_arc)
@@ -373,7 +383,7 @@
 // *fileName* is the relative name of the file how it is stored within the zip e.g. /folder/subfolder/text1.txt
 - (BOOL)writeFileAtPath:(NSString *)path withFileName:(NSString *)fileName {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
-    
+    BOOL error = NO;
 	FILE *input = fopen([path UTF8String], "r");
 	if (NULL == input) {
 		return NO;
@@ -388,31 +398,43 @@
     }
     
     zip_fileinfo zipInfo = {{0}};
-
-    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
-    if( attr )
-    {
-      NSDate *fileDate = (NSDate *)[attr objectForKey:NSFileModificationDate];
-      if( fileDate )
-      {
-        [self zipInfo:&zipInfo setDate: fileDate ];
-      }
-    }
-	
-    zipOpenNewFileInZip(_zip, afileName, NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
     
-	void *buffer = malloc(CHUNK);
-	unsigned int len = 0;
-	
-    while (!feof(input))
+    if (!error)
     {
-		len = (unsigned int) fread(buffer, 1, CHUNK, input);
-		zipWriteInFileInZip(_zip, buffer, len);
+        NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
+        NSDate *fileDate = (NSDate *)[attr objectForKey:NSFileModificationDate];
+        if(fileDate)
+        {
+            [self zipInfo:&zipInfo setDate:fileDate];
+        }
+        
+        int openRes = zipOpenNewFileInZip(_zip, afileName, NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_BEST_COMPRESSION);
+        if (openRes != ZIP_OK)
+            error = YES;
+    }
+    
+	unsigned int len = 0;
+    void* buffer = malloc(CHUNK);
+    if (!buffer)
+        error = YES;
+	
+    while (!error && !feof(input))
+    {
+		len = (unsigned int)fread(buffer, 1, CHUNK, input);
+		int writeRes = zipWriteInFileInZip(_zip, buffer, len);
+        if (writeRes != Z_OK)
+            error = YES;
 	}
     
-	zipCloseFileInZip(_zip);
+	int closeRes = zipCloseFileInZip(_zip);
+    if (closeRes != Z_OK)
+        error = YES;
+    
 	free(buffer);
-	return YES;
+    fclose(input);
+    input = NULL;
+    
+	return !error;
 }
 
 
@@ -423,15 +445,27 @@
     if (!data) {
 		return NO;
     }
+    BOOL error = NO;
     zip_fileinfo zipInfo = {{0,0,0,0,0,0},0,0,0};
     [self zipInfo:&zipInfo setDate:[NSDate date]];
 
-	zipOpenNewFileInZip(_zip, [filename UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+    
+	int openRes = zipOpenNewFileInZip(_zip, [filename UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+    if (openRes != Z_OK)
+        error = YES;
 
-    zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
+    if (!error)
+    {
+        int writeRes = zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
+        if (writeRes != Z_OK)
+            error = YES;
+    }
 
-	zipCloseFileInZip(_zip);
-	return YES;
+	int closeRes = zipCloseFileInZip(_zip);
+    if (closeRes != Z_OK)
+        error = YES;
+
+	return !error;
 }
 
 
