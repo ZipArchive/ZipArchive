@@ -399,7 +399,7 @@
       }
     }
 	
-    zipOpenNewFileInZip(_zip, afileName, NULL, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+    zipOpenNewFileInZip(_zip, afileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
     
 	void *buffer = malloc(CHUNK);
 	unsigned int len = 0;
