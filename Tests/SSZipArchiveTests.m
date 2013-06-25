@@ -136,6 +136,26 @@
     STAssertTrue(unicodeFolderWasExtracted, @"Folders with names in unicode should be extracted propertly.");
 }
 
+- (void)testZippingAndUnzippingForDate {
+
+	NSString *inputPath = [self _cachesPath:@"Regular"];
+	NSArray *inputPaths = [NSArray arrayWithObjects:
+						   [inputPath stringByAppendingPathComponent:@"Readme.markdown"],
+						   nil];
+    
+	NSDictionary *originalFileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[inputPath stringByAppendingPathComponent:@"Readme.markdown"] error:nil];
+
+    NSString *outputPath = [self _cachesPath:@"ZippedDate"];
+	NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+	
+	[SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
+	[SSZipArchive unzipFileAtPath:archivePath toDestination:outputPath delegate:self];
+	
+	NSDictionary *createdFileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[outputPath stringByAppendingPathComponent:@"Readme.markdown"] error:nil];
+
+	STAssertEquals(originalFileAttributes[@"NSFileCreationDate"], createdFileAttributes[@"NSFileCreationDate"], @"Orginal file creationDate should match created one");
+}
+
 // Commented out to avoid checking in several gig file into the repository. Simply add a file named
 // `LargeArchive.zip` to the project and uncomment out these lines to test.
 //
