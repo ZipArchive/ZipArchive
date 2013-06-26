@@ -199,10 +199,31 @@
 	                    if (attr) {
 	                        if ([fileManager setAttributes:attr ofItemAtPath:fullPath error:nil] == NO) {
 	                            // Can't set attributes 
-	                            NSLog(@"[SSZipArchive] Failed to set attributes");
+	                            NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting modification date");
 	                        }
 	                    }
 	                }
+                    
+                    // Set the original permissions on the file
+                    if (fileInfo.external_fa != 0) {
+                        // Get the permissions
+                        uLong permissions = fileInfo.external_fa >> 16;
+                        
+                        // Store it into a NSNumber
+                        NSNumber *permissionsValue = @(permissions);
+                        
+                        // Retrieve any existing attributes
+                        NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:[fileManager attributesOfItemAtPath:fullPath error:nil]];
+                        
+                        // Set the value in the attributes dict
+                        attrs[NSFilePosixPermissions] = permissionsValue;
+                        
+                        // Update attributes
+                        if ([fileManager setAttributes:attrs ofItemAtPath:fullPath error:nil] == NO) {
+                            // Unable to set the permissions attribute
+                            NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting permissions");
+                        }
+                    }
 	            }
 	        }
 	        else
@@ -392,11 +413,28 @@
     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
     if( attr )
     {
-      NSDate *fileDate = (NSDate *)[attr objectForKey:NSFileModificationDate];
-      if( fileDate )
-      {
-        [self zipInfo:&zipInfo setDate: fileDate ];
-      }
+        NSDate *fileDate = (NSDate *)[attr objectForKey:NSFileModificationDate];
+        if( fileDate )
+        {
+            [self zipInfo:&zipInfo setDate: fileDate ];
+        }
+        
+        // Write permissions into the external attributes, for details on this see here: http://unix.stackexchange.com/a/14727
+        // Get the permissions value from the files attributes
+        NSNumber *permissionsValue = (NSNumber *)[attr objectForKey:NSFilePosixPermissions];
+        if (permissionsValue) {
+            // Get the short value for the permissions
+            short permissionsShort = permissionsValue.shortValue;
+            
+            // Convert this into an octal by adding 010000, 010000 being the flag for a regular file
+            NSInteger permissionsOctal = 0100000 + permissionsShort;
+            
+            // Convert this into a long value
+            uLong permissionsLong = @(permissionsOctal).unsignedLongValue;
+            
+            // Store this into the external file attributes once it has been shifted 16 places left to form part of the second from last byte
+            zipInfo.external_fa = permissionsLong << 16L;
+        }
     }
 	
     zipOpenNewFileInZip(_zip, afileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
