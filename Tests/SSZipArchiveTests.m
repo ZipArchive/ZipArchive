@@ -153,7 +153,47 @@
 	
 	NSDictionary *createdFileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[outputPath stringByAppendingPathComponent:@"Readme.markdown"] error:nil];
 
-	STAssertEquals(originalFileAttributes[@"NSFileCreationDate"], createdFileAttributes[@"NSFileCreationDate"], @"Orginal file creationDate should match created one");
+	STAssertEquals(originalFileAttributes[NSFileCreationDate], createdFileAttributes[@"NSFileCreationDate"], @"Orginal file creationDate should match created one");
+}
+
+- (void)testZippingAndUnzippingForPermissions {
+    // File we're going to test permissions on before and after zipping
+    NSString *targetFile = @"/Contents/MacOS/TestProject";
+    
+    
+    /********** Zipping ********/
+    
+    // The .app file we're going to zip up
+    NSString *inputFile = [[NSBundle mainBundle] pathForResource:@"PermissionsTestApp" ofType:@"app"];
+
+    // The path to the target file in the app before zipping
+    NSString *targetFilePreZipPath = [inputFile stringByAppendingPathComponent:targetFile];
+    
+    // Atribtues for the target file before zipping
+    NSDictionary *preZipAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:targetFilePreZipPath error:nil];
+    
+    // Directory to output our created zip file
+    NSString *outputDir = [self _cachesPath:@"PermissionsTest"];
+    // The path to where the archive shall be created
+    NSString *archivePath = [outputDir stringByAppendingPathComponent:@"TestAppArchive.zip"];
+    
+    // Create the zip file using the contents of the .app file as the input
+    [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputFile];
+    
+    
+    /********** Un-zipping *******/
+    
+    // Using this newly created zip file, unzip it
+    [SSZipArchive unzipFileAtPath:archivePath toDestination:outputDir];
+    
+    // Get the path to the target file after unzipping
+    NSString *targetFilePath = [outputDir stringByAppendingPathComponent:@"/Contents/MacOS/TestProject"];
+    
+    // Get the file attributes of the target file following the unzipping
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:targetFilePath error:nil];
+    
+    // Compare the value of the permissions attribute to assert equality
+    STAssertEquals(fileAttributes[NSFilePosixPermissions], preZipAttributes[NSFilePosixPermissions], @"File permissions should be retained during compression and de-compression");
 }
 
 // Commented out to avoid checking in several gig file into the repository. Simply add a file named

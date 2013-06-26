@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AF313D09177B02A700478143 /* PermissionsTestApp.app in Resources */ = {isa = PBXBuildFile; fileRef = AF313D08177B02A700478143 /* PermissionsTestApp.app */; };
 		B215FB32143AD3C7003AC546 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B215FB31143AD3C7003AC546 /* SenTestingKit.framework */; };
 		B215FB63143AD514003AC546 /* SSZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B215FB61143AD514003AC546 /* SSZipArchiveTests.m */; };
 		B215FB65143AD527003AC546 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B215FB64143AD527003AC546 /* libz.dylib */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AF313D08177B02A700478143 /* PermissionsTestApp.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = PermissionsTestApp.app; sourceTree = "<group>"; };
 		B215FB18143AD3C7003AC546 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B215FB30143AD3C7003AC546 /* SSZipArchiveTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SSZipArchiveTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B215FB31143AD3C7003AC546 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -120,6 +122,7 @@
 		B215FB5E143AD505003AC546 /* SSZipArchiveTests */ = {
 			isa = PBXGroup;
 			children = (
+				AF313D08177B02A700478143 /* PermissionsTestApp.app */,
 				B2283D5C155AD80F00F9395A /* Unicode.zip */,
 				B215FB61143AD514003AC546 /* SSZipArchiveTests.m */,
 				B215FB5F143AD514003AC546 /* SSZipArchiveTests-Info.plist */,
@@ -185,6 +188,7 @@
 			files = (
 				B215FB6D143AD6FF003AC546 /* TestArchive.zip in Resources */,
 				B23FCC7F1558F1B70026375C /* TestPasswordArchive.zip in Resources */,
+				AF313D09177B02A700478143 /* PermissionsTestApp.app in Resources */,
 				C5AE4E64155A12760045F3ED /* IncorrectHeaders.zip in Resources */,
 				C5AE4E6D155A8B010045F3ED /* SymbolicLink.zip in Resources */,
 				B2283D5D155AD80F00F9395A /* Unicode.zip in Resources */,
