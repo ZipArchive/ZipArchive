@@ -205,10 +205,8 @@
 	                }
                     
                     // Set the original permissions on the file
-                    if (fileInfo.external_fa != 0) {
-                        // Get the permissions
-                        uLong permissions = fileInfo.external_fa >> 16;
-                        
+                    uLong permissions = fileInfo.external_fa >> 16;
+                    if (permissions != 0) {
                         // Store it into a NSNumber
                         NSNumber *permissionsValue = @(permissions);
                         
