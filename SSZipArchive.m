@@ -495,7 +495,7 @@
 	static const UInt32 kMinuteMask = 0x7E0;
 	static const UInt32 kSecondMask = 0x1F;
 	
-	static NSCalendar *gregorian
+	static NSCalendar *gregorian;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
