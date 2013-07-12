@@ -495,7 +495,12 @@
 	static const UInt32 kMinuteMask = 0x7E0;
 	static const UInt32 kSecondMask = 0x1F;
 	
-	NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+	static NSCalendar *gregorian
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+	});
+    
     NSDateComponents *components = [[NSDateComponents alloc] init];
 
     NSAssert(0xFFFFFFFF == (kYearMask | kMonthMask | kDayMask | kHourMask | kMinuteMask | kSecondMask), @"[SSZipArchive] MSDOS date masks don't add up");
@@ -510,7 +515,6 @@
     NSDate *date = [NSDate dateWithTimeInterval:0 sinceDate:[gregorian dateFromComponents:components]];
 	
 #if !__has_feature(objc_arc)
-	[gregorian release];
 	[components release];
 #endif
 	
