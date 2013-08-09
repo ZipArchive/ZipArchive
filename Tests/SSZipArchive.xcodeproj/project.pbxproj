@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0472DDA417AF617E007BDB8D /* 0.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0472DD9C17AF617E007BDB8D /* 0.m4a */; };
+		0472DDA517AF617E007BDB8D /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0472DD9D17AF617E007BDB8D /* 1.m4a */; };
+		0472DDA617AF617E007BDB8D /* 2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0472DD9E17AF617E007BDB8D /* 2.m4a */; };
+		0472DDA717AF617E007BDB8D /* 3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0472DD9F17AF617E007BDB8D /* 3.m4a */; };
+		0472DDA817AF617E007BDB8D /* 4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0472DDA017AF617E007BDB8D /* 4.m4a */; };
+		0472DDA917AF617E007BDB8D /* 5.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0472DDA117AF617E007BDB8D /* 5.m4a */; };
+		0472DDAA17AF617E007BDB8D /* 6.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0472DDA217AF617E007BDB8D /* 6.m4a */; };
+		0472DDAB17AF617E007BDB8D /* 7.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 0472DDA317AF617E007BDB8D /* 7.m4a */; };
 		AF313D09177B02A700478143 /* PermissionsTestApp.app in Resources */ = {isa = PBXBuildFile; fileRef = AF313D08177B02A700478143 /* PermissionsTestApp.app */; };
 		B215FB32143AD3C7003AC546 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B215FB31143AD3C7003AC546 /* SenTestingKit.framework */; };
 		B215FB63143AD514003AC546 /* SSZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B215FB61143AD514003AC546 /* SSZipArchiveTests.m */; };
@@ -25,6 +33,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0472DD9C17AF617E007BDB8D /* 0.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0.m4a; sourceTree = "<group>"; };
+		0472DD9D17AF617E007BDB8D /* 1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1.m4a; sourceTree = "<group>"; };
+		0472DD9E17AF617E007BDB8D /* 2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2.m4a; sourceTree = "<group>"; };
+		0472DD9F17AF617E007BDB8D /* 3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3.m4a; sourceTree = "<group>"; };
+		0472DDA017AF617E007BDB8D /* 4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4.m4a; sourceTree = "<group>"; };
+		0472DDA117AF617E007BDB8D /* 5.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 5.m4a; sourceTree = "<group>"; };
+		0472DDA217AF617E007BDB8D /* 6.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 6.m4a; sourceTree = "<group>"; };
+		0472DDA317AF617E007BDB8D /* 7.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 7.m4a; sourceTree = "<group>"; };
 		AF313D08177B02A700478143 /* PermissionsTestApp.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; path = PermissionsTestApp.app; sourceTree = "<group>"; };
 		B215FB18143AD3C7003AC546 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B215FB30143AD3C7003AC546 /* SSZipArchiveTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SSZipArchiveTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +80,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0472DD9B17AF617E007BDB8D /* multi_zip_test */ = {
+			isa = PBXGroup;
+			children = (
+				0472DD9C17AF617E007BDB8D /* 0.m4a */,
+				0472DD9D17AF617E007BDB8D /* 1.m4a */,
+				0472DD9E17AF617E007BDB8D /* 2.m4a */,
+				0472DD9F17AF617E007BDB8D /* 3.m4a */,
+				0472DDA017AF617E007BDB8D /* 4.m4a */,
+				0472DDA117AF617E007BDB8D /* 5.m4a */,
+				0472DDA217AF617E007BDB8D /* 6.m4a */,
+				0472DDA317AF617E007BDB8D /* 7.m4a */,
+			);
+			path = multi_zip_test;
+			sourceTree = "<group>";
+		};
 		B215FB04143AD3C7003AC546 = {
 			isa = PBXGroup;
 			children = (
@@ -122,6 +153,7 @@
 		B215FB5E143AD505003AC546 /* SSZipArchiveTests */ = {
 			isa = PBXGroup;
 			children = (
+				0472DD9B17AF617E007BDB8D /* multi_zip_test */,
 				AF313D08177B02A700478143 /* PermissionsTestApp.app */,
 				B2283D5C155AD80F00F9395A /* Unicode.zip */,
 				B215FB61143AD514003AC546 /* SSZipArchiveTests.m */,
@@ -192,6 +224,14 @@
 				C5AE4E64155A12760045F3ED /* IncorrectHeaders.zip in Resources */,
 				C5AE4E6D155A8B010045F3ED /* SymbolicLink.zip in Resources */,
 				B2283D5D155AD80F00F9395A /* Unicode.zip in Resources */,
+				0472DDA417AF617E007BDB8D /* 0.m4a in Resources */,
+				0472DDA517AF617E007BDB8D /* 1.m4a in Resources */,
+				0472DDA617AF617E007BDB8D /* 2.m4a in Resources */,
+				0472DDA717AF617E007BDB8D /* 3.m4a in Resources */,
+				0472DDA817AF617E007BDB8D /* 4.m4a in Resources */,
+				0472DDA917AF617E007BDB8D /* 5.m4a in Resources */,
+				0472DDAA17AF617E007BDB8D /* 6.m4a in Resources */,
+				0472DDAB17AF617E007BDB8D /* 7.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
