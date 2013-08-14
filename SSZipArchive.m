@@ -81,12 +81,6 @@
 	NSInteger currentFileNumber = 0;
 	do {
 		@autoreleasepool {
-            ret = unzOpenCurrentFile(zip);
-            if (ret != UNZ_OK) {
-                success = NO;
-                break;
-            }
-            
             // Reading data and write to file
             unz_file_info fileInfo;
             memset(&fileInfo, 0, sizeof(unz_file_info));
@@ -99,11 +93,14 @@
             }
             if ([password length] > 0 && (fileInfo.flag & 1) == 1) {
                 ret = unzOpenCurrentFilePassword(zip, [password cStringUsingEncoding:NSASCIIStringEncoding]);
-                if (ret != UNZ_OK) {
-                    success = NO;
-                    unzCloseCurrentFile(zip);
-                    break;
-                }
+            } else {
+                ret = unzOpenCurrentFile(zip);
+            }
+            
+            if (ret != UNZ_OK) {
+                success = NO;
+                unzCloseCurrentFile(zip);
+                break;
             }
 			
 			// Message delegate
