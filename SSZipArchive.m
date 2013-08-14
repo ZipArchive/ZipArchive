@@ -99,6 +99,11 @@
             }
             if ([password length] > 0 && (fileInfo.flag & 1) == 1) {
                 ret = unzOpenCurrentFilePassword(zip, [password cStringUsingEncoding:NSASCIIStringEncoding]);
+                if (ret != UNZ_OK) {
+                    success = NO;
+                    unzCloseCurrentFile(zip);
+                    break;
+                }
             }
 			
 			// Message delegate
