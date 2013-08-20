@@ -11,3 +11,4 @@ Pod::Spec.new do |s|
   s.preserve_paths  = ['Tests', '.gitignore']
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.header_mappings_dir = '.'
+end
