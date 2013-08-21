@@ -46,6 +46,8 @@
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
 
+- (BOOL)zipArchiveShouldlUnzipFileAtIndex:(NSInteger)fileIndex filePath:(NSString *)fileName archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
+
 @end
 
 #endif /* _SSZIPARCHIVE_H */
