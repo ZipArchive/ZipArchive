@@ -19,11 +19,42 @@
 + (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime;
 @end
 
+/*
+ - (void)zipArchiveWillUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo;
+ - (void)zipArchiveDidUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo unzippedPath:(NSString *)unzippedPath;
+ 
+ - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
+ - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
+ 
+ - (BOOL)zipArchiveShouldlUnzipFileAtIndex:(NSInteger)fileIndex filePath:(NSString *)fileName archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
+
+ 
+ */
+
+typedef struct {
+    BOOL zipArchiveWillUnzipArchiveAtPath;
+    BOOL zipArchiveDidUnzipArchiveAtPath;
+    BOOL zipArchiveWillUnzipFileAtIndex;
+    BOOL zipArchiveDidUnzipFileAtIndex;
+    BOOL zipArchiveShouldlUnzipFileAtIndex;
+} DelegationMethodsMask;
 
 @implementation SSZipArchive {
 	NSString *_path;
 	NSString *_filename;
     zipFile _zip;
+}
+
+#pragma mark
+
++ (DelegationMethodsMask)delegationMaskForDelegate:(id)delegate {
+    DelegationMethodsMask delegationMask;
+    delegationMask.zipArchiveWillUnzipArchiveAtPath = [delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:zipInfo:)];
+    delegationMask.zipArchiveDidUnzipArchiveAtPath = [delegate respondsToSelector:@selector(zipArchiveDidUnzipArchiveAtPath:zipInfo:unzippedPath:)];
+    delegationMask.zipArchiveWillUnzipFileAtIndex = [delegate respondsToSelector:@selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)];
+    delegationMask.zipArchiveDidUnzipFileAtIndex = [delegate respondsToSelector:@selector(zipArchiveDidUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)];
+    delegationMask.zipArchiveShouldlUnzipFileAtIndex = [delegate respondsToSelector:@selector(zipArchiveShouldlUnzipFileAtIndex:filePath:archivePath:fileInfo:)];
+    return delegationMask;
 }
 
 
@@ -45,6 +76,9 @@
 
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password error:(NSError **)error delegate:(id<SSZipArchiveDelegate>)delegate {
+    // check for delegates
+    DelegationMethodsMask delegationMask = [self delegationMaskForDelegate:delegate];
+    
 	// Begin opening
 	zipFile zip = unzOpen((const char*)[path UTF8String]);	
 	if (zip == NULL) {
@@ -74,44 +108,45 @@
 	NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
 	
 	// Message delegate
-	if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:zipInfo:)]) {
+	if (delegationMask.zipArchiveWillUnzipArchiveAtPath) {
 		[delegate zipArchiveWillUnzipArchiveAtPath:path zipInfo:globalInfo];
 	}
 	
 	NSInteger currentFileNumber = 0;
 	do {
 		@autoreleasepool {
-			if ([password length] == 0) {
-				ret = unzOpenCurrentFile(zip);
-			} else {
-				ret = unzOpenCurrentFilePassword(zip, [password cStringUsingEncoding:NSASCIIStringEncoding]);
-			}
-			
-			if (ret != UNZ_OK) {
-				success = NO;
-				break;
-			}
-			
-			// Reading data and write to file
-			unz_file_info fileInfo;
-			memset(&fileInfo, 0, sizeof(unz_file_info));
-			
-			ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
-			if (ret != UNZ_OK) {
-				success = NO;
-				unzCloseCurrentFile(zip);
-				break;
-			}
+            // Reading data and write to file
+            unz_file_info fileInfo;
+            memset(&fileInfo, 0, sizeof(unz_file_info));
+            
+            ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
+            
+            if (ret != UNZ_OK) {
+                success = NO;
+                unzCloseCurrentFile(zip);
+                break;
+            }
+             
+            if ([password length] > 0 && (fileInfo.flag & 1) == 1) {
+                ret = unzOpenCurrentFilePassword(zip, [password cStringUsingEncoding:NSASCIIStringEncoding]);
+            } else {
+                ret = unzOpenCurrentFile(zip);
+            }
+            
+            if (ret != UNZ_OK) {
+                success = NO;
+                unzCloseCurrentFile(zip);
+                break;
+            }
 			
 			// Message delegate
-			if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
-				[delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
-											 archivePath:path fileInfo:fileInfo];
+			if (delegationMask.zipArchiveWillUnzipFileAtIndex) {
+				[delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry archivePath:path fileInfo:fileInfo];
 			}
 	        
-			char *filename = (char *)malloc(fileInfo.size_filename + 1);
-			unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
-			filename[fileInfo.size_filename] = '\0';
+            char *filename = (char *)malloc(fileInfo.size_filename + 1);
+            unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
+            filename[fileInfo.size_filename] = '\0';
 	        
 	        //
 	        // NOTE
@@ -127,7 +162,9 @@
 	        // by the archivers we're testing. Most of this is figured out through trial and error and
 	        // reading ZIP headers in hex editors. This seems to do the trick though.
 	        //
-	        
+
+            
+            
 	        const uLong ZipCompressionMethodStore = 0;
 	        
 	        BOOL fileIsSymbolicLink = NO;
@@ -138,9 +175,10 @@
 	        {
 	            fileIsSymbolicLink = YES;
 	        }
-	        
-			// Check if it contains directory
-			NSString *strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
+            
+            NSString *strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
+            // Check if it contains directory
+			
 			BOOL isDirectory = NO;
 			if (filename[fileInfo.size_filename-1] == '/' || filename[fileInfo.size_filename-1] == '\\') {
 				isDirectory = YES;
@@ -152,6 +190,12 @@
 				strPath = [strPath stringByReplacingOccurrencesOfString:@"\\" withString:@"/"];
 			}
 			
+             if (delegationMask.zipArchiveShouldlUnzipFileAtIndex && ![delegate zipArchiveShouldlUnzipFileAtIndex:currentFileNumber filePath:strPath archivePath:path fileInfo:fileInfo]) {
+                unzCloseCurrentFile(zip);
+                ret = unzGoToNextFile(zip);
+                continue;
+            }
+ 	        
 			NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
 			NSError *err = nil;
 	        NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
@@ -256,7 +300,7 @@
 			ret = unzGoToNextFile( zip );
 			
 			// Message delegate
-			if ([delegate respondsToSelector:@selector(zipArchiveDidUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
+			if (delegationMask.zipArchiveDidUnzipFileAtIndex) {
 				[delegate zipArchiveDidUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
 											 archivePath:path fileInfo:fileInfo];
 			}
@@ -286,7 +330,7 @@
 #endif
 	
 	// Message delegate
-	if (success && [delegate respondsToSelector:@selector(zipArchiveDidUnzipArchiveAtPath:zipInfo:unzippedPath:)]) {
+	if (success && delegationMask.zipArchiveDidUnzipArchiveAtPath) {
 		[delegate zipArchiveDidUnzipArchiveAtPath:path zipInfo:globalInfo unzippedPath:destination];
 	}
 	
