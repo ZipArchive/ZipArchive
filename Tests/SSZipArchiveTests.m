@@ -7,22 +7,18 @@
 //
 
 #import "SSZipArchive.h"
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <CommonCrypto/CommonDigest.h>
 
-@interface SSZipArchiveTests : SenTestCase <SSZipArchiveDelegate>
-
-- (NSString *)_cachesPath:(NSString *)directory;
-
-- (NSString *)_calculateMD5Digest:(NSData *)data;
-
+@interface SSZipArchiveTests : XCTestCase <SSZipArchiveDelegate>
 @end
 
 @implementation SSZipArchiveTests
 
-//- (void)setUp {
-//	[[NSFileManager defaultManager] removeItemAtPath:[self _cachesPath:nil] error:nil];
-//}
+- (void)tearDown {
+	[super tearDown];
+	[[NSFileManager defaultManager] removeItemAtPath:[self _cachesPath:nil] error:nil];
+}
 
 
 - (void)testZipping {
@@ -39,8 +35,9 @@
 	[SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
 
 	// TODO: Make sure the files are actually unzipped. They are, but the test should be better.
-	STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+	XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
 }
+
 
 - (void)testDirectoryZipping {
     // use Unicode as folder (has a file in root and a file in subfolder)
@@ -50,7 +47,7 @@
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"ArchiveWithFolders.zip"];
     
     [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputPath];
-    STAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Folder Archive created");
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Folder Archive created");
 }
 
 
@@ -62,10 +59,10 @@
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
-	STAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
+	XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
 	
 	testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
-	STAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
+	XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
 
 
@@ -78,11 +75,12 @@
 	
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
-	STAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
+	XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
 	
 	testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
-	STAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
+	XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
+
 
 - (void)testUnzippingTruncatedFileFix {
     NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IncorrectHeaders" ofType:@"zip"];
@@ -96,8 +94,9 @@
     NSData* data = [NSData dataWithContentsOfFile:filePath];
     
     NSString* actualReadmeTxtMD5 = [self _calculateMD5Digest:data];
-    STAssertTrue([actualReadmeTxtMD5 isEqualToString:intendedReadmeTxtMD5], @"Readme.txt MD5 digest should match original.");
+    XCTAssertTrue([actualReadmeTxtMD5 isEqualToString:intendedReadmeTxtMD5], @"Readme.txt MD5 digest should match original.");
 }
+
 
 - (void)testUnzippingWithSymlinkedFileInside {
     
@@ -118,8 +117,9 @@
     NSString *symlinkFilePath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlinkFile error:&error];
     bool symbolicLinkToFilePersists = ((symlinkFilePath != nil) && [symlinkFilePath isEqualToString:@"/Applications/GitHub.app/Contents/Resources/AppIcon.icns"]) && (error == nil);
     
-    STAssertTrue(symbolicLinkToFilePersists && symbolicLinkToFolderPersists, @"Symbolic links should persist from the original archive to the outputted files.");
+    XCTAssertTrue(symbolicLinkToFilePersists && symbolicLinkToFolderPersists, @"Symbolic links should persist from the original archive to the outputted files.");
 }
+
 
 - (void)testUnzippingWithUnicodeFilenameInside {
     
@@ -132,9 +132,10 @@
     
     bool unicodeFolderWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:[outputPath stringByAppendingPathComponent:@"Fólder/Nothing.txt"]];
     
-    STAssertTrue(unicodeFilenameWasExtracted, @"Files with filenames in unicode should be extracted properly.");
-    STAssertTrue(unicodeFolderWasExtracted, @"Folders with names in unicode should be extracted propertly.");
+    XCTAssertTrue(unicodeFilenameWasExtracted, @"Files with filenames in unicode should be extracted properly.");
+    XCTAssertTrue(unicodeFolderWasExtracted, @"Folders with names in unicode should be extracted propertly.");
 }
+
 
 - (void)testZippingAndUnzippingForDate {
 
@@ -153,8 +154,9 @@
 	
 	NSDictionary *createdFileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[outputPath stringByAppendingPathComponent:@"Readme.markdown"] error:nil];
 
-	STAssertEquals(originalFileAttributes[NSFileCreationDate], createdFileAttributes[@"NSFileCreationDate"], @"Orginal file creationDate should match created one");
+	XCTAssertEqualObjects(originalFileAttributes[NSFileCreationDate], createdFileAttributes[@"NSFileCreationDate"], @"Orginal file creationDate should match created one");
 }
+
 
 - (void)testZippingAndUnzippingForPermissions {
     // File we're going to test permissions on before and after zipping
@@ -193,7 +195,7 @@
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:targetFilePath error:nil];
     
     // Compare the value of the permissions attribute to assert equality
-    STAssertEquals(fileAttributes[NSFilePosixPermissions], preZipAttributes[NSFilePosixPermissions], @"File permissions should be retained during compression and de-compression");
+    XCTAssertEqual(fileAttributes[NSFilePosixPermissions], preZipAttributes[NSFilePosixPermissions], @"File permissions should be retained during compression and de-compression");
 }
 
 // Commented out to avoid checking in several gig file into the repository. Simply add a file named
@@ -220,12 +222,12 @@
 
 
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-	NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%ld` totalFiles: `%ld` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
+	NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
 }
 
 
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-	NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%ld` totalFiles: `%ld` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
+	NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
 }
 
 
