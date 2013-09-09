@@ -11,7 +11,7 @@ SSZipArchive is a simple utility class for zipping and unzipping files. Features
 
 ## Adding to your project
 
-1. Add the `SSZipArchive` folder to your project.
+1. Add the `SSZipArchive` and `minizip` folders to your project.
 2. Add the `libz` library to your target
 
 SSZipArchive requires ARC.
