@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SSZipArchive'
-  s.version      = '0.3.0'
+  s.version      = '0.3.1'
   s.summary      = 'Utility class for zipping and unzipping files on iOS and Mac.'
   s.description  = 'SSZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.'
   s.homepage     = 'https://github.com/soffes/ssziparchive'
@@ -9,7 +9,8 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/soffes/ssziparchive.git', :tag => "v#{s.version}" }
   s.ios.deployment_target = '4.0'
   s.osx.deployment_target = '10.6'
-  s.source_files = 'SSZipArchive/SSZipArchive.{h,m}', 'SSZipArchive/minizip/*.{h,c}'
-  s.header_dir = 'SSZipArchive/minizip'
-  s.library      = 'z'
+  s.source_files = 'SSZipArchive/SSZipArchive.{h,m}', 'minizip'
+  s.header_dir = 'minizip'
+  s.preserve_paths = 'minizip'
+  s.library = 'z'
 end
