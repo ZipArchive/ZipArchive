@@ -9,8 +9,6 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/soffes/ssziparchive.git', :tag => "v#{s.version}" }
   s.ios.deployment_target = '4.0'
   s.osx.deployment_target = '10.6'
-  s.source_files = 'SSZipArchive/SSZipArchive.{h,m}', 'minizip'
-  s.header_dir = 'minizip'
-  s.preserve_paths = 'minizip'
+  s.source_files = 'SSZipArchive/*'
   s.library = 'z'
 end
