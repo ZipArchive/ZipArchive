@@ -71,7 +71,7 @@
 		210D525117DEFB880060D41A /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
 		210D525217DEFB880060D41A /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
 		210D525317DEFB880060D41A /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
-		21CC41A517DB7D1300201DDC /* SSZipArchive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SSZipArchive.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		21CC41A517DB7D1300201DDC /* SSZipArchiveExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SSZipArchiveExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21CC41A817DB7D1300201DDC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		21CC41AA17DB7D1300201DDC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		21CC41AC17DB7D1300201DDC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -165,7 +165,7 @@
 		21CC41A617DB7D1300201DDC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				21CC41A517DB7D1300201DDC /* SSZipArchive.app */,
+				21CC41A517DB7D1300201DDC /* SSZipArchiveExample.app */,
 				A778373318270D9D00EBBB29 /* libSSZipArchive.a */,
 				A778374018270D9D00EBBB29 /* SSZipArchiveTests.xctest */,
 			);
@@ -287,7 +287,7 @@
 			);
 			name = SSZipArchiveExample;
 			productName = SSZipArchive;
-			productReference = 21CC41A517DB7D1300201DDC /* SSZipArchive.app */;
+			productReference = 21CC41A517DB7D1300201DDC /* SSZipArchiveExample.app */;
 			productType = "com.apple.product-type.application";
 		};
 		A778373218270D9D00EBBB29 /* SSZipArchive */ = {
@@ -536,6 +536,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -559,7 +560,7 @@
 		A778375318270D9D00EBBB29 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -573,6 +574,7 @@
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "Tests/SSZipArchiveTests-Info.plist";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -581,7 +583,7 @@
 		A778375418270D9D00EBBB29 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -624,6 +626,7 @@
 				A778375118270D9D00EBBB29 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A778375218270D9D00EBBB29 /* Build configuration list for PBXNativeTarget "SSZipArchiveTests" */ = {
 			isa = XCConfigurationList;
@@ -632,6 +635,7 @@
 				A778375418270D9D00EBBB29 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
