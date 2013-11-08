@@ -224,34 +224,27 @@
                     }
 	            }
 	        }
-	        else
-	        {
-	            // Get the path for the symbolic link
-	            
-	            NSURL* symlinkURL = [NSURL fileURLWithPath:fullPath];
-	            NSMutableString* destinationPath = [NSMutableString string];
-	            
-	            int bytesRead = 0;
-	            while((bytesRead = unzReadCurrentFile(zip, buffer, 4096)) > 0)
-	            {
-	                buffer[bytesRead] = 0;
-	                [destinationPath appendString:[NSString stringWithUTF8String:(const char*)buffer]];
-	            }
-	            
-	            //NSLog(@"Symlinking to: %@", destinationPath);
-	            
-	            NSURL* destinationURL = [NSURL fileURLWithPath:destinationPath];
-	            
-	            // Create the symbolic link
-	            NSError* symlinkError = nil;
-	            [fileManager createSymbolicLinkAtURL:symlinkURL withDestinationURL:destinationURL error:&symlinkError];
-	            
-	            if(symlinkError != nil)
-	            {
-	                NSLog(@"Failed to create symbolic link at \"%@\" to \"%@\". Error: %@", symlinkURL.absoluteString, destinationURL.absoluteString, symlinkError.localizedDescription);
-	            }
-	        }
-			
+            else
+            {
+                // Assemble the path for the symbolic link
+                NSMutableString* destinationPath = [NSMutableString string];
+                int bytesRead = 0;
+                while((bytesRead = unzReadCurrentFile(zip, buffer, 4096)) > 0)
+                {
+                    buffer[bytesRead] = 0;
+                    [destinationPath appendString:[NSString stringWithUTF8String:(const char*)buffer]];
+                }
+
+                // Create the symbolic link (making sure it stays relative if it was relative before)
+                int symlinkError = symlink([destinationPath cStringUsingEncoding:NSUTF8StringEncoding],
+                                           [fullPath cStringUsingEncoding:NSUTF8StringEncoding]);
+
+                if(symlinkError != 0)
+                {
+                    NSLog(@"Failed to create symbolic link at \"%@\" to \"%@\". symlink() error code: %d", fullPath, destinationPath, errno);
+                }
+            }
+
 			unzCloseCurrentFile( zip );
 			ret = unzGoToNextFile( zip );
 			
