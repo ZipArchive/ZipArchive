@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		011F4B96182D71B700DE704F /* RelativeSymbolicLink.zip in Resources */ = {isa = PBXBuildFile; fileRef = 011F4B95182D71B700DE704F /* RelativeSymbolicLink.zip */; };
+		011F4B97182D72B400DE704F /* RelativeSymbolicLink.zip in Resources */ = {isa = PBXBuildFile; fileRef = 011F4B95182D71B700DE704F /* RelativeSymbolicLink.zip */; };
 		210D525417DEFB880060D41A /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 210D524C17DEFB880060D41A /* ioapi.c */; };
 		210D525517DEFB880060D41A /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 210D524C17DEFB880060D41A /* ioapi.c */; };
 		210D525617DEFB880060D41A /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 210D524E17DEFB880060D41A /* mztools.c */; };
@@ -48,6 +50,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		011F4B95182D71B700DE704F /* RelativeSymbolicLink.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = RelativeSymbolicLink.zip; sourceTree = "<group>"; };
 		210D524B17DEFB880060D41A /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
 		210D524C17DEFB880060D41A /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
 		210D524D17DEFB880060D41A /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
@@ -179,6 +182,7 @@
 		21CC41EF17DB7D3500201DDC /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				011F4B95182D71B700DE704F /* RelativeSymbolicLink.zip */,
 				21CC41F017DB7D3500201DDC /* IncorrectHeaders.zip */,
 				21CC41F117DB7D3500201DDC /* PermissionsTestApp.app */,
 				21CC41F217DB7D3500201DDC /* SymbolicLink.zip */,
@@ -303,6 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				21CC420F17DB7D6F00201DDC /* Images.xcassets in Resources */,
+				011F4B96182D71B700DE704F /* RelativeSymbolicLink.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +315,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				011F4B97182D72B400DE704F /* RelativeSymbolicLink.zip in Resources */,
 				21CC41F817DB7D3500201DDC /* IncorrectHeaders.zip in Resources */,
 				21CC41FD17DB7D3500201DDC /* Unicode.zip in Resources */,
 				21CC41FA17DB7D3500201DDC /* SymbolicLink.zip in Resources */,

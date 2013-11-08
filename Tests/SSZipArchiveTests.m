@@ -120,6 +120,36 @@
     XCTAssertTrue(symbolicLinkToFilePersists && symbolicLinkToFolderPersists, @"Symbolic links should persist from the original archive to the outputted files.");
 }
 
+- (void)testUnzippingWithRelativeSymlink {
+
+    NSString *resourceName = @"RelativeSymbolicLink";
+    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:resourceName ofType:@"zip"];
+    NSString* outputPath = [self _cachesPath:resourceName];
+
+    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
+
+    // Determine where the symlinks are
+    NSString *subfolderName = @"symlinks";
+    NSString *testBasePath = [NSString pathWithComponents:@[outputPath, resourceName]];
+    NSString *testSymlinkFolder = [NSString pathWithComponents:@[testBasePath, subfolderName, @"folderSymlink"]];
+    NSString *testSymlinkFile = [NSString pathWithComponents:@[testBasePath, subfolderName, @"fileSymlink"]];
+
+    // Determine where the files they link to are
+    NSString *parentDir = @"../";
+    NSString *testSymlinkFolderTarget = [NSString pathWithComponents:@[parentDir, @"symlinkedFolder"]];
+    NSString *testSymlinkFileTarget = [NSString pathWithComponents:@[parentDir, @"symlinkedFile"]];
+
+    NSError *error = nil;
+    NSString *symlinkFolderPath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlinkFolder error:&error];
+    bool symbolicLinkToFolderPersists = ((symlinkFolderPath != nil) && [symlinkFolderPath isEqualToString:testSymlinkFolderTarget]) && (error == nil);
+
+    error = nil;
+
+    NSString *symlinkFilePath = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:testSymlinkFile error:&error];
+    bool symbolicLinkToFilePersists = ((symlinkFilePath != nil) && [symlinkFilePath isEqualToString:testSymlinkFileTarget]) && (error == nil);
+
+    XCTAssertTrue(symbolicLinkToFilePersists && symbolicLinkToFolderPersists, @"Relative symbolic links should persist from the original archive to the outputted files (and also remain relative).");
+}
 
 - (void)testUnzippingWithUnicodeFilenameInside {
     
