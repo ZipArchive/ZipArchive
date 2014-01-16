@@ -114,28 +114,22 @@
 			filename[fileInfo.size_filename] = '\0';
 
 	        //
-	        // NOTE
-	        // I used the ZIP spec from here:
-	        // http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+	        // Determine whether this is a symbolic link:
+	        // - File is stored with 'version made by' value of UNIX (3),
+	        //   as per http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+	        //   in the upper byte of the version field.
+	        // - BSD4.4 st_mode constants are stored in the high 16 bits of the
+	        //   external file attributes (defacto standard, verified against libarchive)
 	        //
-	        // ...to deduce this method of detecting whether the file in the ZIP is a symbolic link.
-	        // If it is, it is listed as a directory but has a data size greater than zero (real
-	        // directories have it equal to 0) and the included, uncompressed data is the symbolic link path.
+	        // The original constants can be found here:
+	        //    http://minnie.tuhs.org/cgi-bin/utree.pl?file=4.4BSD/usr/include/sys/stat.h
 	        //
-	        // ZIP files did not originally include support for symbolic links so the specification
-	        // doesn't include anything in them that isn't part of a unix extension that isn't being used
-	        // by the archivers we're testing. Most of this is figured out through trial and error and
-	        // reading ZIP headers in hex editors. This seems to do the trick though.
-	        //
-
-	        const uLong ZipCompressionMethodStore = 0;
+	        const uLong ZipUNIXVersion = 3;
+	        const uLong BSD_SFMT = 0170000;
+	        const uLong BSD_IFLNK = 0120000;
 
 	        BOOL fileIsSymbolicLink = NO;
-
-	        if((fileInfo.compression_method == ZipCompressionMethodStore) && // Is it compressed?
-	           (S_ISDIR(fileInfo.external_fa)) && // Is it marked as a directory
-	           (fileInfo.compressed_size > 0)) // Is there any data?
-	        {
+	        if (((fileInfo.version >> 8) == ZipUNIXVersion) && BSD_IFLNK == (BSD_SFMT & (fileInfo.external_fa >> 16))) {
 	            fileIsSymbolicLink = YES;
 	        }
 
