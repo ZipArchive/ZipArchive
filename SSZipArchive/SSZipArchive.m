@@ -171,6 +171,9 @@
 			}
 
 			NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
+            if (fullPath) {
+                [unarchivedFilePaths addObject:fullPath];
+            }
 			NSError *err = nil;
 	        NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
 	        NSDictionary *directoryAttr = [NSDictionary dictionaryWithObjectsAndKeys:modDate, NSFileCreationDate, modDate, NSFileModificationDate, nil];
