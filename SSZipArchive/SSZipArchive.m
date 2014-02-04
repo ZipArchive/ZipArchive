@@ -78,6 +78,8 @@
 		[delegate zipArchiveWillUnzipArchiveAtPath:path zipInfo:globalInfo];
 	}
 
+	NSMutableArray *unarchivedFilePaths = [NSMutableArray array];
+
 	NSInteger currentFileNumber = 0;
 	do {
 		@autoreleasepool {
@@ -102,6 +104,22 @@
 				unzCloseCurrentFile(zip);
 				break;
 			}
+
+			if (![[self class] checkIfHasSufficientDiskSpaceIn:destination
+                                               forArchiveFile:fileInfo]) {
+                success = NO;
+                unzCloseCurrentFile(zip);
+                for (NSString *filePath in unarchivedFilePaths) {
+                    NSError *error = nil;
+                    [[NSFileManager defaultManager]removeItemAtPath:filePath
+                                                              error:&error];
+                }
+
+                *error = [[NSError errorWithDomain:NSCocoaErrorDomain
+                                             code:NSFileWriteOutOfSpaceError
+                                         userInfo:nil] copy];
+                break;
+            }
 
 			// Message delegate
 			if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
@@ -469,6 +487,31 @@
 	NSAssert((_zip != NULL), @"[SSZipArchive] Attempting to close an archive which was never opened");
 	zipClose(_zip, NULL);
 	return YES;
+}
+
+#pragma mark - Disk space
+
++ (BOOL)checkIfHasSufficientDiskSpaceIn:(NSString*)diskPath
+                         forArchiveFile:(unz_file_info)fileInfo
+{
+    uint64_t availableDiskSpaceInBytes = [[self class] getFreeDiskspaceIn:diskPath];
+    int64_t diff = availableDiskSpaceInBytes - fileInfo.uncompressed_size;
+    return diff > 0;
+}
+
++ (uint64_t)getFreeDiskspaceIn:(NSString*)diskPath {
+    __unused uint64_t totalSpace = 0;
+    uint64_t totalFreeSpace = 0;
+    NSError *error = nil;
+    __unused NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:diskPath error: &error];
+    
+    if (dictionary) {
+        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+        totalFreeSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
+    }
+    
+    return totalFreeSpace;
 }
 
 
