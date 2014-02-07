@@ -44,7 +44,12 @@
 }
 
 
-+ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(NSString *)password error:(NSError *__autorelease*)error delegate:(id<SSZipArchiveDelegate>)delegate {
++ (BOOL)unzipFileAtPath:(NSString *)path
+          toDestination:(NSString *)destination
+              overwrite:(BOOL)overwrite
+               password:(NSString *)password
+                  error:(NSError *__autoreleasing*)error
+               delegate:(id<SSZipArchiveDelegate>)delegate {
 	// Begin opening
 	zipFile zip = unzOpen((const char*)[path UTF8String]);
 	if (zip == NULL) {
@@ -296,6 +301,7 @@
     }
 
 #if !__has_feature(objc_arc)
+    [*error autorelease];
 	[directoriesModificationDates release];
 #endif
 
