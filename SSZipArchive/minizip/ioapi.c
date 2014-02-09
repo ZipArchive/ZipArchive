@@ -192,9 +192,11 @@ static long ZCALLBACK fseek64_file_func (voidpf  opaque, voidpf stream, ZPOS64_T
     }
     ret = 0;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wconversion"
     if(fseeko64((FILE *)stream, offset, fseek_origin) != 0)
                         ret = -1;
-
+#pragma clang diagnostic pop
     return ret;
 }
 

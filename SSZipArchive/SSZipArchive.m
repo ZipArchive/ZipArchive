@@ -306,7 +306,6 @@
 	return success;
 }
 
-
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
     BOOL success = NO;
 
@@ -314,18 +313,27 @@
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
 
 	if ([zipArchive open]) {
+
         // use a local filemanager (queue/thread compatibility)
         fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
 
+		NSString *directoryName = [directoryPath lastPathComponent];
 		NSString *fileName;
+
+		[zipArchive writeFolderAtPath:directoryPath withFolderName:directoryName];
+
         while ((fileName = [dirEnumerator nextObject])) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
             if (!isDir) {
-                [zipArchive writeFileAtPath:fullFilePath withFileName:fileName];
+                [zipArchive writeFileAtPath:fullFilePath withFileName:[directoryName stringByAppendingPathComponent:fileName]];
             }
+			else
+			{
+				[zipArchive writeFolderAtPath:fullFilePath withFolderName:[directoryName stringByAppendingPathComponent:fileName]];
+			}
         }
         success = [zipArchive close];
 	}
@@ -374,6 +382,45 @@
     zipInfo->tmz_date.tm_year = (unsigned int)components.year;
 }
 
+- (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName
+{
+    NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
+
+    zip_fileinfo zipInfo = {{0}};
+
+    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
+    if( attr )
+    {
+        NSDate *fileDate = (NSDate *)[attr objectForKey:NSFileModificationDate];
+        if( fileDate )
+        {
+            [self zipInfo:&zipInfo setDate: fileDate ];
+        }
+
+        // Write permissions into the external attributes, for details on this see here: http://unix.stackexchange.com/a/14727
+        // Get the permissions value from the files attributes
+        NSNumber *permissionsValue = (NSNumber *)[attr objectForKey:NSFilePosixPermissions];
+        if (permissionsValue) {
+            // Get the short value for the permissions
+            short permissionsShort = permissionsValue.shortValue;
+
+            // Convert this into an octal by adding 010000, 010000 being the flag for a regular file
+            NSInteger permissionsOctal = 0100000 + permissionsShort;
+
+            // Convert this into a long value
+            uLong permissionsLong = @(permissionsOctal).unsignedLongValue;
+
+            // Store this into the external file attributes once it has been shifted 16 places left to form part of the second from last byte
+            zipInfo.external_fa = permissionsLong << 16L;
+        }
+    }
+
+	unsigned int len = 0;
+    zipOpenNewFileInZip(_zip, [[folderName stringByAppendingString:@"/"] UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_NO_COMPRESSION);
+	zipWriteInFileInZip(_zip, &len, 0);
+	zipCloseFileInZip(_zip);
+	return YES;
+}
 
 - (BOOL)writeFile:(NSString *)path
 {
