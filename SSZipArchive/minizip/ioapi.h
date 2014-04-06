@@ -44,11 +44,14 @@
 #include <stdlib.h>
 #include "zlib.h"
 
-#define USE_FILE32API
 #if defined(USE_FILE32API)
 #define fopen64 fopen
 #define ftello64 ftell
 #define fseeko64 fseek
+#elif defined(__APPLE__)
+#define fopen64 fopen
+#define ftello64 ftello
+#define fseeko64 fseeko
 #else
 #ifdef _MSC_VER
  #define fopen64 fopen
