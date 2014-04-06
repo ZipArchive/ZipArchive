@@ -233,6 +233,10 @@
                             // Unable to set the permissions attribute
                             NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting permissions");
                         }
+                        
+#if !__has_feature(objc_arc)
+                        [attrs release];
+#endif
                     }
 	            }
 	        }
