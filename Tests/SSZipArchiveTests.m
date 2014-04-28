@@ -13,7 +13,14 @@
 @interface SSZipArchiveTests : XCTestCase <SSZipArchiveDelegate>
 @end
 
-@implementation SSZipArchiveTests
+@implementation SSZipArchiveTests {
+	NSMutableArray *progressEvents;
+}
+
+- (void)setUp {
+	[super setUp];
+	progressEvents = [NSMutableArray array];
+}
 
 - (void)tearDown {
 	[super tearDown];
@@ -63,6 +70,22 @@
 
 	testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
 	XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
+}
+
+- (void)testUnzippingProgress {
+	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
+	NSString *outputPath = [self _cachesPath:@"Progress"];
+
+	[progressEvents removeAllObjects];
+
+	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
+
+	// 4 events: the first, then for each of the two files one, then the final event
+	XCTAssertTrue(4 == [progressEvents count], @"Expected 4 progress events");
+	XCTAssertTrue(0 == [[progressEvents objectAtIndex:0] intValue]);
+	XCTAssertTrue(619 == [[progressEvents objectAtIndex:1] intValue]);
+	XCTAssertTrue(1114 == [[progressEvents objectAtIndex:2] intValue]);
+	XCTAssertTrue(1436 == [[progressEvents objectAtIndex:3] intValue]);
 }
 
 
@@ -252,12 +275,17 @@
 
 
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-	NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
+	NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
 }
 
 
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-	NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
+	NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
+}
+
+- (void)zipArchiveProgressEvent:(NSInteger)loaded total:(NSInteger)total {
+    NSLog(@"*** zipArchiveProgressEvent: loaded: `%d` total: `%d`", (int)loaded, (int)total);
+    [progressEvents addObject:[[NSNumber alloc] initWithInteger:loaded]];
 }
 
 

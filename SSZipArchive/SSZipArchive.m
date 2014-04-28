@@ -55,6 +55,10 @@
 		return NO;
 	}
 
+	NSDictionary * fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+	ZPOS64_T fileSize = fileAttributes.fileSize;
+	ZPOS64_T currentPosition = 0;
+
 	unz_global_info  globalInfo = {0ul, 0ul};
 	unzGetGlobalInfo(zip, &globalInfo);
 
@@ -76,6 +80,9 @@
 	// Message delegate
 	if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:zipInfo:)]) {
 		[delegate zipArchiveWillUnzipArchiveAtPath:path zipInfo:globalInfo];
+	}
+	if ([delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
+		[delegate zipArchiveProgressEvent:currentPosition total:fileSize];
 	}
 
 	NSInteger currentFileNumber = 0;
@@ -103,10 +110,15 @@
 				break;
 			}
 
+			currentPosition += fileInfo.compressed_size;
+
 			// Message delegate
 			if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
 				[delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
 											 archivePath:path fileInfo:fileInfo];
+			}
+			if ([delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
+				[delegate zipArchiveProgressEvent:currentPosition total:fileSize];
 			}
 
 			char *filename = (char *)malloc(fileInfo.size_filename + 1);
@@ -221,6 +233,10 @@
                             // Unable to set the permissions attribute
                             NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting permissions");
                         }
+                        
+#if !__has_feature(objc_arc)
+                        [attrs release];
+#endif
                     }
 	            }
 	        }
@@ -281,6 +297,10 @@
 	// Message delegate
 	if (success && [delegate respondsToSelector:@selector(zipArchiveDidUnzipArchiveAtPath:zipInfo:unzippedPath:)]) {
 		[delegate zipArchiveDidUnzipArchiveAtPath:path zipInfo:globalInfo unzippedPath:destination];
+	}
+	// final progress event = 100%
+	if ([delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
+		[delegate zipArchiveProgressEvent:fileSize total:fileSize];
 	}
 
 	return success;
