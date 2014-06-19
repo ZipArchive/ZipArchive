@@ -271,6 +271,12 @@
 			}
 
 			currentFileNumber++;
+
+			if ([delegate respondsToSelector:@selector(zipArchiveShouldCancelUnarchivingAtPath:fileInfo:)]) {
+				if ([delegate zipArchiveShouldCancelUnarchivingAtPath:path fileInfo:fileInfo]) {
+					break;
+				}
+			}
 		}
 	} while(ret == UNZ_OK && ret != UNZ_END_OF_LIST_OF_FILE);
 

@@ -10,6 +10,21 @@
 #import <XCTest/XCTest.h>
 #import <CommonCrypto/CommonDigest.h>
 
+@interface CancelDelegate : NSObject <SSZipArchiveDelegate>
+@property (nonatomic, assign) int numFilesUnzipped;
+@end
+
+@implementation CancelDelegate
+- (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo
+{
+  _numFilesUnzipped = fileIndex + 1;
+}
+- (BOOL)zipArchiveShouldCancelUnarchivingAtPath:(NSString *)path fileInfo:(unz_file_info)fileInfo
+{
+  return YES;
+}
+@end
+
 @interface SSZipArchiveTests : XCTestCase <SSZipArchiveDelegate>
 @end
 
@@ -262,6 +277,17 @@
 //}
 
 
+- (void)testUnzippingWithCancel {
+	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
+	NSString *outputPath = [self _cachesPath:@"Cancel"];
+
+	CancelDelegate *delegate = [[CancelDelegate alloc] init];
+
+	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+
+	XCTAssertTrue(delegate.numFilesUnzipped == 1);
+}
+
 #pragma mark - SSZipArchiveDelegate
 
 - (void)zipArchiveWillUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo {
@@ -273,6 +299,10 @@
 	NSLog(@"*** zipArchiveDidUnzipArchiveAtPath: `%@` zipInfo: unzippedPath: `%@`", path, unzippedPath);
 }
 
+- (BOOL)zipArchiveShouldCancelUnarchivingAtPath:(NSString *)path fileInfo:(unz_file_info)fileInfo {
+	NSLog(@"*** zipArchiveShouldCancelUnarchivingAtPath: `%@` zipInfo: ", path);
+	return NO;
+}
 
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
 	NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
