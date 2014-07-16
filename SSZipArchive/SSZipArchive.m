@@ -72,6 +72,7 @@
 	}
 
 	BOOL success = YES;
+	BOOL canceled = NO;
 	int ret = 0;
 	unsigned char buffer[4096] = {0};
 	NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -113,6 +114,15 @@
 			currentPosition += fileInfo.compressed_size;
 
 			// Message delegate
+			if ([delegate respondsToSelector:@selector(zipArchiveShouldUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
+				if (![delegate zipArchiveShouldUnzipFileAtIndex:currentFileNumber
+                                             totalFiles:(NSInteger)globalInfo.number_entry
+                                            archivePath:path fileInfo:fileInfo]) {
+					success = NO;
+					canceled = YES;
+					break;
+				}
+			}
 			if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
 				[delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
 											 archivePath:path fileInfo:fileInfo];
@@ -299,7 +309,7 @@
 		[delegate zipArchiveDidUnzipArchiveAtPath:path zipInfo:globalInfo unzippedPath:destination];
 	}
 	// final progress event = 100%
-	if ([delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
+	if (!canceled && [delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
 		[delegate zipArchiveProgressEvent:fileSize total:fileSize];
 	}
 
