@@ -1,4 +1,4 @@
-# SSZipArchive - ExtractSingleEntity
+# SSZipArchive
 
 SSZipArchive is a simple utility class for zipping and unzipping files. Features:
 
