@@ -24,11 +24,15 @@ SSZipArchive requires ARC.
 NSString *zipPath = @"path_to_your_zip_file";
 NSString *destinationPath = @"path_to_the_folder_where_you_want_it_unzipped";
 [SSZipArchive unzipFileAtPath:zipPath toDestination:destinationPath];
+```
 
+``` objective-c
 // Unzipping a single entity
 NSString *zipEntityToExtract = @"file_name_to.extract";
 [SSZipArchive unzipEntityName:zipEntityToExtract fromFilePath:zipPath toDestination:destinationPath];
+```
 
+``` objective-c
 // Zipping
 NSString *zippedPath = @"path_where_you_want_the_file_created";
 NSArray *inputPaths = [NSArray arrayWithObjects:
