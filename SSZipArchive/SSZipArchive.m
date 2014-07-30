@@ -324,7 +324,7 @@
 		return NO;
 	}
     
-	BOOL success = YES;
+	BOOL success = NO;
 	int ret = 0;
 	unsigned char buffer[4096] = {0};
 	NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -387,6 +387,9 @@
                 
                 if (fp) {
                     fclose(fp);
+                }
+                if (nil == err) {
+                    success = YES;
                 }
             }
 	        
