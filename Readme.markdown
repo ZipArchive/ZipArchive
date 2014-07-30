@@ -1,4 +1,4 @@
-# SSZipArchive
+# SSZipArchive - ExtractSingleEntity
 
 SSZipArchive is a simple utility class for zipping and unzipping files. Features:
 
@@ -8,6 +8,7 @@ SSZipArchive is a simple utility class for zipping and unzipping files. Features
 * Appending to zip files
 * Zipping files
 * Zipping NSData with a filename
+* Extracting a single file from a zip archive
 
 ## Adding to your project
 
@@ -23,6 +24,10 @@ SSZipArchive requires ARC.
 NSString *zipPath = @"path_to_your_zip_file";
 NSString *destinationPath = @"path_to_the_folder_where_you_want_it_unzipped";
 [SSZipArchive unzipFileAtPath:zipPath toDestination:destinationPath];
+
+// Unzipping a single entity
+NSString *zipEntityToExtract = @"file_name_to.extract";
+[SSZipArchive unzipEntityName:zipEntityToExtract fromFilePath:zipPath toDestination:destinationPath];
 
 // Zipping
 NSString *zippedPath = @"path_where_you_want_the_file_created";
