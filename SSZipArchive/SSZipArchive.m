@@ -307,8 +307,8 @@
 	BOOL success = NO;
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
 	if ([zipArchive open]) {
-		for (NSString *path in paths) {
-			[zipArchive writeFile:path];
+		for (NSString *filePath in paths) {
+			[zipArchive writeFile:filePath];
 		}
 		success = [zipArchive close];
 	}
