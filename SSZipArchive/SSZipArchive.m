@@ -56,8 +56,8 @@
 	}
 
 	NSDictionary * fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
-	ZPOS64_T fileSize = fileAttributes.fileSize;
-	ZPOS64_T currentPosition = 0;
+	unsigned long long fileSize = [[fileAttributes objectForKey:NSFileSize] unsignedLongLongValue];
+	unsigned long long currentPosition = 0;
 
 	unz_global_info  globalInfo = {0ul, 0ul};
 	unzGetGlobalInfo(zip, &globalInfo);
