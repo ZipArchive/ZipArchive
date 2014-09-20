@@ -31,6 +31,9 @@ NSArray *inputPaths = [NSArray arrayWithObjects:
                        [[NSBundle mainBundle] pathForResource:@"photo2" ofType:@"jpg"]
                        nil];
 [SSZipArchive createZipFileAtPath:zippedPath withFilesAtPaths:inputPaths];
+
+// Zipping directory
+[SSZipArchive createZipFileAtPath:zippedPath withContentsOfDirectory:inputPath];
 ```
 
 ## Tests
