@@ -153,7 +153,7 @@
 
     // Determine where the symlinks are
     NSString *subfolderName = @"symlinks";
-    NSString *testBasePath = [NSString pathWithComponents:@[outputPath, resourceName]];
+    NSString *testBasePath = [NSString pathWithComponents:@[outputPath]];
     NSString *testSymlinkFolder = [NSString pathWithComponents:@[testBasePath, subfolderName, @"folderSymlink"]];
     NSString *testSymlinkFile = [NSString pathWithComponents:@[testBasePath, subfolderName, @"fileSymlink"]];
 
