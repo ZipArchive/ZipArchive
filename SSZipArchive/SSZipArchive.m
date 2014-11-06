@@ -300,6 +300,123 @@
 	return success;
 }
 
++(BOOL)unzipEntityName:(NSString *)name fromFilePath:(NSString *)path toDestination:(NSString *)destination
+{
+    // Begin opening
+	zipFile zip = unzOpen((const char*)[path UTF8String]);
+	if (zip == NULL) {
+		return NO;
+	}
+    
+	ZPOS64_T currentPosition = 0;
+    
+	unz_global_info  globalInfo = {0ul, 0ul};
+	unzGetGlobalInfo(zip, &globalInfo);
+    
+	// Begin unzipping
+	if (unzGoToFirstFile(zip) != UNZ_OK) {
+		return NO;
+	}
+    
+	BOOL success = NO;
+	int ret = 0;
+	unsigned char buffer[4096] = {0};
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
+    
+	NSInteger currentFileNumber = 0;
+	do {
+		@autoreleasepool {
+            ret = unzOpenCurrentFile(zip);
+            
+			if (ret != UNZ_OK) {
+				success = NO;
+				break;
+			}
+            
+			// Reading data and write to file
+			unz_file_info fileInfo;
+			memset(&fileInfo, 0, sizeof(unz_file_info));
+            
+			ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
+			if (ret != UNZ_OK) {
+				success = NO;
+				unzCloseCurrentFile(zip);
+				break;
+			}
+            
+			currentPosition += fileInfo.compressed_size;
+            
+			char *filename = (char *)malloc(fileInfo.size_filename + 1);
+			unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
+			filename[fileInfo.size_filename] = '\0';
+            
+			NSString *strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
+			free(filename);
+            
+            if([strPath isEqualToString:name]) { /* If file is the one that we're looking to */
+                
+                NSError *err = nil;
+                NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+                NSDictionary *directoryAttr = [NSDictionary dictionaryWithObjectsAndKeys:modDate, NSFileCreationDate, modDate, NSFileModificationDate, nil];
+                
+                /* Create directories for destination */
+                [fileManager createDirectoryAtPath:[destination stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:directoryAttr error:&err];
+                
+                if (nil != err) {
+                    NSLog(@"Error creating directories for destination[%@]: %@",[destination stringByDeletingLastPathComponent], err);
+                }
+                
+                /* Open destination file for write */
+                FILE *fp = fopen((const char*)[destination UTF8String], "wb");
+                while (fp) {
+                    int readBytes = unzReadCurrentFile(zip, buffer, 4096);
+                    
+                    if (readBytes > 0) {
+                        fwrite(buffer, readBytes, 1, fp );
+                    } else {
+                        break;
+                    }
+                }
+                
+                if (fp) {
+                    fclose(fp);
+                }
+                if (nil == err) {
+                    success = YES;
+                }
+            }
+	        
+            /* Move to next file */
+			unzCloseCurrentFile( zip );
+			ret = unzGoToNextFile( zip );
+			currentFileNumber++;
+		}
+	} while(ret == UNZ_OK && ret != UNZ_END_OF_LIST_OF_FILE);
+    
+	// Close
+	unzClose(zip);
+    
+	// The process of decompressing the .zip archive causes the modification times on the folders
+    // to be set to the present time. So, when we are done, they need to be explicitly set.
+    // set the modification date on all of the directories.
+    NSError * err = nil;
+    for (NSDictionary * d in directoriesModificationDates) {
+        if (![[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[d objectForKey:@"modDate"], NSFileModificationDate, nil] ofItemAtPath:[d objectForKey:@"path"] error:&err]) {
+            NSLog(@"[SSZipArchive] Set attributes failed for directory: %@.", [d objectForKey:@"path"]);
+        }
+        if (err) {
+            NSLog(@"[SSZipArchive] Error setting directory file modification date attribute: %@",err.localizedDescription);
+        }
+    }
+    
+#if !__has_feature(objc_arc)
+	[directoriesModificationDates release];
+#endif
+    
+	return success;
+}
+
 
 #pragma mark - Zipping
 

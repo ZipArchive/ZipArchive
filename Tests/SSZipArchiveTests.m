@@ -72,6 +72,28 @@
 	XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
 
+- (void)testSingleElementUnzipping {
+	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
+	NSString *outputPath = [[self _cachesPath:@"Regular"] stringByAppendingPathComponent:@"Readme.markdown"];
+    
+    XCTAssertTrue([SSZipArchive unzipEntityName:@"Readme.markdown" fromFilePath:zipPath toDestination:outputPath], @"Method returned True");
+    
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSString *testPath = outputPath;
+	XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
+    
+	testPath = [[outputPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"LICENSE"];
+	XCTAssertFalse([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
+}
+
+- (void)testSingleElementUnzippingFailure {
+	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
+	NSString *outputPath = [[self _cachesPath:@"Regular"] stringByAppendingPathComponent:@"Readme.markdown"];
+    
+	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
+    XCTAssertFalse([SSZipArchive unzipEntityName:@"DOESNT_EXISTS" fromFilePath:zipPath toDestination:outputPath], @"Method returned True");
+}
+
 - (void)testUnzippingProgress {
 	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
 	NSString *outputPath = [self _cachesPath:@"Progress"];
