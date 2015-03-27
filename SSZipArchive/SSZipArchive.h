@@ -25,12 +25,20 @@
 
 // Zip
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)filenames;
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)filenames inFolder:(NSString*)folder;
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath;
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath inFolder:(NSString*)folder;
+
 
 - (id)initWithPath:(NSString *)path;
 - (BOOL)open;
 - (BOOL)writeFile:(NSString *)path;
 - (BOOL)writeData:(NSData *)data filename:(NSString *)filename;
+
+// supports writing files with logical folder/directory structure
+// *path* is the absolute path of the file that will be compressed
+// *fileName* is the relative name of the file how it is stored within the zip e.g. /folder/subfolder/text1.txt
+- (BOOL)writeFileAtPath:(NSString *)path withFileName:(NSString *)fileName;
 - (BOOL)close;
 
 @end
