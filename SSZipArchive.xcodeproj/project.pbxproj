@@ -32,11 +32,11 @@
 		21CC41FC17DB7D3500201DDC /* TestPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 21CC41F417DB7D3500201DDC /* TestPasswordArchive.zip */; };
 		21CC41FD17DB7D3500201DDC /* Unicode.zip in Resources */ = {isa = PBXBuildFile; fileRef = 21CC41F517DB7D3500201DDC /* Unicode.zip */; };
 		21CC41FF17DB7D3500201DDC /* SSZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 21CC41F717DB7D3500201DDC /* SSZipArchiveTests.m */; };
-		21CC420F17DB7D6F00201DDC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21CC420817DB7D6300201DDC /* Images.xcassets */; };
 		21CC421017DB7D7400201DDC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 21CC420517DB7D6300201DDC /* main.m */; };
 		21CC421117DB7D7900201DDC /* SSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 21CC420317DB7D6300201DDC /* SSAppDelegate.m */; };
 		21CC421317DB7E0500201DDC /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CC421217DB7E0500201DDC /* libz.dylib */; };
 		21CC421417DB7E0900201DDC /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CC421217DB7E0500201DDC /* libz.dylib */; };
+		A5CD0D381AD32ECE00E7F209 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A5CD0D371AD32ECE00E7F209 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,13 +76,13 @@
 		21CC41F517DB7D3500201DDC /* Unicode.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Unicode.zip; sourceTree = "<group>"; };
 		21CC41F617DB7D3500201DDC /* SSZipArchiveTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SSZipArchiveTests-Info.plist"; sourceTree = "<group>"; };
 		21CC41F717DB7D3500201DDC /* SSZipArchiveTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchiveTests.m; sourceTree = "<group>"; };
-		21CC420217DB7D6300201DDC /* SSAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSAppDelegate.h; sourceTree = "<group>"; };
-		21CC420317DB7D6300201DDC /* SSAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSAppDelegate.m; sourceTree = "<group>"; };
+		21CC420217DB7D6300201DDC /* SSAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSAppDelegate.h; path = Classes/SSAppDelegate.h; sourceTree = "<group>"; };
+		21CC420317DB7D6300201DDC /* SSAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSAppDelegate.m; path = Classes/SSAppDelegate.m; sourceTree = "<group>"; };
 		21CC420517DB7D6300201DDC /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		21CC420617DB7D6300201DDC /* SSZipArchive-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SSZipArchive-Prefix.pch"; sourceTree = "<group>"; };
-		21CC420817DB7D6300201DDC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		21CC420917DB7D6300201DDC /* SSZipArchive-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SSZipArchive-Info.plist"; sourceTree = "<group>"; };
+		21CC420917DB7D6300201DDC /* SSZipArchive-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "SSZipArchive-Info.plist"; path = "../Resources/SSZipArchive-Info.plist"; sourceTree = "<group>"; };
 		21CC421217DB7E0500201DDC /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		A5CD0D371AD32ECE00E7F209 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +130,7 @@
 		21CC419C17DB7D1300201DDC = {
 			isa = PBXGroup;
 			children = (
+				A5CD0D371AD32ECE00E7F209 /* Default-568h@2x.png */,
 				21CC41D717DB7D2F00201DDC /* SSZipArchive */,
 				21CC420017DB7D6300201DDC /* Example */,
 				21CC41EE17DB7D3500201DDC /* Tests */,
@@ -196,38 +197,22 @@
 		21CC420017DB7D6300201DDC /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				21CC420117DB7D6300201DDC /* Classes */,
-				21CC420417DB7D6300201DDC /* Other Sources */,
-				21CC420717DB7D6300201DDC /* Resources */,
+				21CC420217DB7D6300201DDC /* SSAppDelegate.h */,
+				21CC420317DB7D6300201DDC /* SSAppDelegate.m */,
+				21CC420417DB7D6300201DDC /* Supporting Files */,
 			);
 			path = Example;
 			sourceTree = "<group>";
 		};
-		21CC420117DB7D6300201DDC /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				21CC420217DB7D6300201DDC /* SSAppDelegate.h */,
-				21CC420317DB7D6300201DDC /* SSAppDelegate.m */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
-		21CC420417DB7D6300201DDC /* Other Sources */ = {
+		21CC420417DB7D6300201DDC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
 				21CC420517DB7D6300201DDC /* main.m */,
 				21CC420617DB7D6300201DDC /* SSZipArchive-Prefix.pch */,
-			);
-			path = "Other Sources";
-			sourceTree = "<group>";
-		};
-		21CC420717DB7D6300201DDC /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				21CC420817DB7D6300201DDC /* Images.xcassets */,
 				21CC420917DB7D6300201DDC /* SSZipArchive-Info.plist */,
 			);
-			path = Resources;
+			name = "Supporting Files";
+			path = "Other Sources";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -306,8 +291,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21CC420F17DB7D6F00201DDC /* Images.xcassets in Resources */,
 				011F4B96182D71B700DE704F /* RelativeSymbolicLink.zip in Resources */,
+				A5CD0D381AD32ECE00E7F209 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -439,8 +424,6 @@
 		21CC41D217DB7D1300201DDC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/Other Sources/SSZipArchive-Prefix.pch";
 				INFOPLIST_FILE = "Example/Resources/SSZipArchive-Info.plist";
@@ -452,8 +435,6 @@
 		21CC41D317DB7D1300201DDC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/Other Sources/SSZipArchive-Prefix.pch";
 				INFOPLIST_FILE = "Example/Resources/SSZipArchive-Info.plist";
