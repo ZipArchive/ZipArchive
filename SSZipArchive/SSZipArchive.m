@@ -364,15 +364,62 @@
 
 #pragma mark - Zipping
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths
-{
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths {
 	BOOL success = NO;
+    NSFileManager *fileManager = nil;
+    NSString *directoryPath = [paths.firstObject stringByDeletingLastPathComponent];
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
-	if ([zipArchive open]) {
-		for (NSString *filePath in paths) {
-			[zipArchive writeFile:filePath];
-		}
-		success = [zipArchive close];
+    NSMutableArray *PathsArray = [[NSMutableArray alloc]init];
+    for (int i = 0; i < paths.count; i++) {
+        NSString *name = [paths[i] componentsSeparatedByString:@"/"].lastObject;
+        [PathsArray addObject:name];
+    }
+    if ([zipArchive open]) {
+        // use a local filemanager (queue/thread compatibility)
+        fileManager = [[NSFileManager alloc] init];
+        NSEnumerator *filesEnumerator = [PathsArray objectEnumerator];
+        NSString *fileName;
+        NSString *fileName1;
+        while ((fileName1 = [filesEnumerator nextObject])) {
+            BOOL isDir;
+            NSString *fullFilePath1 = [directoryPath stringByAppendingPathComponent:fileName1];
+            [fileManager fileExistsAtPath:fullFilePath1 isDirectory:&isDir];
+            if (!isDir) {
+                [zipArchive writeFileAtPath:fullFilePath1 withFileName:fileName1];
+            }
+            else
+            {
+                NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:fullFilePath1];
+                if([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fullFilePath1 error:nil].count == 0)
+                {
+                    [@"s" writeToFile:[fullFilePath1 stringByAppendingPathComponent:@".DS_Store"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                    [zipArchive writeFileAtPath:[fullFilePath1 stringByAppendingPathComponent:@".DS_Store"] withFileName:[fileName1 stringByAppendingPathComponent:@".DS_Store"]];
+                    [[NSFileManager defaultManager] removeItemAtPath:[fullFilePath1 stringByAppendingPathComponent:@".DS_Store"] error:nil];
+                }
+                else
+                {
+                    while ((fileName = [dirEnumerator nextObject])) {
+                        BOOL isDir;
+                        fileName = [fileName1 stringByAppendingPathComponent:fileName];
+                        NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
+                        [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
+                        if (!isDir) {
+                            [zipArchive writeFileAtPath:fullFilePath withFileName:fileName];
+                        }
+                        else
+                        {
+                            if([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fullFilePath error:nil].count == 0)
+                            {
+                                [@"" writeToFile:[fullFilePath stringByAppendingPathComponent:@".DS_Store"] atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                                [zipArchive writeFileAtPath:[fullFilePath stringByAppendingPathComponent:@".DS_Store"] withFileName:[fileName stringByAppendingPathComponent:@".DS_Store"]];
+                                [[NSFileManager defaultManager] removeItemAtPath:[fullFilePath stringByAppendingPathComponent:@".DS_Store"] error:nil];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        success = [zipArchive close];
 	}
 
 #if !__has_feature(objc_arc)
@@ -381,6 +428,7 @@
 
 	return success;
 }
+
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath
 {
