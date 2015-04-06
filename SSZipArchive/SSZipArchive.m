@@ -320,30 +320,8 @@
 	return success;
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths inFolder:(NSString *)folder {
-    BOOL success = NO;
-    SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
-    if ([zipArchive open]) {
-        for (NSString *path in paths) {
-            if (!folder) {
-                [zipArchive writeFile:path];
-            }
-            else {
-                NSString *destination = [folder stringByAppendingPathComponent:path.lastPathComponent];
-                [zipArchive writeFileAtPath:path withFileName:destination];
-            }
-        }
-        success = [zipArchive close];
-    }
 
-#if !__has_feature(objc_arc)
-    [zipArchive release];
-#endif
-    
-    return success;
-}
-
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath inFolder:(NSString *)folder {
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
     BOOL success = NO;
 
     NSFileManager *fileManager = nil;
@@ -358,9 +336,6 @@
         while ((fileName = [dirEnumerator nextObject])) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
-            if (folder) {
-                fileName = [folder stringByAppendingPathComponent: fileName];
-            }
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
             if (!isDir) {
                 [zipArchive writeFileAtPath:fullFilePath withFileName:fileName];
@@ -377,9 +352,6 @@
 	return success;
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
-    return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath inFolder:nil];
-}
 
 - (id)initWithPath:(NSString *)path {
 	if ((self = [super init])) {
