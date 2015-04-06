@@ -10,6 +10,35 @@
 #import <XCTest/XCTest.h>
 #import <CommonCrypto/CommonDigest.h>
 
+@interface CancelDelegate : NSObject <SSZipArchiveDelegate>
+@property (nonatomic, assign) int numFilesUnzipped;
+@property (nonatomic, assign) int numFilesToUnzip;
+@property (nonatomic, assign) BOOL didUnzipArchive;
+@property (nonatomic, assign) int loaded;
+@property (nonatomic, assign) int total;
+@end
+
+@implementation CancelDelegate
+- (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo
+{
+	_numFilesUnzipped = fileIndex + 1;
+}
+- (BOOL)zipArchiveShouldUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo
+{
+	//return YES;
+	return _numFilesUnzipped < _numFilesToUnzip;
+}
+- (void)zipArchiveDidUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo unzippedPath:(NSString *)unzippedPath
+{
+	_didUnzipArchive = YES;
+}
+- (void)zipArchiveProgressEvent:(NSInteger)loaded total:(NSInteger)total
+{
+	_loaded = loaded;
+	_total = total;
+}
+@end
+
 @interface SSZipArchiveTests : XCTestCase <SSZipArchiveDelegate>
 @end
 
@@ -251,6 +280,32 @@
     XCTAssertEqual(fileAttributes[NSFilePosixPermissions], preZipAttributes[NSFilePosixPermissions], @"File permissions should be retained during compression and de-compression");
 }
 
+- (void)testUnzippingWithCancel {
+	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
+	NSString *outputPath = [self _cachesPath:@"Cancel1"];
+
+	CancelDelegate *delegate = [[CancelDelegate alloc] init];
+	delegate.numFilesToUnzip = 1;
+
+	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+
+	XCTAssertEqual(delegate.numFilesUnzipped, 1);
+	XCTAssertFalse(delegate.didUnzipArchive);
+	XCTAssertNotEqual(delegate.loaded, delegate.total);
+
+	outputPath = [self _cachesPath:@"Cancel2"];
+
+	delegate = [[CancelDelegate alloc] init];
+	delegate.numFilesToUnzip = 1000;
+
+	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+
+	XCTAssertEqual(delegate.numFilesUnzipped, 2);
+	XCTAssertTrue(delegate.didUnzipArchive);
+	XCTAssertEqual(delegate.loaded, delegate.total);
+
+}
+
 // Commented out to avoid checking in several gig file into the repository. Simply add a file named
 // `LargeArchive.zip` to the project and uncomment out these lines to test.
 //
@@ -273,6 +328,11 @@
 	NSLog(@"*** zipArchiveDidUnzipArchiveAtPath: `%@` zipInfo: unzippedPath: `%@`", path, unzippedPath);
 }
 
+- (BOOL)zipArchiveShouldUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo
+{
+	NSLog(@"*** zipArchiveShouldUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
+	return YES;
+}
 
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
 	NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
