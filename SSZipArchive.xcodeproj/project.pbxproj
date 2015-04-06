@@ -36,7 +36,7 @@
 		21CC421117DB7D7900201DDC /* SSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 21CC420317DB7D6300201DDC /* SSAppDelegate.m */; };
 		21CC421317DB7E0500201DDC /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CC421217DB7E0500201DDC /* libz.dylib */; };
 		21CC421417DB7E0900201DDC /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CC421217DB7E0500201DDC /* libz.dylib */; };
-		A5CD0D381AD32ECE00E7F209 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A5CD0D371AD32ECE00E7F209 /* Default-568h@2x.png */; };
+		A5CD0D3A1AD3490700E7F209 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A5CD0D391AD3490700E7F209 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,13 +76,13 @@
 		21CC41F517DB7D3500201DDC /* Unicode.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Unicode.zip; sourceTree = "<group>"; };
 		21CC41F617DB7D3500201DDC /* SSZipArchiveTests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SSZipArchiveTests-Info.plist"; sourceTree = "<group>"; };
 		21CC41F717DB7D3500201DDC /* SSZipArchiveTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchiveTests.m; sourceTree = "<group>"; };
-		21CC420217DB7D6300201DDC /* SSAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSAppDelegate.h; path = Classes/SSAppDelegate.h; sourceTree = "<group>"; };
-		21CC420317DB7D6300201DDC /* SSAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSAppDelegate.m; path = Classes/SSAppDelegate.m; sourceTree = "<group>"; };
+		21CC420217DB7D6300201DDC /* SSAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSAppDelegate.h; sourceTree = "<group>"; };
+		21CC420317DB7D6300201DDC /* SSAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSAppDelegate.m; sourceTree = "<group>"; };
 		21CC420517DB7D6300201DDC /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		21CC420617DB7D6300201DDC /* SSZipArchive-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SSZipArchive-Prefix.pch"; sourceTree = "<group>"; };
-		21CC420917DB7D6300201DDC /* SSZipArchive-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "SSZipArchive-Info.plist"; path = "../Resources/SSZipArchive-Info.plist"; sourceTree = "<group>"; };
+		21CC420917DB7D6300201DDC /* SSZipArchive-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SSZipArchive-Info.plist"; sourceTree = "<group>"; };
 		21CC421217DB7E0500201DDC /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		A5CD0D371AD32ECE00E7F209 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		A5CD0D391AD3490700E7F209 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,10 +130,9 @@
 		21CC419C17DB7D1300201DDC = {
 			isa = PBXGroup;
 			children = (
-				A5CD0D371AD32ECE00E7F209 /* Default-568h@2x.png */,
 				21CC41D717DB7D2F00201DDC /* SSZipArchive */,
-				21CC420017DB7D6300201DDC /* Example */,
-				21CC41EE17DB7D3500201DDC /* Tests */,
+				21CC41EE17DB7D3500201DDC /* SSZipArchiveTests */,
+				21CC420017DB7D6300201DDC /* Sample Application */,
 				21CC41A717DB7D1300201DDC /* Frameworks */,
 				21CC41A617DB7D1300201DDC /* Products */,
 			);
@@ -170,14 +169,14 @@
 			path = SSZipArchive;
 			sourceTree = "<group>";
 		};
-		21CC41EE17DB7D3500201DDC /* Tests */ = {
+		21CC41EE17DB7D3500201DDC /* SSZipArchiveTests */ = {
 			isa = PBXGroup;
 			children = (
 				21CC41EF17DB7D3500201DDC /* Fixtures */,
 				21CC41F617DB7D3500201DDC /* SSZipArchiveTests-Info.plist */,
 				21CC41F717DB7D3500201DDC /* SSZipArchiveTests.m */,
 			);
-			path = Tests;
+			path = SSZipArchiveTests;
 			sourceTree = "<group>";
 		};
 		21CC41EF17DB7D3500201DDC /* Fixtures */ = {
@@ -194,25 +193,25 @@
 			path = Fixtures;
 			sourceTree = "<group>";
 		};
-		21CC420017DB7D6300201DDC /* Example */ = {
+		21CC420017DB7D6300201DDC /* Sample Application */ = {
 			isa = PBXGroup;
 			children = (
 				21CC420217DB7D6300201DDC /* SSAppDelegate.h */,
 				21CC420317DB7D6300201DDC /* SSAppDelegate.m */,
 				21CC420417DB7D6300201DDC /* Supporting Files */,
 			);
-			path = Example;
+			path = "Sample Application";
 			sourceTree = "<group>";
 		};
 		21CC420417DB7D6300201DDC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				A5CD0D391AD3490700E7F209 /* Default-568h@2x.png */,
 				21CC420517DB7D6300201DDC /* main.m */,
 				21CC420617DB7D6300201DDC /* SSZipArchive-Prefix.pch */,
 				21CC420917DB7D6300201DDC /* SSZipArchive-Info.plist */,
 			);
-			name = "Supporting Files";
-			path = "Other Sources";
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -292,7 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				011F4B96182D71B700DE704F /* RelativeSymbolicLink.zip in Resources */,
-				A5CD0D381AD32ECE00E7F209 /* Default-568h@2x.png in Resources */,
+				A5CD0D3A1AD3490700E7F209 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,8 +424,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Example/Other Sources/SSZipArchive-Prefix.pch";
-				INFOPLIST_FILE = "Example/Resources/SSZipArchive-Info.plist";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Sample Application/Supporting Files/SSZipArchive-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/Sample Application/Supporting Files/SSZipArchive-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -436,8 +435,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Example/Other Sources/SSZipArchive-Prefix.pch";
-				INFOPLIST_FILE = "Example/Resources/SSZipArchive-Info.plist";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/Sample Application/Supporting Files/SSZipArchive-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/Sample Application/Supporting Files/SSZipArchive-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -456,7 +455,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "Tests/SSZipArchiveTests-Info.plist";
+				INFOPLIST_FILE = "SSZipArchiveTests/SSZipArchiveTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -472,7 +471,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				INFOPLIST_FILE = "Tests/SSZipArchiveTests-Info.plist";
+				INFOPLIST_FILE = "SSZipArchiveTests/SSZipArchiveTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
