@@ -382,45 +382,44 @@
 	return success;
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath
-{
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
     BOOL success = NO;
-
+    
     NSFileManager *fileManager = nil;
-	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
-
-	if ([zipArchive open]) {
-
+    SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
+    
+    if ([zipArchive open]) {
         // use a local filemanager (queue/thread compatibility)
         fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
-
-		NSString *directoryName = [directoryPath lastPathComponent];
-		NSString *fileName;
-
-		[zipArchive writeFolderAtPath:directoryPath withFolderName:directoryName];
-
+        NSString *fileName;
         while ((fileName = [dirEnumerator nextObject])) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
             if (!isDir) {
-                [zipArchive writeFileAtPath:fullFilePath withFileName:[directoryName stringByAppendingPathComponent:fileName]];
+                [zipArchive writeFileAtPath:fullFilePath withFileName:fileName];
             }
-			else
-			{
-				[zipArchive writeFolderAtPath:fullFilePath withFolderName:[directoryName stringByAppendingPathComponent:fileName]];
-			}
+            else
+            {
+                if([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fullFilePath error:nil].count == 0)
+                {
+                    NSString *tempName = [fullFilePath stringByAppendingPathComponent:@".DS_Store"];
+                    [@"" writeToFile:tempName atomically:YES encoding:NSUTF8StringEncoding error:nil];
+                    [zipArchive writeFileAtPath:tempName withFileName:[fileName stringByAppendingPathComponent:@".DS_Store"]];
+                    [[NSFileManager defaultManager] removeItemAtPath:tempName error:nil];
+                }
+            }
         }
         success = [zipArchive close];
-	}
-
+    }
+    
 #if !__has_feature(objc_arc)
     [fileManager release];
-	[zipArchive release];
+    [zipArchive release];
 #endif
-
-	return success;
+    
+    return success;
 }
 
 
