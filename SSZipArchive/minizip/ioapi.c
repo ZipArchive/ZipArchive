@@ -194,7 +194,6 @@ static long ZCALLBACK fseek64_file_func (voidpf  opaque, voidpf stream, ZPOS64_T
 
     if(fseeko64((FILE *)stream, (long)offset, fseek_origin) != 0)
                         ret = -1;
-
     return ret;
 }
 
