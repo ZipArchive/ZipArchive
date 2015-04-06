@@ -44,6 +44,7 @@
 - (BOOL)open;
 - (BOOL)writeFile:(NSString *)path;
 - (BOOL)writeFile:(NSString *)filename basePath:(NSString *)base;
+- (BOOL)writeFileAtPath:(NSString *)path withFileName:(NSString *)fileName;
 - (BOOL)writeData:(NSData *)data filename:(NSString *)filename;
 - (BOOL)close;
 
