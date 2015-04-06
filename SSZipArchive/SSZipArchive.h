@@ -3,7 +3,7 @@
 //  SSZipArchive
 //
 //  Created by Sam Soffes on 7/21/10.
-//  Copyright (c) Sam Soffes 2010-2014. All rights reserved.
+//  Copyright (c) Sam Soffes 2010-2013. All rights reserved.
 //
 
 #ifndef _SSZIPARCHIVE_H
@@ -42,6 +42,7 @@
 - (id)initWithPath:(NSString *)path;
 - (BOOL)open;
 - (BOOL)writeFile:(NSString *)path;
+- (BOOL)writeFile:(NSString *)filename basePath:(NSString *)base;
 - (BOOL)writeData:(NSData *)data filename:(NSString *)filename;
 - (BOOL)close;
 
