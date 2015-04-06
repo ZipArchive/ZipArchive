@@ -8,6 +8,8 @@
 
 #import "SSZipArchive.h"
 #import <XCTest/XCTest.h>
+#import "CollectingDelegate.h"
+#import <SenTestingKit/SenTestingKit.h>
 #import <CommonCrypto/CommonDigest.h>
 
 @interface CancelDelegate : NSObject <SSZipArchiveDelegate>
@@ -34,8 +36,8 @@
 }
 - (void)zipArchiveProgressEvent:(NSInteger)loaded total:(NSInteger)total
 {
-	_loaded = loaded;
-	_total = total;
+	_loaded = (int)loaded;
+	_total = (int)total;
 }
 @end
 
@@ -316,6 +318,16 @@
 //	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
 //}
 
+-(void)testShouldProvidePathOfUnzippedFileInDelegateCallback {
+    CollectingDelegate *collector = [CollectingDelegate new];
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
+   	NSString *outputPath = [self _cachesPath:@"Regular"];
+
+   	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:collector];
+
+//    STAssertEqualObjects([collector.files objectAtIndex:0], @"LICENSE.txt", nil);
+//    STAssertEqualObjects([collector.files objectAtIndex:1], @"README.md", nil);
+}
 
 #pragma mark - SSZipArchiveDelegate
 

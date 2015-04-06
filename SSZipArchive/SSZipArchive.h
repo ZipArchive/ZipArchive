@@ -59,7 +59,11 @@
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo;
 
+//<<<<<<< HEAD:SSZipArchive/SSZipArchive.h
 - (void)zipArchiveProgressEvent:(unsigned long long)loaded total:(unsigned long long)total;
+//=======
+- (void)zipArchiveDidUnzipArchiveFile:(NSString *)zipFile entryPath:(NSString *)entryPath destPath:(NSString *)destPath;
+//>>>>>>> 67403e8a283676787fcd07843aade0137452a04f:SSZipArchive.h
 @end
 
 #endif /* _SSZIPARCHIVE_H */
