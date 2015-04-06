@@ -485,6 +485,9 @@
     
 	zipCloseFileInZip(_zip);
 	free(buffer);
+    fclose(input);
+    input = NULL;
+    
 	return YES;
 }
 
