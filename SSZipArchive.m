@@ -240,7 +240,10 @@
 			[delegate zipArchiveDidUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
 										 archivePath:path fileInfo:fileInfo];
 		}
-		
+        if ([delegate respondsToSelector:@selector(zipArchiveDidUnzipArchiveFile:entryPath:destPath:)]) {
+            [delegate zipArchiveDidUnzipArchiveFile:path entryPath:strPath destPath:fullPath];
+        }
+
 		currentFileNumber++;
 	} while(ret == UNZ_OK && ret != UNZ_END_OF_LIST_OF_FILE);
 	

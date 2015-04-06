@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.summary      = 'Utility class for zipping and unzipping files on iOS and Mac.'
   s.description  = 'SSZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.'
   s.homepage     = 'https://github.com/soffes/ssziparchive'
-  s.license      = { :type => 'MIT', :file => 'LICENSE' }
+  s.license      = { :type => 'MIT', :file => 'LICENSE.txt' }
   s.author       = { 'Sam Soffes' => 'sam@soff.es' }
   s.source       = { :git => 'https://github.com/soffes/ssziparchive.git', :tag => "v#{s.version}" }
   s.ios.deployment_target = '4.0'
