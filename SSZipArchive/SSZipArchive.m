@@ -383,6 +383,11 @@
 }
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
+    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:NO];
+}
+
+
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory {
     BOOL success = NO;
     
     NSFileManager *fileManager = nil;
@@ -398,6 +403,10 @@
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
             if (!isDir) {
+                if (keepParentDirectory)
+                {
+                    fileName = [[directoryPath lastPathComponent] stringByAppendingPathComponent:fileName];
+                }
                 [zipArchive writeFileAtPath:fullFilePath withFileName:fileName];
             }
             else
