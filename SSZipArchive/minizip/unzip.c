@@ -1556,6 +1556,7 @@ extern int ZEXPORT unzOpenCurrentFile3 (unzFile file, int* method,
     pfile_in_zip_read_info->filestream=s->filestream;
     pfile_in_zip_read_info->z_filefunc=s->z_filefunc;
     pfile_in_zip_read_info->byte_before_the_zipfile=s->byte_before_the_zipfile;
+
     pfile_in_zip_read_info->stream.total_out = 0;
 
     if ((s->cur_file_info.compression_method==Z_BZIP2ED) && (!raw))
