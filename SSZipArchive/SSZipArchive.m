@@ -314,52 +314,61 @@
 #pragma mark - Zipping
 
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths {
-	BOOL success = NO;
-	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
-	if ([zipArchive open]) {
-		for (NSString *path in paths) {
-			[zipArchive writeFile:path];
-		}
-		success = [zipArchive close];
-	}
-
-#if !__has_feature(objc_arc)
-	[zipArchive release];
-#endif
-
-	return success;
+    return [self createZipFileAtPath:path withFilesAtPaths:paths withPassword:NULL];
 }
 
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths withPassword:(const char*)password {
     BOOL success = NO;
+    SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
+    if ([zipArchive open]) {
+        for (NSString *path in paths) {
+            [zipArchive writeFile:path withPassword: password];
+        }
+        success = [zipArchive close];
+    }
+    
+#if !__has_feature(objc_arc)
+    [zipArchive release];
+#endif
+    
+    return success;
+}
 
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
+    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath withPassword:NULL];
+}
+
+
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath withPassword:(const char*)password {
+    BOOL success = NO;
+    
     NSFileManager *fileManager = nil;
-	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
-
-	if ([zipArchive open]) {
+    SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
+    
+    if ([zipArchive open]) {
         // use a local filemanager (queue/thread compatibility)
         fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
-
-		NSString *fileName;
+        
+        NSString *fileName;
         while ((fileName = [dirEnumerator nextObject])) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
             if (!isDir) {
-                [zipArchive writeFileAtPath:fullFilePath withFileName:fileName];
+                [zipArchive writeFileAtPath:fullFilePath withFileName:fileName withPassword:password];
             }
         }
         success = [zipArchive close];
-	}
-
+    }
+    
 #if !__has_feature(objc_arc)
     [fileManager release];
-	[zipArchive release];
+    [zipArchive release];
 #endif
-
-	return success;
+    
+    return success;
 }
 
 
@@ -405,13 +414,18 @@
 
 - (BOOL)writeFile:(NSString *)path
 {
-    return [self writeFileAtPath:path withFileName:nil];
+    return [self writeFileAtPath:path withFileName:nil withPassword: nil];
+}
+
+- (BOOL)writeFile:(NSString *)path withPassword:(const char*)password
+{
+    return [self writeFileAtPath:path withFileName:nil withPassword: password];
 }
 
 // supports writing files with logical folder/directory structure
 // *path* is the absolute path of the file that will be compressed
 // *fileName* is the relative name of the file how it is stored within the zip e.g. /folder/subfolder/text1.txt
-- (BOOL)writeFileAtPath:(NSString *)path withFileName:(NSString *)fileName {
+- (BOOL)writeFileAtPath:(NSString *)path withFileName:(NSString *)fileName withPassword:(const char*) password {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
 
 	FILE *input = fopen([path UTF8String], "r");
@@ -456,7 +470,20 @@
         }
     }
 
-    zipOpenNewFileInZip(_zip, afileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+    if (password == NULL) {
+        zipOpenNewFileInZip(_zip, afileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+    } else {
+        NSData *data = [ NSData dataWithContentsOfFile:path];
+        uLong crcValue = crc32( 0L,NULL, 0L );
+        crcValue = crc32( crcValue, (const Bytef*)[data bytes], [data length] );
+        
+        zipOpenNewFileInZip4_64 (_zip, afileName, &zipInfo,
+                                 NULL, 0,
+                                 NULL, 0,
+                                 NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0,
+                                 -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
+                                 password, crcValue, 0, 0, 0);
+    }
 
 	void *buffer = malloc(CHUNK);
 	unsigned int len = 0;
