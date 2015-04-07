@@ -235,8 +235,7 @@
 				continue;
 			}
 
-			if(!fileIsSymbolicLink)
-	        {
+			if (!fileIsSymbolicLink) {
 	            FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
 	            while (fp) {
 	                int readBytes = unzReadCurrentFile(zip, buffer, 4096);
@@ -249,6 +248,13 @@
 	            }
 
 	            if (fp) {
+                    if ([[[fullPath pathExtension] lowercaseString] isEqualToString:@"zip"]) {
+                        NSLog(@"Unzipping nested .zip file:  %@", [fullPath lastPathComponent]);
+                        if ([self unzipFileAtPath:fullPath toDestination:[fullPath stringByDeletingLastPathComponent] overwrite:overwrite password:password error:nil delegate:nil]) {
+                            [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
+                        }
+                    }
+                    
 	                fclose(fp);
 
 	                // Set the original datetime property
