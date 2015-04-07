@@ -301,7 +301,7 @@
                 int bytesRead = 0;
                 while((bytesRead = unzReadCurrentFile(zip, buffer, 4096)) > 0)
                 {
-                    buffer[bytesRead] = 0;
+                    buffer[bytesRead] = (int)0;
                     [destinationPath appendString:[NSString stringWithUTF8String:(const char*)buffer]];
                 }
 
