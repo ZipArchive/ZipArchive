@@ -193,10 +193,10 @@
 	        const uLong ZipUNIXVersion = 3;
 	        const uLong BSD_SFMT = 0170000;
 	        const uLong BSD_IFLNK = 0120000;
-
+            
 	        BOOL fileIsSymbolicLink = NO;
 	        if (((fileInfo.version >> 8) == ZipUNIXVersion) && BSD_IFLNK == (BSD_SFMT & (fileInfo.external_fa >> 16))) {
-	            fileIsSymbolicLink = YES;
+	            fileIsSymbolicLink = NO;
 	        }
 
 			// Check if it contains directory
