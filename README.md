@@ -1,42 +1,37 @@
-# SSZipArchive
+# SSZipArchive [2.0]
 
-SSZipArchive is a simple utility class for zipping and unzipping files. 
+> SSZipArchive is a simple utility class for zipping and unzipping files.
 
-You can do the following:
+[![Build](https://img.shields.io/travis/joyent/node.svg)](#)
+[![Platform](http://img.shields.io/badge/platform-ios-blue.svg?style=flat)](https://developer.apple.com/iphone/index.action)
+[![Language](http://img.shields.io/badge/language-objectivec-brightgreen.svg?style=flat
+)](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)
+[![Language](http://img.shields.io/badge/language-swift-brightgreen.svg?style=flat
+)](https://developer.apple.com/swift)
+[![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat
+)](https://github.com/soffes/ssziparchive/blob/master/LICENSE.txt)
 
-- Unzip zip files;
-- Unzip password protected zip files;
+**Important**: 2.0 is currently in the development phase and is not stable.
+
+## What's new in 2.0?
+
+We are planning on improving the API for use in modern Objective-C and Swift projects. Introducing nullability, fixing major bugs and over-all improving the API for better use in your projects!
+
+#### Improvements:
+
+- Unzipping files;
+- Unzipping encrypted files;
 - Create new zip files;
 - Append to existing zip files;
-- Zip files;
-- Zip-up NSData instances. (with a filename)
+- Zipping files;
+- Zipping up NSData instances. (with a filename)
 
-## How to add SSZipArchive to your project
+#### New:
 
-1. Add the `SSZipArchive` and `minizip` folders to your project.
-2. Add the `libz` library to your target
-
-SSZipArchive requires ARC.
-
-### Usage
-
-```objective-c
-// Unzipping
-NSString *zipPath = @"path_to_your_zip_file";
-NSString *destinationPath = @"path_to_the_folder_where_you_want_it_unzipped";
-[SSZipArchive unzipFileAtPath:zipPath toDestination:destinationPath];
-
-// Zipping
-NSString *zippedPath = @"path_where_you_want_the_file_created";
-NSArray *inputPaths = [NSArray arrayWithObjects:
-                       [[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"],
-                       [[NSBundle mainBundle] pathForResource:@"photo2" ofType:@"jpg"]
-                       nil];
-[SSZipArchive createZipFileAtPath:zippedPath withFilesAtPaths:inputPaths];
-
-// Zipping directory
-[SSZipArchive createZipFileAtPath:zippedPath withContentsOfDirectory:inputPath];
-```
+- Nullability;
+- Carthage support;
+- Continuous integration testing with Travis;
+- Swift version.
 
 ### License
 SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.1 is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
