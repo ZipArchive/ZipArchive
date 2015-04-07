@@ -88,6 +88,34 @@
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Folder Archive created");
 }
 
+- (void)testMultipleZippping{
+    
+	NSArray *inputPaths = @[[[NSBundle bundleForClass:[self class]]pathForResource:@"0" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]]pathForResource:@"1" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]]pathForResource:@"2" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]]pathForResource:@"3" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]]pathForResource:@"4" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]]pathForResource:@"5" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]]pathForResource:@"6" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]]pathForResource:@"7" ofType:@"m4a"]
+                         ];
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    
+    // this is a monster
+    // if testing on iOS, within 30 loops it will fail; however, on OS X, it may take about 900 loops
+    for (int test = 0; test < 1000; test++) 
+    {
+        // Zipping
+        NSString *archivePath = [outputPath stringByAppendingPathComponent:[NSString stringWithFormat:@"queue_test_%d.zip",test]];
+           
+        [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
+        
+        long long threshold = 510000; // 510kB:size slightly smaller than a successful zip, but much larger than a failed one
+        long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:archivePath error:nil][NSFileSize] longLongValue];
+        STAssertTrue(fileSize > threshold, @"zipping failed at %@!",fileSize,archivePath);
+    }
+
+}
 
 - (void)testUnzipping {
 	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
