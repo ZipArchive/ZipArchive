@@ -1,15 +1,13 @@
 # SSZipArchive [2.0]
-
-> SSZipArchive is a simple utility class for zipping and unzipping files.
-
 [![Build](https://img.shields.io/travis/joyent/node.svg)](#)
-[![Platform](http://img.shields.io/badge/platform-ios-blue.svg?style=flat)](https://developer.apple.com/iphone/index.action)
 [![Language](http://img.shields.io/badge/language-objectivec-brightgreen.svg?style=flat
 )](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html)
 [![Language](http://img.shields.io/badge/language-swift-brightgreen.svg?style=flat
 )](https://developer.apple.com/swift)
 [![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat
 )](https://github.com/soffes/ssziparchive/blob/master/LICENSE.txt)
+
+> SSZipArchive is a simple utility class for zipping and unzipping files.
 
 **Important**: 2.0 is currently in the development phase and is not stable.
 

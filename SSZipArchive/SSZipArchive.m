@@ -285,10 +285,6 @@
                             // Unable to set the permissions attribute
                             NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting permissions");
                         }
-                        
-#if !__has_feature(objc_arc)
-                        [attrs release];
-#endif
                     }
 	            }
 	        } else {
@@ -348,10 +344,6 @@
         }
     }
 
-#if !__has_feature(objc_arc)
-	[directoriesModificationDates release];
-#endif
-
 	// Message delegate
 	if (success && [delegate respondsToSelector:@selector(zipArchiveDidUnzipArchiveAtPath:zipInfo:unzippedPath:)]) {
 		[delegate zipArchiveDidUnzipArchiveAtPath:path zipInfo:globalInfo unzippedPath:destination];
@@ -382,11 +374,7 @@
         
 		success = [zipArchive close];
 	}
-
-#if !__has_feature(objc_arc)
-	[zipArchive release];
-#endif
-
+    
 	return success;
 }
 
@@ -430,11 +418,6 @@
         success = [zipArchive close];
     }
     
-#if !__has_feature(objc_arc)
-    [fileManager release];
-    [zipArchive release];
-#endif
-    
     return success;
 }
 
@@ -445,15 +428,6 @@
     
 	return self;
 }
-
-
-#if !__has_feature(objc_arc)
-- (void)dealloc {
-    [_path release];
-	[super dealloc];
-}
-#endif
-
 
 - (BOOL)open {
 	NSAssert((_zip == NULL), @"Attempting open an archive which is already open");
@@ -649,10 +623,6 @@
     [components setSecond:(msdosDateTime & kSecondMask) * 2];
 
     NSDate *date = [NSDate dateWithTimeInterval:0 sinceDate:[gregorian dateFromComponents:components]];
-
-#if !__has_feature(objc_arc)
-	[components release];
-#endif
 
 	return date;
 }
