@@ -467,7 +467,7 @@
 - (void)zipInfo:(zip_fileinfo*)zipInfo setDate:(NSDate*)date
 {
     NSCalendar *currentCalendar = [NSCalendar currentCalendar];
-#ifdef __IPHONE_8_0
+#if defined(__IPHONE_8_0) || defined(__MAC_10_10)
     uint flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
 #else
     uint flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
@@ -639,7 +639,7 @@
 	static NSCalendar *gregorian;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-#ifdef __IPHONE_8_0
+#if defined(__IPHONE_8_0) || defined(__MAC_10_10)
 		gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
 #else
         gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
