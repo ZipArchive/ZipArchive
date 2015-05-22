@@ -157,24 +157,6 @@
 
 			currentPosition += fileInfo.compressed_size;
 
-			// Message delegate
-			if ([delegate respondsToSelector:@selector(zipArchiveShouldUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
-				if (![delegate zipArchiveShouldUnzipFileAtIndex:currentFileNumber
-                                             totalFiles:(NSInteger)globalInfo.number_entry
-                                            archivePath:path fileInfo:fileInfo]) {
-					success = NO;
-					canceled = YES;
-					break;
-				}
-			}
-			if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
-				[delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
-											 archivePath:path fileInfo:fileInfo];
-			}
-			if ([delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
-				[delegate zipArchiveProgressEvent:(NSInteger)currentPosition total:(NSInteger)fileSize];
-			}
-
 			char *filename = (char *)malloc(fileInfo.size_filename + 1);
 			unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
 			filename[fileInfo.size_filename] = '\0';
@@ -213,6 +195,24 @@
 			}
 
 			NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
+
+			// Message delegate
+			if ([delegate respondsToSelector:@selector(zipArchiveShouldUnzipFileAtIndex:totalFiles:archivePath:fullPath:fileInfo:)]) {
+				if (![delegate zipArchiveShouldUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry archivePath:path fullPath:fullPath fileInfo:fileInfo]) {
+					success = NO;
+					canceled = YES;
+					break;
+				}
+			}
+
+			if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
+				[delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
+								archivePath:path fileInfo:fileInfo];
+			}
+			if ([delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
+				[delegate zipArchiveProgressEvent:(NSInteger)currentPosition total:(NSInteger)fileSize];
+			}
+
 			NSError *err = nil;
 	        NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
 	        NSDictionary *directoryAttr = [NSDictionary dictionaryWithObjectsAndKeys:modDate, NSFileCreationDate, modDate, NSFileModificationDate, nil];
