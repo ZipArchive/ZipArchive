@@ -62,7 +62,9 @@
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath unzippedFilePath:(NSString *)unzippedFilePath;
 
 - (void)zipArchiveProgressEvent:(unsigned long long)loaded total:(unsigned long long)total;
-- (void)zipArchiveDidUnzipArchiveFile:(NSString *)zipFile entryPath:(NSString *)entryPath destPath:(NSString *)destPath DEPRECATED_MSG_ATTRIBUTE();
+
+- (BOOL)zipArchiveShouldUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo DEPRECATED_MSG_ATTRIBUTE();
+- (void)zipArchiveDidUnzipArchiveFile:(NSString *)zipFile entryPath:(NSString *)entryPath destPath:(NSString *)destPath DEPRECATED_MSG_ATTRIBUTE("Use - zipArchiveShouldUnzipFileAtIndex:totalFiles:archivePath:fullPath:fileInfo:");
 
 @end
 
