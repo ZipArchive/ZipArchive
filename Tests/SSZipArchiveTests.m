@@ -137,30 +137,14 @@
 	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
 	NSString *outputPath = [self _cachesPath:@"Regular"];
 
-    XCTestExpectation *expectation = [self expectationWithDescription:@"unzip"];
+	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
 
-    __block NSInteger unzippedFileCount = 0;
-    CollectingDelegate *delegate = [[CollectingDelegate alloc] init];
-    [delegate setCompleteUnzipBlock:^(NSInteger totalFiles, NSString *archivePath, NSString *unzippedFilePath) {
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
+	XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
 
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
-        if ([testPath isEqualToString:unzippedFilePath]) {
-            XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
-        }
-
-        testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
-        if ([testPath isEqualToString:unzippedFilePath]) {
-            XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
-        }
-        if (++ unzippedFileCount == totalFiles) {
-            [expectation fulfill];
-        }
-    }];
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
-    [self waitForExpectationsWithTimeout:5.0f handler:^(NSError *error) {
-        XCTAssertNil(error, @"timeout");
-    }];
+	testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
+	XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
 
 - (void)testUnzippingProgress {
