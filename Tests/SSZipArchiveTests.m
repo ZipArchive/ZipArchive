@@ -73,7 +73,20 @@
     // TODO: Make sure the files are actually unzipped. They are, but the test should be better.
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
 }
-
+- (void)testSmallZipping {
+    // use extracted files from [-testUnzipping]
+    NSString *inputPath = [self _cachesPath:@"Regular"];
+    NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"],
+                            [inputPath stringByAppendingPathComponent:@"LICENSE"]];
+    
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+    [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
+    
+    // TODO: Make sure the files are actually unzipped. They are, but the test should be better.
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+}
 
 - (void)testDirectoryZipping {
     // use Unicode as folder (has a file in root and a file in subfolder)

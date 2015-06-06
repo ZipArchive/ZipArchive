@@ -36,15 +36,15 @@
 		21CC421117DB7D7900201DDC /* SSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 21CC420317DB7D6300201DDC /* SSAppDelegate.m */; };
 		21CC421317DB7E0500201DDC /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CC421217DB7E0500201DDC /* libz.dylib */; };
 		21CC421417DB7E0900201DDC /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CC421217DB7E0500201DDC /* libz.dylib */; };
-		3D18E4B21B23679000627171 /* 0.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4AA1B23679000627171 /* 0.m4a */; };
-		3D18E4B31B23679000627171 /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4AB1B23679000627171 /* 1.m4a */; };
-		3D18E4B41B23679000627171 /* 2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4AC1B23679000627171 /* 2.m4a */; };
-		3D18E4B51B23679000627171 /* 3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4AD1B23679000627171 /* 3.m4a */; };
-		3D18E4B61B23679000627171 /* 4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4AE1B23679000627171 /* 4.m4a */; };
-		3D18E4B71B23679000627171 /* 5.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4AF1B23679000627171 /* 5.m4a */; };
-		3D18E4B81B23679000627171 /* 6.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4B01B23679000627171 /* 6.m4a */; };
-		3D18E4B91B23679000627171 /* 7.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4B11B23679000627171 /* 7.m4a */; };
 		3D18E4BC1B2367A300627171 /* CollectingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D18E4BB1B2367A300627171 /* CollectingDelegate.m */; };
+		3D18E4C51B236A7500627171 /* 0.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4BD1B236A7500627171 /* 0.m4a */; };
+		3D18E4C61B236A7500627171 /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4BE1B236A7500627171 /* 1.m4a */; };
+		3D18E4C71B236A7500627171 /* 2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4BF1B236A7500627171 /* 2.m4a */; };
+		3D18E4C81B236A7500627171 /* 3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4C01B236A7500627171 /* 3.m4a */; };
+		3D18E4C91B236A7500627171 /* 4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4C11B236A7500627171 /* 4.m4a */; };
+		3D18E4CA1B236A7500627171 /* 5.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4C21B236A7500627171 /* 5.m4a */; };
+		3D18E4CB1B236A7500627171 /* 6.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4C31B236A7500627171 /* 6.m4a */; };
+		3D18E4CC1B236A7500627171 /* 7.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4C41B236A7500627171 /* 7.m4a */; };
 		A5CD0D3A1AD3490700E7F209 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A5CD0D391AD3490700E7F209 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
@@ -91,16 +91,16 @@
 		21CC420617DB7D6300201DDC /* SSZipArchive-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SSZipArchive-Prefix.pch"; sourceTree = "<group>"; };
 		21CC420917DB7D6300201DDC /* SSZipArchive-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "SSZipArchive-Info.plist"; sourceTree = "<group>"; };
 		21CC421217DB7E0500201DDC /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		3D18E4AA1B23679000627171 /* 0.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 0.m4a; sourceTree = "<group>"; };
-		3D18E4AB1B23679000627171 /* 1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1.m4a; sourceTree = "<group>"; };
-		3D18E4AC1B23679000627171 /* 2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2.m4a; sourceTree = "<group>"; };
-		3D18E4AD1B23679000627171 /* 3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3.m4a; sourceTree = "<group>"; };
-		3D18E4AE1B23679000627171 /* 4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4.m4a; sourceTree = "<group>"; };
-		3D18E4AF1B23679000627171 /* 5.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 5.m4a; sourceTree = "<group>"; };
-		3D18E4B01B23679000627171 /* 6.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 6.m4a; sourceTree = "<group>"; };
-		3D18E4B11B23679000627171 /* 7.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 7.m4a; sourceTree = "<group>"; };
 		3D18E4BA1B2367A300627171 /* CollectingDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectingDelegate.h; sourceTree = "<group>"; };
 		3D18E4BB1B2367A300627171 /* CollectingDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectingDelegate.m; sourceTree = "<group>"; };
+		3D18E4BD1B236A7500627171 /* 0.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 0.m4a; path = Tests/Multi_Zip_Test/0.m4a; sourceTree = SOURCE_ROOT; };
+		3D18E4BE1B236A7500627171 /* 1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 1.m4a; path = Tests/Multi_Zip_Test/1.m4a; sourceTree = SOURCE_ROOT; };
+		3D18E4BF1B236A7500627171 /* 2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 2.m4a; path = Tests/Multi_Zip_Test/2.m4a; sourceTree = SOURCE_ROOT; };
+		3D18E4C01B236A7500627171 /* 3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 3.m4a; path = Tests/Multi_Zip_Test/3.m4a; sourceTree = SOURCE_ROOT; };
+		3D18E4C11B236A7500627171 /* 4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 4.m4a; path = Tests/Multi_Zip_Test/4.m4a; sourceTree = SOURCE_ROOT; };
+		3D18E4C21B236A7500627171 /* 5.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 5.m4a; path = Tests/Multi_Zip_Test/5.m4a; sourceTree = SOURCE_ROOT; };
+		3D18E4C31B236A7500627171 /* 6.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 6.m4a; path = Tests/Multi_Zip_Test/6.m4a; sourceTree = SOURCE_ROOT; };
+		3D18E4C41B236A7500627171 /* 7.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 7.m4a; path = Tests/Multi_Zip_Test/7.m4a; sourceTree = SOURCE_ROOT; };
 		A5CD0D391AD3490700E7F209 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -239,14 +239,14 @@
 		3D18E4A91B23679000627171 /* Multi_Zip_Test */ = {
 			isa = PBXGroup;
 			children = (
-				3D18E4AA1B23679000627171 /* 0.m4a */,
-				3D18E4AB1B23679000627171 /* 1.m4a */,
-				3D18E4AC1B23679000627171 /* 2.m4a */,
-				3D18E4AD1B23679000627171 /* 3.m4a */,
-				3D18E4AE1B23679000627171 /* 4.m4a */,
-				3D18E4AF1B23679000627171 /* 5.m4a */,
-				3D18E4B01B23679000627171 /* 6.m4a */,
-				3D18E4B11B23679000627171 /* 7.m4a */,
+				3D18E4BD1B236A7500627171 /* 0.m4a */,
+				3D18E4BE1B236A7500627171 /* 1.m4a */,
+				3D18E4BF1B236A7500627171 /* 2.m4a */,
+				3D18E4C01B236A7500627171 /* 3.m4a */,
+				3D18E4C11B236A7500627171 /* 4.m4a */,
+				3D18E4C21B236A7500627171 /* 5.m4a */,
+				3D18E4C31B236A7500627171 /* 6.m4a */,
+				3D18E4C41B236A7500627171 /* 7.m4a */,
 			);
 			name = Multi_Zip_Test;
 			path = ../../../Pictures/ssziparchive/Tests/Multi_Zip_Test;
@@ -328,16 +328,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D18E4B91B23679000627171 /* 7.m4a in Resources */,
-				3D18E4B81B23679000627171 /* 6.m4a in Resources */,
-				3D18E4B51B23679000627171 /* 3.m4a in Resources */,
-				3D18E4B61B23679000627171 /* 4.m4a in Resources */,
-				3D18E4B71B23679000627171 /* 5.m4a in Resources */,
-				3D18E4B41B23679000627171 /* 2.m4a in Resources */,
-				3D18E4B21B23679000627171 /* 0.m4a in Resources */,
+				3D18E4C51B236A7500627171 /* 0.m4a in Resources */,
+				3D18E4CB1B236A7500627171 /* 6.m4a in Resources */,
+				3D18E4CC1B236A7500627171 /* 7.m4a in Resources */,
+				3D18E4C91B236A7500627171 /* 4.m4a in Resources */,
+				3D18E4C61B236A7500627171 /* 1.m4a in Resources */,
+				3D18E4CA1B236A7500627171 /* 5.m4a in Resources */,
 				011F4B96182D71B700DE704F /* RelativeSymbolicLink.zip in Resources */,
-				3D18E4B31B23679000627171 /* 1.m4a in Resources */,
 				A5CD0D3A1AD3490700E7F209 /* Default-568h@2x.png in Resources */,
+				3D18E4C81B236A7500627171 /* 3.m4a in Resources */,
+				3D18E4C71B236A7500627171 /* 2.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
