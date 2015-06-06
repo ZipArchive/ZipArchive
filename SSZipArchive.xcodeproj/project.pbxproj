@@ -45,6 +45,7 @@
 		3D18E4CA1B236A7500627171 /* 5.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4C21B236A7500627171 /* 5.m4a */; };
 		3D18E4CB1B236A7500627171 /* 6.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4C31B236A7500627171 /* 6.m4a */; };
 		3D18E4CC1B236A7500627171 /* 7.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4C41B236A7500627171 /* 7.m4a */; };
+		3D18E4CE1B236C2A00627171 /* hello.zip in Resources */ = {isa = PBXBuildFile; fileRef = 3D18E4CD1B236C2A00627171 /* hello.zip */; };
 		A5CD0D3A1AD3490700E7F209 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A5CD0D391AD3490700E7F209 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
@@ -101,6 +102,7 @@
 		3D18E4C21B236A7500627171 /* 5.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 5.m4a; path = Tests/Multi_Zip_Test/5.m4a; sourceTree = SOURCE_ROOT; };
 		3D18E4C31B236A7500627171 /* 6.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 6.m4a; path = Tests/Multi_Zip_Test/6.m4a; sourceTree = SOURCE_ROOT; };
 		3D18E4C41B236A7500627171 /* 7.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 7.m4a; path = Tests/Multi_Zip_Test/7.m4a; sourceTree = SOURCE_ROOT; };
+		3D18E4CD1B236C2A00627171 /* hello.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = hello.zip; sourceTree = "<group>"; };
 		A5CD0D391AD3490700E7F209 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -204,6 +206,7 @@
 		21CC41EF17DB7D3500201DDC /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				3D18E4CD1B236C2A00627171 /* hello.zip */,
 				011F4B95182D71B700DE704F /* RelativeSymbolicLink.zip */,
 				21CC41F017DB7D3500201DDC /* IncorrectHeaders.zip */,
 				21CC41F117DB7D3500201DDC /* PermissionsTestApp.app */,
@@ -335,6 +338,7 @@
 				3D18E4C61B236A7500627171 /* 1.m4a in Resources */,
 				3D18E4CA1B236A7500627171 /* 5.m4a in Resources */,
 				011F4B96182D71B700DE704F /* RelativeSymbolicLink.zip in Resources */,
+				3D18E4CE1B236C2A00627171 /* hello.zip in Resources */,
 				A5CD0D3A1AD3490700E7F209 /* Default-568h@2x.png in Resources */,
 				3D18E4C81B236A7500627171 /* 3.m4a in Resources */,
 				3D18E4C71B236A7500627171 /* 2.m4a in Resources */,

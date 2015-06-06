@@ -73,20 +73,7 @@
     // TODO: Make sure the files are actually unzipped. They are, but the test should be better.
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
 }
-- (void)testSmallZipping {
-    // use extracted files from [-testUnzipping]
-    NSString *inputPath = [self _cachesPath:@"Regular"];
-    NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"],
-                            [inputPath stringByAppendingPathComponent:@"LICENSE"]];
-    
-    NSString *outputPath = [self _cachesPath:@"Zipped"];
-    
-    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
-    [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
-    
-    // TODO: Make sure the files are actually unzipped. They are, but the test should be better.
-    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
-}
+
 
 - (void)testDirectoryZipping {
     // use Unicode as folder (has a file in root and a file in subfolder)
@@ -142,7 +129,19 @@
     testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
-
+- (void)testSmallFileUnzipping {
+    NSString *zipPath = [[NSBundle mainBundle] pathForResource:@"hello" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"Regular"];
+    
+    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
+    XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
+    
+    testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
+    XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
+}
 - (void)testUnzippingProgress {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Progress"];
