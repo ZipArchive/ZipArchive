@@ -1,24 +1,24 @@
-# SSZipArchive
+#ZipArchive
 
-SSZipArchive is a simple utility class for zipping and unzipping files. 
+ZipArchive is a simple utility class for zipping and unzipping files. 
 
 You can do the following:
 
-- Unzip zip files;
-- Unzip password protected zip files;
-- Create new zip files;
-- Append to existing zip files;
-- Zip files;
-- Zip-up NSData instances. (with a filename)
+- Unzip zip files
+- Unzip password protected zip files
+- Create new zip files
+- Append to existing zip files
+- Zip files
+- Zip-up `NSData` instances (with a filename)
 
-## How to add SSZipArchive to your project
+##How to add ZipArchive to your project
 
 1. Add the `SSZipArchive` and `minizip` folders to your project.
 2. Add the `libz` library to your target
 
-SSZipArchive requires ARC.
+ZipArchive requires ARC.
 
-### Usage
+###Usage
 
 ```objective-c
 // Unzipping
@@ -38,8 +38,8 @@ NSArray *inputPaths = [NSArray arrayWithObjects:
 [SSZipArchive createZipFileAtPath:zippedPath withContentsOfDirectory:inputPath];
 ```
 
-### License
-SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.1 is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
+###Licensing
+ZipArchive is protected under the [MIT license](https://github.com/ZipArchive/ZipArchive/raw/master/LICENSE) and our slightly modified version of [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.1 is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
 
 ## Acknowledgments
-Big thanks to [aish](http://code.google.com/p/ziparchive) for creating [ZipArchive](http://code.google.com/p/ziparchive). The project that inspired SSZipArchive. Thank you [@randomsequence](https://github.com/randomsequence) for implementing the creation support tech and to [@johnezang](https://github.com/johnezang) for all his amazing help along the way.
+Big thanks to [Aish](http://code.google.com/p/ziparchive) for creating [ZipArchive](http://code.google.com/p/ziparchive). The project that inspired ZipArchive. Thank you [@randomsequence](https://github.com/randomsequence) for implementing the creation support tech and to [@johnezang](https://github.com/johnezang) for all his amazing help along the way.
