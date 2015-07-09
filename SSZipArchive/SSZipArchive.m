@@ -440,6 +440,10 @@
     return success;
 }
 
+- (instancetype)init NS_UNAVAILABLE
+{
+    return nil;
+}
 
 - (instancetype)initWithPath:(NSString *)path
 {
