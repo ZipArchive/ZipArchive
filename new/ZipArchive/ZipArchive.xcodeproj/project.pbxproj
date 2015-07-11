@@ -25,8 +25,27 @@
 		A5D15D141B51A44C00929105 /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D0B1B51A44C00929105 /* unzip.h */; };
 		A5D15D151B51A44C00929105 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D0C1B51A44C00929105 /* zip.c */; };
 		A5D15D161B51A44C00929105 /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D0D1B51A44C00929105 /* zip.h */; };
-		A5D15D1A1B51A4D000929105 /* Main.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D181B51A4D000929105 /* Main.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A5D15D1B1B51A4D000929105 /* Main.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D191B51A4D000929105 /* Main.m */; };
+		A5D15D201B51CDB900929105 /* CollectingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D1E1B51CD5600929105 /* CollectingDelegate.m */; };
+		A5D15D2B1B51CEAC00929105 /* 0.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D231B51CEAC00929105 /* 0.m4a */; };
+		A5D15D2C1B51CEAC00929105 /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D241B51CEAC00929105 /* 1.m4a */; };
+		A5D15D2D1B51CEAC00929105 /* 2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D251B51CEAC00929105 /* 2.m4a */; };
+		A5D15D2E1B51CEAC00929105 /* 3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D261B51CEAC00929105 /* 3.m4a */; };
+		A5D15D2F1B51CEAC00929105 /* 4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D271B51CEAC00929105 /* 4.m4a */; };
+		A5D15D301B51CEAC00929105 /* 5.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D281B51CEAC00929105 /* 5.m4a */; };
+		A5D15D311B51CEAC00929105 /* 6.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D291B51CEAC00929105 /* 6.m4a */; };
+		A5D15D321B51CEAC00929105 /* 7.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D2A1B51CEAC00929105 /* 7.m4a */; };
+		A5D15D3C1B51CED100929105 /* hello.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D341B51CED100929105 /* hello.zip */; };
+		A5D15D3D1B51CED100929105 /* IncorrectHeaders.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D351B51CED100929105 /* IncorrectHeaders.zip */; };
+		A5D15D3E1B51CED100929105 /* PermissionsTestApp.app in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D361B51CED100929105 /* PermissionsTestApp.app */; };
+		A5D15D3F1B51CED100929105 /* RelativeSymbolicLink.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D371B51CED100929105 /* RelativeSymbolicLink.zip */; };
+		A5D15D401B51CED100929105 /* SymbolicLink.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D381B51CED100929105 /* SymbolicLink.zip */; };
+		A5D15D411B51CED100929105 /* TestArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D391B51CED100929105 /* TestArchive.zip */; };
+		A5D15D421B51CED100929105 /* TestPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D3A1B51CED100929105 /* TestPasswordArchive.zip */; };
+		A5D15D431B51CED100929105 /* Unicode.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D3B1B51CED100929105 /* Unicode.zip */; };
+		A5D15D441B51CF2900929105 /* Main.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D191B51A4D000929105 /* Main.m */; };
+		A5D15D451B51D64200929105 /* Main.m in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D191B51A4D000929105 /* Main.m */; };
+		A5D15D461B51D68600929105 /* CollectingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D1E1B51CD5600929105 /* CollectingDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +86,24 @@
 		A5D15D0D1B51A44C00929105 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zip.h; path = minizip/zip.h; sourceTree = "<group>"; };
 		A5D15D181B51A4D000929105 /* Main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Main.h; sourceTree = "<group>"; };
 		A5D15D191B51A4D000929105 /* Main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Main.m; sourceTree = "<group>"; };
+		A5D15D1C1B51CD4C00929105 /* CollectingDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectingDelegate.h; sourceTree = "<group>"; };
+		A5D15D1E1B51CD5600929105 /* CollectingDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectingDelegate.m; sourceTree = "<group>"; };
+		A5D15D231B51CEAC00929105 /* 0.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 0.m4a; path = Multi_Zip_Test/0.m4a; sourceTree = "<group>"; };
+		A5D15D241B51CEAC00929105 /* 1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 1.m4a; path = Multi_Zip_Test/1.m4a; sourceTree = "<group>"; };
+		A5D15D251B51CEAC00929105 /* 2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 2.m4a; path = Multi_Zip_Test/2.m4a; sourceTree = "<group>"; };
+		A5D15D261B51CEAC00929105 /* 3.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 3.m4a; path = Multi_Zip_Test/3.m4a; sourceTree = "<group>"; };
+		A5D15D271B51CEAC00929105 /* 4.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 4.m4a; path = Multi_Zip_Test/4.m4a; sourceTree = "<group>"; };
+		A5D15D281B51CEAC00929105 /* 5.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 5.m4a; path = Multi_Zip_Test/5.m4a; sourceTree = "<group>"; };
+		A5D15D291B51CEAC00929105 /* 6.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 6.m4a; path = Multi_Zip_Test/6.m4a; sourceTree = "<group>"; };
+		A5D15D2A1B51CEAC00929105 /* 7.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; name = 7.m4a; path = Multi_Zip_Test/7.m4a; sourceTree = "<group>"; };
+		A5D15D341B51CED100929105 /* hello.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = hello.zip; path = Fixtures/hello.zip; sourceTree = "<group>"; };
+		A5D15D351B51CED100929105 /* IncorrectHeaders.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = IncorrectHeaders.zip; path = Fixtures/IncorrectHeaders.zip; sourceTree = "<group>"; };
+		A5D15D361B51CED100929105 /* PermissionsTestApp.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = PermissionsTestApp.app; path = Fixtures/PermissionsTestApp.app; sourceTree = "<group>"; };
+		A5D15D371B51CED100929105 /* RelativeSymbolicLink.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = RelativeSymbolicLink.zip; path = Fixtures/RelativeSymbolicLink.zip; sourceTree = "<group>"; };
+		A5D15D381B51CED100929105 /* SymbolicLink.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = SymbolicLink.zip; path = Fixtures/SymbolicLink.zip; sourceTree = "<group>"; };
+		A5D15D391B51CED100929105 /* TestArchive.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = TestArchive.zip; path = Fixtures/TestArchive.zip; sourceTree = "<group>"; };
+		A5D15D3A1B51CED100929105 /* TestPasswordArchive.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = TestPasswordArchive.zip; path = Fixtures/TestPasswordArchive.zip; sourceTree = "<group>"; };
+		A5D15D3B1B51CED100929105 /* Unicode.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = Unicode.zip; path = Fixtures/Unicode.zip; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +176,10 @@
 			isa = PBXGroup;
 			children = (
 				A5D15CCF1B51A38C00929105 /* ZipArchiveTests.m */,
+				A5D15D331B51CEBD00929105 /* Fixtures */,
+				A5D15D221B51CEA300929105 /* Multi_Zip_Test */,
+				A5D15D1C1B51CD4C00929105 /* CollectingDelegate.h */,
+				A5D15D1E1B51CD5600929105 /* CollectingDelegate.m */,
 				A5D15CCD1B51A38C00929105 /* Supporting Files */,
 			);
 			path = ZipArchiveTests;
@@ -192,6 +233,36 @@
 			name = minizip;
 			sourceTree = "<group>";
 		};
+		A5D15D221B51CEA300929105 /* Multi_Zip_Test */ = {
+			isa = PBXGroup;
+			children = (
+				A5D15D231B51CEAC00929105 /* 0.m4a */,
+				A5D15D241B51CEAC00929105 /* 1.m4a */,
+				A5D15D251B51CEAC00929105 /* 2.m4a */,
+				A5D15D261B51CEAC00929105 /* 3.m4a */,
+				A5D15D271B51CEAC00929105 /* 4.m4a */,
+				A5D15D281B51CEAC00929105 /* 5.m4a */,
+				A5D15D291B51CEAC00929105 /* 6.m4a */,
+				A5D15D2A1B51CEAC00929105 /* 7.m4a */,
+			);
+			name = Multi_Zip_Test;
+			sourceTree = "<group>";
+		};
+		A5D15D331B51CEBD00929105 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				A5D15D341B51CED100929105 /* hello.zip */,
+				A5D15D351B51CED100929105 /* IncorrectHeaders.zip */,
+				A5D15D361B51CED100929105 /* PermissionsTestApp.app */,
+				A5D15D371B51CED100929105 /* RelativeSymbolicLink.zip */,
+				A5D15D381B51CED100929105 /* SymbolicLink.zip */,
+				A5D15D391B51CED100929105 /* TestArchive.zip */,
+				A5D15D3A1B51CED100929105 /* TestPasswordArchive.zip */,
+				A5D15D3B1B51CED100929105 /* Unicode.zip */,
+			);
+			name = Fixtures;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -200,8 +271,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5D15CC31B51A38C00929105 /* ZipArchive.h in Headers */,
+				A5D15D451B51D64200929105 /* Main.m in Headers */,
 				A5D15D161B51A44C00929105 /* zip.h in Headers */,
-				A5D15D1A1B51A4D000929105 /* Main.h in Headers */,
 				A5D15D101B51A44C00929105 /* ioapi.h in Headers */,
 				A5D15D141B51A44C00929105 /* unzip.h in Headers */,
 				A5D15D0E1B51A44C00929105 /* crypt.h in Headers */,
@@ -317,6 +388,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5D15D311B51CEAC00929105 /* 6.m4a in Resources */,
+				A5D15D3F1B51CED100929105 /* RelativeSymbolicLink.zip in Resources */,
+				A5D15D401B51CED100929105 /* SymbolicLink.zip in Resources */,
+				A5D15D431B51CED100929105 /* Unicode.zip in Resources */,
+				A5D15D3C1B51CED100929105 /* hello.zip in Resources */,
+				A5D15D301B51CEAC00929105 /* 5.m4a in Resources */,
+				A5D15D421B51CED100929105 /* TestPasswordArchive.zip in Resources */,
+				A5D15D2E1B51CEAC00929105 /* 3.m4a in Resources */,
+				A5D15D3D1B51CED100929105 /* IncorrectHeaders.zip in Resources */,
+				A5D15D2F1B51CEAC00929105 /* 4.m4a in Resources */,
+				A5D15D411B51CED100929105 /* TestArchive.zip in Resources */,
+				A5D15D321B51CEAC00929105 /* 7.m4a in Resources */,
+				A5D15D2D1B51CEAC00929105 /* 2.m4a in Resources */,
+				A5D15D2C1B51CEAC00929105 /* 1.m4a in Resources */,
+				A5D15D3E1B51CED100929105 /* PermissionsTestApp.app in Resources */,
+				A5D15D2B1B51CEAC00929105 /* 0.m4a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +428,7 @@
 				A5D15D131B51A44C00929105 /* unzip.c in Sources */,
 				A5D15D151B51A44C00929105 /* zip.c in Sources */,
 				A5D15D111B51A44C00929105 /* mztools.c in Sources */,
+				A5D15D201B51CDB900929105 /* CollectingDelegate.m in Sources */,
 				A5D15D0F1B51A44C00929105 /* ioapi.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,6 +437,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5D15D441B51CF2900929105 /* Main.m in Sources */,
+				A5D15D461B51D68600929105 /* CollectingDelegate.m in Sources */,
 				A5D15CD01B51A38C00929105 /* ZipArchiveTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
