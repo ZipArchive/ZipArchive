@@ -149,12 +149,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A527EDDB1B5280D600CA3DAF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A527EDD71B52808900CA3DAF /* Foundation.framework */,
+				A527EDD51B52808400CA3DAF /* CoreGraphics.framework */,
+				A527EDD31B52806D00CA3DAF /* libz.dylib */,
+			);
+			name = Frameworks;
+			path = ZipArchive;
+			sourceTree = "<group>";
+		};
 		A5D15CB31B51A38C00929105 = {
 			isa = PBXGroup;
 			children = (
 				A5D15CBF1B51A38C00929105 /* ZipArchive */,
 				A5D15CCC1B51A38C00929105 /* ZipArchiveTests */,
 				A5D15CDE1B51A3A400929105 /* Example */,
+				A527EDDB1B5280D600CA3DAF /* Frameworks */,
 				A5D15CBE1B51A38C00929105 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -183,9 +195,6 @@
 		A5D15CC01B51A38C00929105 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				A527EDD71B52808900CA3DAF /* Foundation.framework */,
-				A527EDD51B52808400CA3DAF /* CoreGraphics.framework */,
-				A527EDD31B52806D00CA3DAF /* libz.dylib */,
 				A5D15D171B51A46A00929105 /* minizip */,
 				A5D15CC11B51A38C00929105 /* Info.plist */,
 			);
