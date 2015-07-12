@@ -4,7 +4,7 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS and 
 
 ##How to add ZipArchive to your project
 
-1. Add the `SSZipArchive` and `minizip` folders to your project.
+1. Add the `ZipArchive` and `minizip` folders to your project.
 2. Add the `libz` library to your target
 
 ZipArchive requires ARC.
