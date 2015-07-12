@@ -64,13 +64,6 @@
 
 - (instancetype)initWithPath:(NSString *)path NS_DESIGNATED_INITIALIZER;
 
-+ (BOOL)writeFile:(NSString *)path;
-+ (BOOL)writeFileAtPath:(NSString *)path
-           withFileName:(NSString *)fileName;
-
-+ (BOOL)writeData:(NSData *)data
-         fileName:(NSString *)fileName;
-
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL open;
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL close;
 

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Main.h"
 
 /**
  * Test delegate by collecting its calls
