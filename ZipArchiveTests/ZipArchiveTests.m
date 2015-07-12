@@ -160,34 +160,6 @@
     XCTAssertTrue(1436 == [progressEvents[3] intValue]);
 }
 
-#pragma mark - Private
-- (NSString *)_cachesPath:(NSString *)directory {
-    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
-                      stringByAppendingPathComponent:@"com.SamSoffes.ZipArchive.tests"];
-    if (directory) {
-        path = [path stringByAppendingPathComponent:directory];
-    }
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:path]) {
-        [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    
-    return path;
-}
-
-- (NSString *)_calculateMD5Digest:(NSData *)data {
-    unsigned char digest[CC_MD5_DIGEST_LENGTH], i;
-    CC_MD5(data.bytes, (unsigned int)data.length, digest);
-    NSMutableString *string = [NSMutableString string];
-    
-    for (i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
-        [string appendFormat:@"%02x", (int)(digest[i])];
-    }
-    
-    return [string copy];
-}
-
 - (void)testUnzippingWithTest {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestPasswordArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Password"];
@@ -211,16 +183,16 @@
 - (void)testUnzippingTruncatedFileFix {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IncorrectHeaders" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"IncorrectHeaders"];
-
+    
     [Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:self];
-
+    
     NSString *intendedReadmeTxtMD5 = @"31ac96301302eb388070c827447290b5";
-
+    
     NSString *filePath = [outputPath stringByAppendingPathComponent:@"IncorrectHeaders/Readme.txt"];
     NSData *data = [NSData dataWithContentsOfFile:filePath];
-
+    
     NSString *actualReadmeTxtMD5 = [self _calculateMD5Digest:data];
     XCTAssertTrue([actualReadmeTxtMD5 isEqualToString:intendedReadmeTxtMD5], @"Readme.txt MD5 digest should match original.");
 }
@@ -282,12 +254,12 @@
 - (void)testZippingAndUnzippingForDate {
     NSString *inputPath = [self _cachesPath:@"Regular"];
     NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"]];
-
+    
     NSDictionary *originalFileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[inputPath stringByAppendingPathComponent:@"Readme.markdown"] error:nil];
-
+    
     NSString *outputPath = [self _cachesPath:@"ZippedDate"];
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
-
+    
     [Main
      createZipFileAtPath:archivePath
      withFilesAtPaths:inputPaths];
@@ -295,61 +267,61 @@
     [Main unzipFileAtPath:archivePath
             toDestination:outputPath
                  delegate:self];
-
+    
     NSDictionary *createdFileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[outputPath stringByAppendingPathComponent:@"Readme.markdown"] error:nil];
-
+    
     XCTAssertEqualObjects(originalFileAttributes[NSFileCreationDate], createdFileAttributes[@"NSFileCreationDate"], @"Orginal file creationDate should match created one");
 }
 
 - (void)testZippingAndUnzippingForPermissions {
     // File we're going to test permissions on before and after zipping
     NSString *targetFile = @"/Contents/MacOS/TestProject";
-
+    
     // ZIPPING
     NSString *inputFile = [[NSBundle mainBundle] pathForResource:@"PermissionsTestApp" ofType:@"app"];
     NSString *targetFilePreZipPath = [inputFile stringByAppendingPathComponent:targetFile];
     NSDictionary *preZipAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:targetFilePreZipPath error:nil];
-
+    
     NSString *outputDirectory = [self _cachesPath:@"PermissionsTest"];
     NSString *archivePath = [outputDirectory stringByAppendingPathComponent:@"TestAppArchive.zip"];
-
+    
     [Main createZipFileAtPath:archivePath
       withContentsOfDirectory:inputFile];
-
+    
     // UNZIPPING
     [Main unzipFileAtPath:archivePath
             toDestination:outputDirectory];
-
+    
     NSString *targetFilePath = [outputDirectory stringByAppendingPathComponent:@"/Contents/MacOS/TestProject"];
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:targetFilePath error:nil];
-
+    
     XCTAssertEqual(fileAttributes[NSFilePosixPermissions], preZipAttributes[NSFilePosixPermissions], @"File permissions should be retained during compression and de-compression");
 }
 
 - (void)testUnzippingWithCancel {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Cancel1"];
-
+    
     CancelDelegate *delegate = [[CancelDelegate alloc] init];
     delegate.numberOfFilesToUnzip = 1;
-
+    
     [Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:delegate];
-
+    
     XCTAssertEqual(delegate.numberOfFilesUnzipped, 1);
     XCTAssertFalse(delegate.didUnzipArchive);
     XCTAssertNotEqual(delegate.loaded, delegate.total);
-
+    
     outputPath = [self _cachesPath:@"Cancel2"];
-
+    
     delegate = [[CancelDelegate alloc] init];
     delegate.numberOfFilesToUnzip = 1000;
-
+    
     [Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:delegate];
-
+    
     XCTAssertEqual(delegate.numberOfFilesUnzipped, 2);
     XCTAssertTrue(delegate.didUnzipArchive);
     XCTAssertEqual(delegate.loaded, delegate.total);
@@ -414,6 +386,34 @@
                           total:(unsigned long long)total {
     NSLog(@"zipArchiveProgressEvent: loaded: %d total: %d", (int)loaded, (int)total);
     [progressEvents addObject:@(loaded)];
+}
+
+#pragma mark - Private
+- (NSString *)_cachesPath:(NSString *)directory {
+    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
+                      stringByAppendingPathComponent:@"com.SamSoffes.ZipArchive.tests"];
+    if (directory) {
+        path = [path stringByAppendingPathComponent:directory];
+    }
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath:path]) {
+        [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    return path;
+}
+
+- (NSString *)_calculateMD5Digest:(NSData *)data {
+    unsigned char digest[CC_MD5_DIGEST_LENGTH], i;
+    CC_MD5(data.bytes, (unsigned int)data.length, digest);
+    NSMutableString *string = [NSMutableString string];
+    
+    for (i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+        [string appendFormat:@"%02x", (int)(digest[i])];
+    }
+    
+    return [string copy];
 }
 
 @end
