@@ -17,8 +17,9 @@ github "ZipArchive/ZipArchive" "master"
 *currently not working.
 
 ####Manual
-1. Add the `ZipArchive` and `minizip` folders to your project.
-2. Add the `libz` library to your target
+1. Add `Main.h` and `Main.m` to your project.
+2. Add the `minizip` folder to your project.
+3. Add the `libz` library to your target
 
 ##Usage
 ```objective-c
