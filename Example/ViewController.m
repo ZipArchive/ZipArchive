@@ -16,12 +16,25 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-}
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    // Unzip Operation
+    NSString *zipPath = @"path_to_your_zip_file";
+    NSString *destinationPath = @"path_to_the_folder_where_you_want_it_unzipped";
+    
+    [Main unzipFileAtPath:zipPath
+            toDestination:destinationPath];
+    
+    // Zip Operation
+    NSString *zippedPath = @"path_where_you_want_the_file_created";
+    NSArray *inputPaths = @[[[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"],
+                            [[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"]];
+    
+    [Main createZipFileAtPath:zippedPath
+             withFilesAtPaths:inputPaths];
+    
+    // Zip Directory
+    [Main createZipFileAtPath:zippedPath
+      withContentsOfDirectory:inputPaths];
 }
 
 @end

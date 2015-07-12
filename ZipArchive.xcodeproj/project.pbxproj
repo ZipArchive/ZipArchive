@@ -28,6 +28,7 @@
 		A527EDD41B52806D00CA3DAF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A527EDD31B52806D00CA3DAF /* libz.dylib */; };
 		A527EDD91B52809700CA3DAF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A527EDD71B52808900CA3DAF /* Foundation.framework */; };
 		A527EDDA1B52809700CA3DAF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A527EDD51B52808400CA3DAF /* CoreGraphics.framework */; };
+		A53101811B5284E200FA26EA /* Main.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D181B51A4D000929105 /* Main.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A5D15CC31B51A38C00929105 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15CC21B51A38C00929105 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A5D15CC91B51A38C00929105 /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5D15CBD1B51A38C00929105 /* ZipArchive.framework */; };
 		A5D15CD01B51A38C00929105 /* ZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15CCF1B51A38C00929105 /* ZipArchiveTests.m */; };
@@ -300,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5D15CC31B51A38C00929105 /* ZipArchive.h in Headers */,
+				A53101811B5284E200FA26EA /* Main.h in Headers */,
 				A527EDC11B527FD000CA3DAF /* crypt.h in Headers */,
 				A527EDC21B527FD000CA3DAF /* ioapi.c in Headers */,
 				A527EDC31B527FD000CA3DAF /* ioapi.h in Headers */,

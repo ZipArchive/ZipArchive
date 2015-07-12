@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <ZipArchive/Main.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <ZipArchiveDelegate>
 
 
 @end
