@@ -1,15 +1,26 @@
 #ZipArchive
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat
+)](http://mit-license.org)
 
 ZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.
 
-##How to add ZipArchive to your project
+##Installation and Setup
+####Carthage
+Carthage builds the dependencies and provides a binary framework for ZipArchive. To add ZipArchive to your project using Carthage, create a Cartfile and add: 
 
+```ogdl
+github "ZipArchive/ZipArchive" "master"
+```
+
+####CocoaPods
+*currently not working.
+
+####Manual
 1. Add the `ZipArchive` and `minizip` folders to your project.
 2. Add the `libz` library to your target
 
-ZipArchive requires ARC.
-
-###Usage
+##Usage
 ```objective-c
 // Unzip Operation
 NSString *zipPath = @"path_to_your_zip_file";
