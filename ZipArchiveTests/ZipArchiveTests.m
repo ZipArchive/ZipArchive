@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 ZipArchive. All rights reserved.
 //
 
-#import "Main.h"
+#import "ZipArchive/Main.h"
 #import "CollectingDelegate.h"
 #import <XCTest/XCTest.h>
 #import <CommonCrypto/CommonDigest.h>

@@ -29,9 +29,9 @@
 		A527EDD91B52809700CA3DAF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A527EDD71B52808900CA3DAF /* Foundation.framework */; };
 		A527EDDA1B52809700CA3DAF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A527EDD51B52808400CA3DAF /* CoreGraphics.framework */; };
 		A53101811B5284E200FA26EA /* Main.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D181B51A4D000929105 /* Main.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A53101831B528EE100FA26EA /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5D15CBD1B51A38C00929105 /* ZipArchive.framework */; };
+		A53101841B528EF200FA26EA /* ZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15CCF1B51A38C00929105 /* ZipArchiveTests.m */; };
 		A5D15CC31B51A38C00929105 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15CC21B51A38C00929105 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A5D15CC91B51A38C00929105 /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5D15CBD1B51A38C00929105 /* ZipArchive.framework */; };
-		A5D15CD01B51A38C00929105 /* ZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15CCF1B51A38C00929105 /* ZipArchiveTests.m */; };
 		A5D15CE21B51A3A400929105 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15CE11B51A3A400929105 /* main.m */; };
 		A5D15CE51B51A3A400929105 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15CE41B51A3A400929105 /* AppDelegate.m */; };
 		A5D15CE81B51A3A400929105 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15CE71B51A3A400929105 /* ViewController.m */; };
@@ -136,7 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A5D15CC91B51A38C00929105 /* ZipArchive.framework in Frameworks */,
+				A53101831B528EE100FA26EA /* ZipArchive.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,13 +226,9 @@
 		A5D15CDE1B51A3A400929105 /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				A5D15CE31B51A3A400929105 /* AppDelegate.h */,
-				A5D15CE41B51A3A400929105 /* AppDelegate.m */,
 				A5D15CE61B51A3A400929105 /* ViewController.h */,
 				A5D15CE71B51A3A400929105 /* ViewController.m */,
 				A5D15CE91B51A3A400929105 /* Main.storyboard */,
-				A5D15CEC1B51A3A400929105 /* Images.xcassets */,
-				A5D15CEE1B51A3A400929105 /* LaunchScreen.xib */,
 				A5D15CDF1B51A3A400929105 /* Supporting Files */,
 			);
 			path = Example;
@@ -241,6 +237,10 @@
 		A5D15CDF1B51A3A400929105 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				A5D15CE31B51A3A400929105 /* AppDelegate.h */,
+				A5D15CE41B51A3A400929105 /* AppDelegate.m */,
+				A5D15CEC1B51A3A400929105 /* Images.xcassets */,
+				A5D15CEE1B51A3A400929105 /* LaunchScreen.xib */,
 				A5D15CE01B51A3A400929105 /* Info.plist */,
 				A5D15CE11B51A3A400929105 /* main.m */,
 			);
@@ -476,9 +476,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A53101841B528EF200FA26EA /* ZipArchiveTests.m in Sources */,
 				A5D15D441B51CF2900929105 /* Main.m in Sources */,
 				A5D15D461B51D68600929105 /* CollectingDelegate.m in Sources */,
-				A5D15CD01B51A38C00929105 /* ZipArchiveTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -613,6 +613,7 @@
 		A5D15CD41B51A38C00929105 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -628,6 +629,7 @@
 		A5D15CD51B51A38C00929105 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -643,6 +645,7 @@
 		A5D15CD71B51A38C00929105 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -660,6 +663,7 @@
 		A5D15CD81B51A38C00929105 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",

@@ -10,7 +10,5 @@
 #import <ZipArchive/Main.h>
 
 @interface ViewController : UIViewController <ZipArchiveDelegate>
-
-
 @end
 
