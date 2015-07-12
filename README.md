@@ -1,6 +1,6 @@
 #ZipArchive
 
-ZipArchive is a simple utility class for zipping and unzipping files. 
+ZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.
 
 ##How to add ZipArchive to your project
 
@@ -10,26 +10,25 @@ ZipArchive is a simple utility class for zipping and unzipping files.
 ZipArchive requires ARC.
 
 ###Usage
-
 ```objective-c
- // Unzip Operation
-    NSString *zipPath = @"path_to_your_zip_file";
-    NSString *destinationPath = @"path_to_the_folder_where_you_want_it_unzipped";
+// Unzip Operation
+NSString *zipPath = @"path_to_your_zip_file";
+NSString *destinationPath = @"path_to_the_folder_where_you_want_it_unzipped";
     
-    [Main unzipFileAtPath:zipPath
-            toDestination:destinationPath];
+[Main unzipFileAtPath:zipPath 
+        toDestination:destinationPath];
     
-    // Zip Operation
-    NSString *zippedPath = @"path_where_you_want_the_file_created";
-    NSArray *inputPaths = @[[[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"],
-                            [[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"]];
+// Zip Operation
+NSString *zippedPath = @"path_where_you_want_the_file_created";
+NSArray *inputPaths = @[[[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"],
+                        [[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"]];
     
-    [Main createZipFileAtPath:zippedPath
-             withFilesAtPaths:inputPaths];
+[Main createZipFileAtPath:zippedPath
+         withFilesAtPaths:inputPaths];
     
-    // Zip Directory
-    [Main createZipFileAtPath:zippedPath
-      withContentsOfDirectory:inputPaths];
+// Zip Directory
+[Main createZipFileAtPath:zippedPath
+  withContentsOfDirectory:inputPaths];
 ```
 
 ###Licensing
