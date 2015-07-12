@@ -7,6 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A527EDC11B527FD000CA3DAF /* crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D051B51A44C00929105 /* crypt.h */; };
+		A527EDC21B527FD000CA3DAF /* ioapi.c in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D061B51A44C00929105 /* ioapi.c */; };
+		A527EDC31B527FD000CA3DAF /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D071B51A44C00929105 /* ioapi.h */; };
+		A527EDC41B527FD000CA3DAF /* mztools.c in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D081B51A44C00929105 /* mztools.c */; };
+		A527EDC51B527FD000CA3DAF /* mztools.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D091B51A44C00929105 /* mztools.h */; };
+		A527EDC61B527FD000CA3DAF /* unzip.c in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D0A1B51A44C00929105 /* unzip.c */; };
+		A527EDC71B527FD000CA3DAF /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D0B1B51A44C00929105 /* unzip.h */; };
+		A527EDC81B527FD000CA3DAF /* zip.c in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D0C1B51A44C00929105 /* zip.c */; };
+		A527EDC91B527FD000CA3DAF /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D0D1B51A44C00929105 /* zip.h */; };
+		A527EDCA1B52804E00CA3DAF /* crypt.h in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D051B51A44C00929105 /* crypt.h */; };
+		A527EDCB1B52804E00CA3DAF /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D061B51A44C00929105 /* ioapi.c */; };
+		A527EDCC1B52804E00CA3DAF /* ioapi.h in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D071B51A44C00929105 /* ioapi.h */; };
+		A527EDCD1B52804E00CA3DAF /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D081B51A44C00929105 /* mztools.c */; };
+		A527EDCE1B52804E00CA3DAF /* mztools.h in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D091B51A44C00929105 /* mztools.h */; };
+		A527EDCF1B52804E00CA3DAF /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D0A1B51A44C00929105 /* unzip.c */; };
+		A527EDD01B52804E00CA3DAF /* unzip.h in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D0B1B51A44C00929105 /* unzip.h */; };
+		A527EDD11B52804E00CA3DAF /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D0C1B51A44C00929105 /* zip.c */; };
+		A527EDD21B52804E00CA3DAF /* zip.h in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D0D1B51A44C00929105 /* zip.h */; };
+		A527EDD41B52806D00CA3DAF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A527EDD31B52806D00CA3DAF /* libz.dylib */; };
+		A527EDD91B52809700CA3DAF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A527EDD71B52808900CA3DAF /* Foundation.framework */; };
+		A527EDDA1B52809700CA3DAF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A527EDD51B52808400CA3DAF /* CoreGraphics.framework */; };
 		A5D15CC31B51A38C00929105 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15CC21B51A38C00929105 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A5D15CC91B51A38C00929105 /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5D15CBD1B51A38C00929105 /* ZipArchive.framework */; };
 		A5D15CD01B51A38C00929105 /* ZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15CCF1B51A38C00929105 /* ZipArchiveTests.m */; };
@@ -16,17 +37,7 @@
 		A5D15CEB1B51A3A400929105 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A5D15CE91B51A3A400929105 /* Main.storyboard */; };
 		A5D15CED1B51A3A400929105 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5D15CEC1B51A3A400929105 /* Images.xcassets */; };
 		A5D15CF01B51A3A400929105 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A5D15CEE1B51A3A400929105 /* LaunchScreen.xib */; };
-		A5D15D0E1B51A44C00929105 /* crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D051B51A44C00929105 /* crypt.h */; };
-		A5D15D0F1B51A44C00929105 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D061B51A44C00929105 /* ioapi.c */; };
-		A5D15D101B51A44C00929105 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D071B51A44C00929105 /* ioapi.h */; };
-		A5D15D111B51A44C00929105 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D081B51A44C00929105 /* mztools.c */; };
-		A5D15D121B51A44C00929105 /* mztools.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D091B51A44C00929105 /* mztools.h */; };
-		A5D15D131B51A44C00929105 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D0A1B51A44C00929105 /* unzip.c */; };
-		A5D15D141B51A44C00929105 /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D0B1B51A44C00929105 /* unzip.h */; };
-		A5D15D151B51A44C00929105 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D0C1B51A44C00929105 /* zip.c */; };
-		A5D15D161B51A44C00929105 /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = A5D15D0D1B51A44C00929105 /* zip.h */; };
 		A5D15D1B1B51A4D000929105 /* Main.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D191B51A4D000929105 /* Main.m */; };
-		A5D15D201B51CDB900929105 /* CollectingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A5D15D1E1B51CD5600929105 /* CollectingDelegate.m */; };
 		A5D15D2B1B51CEAC00929105 /* 0.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D231B51CEAC00929105 /* 0.m4a */; };
 		A5D15D2C1B51CEAC00929105 /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D241B51CEAC00929105 /* 1.m4a */; };
 		A5D15D2D1B51CEAC00929105 /* 2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A5D15D251B51CEAC00929105 /* 2.m4a */; };
@@ -59,6 +70,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A527EDD31B52806D00CA3DAF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		A527EDD51B52808400CA3DAF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		A527EDD71B52808900CA3DAF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A5D15CBD1B51A38C00929105 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5D15CC11B51A38C00929105 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A5D15CC21B51A38C00929105 /* ZipArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
@@ -111,6 +125,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A527EDD91B52809700CA3DAF /* Foundation.framework in Frameworks */,
+				A527EDDA1B52809700CA3DAF /* CoreGraphics.framework in Frameworks */,
+				A527EDD41B52806D00CA3DAF /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,6 +183,9 @@
 		A5D15CC01B51A38C00929105 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				A527EDD71B52808900CA3DAF /* Foundation.framework */,
+				A527EDD51B52808400CA3DAF /* CoreGraphics.framework */,
+				A527EDD31B52806D00CA3DAF /* libz.dylib */,
 				A5D15D171B51A46A00929105 /* minizip */,
 				A5D15CC11B51A38C00929105 /* Info.plist */,
 			);
@@ -271,12 +291,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5D15CC31B51A38C00929105 /* ZipArchive.h in Headers */,
+				A527EDC11B527FD000CA3DAF /* crypt.h in Headers */,
+				A527EDC21B527FD000CA3DAF /* ioapi.c in Headers */,
+				A527EDC31B527FD000CA3DAF /* ioapi.h in Headers */,
+				A527EDC41B527FD000CA3DAF /* mztools.c in Headers */,
+				A527EDC51B527FD000CA3DAF /* mztools.h in Headers */,
+				A527EDC61B527FD000CA3DAF /* unzip.c in Headers */,
+				A527EDC71B527FD000CA3DAF /* unzip.h in Headers */,
+				A527EDC81B527FD000CA3DAF /* zip.c in Headers */,
+				A527EDC91B527FD000CA3DAF /* zip.h in Headers */,
 				A5D15D451B51D64200929105 /* Main.m in Headers */,
-				A5D15D161B51A44C00929105 /* zip.h in Headers */,
-				A5D15D101B51A44C00929105 /* ioapi.h in Headers */,
-				A5D15D141B51A44C00929105 /* unzip.h in Headers */,
-				A5D15D0E1B51A44C00929105 /* crypt.h in Headers */,
-				A5D15D121B51A44C00929105 /* mztools.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,11 +449,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5D15D1B1B51A4D000929105 /* Main.m in Sources */,
-				A5D15D131B51A44C00929105 /* unzip.c in Sources */,
-				A5D15D151B51A44C00929105 /* zip.c in Sources */,
-				A5D15D111B51A44C00929105 /* mztools.c in Sources */,
-				A5D15D201B51CDB900929105 /* CollectingDelegate.m in Sources */,
-				A5D15D0F1B51A44C00929105 /* ioapi.c in Sources */,
+				A527EDCA1B52804E00CA3DAF /* crypt.h in Sources */,
+				A527EDCB1B52804E00CA3DAF /* ioapi.c in Sources */,
+				A527EDCC1B52804E00CA3DAF /* ioapi.h in Sources */,
+				A527EDCD1B52804E00CA3DAF /* mztools.c in Sources */,
+				A527EDCE1B52804E00CA3DAF /* mztools.h in Sources */,
+				A527EDCF1B52804E00CA3DAF /* unzip.c in Sources */,
+				A527EDD01B52804E00CA3DAF /* unzip.h in Sources */,
+				A527EDD11B52804E00CA3DAF /* zip.c in Sources */,
+				A527EDD21B52804E00CA3DAF /* zip.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,6 +702,7 @@
 				A5D15CD51B51A38C00929105 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A5D15CD61B51A38C00929105 /* Build configuration list for PBXNativeTarget "ZipArchiveTests" */ = {
 			isa = XCConfigurationList;
@@ -682,6 +711,7 @@
 				A5D15CD81B51A38C00929105 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A5D15CFD1B51A3A400929105 /* Build configuration list for PBXNativeTarget "Example" */ = {
 			isa = XCConfigurationList;
@@ -690,6 +720,7 @@
 				A5D15CFF1B51A3A400929105 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
