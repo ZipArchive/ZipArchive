@@ -543,7 +543,7 @@
 
 - (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName {
     NSAssert((NULL != _zip), @"Attempting to write to an archive which has not been unzipped.");
-    zip_fileinfo zipInformation = {{0}};
+    zip_fileinfo zipInformation = {};
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
     
     if (attributes) {
@@ -596,7 +596,7 @@
         aFileName = [fileName UTF8String];
     }
     
-    zip_fileinfo zipInformation = {{0}};
+    zip_fileinfo zipInformation = {};
     NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
     
     if (attributes) {
