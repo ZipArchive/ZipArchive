@@ -292,7 +292,7 @@
 					0x00b0, 0x2219, 0x00b7, 0x221a, 0x207f, 0x00b2, 0x25a0, 0x00a0
 				};
 				strPath = @"";
-				for (int i; i<fileInfo.size_filename; i++) {
+				for (int i=0; i<fileInfo.size_filename; i++) {
 					unichar utf8char = cp437ToUnicode[(unsigned char)filename[i]];
 					strPath = [strPath stringByAppendingString:[NSString stringWithCharacters:&utf8char length:1]];
 				}
