@@ -169,7 +169,7 @@
             toDestination:outputPath
                 overwrite:YES
                  password:@"passw0rd"
-                    error:error
+                    error:&error
                  delegate:self];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
