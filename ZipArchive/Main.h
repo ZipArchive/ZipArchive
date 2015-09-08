@@ -28,13 +28,13 @@
           toDestination:(NSString *)destination
               overwrite:(BOOL)overwrite
                password:(NSString *)password
-                  error:(NSError *)error;
+                  error:(NSError * __autoreleasing *)error;
 
 + (BOOL)unzipFileAtPath:(NSString *)path
           toDestination:(NSString *)destination
               overwrite:(BOOL)overwrite
                password:(NSString *)password
-                  error:(NSError *)error
+                  error:(NSError * __autoreleasing *)error
                delegate:(id<ZipArchiveDelegate>)delegate;
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -46,7 +46,7 @@
           toDestination:(NSString *)destination
               overwrite:(BOOL)overwrite
                password:(NSString *)password
-                  error:(NSError *)error
+                  error:(NSError * __autoreleasing *)error
                delegate:(id<ZipArchiveDelegate>)delegate
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError *error))completionHandler;
