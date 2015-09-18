@@ -64,6 +64,8 @@
 
 - (instancetype)initWithPath:(NSString *)path NS_DESIGNATED_INITIALIZER;
 
+- (instancetype)init __attribute__((unavailable("-init is unavailable; use -initWithPath")));
+
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL open;
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL close;
 
