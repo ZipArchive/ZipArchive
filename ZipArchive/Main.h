@@ -63,6 +63,7 @@
         keepParentDirectory:(BOOL)keepParentDirectory;
 
 - (instancetype)initWithPath:(NSString *)path NS_DESIGNATED_INITIALIZER;
+- (instancetype)init NS_UNAVAILABLE;
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL open;
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL close;

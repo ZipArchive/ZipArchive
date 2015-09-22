@@ -516,6 +516,10 @@
     return self;
 }
 
+- (instancetype)init {
+    @throw nil;
+}
+
 - (BOOL)open {
     NSAssert((NULL == _zip), @"Attempting to open an archive which has already been opened.");
     _zip = zipOpen([_path UTF8String], APPEND_STATUS_CREATE);
