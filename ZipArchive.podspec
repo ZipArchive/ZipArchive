@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'ZipArchive'
-  s.version      = '2.0'
+  s.version      = '0.3.3'
   s.summary      = 'Utility class for zipping and unzipping files on iOS and Mac.'
   s.description  = 'ZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.'
   s.homepage     = 'https://github.com/ZipArchive/ZipArchive'
