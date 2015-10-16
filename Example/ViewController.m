@@ -21,7 +21,7 @@
     NSString *zipPath = @"path_to_your_zip_file";
     NSString *destinationPath = @"path_to_the_folder_where_you_want_it_unzipped";
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:destinationPath];
     
     // Zip Operation
@@ -29,11 +29,11 @@
     NSArray *inputPaths = @[[[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"],
                             [[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"]];
     
-    [Main createZipFileAtPath:zippedPath
+    [cy_Main createZipFileAtPath:zippedPath
              withFilesAtPaths:inputPaths];
     
     // Zip Directory
-    [Main createZipFileAtPath:zippedPath
+    [cy_Main createZipFileAtPath:zippedPath
       withContentsOfDirectory:inputPaths];
 }
 

@@ -22,7 +22,7 @@ extern "C" {
    fileOut: output file after recovery
    fileOutTmp: temporary file name used for recovery
 */
-extern int ZEXPORT unzRepair(const char* file,
+extern int ZEXPORT cy_unzRepair(const char* file,
                              const char* fileOut,
                              const char* fileOutTmp,
                              uLong* nRecovered,
