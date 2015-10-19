@@ -14,7 +14,7 @@
 
 @protocol ZipArchiveDelegate;
 
-@interface Main: NSObject
+@interface cy_Main: NSObject
 
 // Unzip
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -28,13 +28,13 @@
           toDestination:(NSString *)destination
               overwrite:(BOOL)overwrite
                password:(NSString *)password
-                  error:(NSError *)error;
+                  error:(NSError * __autoreleasing *)error;
 
 + (BOOL)unzipFileAtPath:(NSString *)path
           toDestination:(NSString *)destination
               overwrite:(BOOL)overwrite
                password:(NSString *)password
-                  error:(NSError *)error
+                  error:(NSError * __autoreleasing *)error
                delegate:(id<ZipArchiveDelegate>)delegate;
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -46,7 +46,7 @@
           toDestination:(NSString *)destination
               overwrite:(BOOL)overwrite
                password:(NSString *)password
-                  error:(NSError *)error
+                  error:(NSError * __autoreleasing *)error
                delegate:(id<ZipArchiveDelegate>)delegate
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError *error))completionHandler;
@@ -63,6 +63,8 @@
         keepParentDirectory:(BOOL)keepParentDirectory;
 
 - (instancetype)initWithPath:(NSString *)path NS_DESIGNATED_INITIALIZER;
+
+- (instancetype)init __attribute__((unavailable("-init is unavailable; use -initWithPath")));
 
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL open;
 @property (NS_NONATOMIC_IOSONLY, readonly) BOOL close;

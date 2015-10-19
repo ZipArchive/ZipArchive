@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 ZipArchive. All rights reserved.
 //
 
-#import "ZipArchive/Main.h"
+#import "../ZipArchive/Main.h"
 #import "CollectingDelegate.h"
 #import <XCTest/XCTest.h>
 #import <CommonCrypto/CommonDigest.h>
@@ -69,7 +69,7 @@
     NSString *outputPath = [self _cachesPath:@"Zipped"];
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
     
-    [Main createZipFileAtPath:archivePath
+    [cy_Main createZipFileAtPath:archivePath
              withFilesAtPaths:inputPaths];
     
     // TODO: - Make sure the files are actually unzipped. They are, but the test could be better.
@@ -81,7 +81,7 @@
     NSString *outputPath = [self _cachesPath:@"FolderZipped"];
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"ArchiveWithFolders.zip"];
     
-    [Main createZipFileAtPath:archivePath
+    [cy_Main createZipFileAtPath:archivePath
       withContentsOfDirectory:inputPath];
     
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Folder Archive created");
@@ -101,7 +101,7 @@
     for (int test = 0; test < 1000; test++) {
         NSString *archivePath = [outputPath stringByAppendingPathComponent:[NSString stringWithFormat:@"queue_test_%d.zip", test]];
         
-        [Main createZipFileAtPath:archivePath
+        [cy_Main createZipFileAtPath:archivePath
                  withFilesAtPaths:inputPaths];
         
         long long threshold = 510000;
@@ -115,7 +115,7 @@
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Regular"];
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:self];
     
@@ -131,7 +131,7 @@
     NSString *zipPath = [[NSBundle mainBundle] pathForResource:@"hello" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Regular"];
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:self];
     
@@ -148,7 +148,7 @@
     NSString *outputPath = [self _cachesPath:@"Progress"];
     
     [progressEvents removeAllObjects];
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:self];
     
@@ -165,11 +165,11 @@
     NSString *outputPath = [self _cachesPath:@"Password"];
     NSError *error = nil;
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath
                 overwrite:YES
                  password:@"passw0rd"
-                    error:error
+                    error:&error
                  delegate:self];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -184,7 +184,7 @@
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IncorrectHeaders" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"IncorrectHeaders"];
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:self];
     
@@ -201,7 +201,7 @@
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"SymbolicLink" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"SymbolicLink"];
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:self];
     
@@ -223,7 +223,7 @@
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"RelativeSymbolicLink" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"RelativeSymbolicLink"];
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:self];
     
@@ -260,11 +260,11 @@
     NSString *outputPath = [self _cachesPath:@"ZippedDate"];
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
     
-    [Main
+    [cy_Main
      createZipFileAtPath:archivePath
      withFilesAtPaths:inputPaths];
     
-    [Main unzipFileAtPath:archivePath
+    [cy_Main unzipFileAtPath:archivePath
             toDestination:outputPath
                  delegate:self];
     
@@ -285,11 +285,11 @@
     NSString *outputDirectory = [self _cachesPath:@"PermissionsTest"];
     NSString *archivePath = [outputDirectory stringByAppendingPathComponent:@"TestAppArchive.zip"];
     
-    [Main createZipFileAtPath:archivePath
+    [cy_Main createZipFileAtPath:archivePath
       withContentsOfDirectory:inputFile];
     
     // UNZIPPING
-    [Main unzipFileAtPath:archivePath
+    [cy_Main unzipFileAtPath:archivePath
             toDestination:outputDirectory];
     
     NSString *targetFilePath = [outputDirectory stringByAppendingPathComponent:@"/Contents/MacOS/TestProject"];
@@ -305,7 +305,7 @@
     CancelDelegate *delegate = [[CancelDelegate alloc] init];
     delegate.numberOfFilesToUnzip = 1;
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:delegate];
     
@@ -318,7 +318,7 @@
     delegate = [[CancelDelegate alloc] init];
     delegate.numberOfFilesToUnzip = 1000;
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:delegate];
     
@@ -333,7 +333,7 @@
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"LargeArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Large"];
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath];
 }
 
@@ -342,7 +342,7 @@
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Regular"];
     
-    [Main unzipFileAtPath:zipPath
+    [cy_Main unzipFileAtPath:zipPath
             toDestination:outputPath
                  delegate:collector];
 }
