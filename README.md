@@ -24,6 +24,8 @@ SSZipArchive requires ARC.
 
 ## Usage
 
+### Objective-C
+
 ```objective-c
 // Create
 [SSZipArchive createZipFileAtPath: zipPath withContentsOfDirectory: sampleDataPath];
@@ -31,6 +33,8 @@ SSZipArchive requires ARC.
 // Unzip
 [SSZipArchive unzipFileAtPath:zipPath toDestination: unzipPath];
 ```
+
+### Swift
 
 ```swift
 // Create
