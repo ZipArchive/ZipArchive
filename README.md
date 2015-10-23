@@ -1,47 +1,49 @@
-#ZipArchive
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![License](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat
-)](http://mit-license.org)
+# WPZipArchive
 
 ZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.
 
-##Installation and Setup
-####Carthage
-Carthage builds the dependencies and provides a binary framework for ZipArchive. To add ZipArchive to your project using Carthage, create a Cartfile and add: 
+- Unzip zip files;
+- Unzip password protected zip files;
+- Create new zip files;
+- Append to existing zip files;
+- Zip files;
+- Zip-up NSData instances. (with a filename)
 
-```ogdl
-github "ZipArchive/ZipArchive" "master"
-```
+## Installation and Setup
 
-####CocoaPods
-*currently not working.
+### CocoaPods
 
-####Manual
-1. Add `Main.h` and `Main.m` to your project.
-2. Add the `minizip` folder to your project.
-3. Add the `libz` library to your target
+`pod install WPZipArchive`
 
-##Usage
+### Manual
+
+1. Add the `SSZipArchive` and `minizip` folders to your project.
+2. Add the `libz` library to your target
+
+SSZipArchive requires ARC.
+
+## Usage
+
 ```objective-c
-// Unzip Operation
-NSString *zipPath = @"path_to_your_zip_file";
-NSString *destinationPath = @"path_to_the_folder_where_you_want_it_unzipped";
-    
-[Main unzipFileAtPath:zipPath 
-        toDestination:destinationPath];
-    
-// Zip Operation
-NSString *zippedPath = @"path_where_you_want_the_file_created";
-NSArray *inputPaths = @[[[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"],
-                        [[NSBundle mainBundle] pathForResource:@"photo1" ofType:@"jpg"]];
-    
-[Main createZipFileAtPath:zippedPath
-         withFilesAtPaths:inputPaths];
-    
-// Zip Directory
-[Main createZipFileAtPath:zippedPath
-  withContentsOfDirectory:inputPaths];
+// Create
+[SSZipArchive createZipFileAtPath: zipPath withContentsOfDirectory: sampleDataPath];
+
+// Unzip
+[SSZipArchive unzipFileAtPath:zipPath toDestination: unzipPath];
 ```
 
-###Licensing
-ZipArchive is released under the [MIT license](https://github.com/ZipArchive/ZipArchive/raw/master/LICENSE) and our slightly modified version of [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.1 is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
+```swift
+// Create
+SSZipArchive.createZipFileAtPath(zipPath, withContentsOfDirectory: sampleDataPath)
+
+// Unzip
+SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
+```
+
+## License
+
+SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.1 is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
+
+## Acknowledgments
+
+Big thanks to [aish](http://code.google.com/p/ziparchive) for creating [ZipArchive](http://code.google.com/p/ziparchive). The project that inspired SSZipArchive. Thank you [@randomsequence](https://github.com/randomsequence) for implementing the creation support tech and to [@johnezang](https://github.com/johnezang) for all his amazing help along the way.
