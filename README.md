@@ -1,4 +1,4 @@
-# WPZipArchive
+# SSZipArchive
 
 ZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.
 
@@ -13,7 +13,7 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS and 
 
 ### CocoaPods
 
-`pod install WPZipArchive`
+`pod install SSZipArchive`
 
 ### Manual
 
