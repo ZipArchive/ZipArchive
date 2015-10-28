@@ -15,6 +15,7 @@
 #include <sys/stat.h>
 
 #define CHUNK 16384
+#define HAVE_AES
 
 @interface SSZipArchive ()
 + (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime;
