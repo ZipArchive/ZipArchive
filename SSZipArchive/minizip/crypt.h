@@ -1,30 +1,29 @@
-/* crypt.h -- base code for crypt/uncrypt ZIPfile
-
-
+/* crypt.h -- base code for traditional PKWARE encryption
    Version 1.01e, February 12th, 2005
 
    Copyright (C) 1998-2005 Gilles Vollant
+   Modifications for Info-ZIP crypting
+     Copyright (C) 2003 Terry Thorsen
 
-   This code is a modified version of crypting code in Infozip distribution
+   This code is a modified version of crypting code in Info-ZIP distribution
+
+   Copyright (C) 1990-2000 Info-ZIP.  All rights reserved.
+
+   See the Info-ZIP LICENSE file version 2000-Apr-09 or later for terms of use
+   which also may be found at: ftp://ftp.info-zip.org/pub/infozip/license.html
 
    The encryption/decryption parts of this source code (as opposed to the
-   non-echoing password parts) were originally written in Europe.  The
+   non-echoing password parts) were originally written in Europe. The
    whole source package can be freely distributed, including from the USA.
    (Prior to January 2000, re-export from the US was a violation of US law.)
 
    This encryption code is a direct transcription of the algorithm from
-   Roger Schlafly, described by Phil Katz in the file appnote.txt.  This
+   Roger Schlafly, described by Phil Katz in the file appnote.txt. This
    file (appnote.txt) is distributed with the PKZIP program (even in the
    version without encryption capabilities).
 
    If you don't need crypting in your application, just define symbols
    NOCRYPT and NOUNCRYPT.
-
-   This code support the "Traditional PKWARE Encryption".
-
-   The new AES encryption added on Zip format by Winzip (see the page
-   http://www.winzip.com/aes_info.htm ) and PKWare PKZip 5.x Strong
-   Encryption is not supported.
 */
 
 #define CRC32(c, b) ((*(pcrc_32_tab+(((int)(c) ^ (b)) & 0xff))) ^ ((c) >> 8))
@@ -67,7 +66,7 @@ static void init_keys(const char* passwd,unsigned long* pkeys,const unsigned lon
     *(pkeys+0) = 305419896L;
     *(pkeys+1) = 591751049L;
     *(pkeys+2) = 878082192L;
-    while (*passwd != '\0') {
+    while (*passwd != 0) {
         update_keys(pkeys,pcrc_32_tab,(int)*passwd);
         passwd++;
     }
@@ -94,11 +93,11 @@ static int crypthead(const char* passwd,      /* password string */
                      const unsigned long* pcrc_32_tab,
                      unsigned long crcForCrypting)
 {
-    int n;                       /* index in random header */
-    int t;                       /* temporary */
-    int c;                       /* random byte */
-    unsigned char header[RAND_HEAD_LEN-2]; /* random header */
-    static unsigned calls = 0;   /* ensure different random header each time */
+    int n;                                  /* index in random header */
+    int t;                                  /* temporary */
+    int c;                                  /* random byte */
+    unsigned char header[RAND_HEAD_LEN-2];  /* random header */
+    static unsigned calls = 0;              /* ensure different random header each time */
 
     if (bufSize<RAND_HEAD_LEN)
       return 0;
