@@ -300,7 +300,9 @@
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:targetFilePath error:nil];
 
     // Compare the value of the permissions attribute to assert equality
-    XCTAssertEqual(fileAttributes[NSFilePosixPermissions], preZipAttributes[NSFilePosixPermissions], @"File permissions should be retained during compression and de-compression");
+    NSString *unzippedPerms = fileAttributes[NSFilePosixPermissions];
+    NSString *prezippedPerms = preZipAttributes[NSFilePosixPermissions];
+    XCTAssertEqualObjects(unzippedPerms, prezippedPerms, @"File permissions should be retained during compression and de-compression");
 }
 
 - (void)testUnzippingWithCancel {
