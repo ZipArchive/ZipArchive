@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ssoper/ZipArchive.svg)](https://travis-ci.org/ssoper/ZipArchive)
+
 # SSZipArchive
 
 ZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.
