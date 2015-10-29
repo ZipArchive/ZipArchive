@@ -3,7 +3,5 @@ osx_image: xcode7.1
 podfile: ObjectiveCExample/Podfile
 xcode_workspace: ObjectiveCExample/ObjectiveCExample.xcworkspace
 xcode_scheme: ObjectiveCExample
-env:
-    global:
-        - CODE_SIGN_IDENTITY=""
-        - CODE_SIGNING_REQUIRED=NO
+script:
+    - xctool -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace -scheme ObjectiveCExample clean test CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
