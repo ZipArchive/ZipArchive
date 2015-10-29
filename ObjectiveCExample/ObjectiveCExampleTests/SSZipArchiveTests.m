@@ -13,11 +13,11 @@
 #import "CollectingDelegate.h"
 
 @interface CancelDelegate : NSObject <SSZipArchiveDelegate>
-@property (nonatomic, assign) int numFilesUnzipped;
-@property (nonatomic, assign) int numFilesToUnzip;
+@property (nonatomic, assign) NSInteger numFilesUnzipped;
+@property (nonatomic, assign) NSInteger numFilesToUnzip;
 @property (nonatomic, assign) BOOL didUnzipArchive;
-@property (nonatomic, assign) int loaded;
-@property (nonatomic, assign) int total;
+@property (nonatomic, assign) NSInteger loaded;
+@property (nonatomic, assign) NSInteger total;
 @end
 
 @implementation CancelDelegate
@@ -34,10 +34,10 @@
 {
     _didUnzipArchive = YES;
 }
-- (void)zipArchiveProgressEvent:(NSInteger)loaded total:(NSInteger)total
+- (void)zipArchiveProgressEvent:(unsigned long long)loaded total:(unsigned long long)total
 {
-    _loaded = (int)loaded;
-    _total = (int)total;
+    _loaded = (NSInteger)loaded;
+    _total = (NSInteger)total;
 }
 @end
 
@@ -363,21 +363,21 @@
 
 - (BOOL)zipArchiveShouldUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo
 {
-    NSLog(@"*** zipArchiveShouldUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
+    NSLog(@"*** zipArchiveShouldUnzipFileAtIndex: `%zd` totalFiles: `%zd` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
     return YES;
 }
 
 - (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-    NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
+    NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%zd` totalFiles: `%zd` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
 }
 
 
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-    NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
+    NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%zd` totalFiles: `%zd` archivePath: `%@` fileInfo:", fileIndex, totalFiles, archivePath);
 }
 
-- (void)zipArchiveProgressEvent:(NSInteger)loaded total:(NSInteger)total {
-    NSLog(@"*** zipArchiveProgressEvent: loaded: `%d` total: `%d`", (int)loaded, (int)total);
+- (void)zipArchiveProgressEvent:(unsigned long long)loaded total:(unsigned long long)total {
+    NSLog(@"*** zipArchiveProgressEvent: loaded: `%zd` total: `%zd`", (NSInteger)loaded, (NSInteger)total);
     [progressEvents addObject:@(loaded)];
 }
 
