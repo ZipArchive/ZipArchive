@@ -4,4 +4,4 @@ podfile: ObjectiveCExample/Podfile
 xcode_workspace: ObjectiveCExample/ObjectiveCExample.xcworkspace
 xcode_scheme: ObjectiveCExample
 script:
-    - xctool -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace -scheme ObjectiveCExample clean test CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+    - xctool -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace -scheme ObjectiveCExample -sdk iphonesimulator clean test CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
