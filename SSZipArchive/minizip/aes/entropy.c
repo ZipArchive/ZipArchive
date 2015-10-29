@@ -3,6 +3,7 @@
 #else
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
 #endif
 
 #if defined(__cplusplus)
@@ -41,7 +42,7 @@ int entropy_fun(unsigned char buf[], unsigned int len)
     int rlen = 0;
     if (frand != -1)
     {
-        rlen = read(frand, buf, len);
+        rlen = (int)read(frand, buf, len);
         close(frand);
     }
     return rlen;

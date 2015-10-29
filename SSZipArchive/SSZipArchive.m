@@ -5,7 +5,6 @@
 //  Created by Sam Soffes on 7/21/10.
 //  Copyright (c) Sam Soffes 2010-2015. All rights reserved.
 //
-
 #import "SSZipArchive.h"
 #include "unzip.h"
 #include "zip.h"
@@ -15,7 +14,6 @@
 #include <sys/stat.h>
 
 #define CHUNK 16384
-#define HAVE_AES
 
 @interface SSZipArchive ()
 + (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime;
@@ -120,6 +118,7 @@
 	BOOL success = YES;
 	BOOL canceled = NO;
 	int ret = 0;
+    int crc_ret =0;
 	unsigned char buffer[4096] = {0};
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
@@ -232,6 +231,7 @@
 	            [directoriesModificationDates addObject: @{@"path": fullPath, @"modDate": modDate}];
 
 	        if ([fileManager fileExistsAtPath:fullPath] && !isDirectory && !overwrite) {
+                //FIXME: couldBe CRC Check?
 				unzCloseCurrentFile(zip);
 				ret = unzGoToNextFile(zip);
 				continue;
@@ -317,7 +317,11 @@
                 }
             }
 
-			unzCloseCurrentFile( zip );
+			crc_ret = unzCloseCurrentFile( zip );
+            if (crc_ret == UNZ_CRCERROR) {
+                //CRC ERROR
+                return NO;
+            }
 			ret = unzGoToNextFile( zip );
 
 			// Message delegate

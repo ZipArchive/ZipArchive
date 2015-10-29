@@ -853,16 +853,16 @@ local int unz64local_GetCurrentFileInfoInternal(unzFile file, unz_file_info64 *p
                 if (uL != 1 && uL != 2)
                     err = UNZ_ERRNO;
                 file_info_internal.aes_version = uL;
-                if (unz64local_getByte(&s->z_filefunc, s->filestream_with_CD, &uL) != UNZ_OK)
+                if (unz64local_getByte(&s->z_filefunc, s->filestream_with_CD, (int *)&uL) != UNZ_OK)
                     err = UNZ_ERRNO;
                 if ((char)uL != 'A')
                     err = UNZ_ERRNO;
-                if (unz64local_getByte(&s->z_filefunc, s->filestream_with_CD, &uL) != UNZ_OK)
+                if (unz64local_getByte(&s->z_filefunc, s->filestream_with_CD, (int *)&uL) != UNZ_OK)
                     err = UNZ_ERRNO;
                 if ((char)uL != 'E')
                     err = UNZ_ERRNO;
                 /* Get AES encryption strength and actual compression method */
-                if (unz64local_getByte(&s->z_filefunc, s->filestream_with_CD, &uL) != UNZ_OK)
+                if (unz64local_getByte(&s->z_filefunc, s->filestream_with_CD, (int *)&uL) != UNZ_OK)
                     err = UNZ_ERRNO;
                 file_info_internal.aes_encryption_mode = uL;
                 if (unz64local_getShort(&s->z_filefunc, s->filestream_with_CD, &uL) != UNZ_OK)
@@ -1202,7 +1202,7 @@ extern int ZEXPORT unzOpenCurrentFile3(unzFile file, int *method, int *level, in
             if (ZREAD64(s->z_filefunc, s->filestream, passverify, AES_PWVERIFYSIZE) != AES_PWVERIFYSIZE)
                 return UNZ_INTERNALERROR;
 
-            fcrypt_init(s->cur_file_info_internal.aes_encryption_mode, password, strlen(password), saltvalue,
+            fcrypt_init((int)s->cur_file_info_internal.aes_encryption_mode, (unsigned char *)password, (unsigned int)strlen(password), saltvalue,
                         passverify, &s->pfile_in_zip_read->aes_ctx);
 
             pfile_in_zip_read_info->rest_read_compressed -= saltlength + AES_PWVERIFYSIZE;
@@ -1293,7 +1293,7 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, unsigned len)
 
             if (pfile_in_zip_read_info->stream.next_in != NULL)
                 bytes_not_read = (uInt)(pfile_in_zip_read_info->read_buffer + UNZ_BUFSIZE -
-                                 pfile_in_zip_read_info->stream.next_in);
+                                        pfile_in_zip_read_info->stream.next_in);
             bytes_to_read -= bytes_not_read;
             if (bytes_not_read > 0)
                 memcpy(pfile_in_zip_read_info->read_buffer, pfile_in_zip_read_info->stream.next_in, bytes_not_read);
