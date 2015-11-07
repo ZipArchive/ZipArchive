@@ -1,3 +1,7 @@
+# Please checkout and comment on https://github.com/ZipArchive/ZipArchive/issues/204 about the future of this project!
+
+
+
 # SSZipArchive
 
 ZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.
