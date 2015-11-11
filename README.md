@@ -1,6 +1,3 @@
-# Please checkout and comment on https://github.com/ZipArchive/ZipArchive/issues/204 about the future of this project!
-
-
 
 # SSZipArchive
 
