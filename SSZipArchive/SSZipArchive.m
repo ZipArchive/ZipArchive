@@ -5,7 +5,6 @@
 //  Created by Sam Soffes on 7/21/10.
 //  Copyright (c) Sam Soffes 2010-2015. All rights reserved.
 //
-
 #import "SSZipArchive.h"
 #include "unzip.h"
 #include "zip.h"
@@ -119,6 +118,7 @@
 	BOOL success = YES;
 	BOOL canceled = NO;
 	int ret = 0;
+    int crc_ret =0;
 	unsigned char buffer[4096] = {0};
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
@@ -231,6 +231,7 @@
 	            [directoriesModificationDates addObject: @{@"path": fullPath, @"modDate": modDate}];
 
 	        if ([fileManager fileExistsAtPath:fullPath] && !isDirectory && !overwrite) {
+                //FIXME: couldBe CRC Check?
 				unzCloseCurrentFile(zip);
 				ret = unzGoToNextFile(zip);
 				continue;
@@ -316,7 +317,11 @@
                 }
             }
 
-			unzCloseCurrentFile( zip );
+			crc_ret = unzCloseCurrentFile( zip );
+            if (crc_ret == UNZ_CRCERROR) {
+                //CRC ERROR
+                return NO;
+            }
 			ret = unzGoToNextFile( zip );
 
 			// Message delegate
@@ -373,14 +378,25 @@
 }
 
 #pragma mark - Zipping
-
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths
+{
+    return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:nil];
+}
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath{
+    return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath withPassword:nil];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirector{
+    return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirector withPassword:nil];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths withPassword:(NSString *)password
 {
 	BOOL success = NO;
 	SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
 	if ([zipArchive open]) {
 		for (NSString *filePath in paths) {
-			[zipArchive writeFile:filePath];
+			[zipArchive writeFile:filePath withPassword:password];
 		}
 		success = [zipArchive close];
 	}
@@ -392,12 +408,12 @@
 	return success;
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
-    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:NO];
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath  withPassword:(NSString *)password{
+return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:NO withPassword:password];
 }
 
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory {
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(NSString *)password{
     BOOL success = NO;
     
     NSFileManager *fileManager = nil;
@@ -417,7 +433,7 @@
                 {
                     fileName = [[directoryPath lastPathComponent] stringByAppendingPathComponent:fileName];
                 }
-                [zipArchive writeFileAtPath:fullFilePath withFileName:fileName];
+                [zipArchive writeFileAtPath:fullFilePath withFileName:fileName withPassword:password];
             }
             else
             {
@@ -425,7 +441,7 @@
                 {
                     NSString *tempName = [fullFilePath stringByAppendingPathComponent:@".DS_Store"];
                     [@"" writeToFile:tempName atomically:YES encoding:NSUTF8StringEncoding error:nil];
-                    [zipArchive writeFileAtPath:tempName withFileName:[fileName stringByAppendingPathComponent:@".DS_Store"]];
+                    [zipArchive writeFileAtPath:tempName withFileName:[fileName stringByAppendingPathComponent:@".DS_Store"] withPassword:password];
                     [[NSFileManager defaultManager] removeItemAtPath:tempName error:nil];
                 }
             }
@@ -485,7 +501,7 @@
     zipInfo->tmz_date.tm_year = (unsigned int)components.year;
 }
 
-- (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName
+- (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName withPassword:(NSString *)password
 {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
 
@@ -519,21 +535,22 @@
     }
 
 	unsigned int len = 0;
-    zipOpenNewFileInZip(_zip, [[folderName stringByAppendingString:@"/"] UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_NO_COMPRESSION);
+    zipOpenNewFileInZip3(_zip, [[folderName stringByAppendingString:@"/"] UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_NO_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL,
+                         Z_DEFAULT_STRATEGY, [password UTF8String], 0);
 	zipWriteInFileInZip(_zip, &len, 0);
 	zipCloseFileInZip(_zip);
 	return YES;
 }
 
-- (BOOL)writeFile:(NSString *)path
+- (BOOL)writeFile:(NSString *)path withPassword:(NSString *)password;
 {
-    return [self writeFileAtPath:path withFileName:nil];
+    return [self writeFileAtPath:path withFileName:nil withPassword:password];
 }
 
 // supports writing files with logical folder/directory structure
 // *path* is the absolute path of the file that will be compressed
 // *fileName* is the relative name of the file how it is stored within the zip e.g. /folder/subfolder/text1.txt
-- (BOOL)writeFileAtPath:(NSString *)path withFileName:(NSString *)fileName
+- (BOOL)writeFileAtPath:(NSString *)path withFileName:(NSString *)fileName withPassword:(NSString *)password
 {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
 
@@ -579,8 +596,8 @@
         }
     }
 
-    zipOpenNewFileInZip(_zip, afileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
-
+    zipOpenNewFileInZip3(_zip, afileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, [password UTF8String], 0);
+    
 	void *buffer = malloc(CHUNK);
 	unsigned int len = 0;
 
@@ -596,7 +613,7 @@
 	return YES;
 }
 
-- (BOOL)writeData:(NSData *)data filename:(NSString *)filename
+- (BOOL)writeData:(NSData *)data filename:(NSString *)filename withPassword:(NSString *)password;
 {
     if (!_zip) {
 		return NO;
@@ -607,7 +624,7 @@
     zip_fileinfo zipInfo = {{0,0,0,0,0,0},0,0,0};
     [self zipInfo:&zipInfo setDate:[NSDate date]];
 
-	zipOpenNewFileInZip(_zip, [filename UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION);
+    zipOpenNewFileInZip3(_zip, [filename UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, [password UTF8String], 0);
 
     zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
 
