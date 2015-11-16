@@ -1,3 +1,4 @@
+
 # SSZipArchive
 
 ZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.
