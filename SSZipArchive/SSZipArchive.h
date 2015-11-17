@@ -15,7 +15,7 @@
 @protocol SSZipArchiveDelegate;
 
 @interface SSZipArchive : NSObject
-
++ (NSArray *)AllZipContent:(NSString *)path;
 // Unzip
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination;
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination delegate:(id<SSZipArchiveDelegate>)delegate;
