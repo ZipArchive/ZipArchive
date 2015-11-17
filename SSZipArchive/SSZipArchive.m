@@ -27,6 +27,59 @@
     zipFile _zip;
 }
 
++(NSArray *)AllZipContent:(NSString *)path    // list the contents of the zip archive.
+{
+    zipFile zip = unzOpen((const char*)[path UTF8String]);
+    int ret = unzGoToFirstFile( zip );
+    NSMutableArray * allFilenames = [NSMutableArray arrayWithCapacity:40];
+    
+    if( ret!=UNZ_OK )
+    {
+        NSLog(@"Failed");
+    }
+    do
+    {
+        if( ret!=UNZ_OK )
+        {
+            NSLog(@"Error occured");
+            break;
+        }
+        
+        // reading data and write to file
+        unz_file_info   fileInfo = {0};
+        ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
+        if( ret!=UNZ_OK )
+        {
+            NSLog(@"Error occurs while getting file info");
+            unzCloseCurrentFile( zip );
+            break;
+        }
+        char* filename = (char*) malloc( fileInfo.size_filename +1 );
+        unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
+        filename[fileInfo.size_filename] = '\0';
+        
+        // check if it contains directory
+        NSString * strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
+        free( filename );
+        if( [strPath rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"/\\"]].location != NSNotFound )
+        {// contains a path
+            strPath = [strPath stringByReplacingOccurrencesOfString:@"\\" withString:@"/"];
+        }
+        
+        // Copy name to array
+        if(strPath != nil)
+            [allFilenames addObject:strPath];
+        
+        unzCloseCurrentFile( zip );
+        ret = unzGoToNextFile( zip );
+    }  while( ret==UNZ_OK && UNZ_OK!=UNZ_END_OF_LIST_OF_FILE );
+    
+    unzClose(zip);
+    // return an immutable array.
+    return [NSArray arrayWithArray:allFilenames];
+}
+
+
 #pragma mark - Unzipping
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination
