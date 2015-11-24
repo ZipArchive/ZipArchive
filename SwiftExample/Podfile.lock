@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ..
 
 SPEC CHECKSUMS:
-  SSZipArchive: 5f30a0af2cb3d48c0ff83b1e18029f7041ac3c38
+  SSZipArchive: 7bfebbf578e47e1c4239a06f0c202101d4d933ab
 
 COCOAPODS: 0.39.0
