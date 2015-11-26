@@ -828,6 +828,8 @@ extern zipFile ZEXPORT zipOpen4(const void *pathname, int append, ZPOS64_T disk_
         size_central_dir_to_read = size_central_dir;
         buf_size = SIZEDATA_INDATABLOCK;
         buf_read = (void *)ALLOC(buf_size);
+        if (buf_read == NULL)
+            err = ZIP_INTERNALERROR;
 
         if (ZSEEK64(ziinit.z_filefunc, ziinit.filestream,
                     offset_central_dir + byte_before_the_zipfile, ZLIB_FILEFUNC_SEEK_SET) != 0)
@@ -1031,6 +1033,9 @@ extern int ZEXPORT zipOpenNewFileInZip4_64(zipFile file, const char *filename, c
         zi->ci.size_centralextrafree += 11; /* Extra space reserved for AES extra info */
 #endif
     zi->ci.central_header = (char *)ALLOC((uInt)zi->ci.size_centralheader + zi->ci.size_centralextrafree + size_comment);
+    if (zi->ci.central_header == NULL)
+        return ZIP_INTERNALERROR;
+    
     zi->ci.number_disk = zi->number_disk;
 
     /* Write central directory header */
