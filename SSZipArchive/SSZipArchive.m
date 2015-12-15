@@ -325,7 +325,8 @@
             crc_ret = unzCloseCurrentFile( zip );
             if (crc_ret == UNZ_CRCERROR) {
                 //CRC ERROR
-                return NO;
+                success = NO;
+                break;
             }
             ret = unzGoToNextFile( zip );
             
@@ -375,9 +376,19 @@
         [delegate zipArchiveProgressEvent:fileSize total:fileSize];
     }
     
+    NSError *retErr = nil;
+    if (crc_ret == UNZ_CRCERROR)
+    {
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"crc check failed for file"};
+        retErr = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-3 userInfo:userInfo];
+    }
+    if (error)
+    {
+        *error = retErr;
+    }
     if (completionHandler)
     {
-        completionHandler(path, YES, nil);
+        completionHandler(path, success, retErr);
     }
     return success;
 }
