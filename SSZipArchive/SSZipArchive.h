@@ -50,6 +50,7 @@
 - (instancetype)initWithPath:(NSString *)path;
 @property (NS_NONATOMIC_IOSONLY, readonly, getter = isOpen) BOOL open;
 - (BOOL)writeFile:(NSString *)path withPassword:(NSString *)password;
+- (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName;
 - (BOOL)writeFileAtPath:(NSString *)path withFileName:(NSString *)fileName withPassword:(NSString *)password;
 - (BOOL)writeData:(NSData *)data filename:(NSString *)filename withPassword:(NSString *)password;
 @property (NS_NONATOMIC_IOSONLY, readonly, getter = isClosed) BOOL close;
