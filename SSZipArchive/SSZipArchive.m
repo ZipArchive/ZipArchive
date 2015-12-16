@@ -196,14 +196,14 @@
             // The original constants can be found here:
             //    http://minnie.tuhs.org/cgi-bin/utree.pl?file=4.4BSD/usr/include/sys/stat.h
             //
-            const uLong ZipUNIXVersion = 3;
-            const uLong BSD_SFMT = 0170000;
-            const uLong BSD_IFLNK = 0120000;
+            //const uLong ZipUNIXVersion = 3;
+            //const uLong BSD_SFMT = 0170000;
+            //const uLong BSD_IFLNK = 0120000;
             
-            BOOL fileIsSymbolicLink = NO;
-            if (((fileInfo.version >> 8) == ZipUNIXVersion) && BSD_IFLNK == (BSD_SFMT & (fileInfo.external_fa >> 16))) {
-                fileIsSymbolicLink = NO;
-            }
+            //BOOL fileIsSymbolicLink = NO;
+            //if (((fileInfo.version >> 8) == ZipUNIXVersion) && BSD_IFLNK == (BSD_SFMT & (fileInfo.external_fa >> 16))) {
+            //    fileIsSymbolicLink = NO;
+            //}
             
             // Check if it contains directory
             NSString *strPath = @(filename);
@@ -232,7 +232,7 @@
                 NSLog(@"[SSZipArchive] Error: %@", err.localizedDescription);
             }
             
-            if(!fileIsSymbolicLink)
+            //if(!fileIsSymbolicLink)
                 [directoriesModificationDates addObject: @{@"path": fullPath, @"modDate": modDate}];
             
             if ([fileManager fileExistsAtPath:fullPath] && !isDirectory && !overwrite) {
@@ -242,7 +242,7 @@
                 continue;
             }
             
-            if (!fileIsSymbolicLink) {
+            //if (!fileIsSymbolicLink) {
                 FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
                 while (fp) {
                     int readBytes = unzReadCurrentFile(zip, buffer, 4096);
@@ -300,27 +300,27 @@
 #endif
                     }
                 }
-            }
-            else
-            {
-                // Assemble the path for the symbolic link
-                NSMutableString* destinationPath = [NSMutableString string];
-                int bytesRead = 0;
-                while((bytesRead = unzReadCurrentFile(zip, buffer, 4096)) > 0)
-                {
-                    buffer[bytesRead] = (int)0;
-                    [destinationPath appendString:@((const char*)buffer)];
-                }
-                
-                // Create the symbolic link (making sure it stays relative if it was relative before)
-                int symlinkError = symlink([destinationPath cStringUsingEncoding:NSUTF8StringEncoding],
-                                           [fullPath cStringUsingEncoding:NSUTF8StringEncoding]);
-                
-                if(symlinkError != 0)
-                {
-                    NSLog(@"Failed to create symbolic link at \"%@\" to \"%@\". symlink() error code: %d", fullPath, destinationPath, errno);
-                }
-            }
+            //}
+            //else
+            //{
+            //    // Assemble the path for the symbolic link
+            //    NSMutableString* destinationPath = [NSMutableString string];
+            //    int bytesRead = 0;
+            //    while((bytesRead = unzReadCurrentFile(zip, buffer, 4096)) > 0)
+            //    {
+            //        buffer[bytesRead] = (int)0;
+            //        [destinationPath appendString:@((const char*)buffer)];
+            //    }
+            //
+            //    // Create the symbolic link (making sure it stays relative if it was relative before)
+            //    int symlinkError = symlink([destinationPath cStringUsingEncoding:NSUTF8StringEncoding],
+            //                               [fullPath cStringUsingEncoding:NSUTF8StringEncoding]);
+            //
+            //    if(symlinkError != 0)
+            //    {
+            //        NSLog(@"Failed to create symbolic link at \"%@\" to \"%@\". symlink() error code: %d", fullPath, destinationPath, errno);
+            //    }
+            //}
             
             crc_ret = unzCloseCurrentFile( zip );
             if (crc_ret == UNZ_CRCERROR) {
