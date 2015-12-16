@@ -443,6 +443,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../Carthage/Build/ios/**";
 				INFOPLIST_FILE = SwiftExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "-DUseCarthage";
 				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.SwiftExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -455,6 +456,7 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../Carthage/Build/ios/**";
 				INFOPLIST_FILE = SwiftExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "-DUseCarthage";
 				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.SwiftExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
