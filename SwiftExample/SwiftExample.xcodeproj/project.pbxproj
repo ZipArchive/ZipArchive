@@ -14,7 +14,7 @@
 		2B4B246E1C21500E00CC99E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19131BDA74F800709011 /* Assets.xcassets */; };
 		2B4B246F1C21500E00CC99E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19101BDA74F800709011 /* Main.storyboard */; };
 		2B4B24701C21500E00CC99E5 /* Sample Data in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19461BDA82EA00709011 /* Sample Data */; };
-		2B4B247B1C21508900CC99E5 /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B4B247A1C21508900CC99E5 /* ZipArchive.framework */; };
+		57AA942E1C28397000858D82 /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57AA942D1C28397000858D82 /* ZipArchive.framework */; };
 		5914648EC4509E192D31CA42 /* Pods_SwiftExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E81180168B01E0210FE1E3F /* Pods_SwiftExample.framework */; };
 		8DFE190D1BDA74F800709011 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE190C1BDA74F800709011 /* AppDelegate.swift */; };
 		8DFE190F1BDA74F800709011 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE190E1BDA74F800709011 /* ViewController.swift */; };
@@ -39,6 +39,7 @@
 /* Begin PBXFileReference section */
 		2B4B24761C21500E00CC99E5 /* SwiftExampleCarthage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftExampleCarthage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B4B247A1C21508900CC99E5 /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipArchive.framework; path = ../Carthage/Build/iOS/ZipArchive.framework; sourceTree = "<group>"; };
+		57AA942D1C28397000858D82 /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipArchive.framework; path = Carthage/Build/iOS/ZipArchive.framework; sourceTree = "<group>"; };
 		8DFE19091BDA74F800709011 /* SwiftExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DFE190C1BDA74F800709011 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8DFE190E1BDA74F800709011 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -72,7 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B4B247B1C21508900CC99E5 /* ZipArchive.framework in Frameworks */,
+				57AA942E1C28397000858D82 /* ZipArchive.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,6 +98,7 @@
 		1B67DA700507825BD99DCEA7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				57AA942D1C28397000858D82 /* ZipArchive.framework */,
 				2B4B247A1C21508900CC99E5 /* ZipArchive.framework */,
 				9E81180168B01E0210FE1E3F /* Pods_SwiftExample.framework */,
 			);
@@ -321,7 +323,7 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/../Carthage/Build/iOS/ZipArchive.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ZipArchive.framework",
 			);
 			outputPaths = (
 			);
@@ -440,7 +442,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../Carthage/Build/ios/**";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/../Carthage/Build/ios/**",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SwiftExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DUseCarthage";
@@ -453,7 +458,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../Carthage/Build/ios/**";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/../Carthage/Build/ios/**",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = SwiftExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-DUseCarthage";
