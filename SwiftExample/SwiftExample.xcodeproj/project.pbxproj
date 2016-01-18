@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B4B24671C21500E00CC99E5 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE19391BDA7D8C00709011 /* mztools.c */; };
+		2B4B24681C21500E00CC99E5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE190E1BDA74F800709011 /* ViewController.swift */; };
+		2B4B24691C21500E00CC99E5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE190C1BDA74F800709011 /* AppDelegate.swift */; };
+		2B4B246D1C21500E00CC99E5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19151BDA74F800709011 /* LaunchScreen.storyboard */; };
+		2B4B246E1C21500E00CC99E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19131BDA74F800709011 /* Assets.xcassets */; };
+		2B4B246F1C21500E00CC99E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19101BDA74F800709011 /* Main.storyboard */; };
+		2B4B24701C21500E00CC99E5 /* Sample Data in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19461BDA82EA00709011 /* Sample Data */; };
+		57AA942E1C28397000858D82 /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57AA942D1C28397000858D82 /* ZipArchive.framework */; };
 		5914648EC4509E192D31CA42 /* Pods_SwiftExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E81180168B01E0210FE1E3F /* Pods_SwiftExample.framework */; };
 		8DFE190D1BDA74F800709011 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE190C1BDA74F800709011 /* AppDelegate.swift */; };
 		8DFE190F1BDA74F800709011 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE190E1BDA74F800709011 /* ViewController.swift */; };
@@ -29,6 +37,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2B4B24761C21500E00CC99E5 /* SwiftExampleCarthage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftExampleCarthage.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B4B247A1C21508900CC99E5 /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipArchive.framework; path = ../Carthage/Build/iOS/ZipArchive.framework; sourceTree = "<group>"; };
+		57AA942D1C28397000858D82 /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipArchive.framework; path = Carthage/Build/iOS/ZipArchive.framework; sourceTree = "<group>"; };
 		8DFE19091BDA74F800709011 /* SwiftExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DFE190C1BDA74F800709011 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8DFE190E1BDA74F800709011 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -58,6 +69,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2B4B24791C21507400CC99E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				57AA942E1C28397000858D82 /* ZipArchive.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DFE19061BDA74F800709011 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -79,6 +98,8 @@
 		1B67DA700507825BD99DCEA7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				57AA942D1C28397000858D82 /* ZipArchive.framework */,
+				2B4B247A1C21508900CC99E5 /* ZipArchive.framework */,
 				9E81180168B01E0210FE1E3F /* Pods_SwiftExample.framework */,
 			);
 			name = Frameworks;
@@ -101,6 +122,7 @@
 			children = (
 				8DFE19091BDA74F800709011 /* SwiftExample.app */,
 				8DFE191D1BDA74F800709011 /* SwiftExampleTests.xctest */,
+				2B4B24761C21500E00CC99E5 /* SwiftExampleCarthage.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -168,6 +190,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2B4B24641C21500E00CC99E5 /* SwiftExampleCarthage */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B4B24731C21500E00CC99E5 /* Build configuration list for PBXNativeTarget "SwiftExampleCarthage" */;
+			buildPhases = (
+				2B4B24661C21500E00CC99E5 /* Sources */,
+				2B4B24791C21507400CC99E5 /* Frameworks */,
+				2B4B246C1C21500E00CC99E5 /* Resources */,
+				2B4B247D1C2150A600CC99E5 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwiftExampleCarthage;
+			productName = SwiftExample;
+			productReference = 2B4B24761C21500E00CC99E5 /* SwiftExampleCarthage.app */;
+			productType = "com.apple.product-type.application";
+		};
 		8DFE19081BDA74F800709011 /* SwiftExample */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8DFE19261BDA74F800709011 /* Build configuration list for PBXNativeTarget "SwiftExample" */;
@@ -239,11 +279,23 @@
 			targets = (
 				8DFE19081BDA74F800709011 /* SwiftExample */,
 				8DFE191C1BDA74F800709011 /* SwiftExampleTests */,
+				2B4B24641C21500E00CC99E5 /* SwiftExampleCarthage */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2B4B246C1C21500E00CC99E5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B4B246D1C21500E00CC99E5 /* LaunchScreen.storyboard in Resources */,
+				2B4B246E1C21500E00CC99E5 /* Assets.xcassets in Resources */,
+				2B4B246F1C21500E00CC99E5 /* Main.storyboard in Resources */,
+				2B4B24701C21500E00CC99E5 /* Sample Data in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DFE19071BDA74F800709011 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -265,6 +317,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2B4B247D1C2150A600CC99E5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/ZipArchive.framework",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			showEnvVarsInLog = 0;
+		};
 		AEFD7A965DD623210F3FCEAA /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -313,6 +380,16 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2B4B24661C21500E00CC99E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2B4B24671C21500E00CC99E5 /* mztools.c in Sources */,
+				2B4B24681C21500E00CC99E5 /* ViewController.swift in Sources */,
+				2B4B24691C21500E00CC99E5 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DFE19051BDA74F800709011 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -361,6 +438,38 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2B4B24741C21500E00CC99E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/../Carthage/Build/ios/**",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = SwiftExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "-DUseCarthage";
+				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.SwiftExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2B4B24751C21500E00CC99E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/../Carthage/Build/ios/**",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = SwiftExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "-DUseCarthage";
+				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.SwiftExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		8DFE19241BDA74F800709011 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -495,6 +604,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2B4B24731C21500E00CC99E5 /* Build configuration list for PBXNativeTarget "SwiftExampleCarthage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2B4B24741C21500E00CC99E5 /* Debug */,
+				2B4B24751C21500E00CC99E5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		8DFE19041BDA74F800709011 /* Build configuration list for PBXProject "SwiftExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

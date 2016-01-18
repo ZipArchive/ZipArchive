@@ -16,6 +16,9 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS and 
 
 `pod install SSZipArchive`
 
+### Carthage
+`github "ZipArchive/ZipArchive"`
+
 ### Manual
 
 1. Add the `SSZipArchive` and `minizip` folders to your project.

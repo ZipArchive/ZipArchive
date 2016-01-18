@@ -6,7 +6,7 @@
 //  Copyright © 2015 smumryak. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for ZipArchive.
 FOUNDATION_EXPORT double ZipArchiveVersionNumber;

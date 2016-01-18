@@ -7,7 +7,12 @@
 //
 
 import UIKit
-import SSZipArchive
+
+#if UseCarthage
+    import ZipArchive
+#else
+    import SSZipArchive
+#endif
 
 class ViewController: UIViewController {
 

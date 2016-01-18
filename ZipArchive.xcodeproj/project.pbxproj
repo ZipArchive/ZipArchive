@@ -7,6 +7,41 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AFF75A2D1C3727F000F450AC /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AFF75A2E1C37280200F450AC /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE481C0DF7950004A2F1 /* SSZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AFF75A2F1C37280200F450AC /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = B423AE491C0DF7950004A2F1 /* SSZipArchive.m */; };
+		AFF75A301C37280900F450AC /* Common.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE3C1C0DF7950004A2F1 /* Common.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AFF75A311C37281700F450AC /* aes.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE271C0DF7950004A2F1 /* aes.h */; };
+		AFF75A321C37281700F450AC /* aes_via_ace.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE281C0DF7950004A2F1 /* aes_via_ace.h */; };
+		AFF75A331C37281700F450AC /* aescrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE291C0DF7950004A2F1 /* aescrypt.c */; };
+		AFF75A341C37281700F450AC /* aeskey.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE2A1C0DF7950004A2F1 /* aeskey.c */; };
+		AFF75A351C37281700F450AC /* aesopt.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE2B1C0DF7950004A2F1 /* aesopt.h */; };
+		AFF75A361C37281700F450AC /* aestab.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE2C1C0DF7950004A2F1 /* aestab.c */; };
+		AFF75A371C37281700F450AC /* aestab.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE2D1C0DF7950004A2F1 /* aestab.h */; };
+		AFF75A381C37281700F450AC /* brg_endian.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE2E1C0DF7950004A2F1 /* brg_endian.h */; };
+		AFF75A391C37281700F450AC /* brg_types.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE2F1C0DF7950004A2F1 /* brg_types.h */; };
+		AFF75A3A1C37281700F450AC /* entropy.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE301C0DF7950004A2F1 /* entropy.c */; };
+		AFF75A3B1C37281700F450AC /* entropy.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE311C0DF7950004A2F1 /* entropy.h */; };
+		AFF75A3C1C37281700F450AC /* fileenc.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE321C0DF7950004A2F1 /* fileenc.c */; };
+		AFF75A3D1C37281700F450AC /* fileenc.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE331C0DF7950004A2F1 /* fileenc.h */; };
+		AFF75A3E1C37281700F450AC /* hmac.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE341C0DF7950004A2F1 /* hmac.c */; };
+		AFF75A3F1C37281700F450AC /* hmac.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE351C0DF7950004A2F1 /* hmac.h */; };
+		AFF75A401C37281700F450AC /* prng.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE361C0DF7950004A2F1 /* prng.c */; };
+		AFF75A411C37281700F450AC /* prng.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE371C0DF7950004A2F1 /* prng.h */; };
+		AFF75A421C37281700F450AC /* pwd2key.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE381C0DF7950004A2F1 /* pwd2key.c */; };
+		AFF75A431C37281700F450AC /* pwd2key.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE391C0DF7950004A2F1 /* pwd2key.h */; };
+		AFF75A441C37281700F450AC /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE3A1C0DF7950004A2F1 /* sha1.c */; };
+		AFF75A451C37281700F450AC /* sha1.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE3B1C0DF7950004A2F1 /* sha1.h */; };
+		AFF75A461C37282700F450AC /* crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE3F1C0DF7950004A2F1 /* crypt.h */; };
+		AFF75A471C37282700F450AC /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE401C0DF7950004A2F1 /* ioapi.c */; };
+		AFF75A481C37282700F450AC /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE411C0DF7950004A2F1 /* ioapi.h */; };
+		AFF75A491C37282700F450AC /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE421C0DF7950004A2F1 /* mztools.c */; };
+		AFF75A4A1C37282700F450AC /* mztools.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE431C0DF7950004A2F1 /* mztools.h */; };
+		AFF75A4B1C37282700F450AC /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE441C0DF7950004A2F1 /* unzip.c */; };
+		AFF75A4C1C37282700F450AC /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE451C0DF7950004A2F1 /* unzip.h */; };
+		AFF75A4D1C37282700F450AC /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE461C0DF7950004A2F1 /* zip.c */; };
+		AFF75A4E1C37282700F450AC /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE471C0DF7950004A2F1 /* zip.h */; };
+		AFF75A511C3728F000F450AC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B423AE6E1C0DF83F0004A2F1 /* libz.tbd */; };
 		B423AE4B1C0DF7950004A2F1 /* aes.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE271C0DF7950004A2F1 /* aes.h */; };
 		B423AE4C1C0DF7950004A2F1 /* aes_via_ace.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE281C0DF7950004A2F1 /* aes_via_ace.h */; };
 		B423AE4D1C0DF7950004A2F1 /* aescrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = B423AE291C0DF7950004A2F1 /* aescrypt.c */; };
@@ -45,6 +80,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AFF75A241C37279600F450AC /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B423AE1A1C0DF76A0004A2F1 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B423AE271C0DF7950004A2F1 /* aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aes.h; sourceTree = "<group>"; };
 		B423AE281C0DF7950004A2F1 /* aes_via_ace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aes_via_ace.h; sourceTree = "<group>"; };
@@ -85,6 +121,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AFF75A201C37279600F450AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AFF75A511C3728F000F450AC /* libz.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B423AE161C0DF76A0004A2F1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -109,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				B423AE1A1C0DF76A0004A2F1 /* ZipArchive.framework */,
+				AFF75A241C37279600F450AC /* ZipArchive.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -174,6 +219,33 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		AFF75A211C37279600F450AC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AFF75A411C37281700F450AC /* prng.h in Headers */,
+				AFF75A431C37281700F450AC /* pwd2key.h in Headers */,
+				AFF75A311C37281700F450AC /* aes.h in Headers */,
+				AFF75A3F1C37281700F450AC /* hmac.h in Headers */,
+				AFF75A3D1C37281700F450AC /* fileenc.h in Headers */,
+				AFF75A2D1C3727F000F450AC /* ZipArchive.h in Headers */,
+				AFF75A351C37281700F450AC /* aesopt.h in Headers */,
+				AFF75A381C37281700F450AC /* brg_endian.h in Headers */,
+				AFF75A321C37281700F450AC /* aes_via_ace.h in Headers */,
+				AFF75A2E1C37280200F450AC /* SSZipArchive.h in Headers */,
+				AFF75A451C37281700F450AC /* sha1.h in Headers */,
+				AFF75A4C1C37282700F450AC /* unzip.h in Headers */,
+				AFF75A4A1C37282700F450AC /* mztools.h in Headers */,
+				AFF75A301C37280900F450AC /* Common.h in Headers */,
+				AFF75A371C37281700F450AC /* aestab.h in Headers */,
+				AFF75A3B1C37281700F450AC /* entropy.h in Headers */,
+				AFF75A481C37282700F450AC /* ioapi.h in Headers */,
+				AFF75A391C37281700F450AC /* brg_types.h in Headers */,
+				AFF75A4E1C37282700F450AC /* zip.h in Headers */,
+				AFF75A461C37282700F450AC /* crypt.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B423AE171C0DF76A0004A2F1 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -204,9 +276,27 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		B423AE191C0DF76A0004A2F1 /* ZipArchive */ = {
+		AFF75A231C37279600F450AC /* ZipArchive-Mac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B423AE221C0DF76A0004A2F1 /* Build configuration list for PBXNativeTarget "ZipArchive" */;
+			buildConfigurationList = AFF75A291C37279600F450AC /* Build configuration list for PBXNativeTarget "ZipArchive-Mac" */;
+			buildPhases = (
+				AFF75A1F1C37279600F450AC /* Sources */,
+				AFF75A201C37279600F450AC /* Frameworks */,
+				AFF75A211C37279600F450AC /* Headers */,
+				AFF75A221C37279600F450AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ZipArchive-Mac";
+			productName = "ZipArchive-Mac";
+			productReference = AFF75A241C37279600F450AC /* ZipArchive.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		B423AE191C0DF76A0004A2F1 /* ZipArchive-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B423AE221C0DF76A0004A2F1 /* Build configuration list for PBXNativeTarget "ZipArchive-iOS" */;
 			buildPhases = (
 				B423AE151C0DF76A0004A2F1 /* Sources */,
 				B423AE161C0DF76A0004A2F1 /* Frameworks */,
@@ -217,7 +307,7 @@
 			);
 			dependencies = (
 			);
-			name = ZipArchive;
+			name = "ZipArchive-iOS";
 			productName = ZipArchive;
 			productReference = B423AE1A1C0DF76A0004A2F1 /* ZipArchive.framework */;
 			productType = "com.apple.product-type.framework";
@@ -231,6 +321,9 @@
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = smumryak;
 				TargetAttributes = {
+					AFF75A231C37279600F450AC = {
+						CreatedOnToolsVersion = 7.2;
+					};
 					B423AE191C0DF76A0004A2F1 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
@@ -248,12 +341,20 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B423AE191C0DF76A0004A2F1 /* ZipArchive */,
+				B423AE191C0DF76A0004A2F1 /* ZipArchive-iOS */,
+				AFF75A231C37279600F450AC /* ZipArchive-Mac */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		AFF75A221C37279600F450AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B423AE181C0DF76A0004A2F1 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -264,6 +365,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		AFF75A1F1C37279600F450AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AFF75A441C37281700F450AC /* sha1.c in Sources */,
+				AFF75A3C1C37281700F450AC /* fileenc.c in Sources */,
+				AFF75A491C37282700F450AC /* mztools.c in Sources */,
+				AFF75A3E1C37281700F450AC /* hmac.c in Sources */,
+				AFF75A4B1C37282700F450AC /* unzip.c in Sources */,
+				AFF75A341C37281700F450AC /* aeskey.c in Sources */,
+				AFF75A361C37281700F450AC /* aestab.c in Sources */,
+				AFF75A331C37281700F450AC /* aescrypt.c in Sources */,
+				AFF75A3A1C37281700F450AC /* entropy.c in Sources */,
+				AFF75A401C37281700F450AC /* prng.c in Sources */,
+				AFF75A471C37282700F450AC /* ioapi.c in Sources */,
+				AFF75A4D1C37282700F450AC /* zip.c in Sources */,
+				AFF75A421C37281700F450AC /* pwd2key.c in Sources */,
+				AFF75A2F1C37280200F450AC /* SSZipArchive.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B423AE151C0DF76A0004A2F1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -288,6 +410,49 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		AFF75A2A1C37279600F450AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "$(SRCROOT)/SSZipArchive/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.ZipArchive;
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		AFF75A2B1C37279600F450AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "$(SRCROOT)/SSZipArchive/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.ZipArchive;
+				PRODUCT_NAME = "$(PROJECT_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		B423AE201C0DF76A0004A2F1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -305,8 +470,6 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -353,8 +516,6 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -383,6 +544,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				BITCODE_GENERATION_MODE = marker;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -392,7 +554,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.ZipArchive;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -402,6 +564,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				BITCODE_GENERATION_MODE = bitcode;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -411,7 +574,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.ZipArchive;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -419,6 +582,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AFF75A291C37279600F450AC /* Build configuration list for PBXNativeTarget "ZipArchive-Mac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AFF75A2A1C37279600F450AC /* Debug */,
+				AFF75A2B1C37279600F450AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		B423AE141C0DF76A0004A2F1 /* Build configuration list for PBXProject "ZipArchive" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -428,7 +599,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B423AE221C0DF76A0004A2F1 /* Build configuration list for PBXNativeTarget "ZipArchive" */ = {
+		B423AE221C0DF76A0004A2F1 /* Build configuration list for PBXNativeTarget "ZipArchive-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B423AE231C0DF76A0004A2F1 /* Debug */,
