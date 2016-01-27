@@ -34,7 +34,7 @@
 {
     _didUnzipArchive = YES;
 }
-- (void)zipArchiveProgressEvent:(NSInteger)loaded total:(NSInteger)total
+- (void)zipArchiveProgressEvent:(unsigned long long)loaded total:(unsigned long long)total
 {
     _loaded = (int)loaded;
     _total = (int)total;
@@ -380,8 +380,8 @@
     NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
 }
 
-- (void)zipArchiveProgressEvent:(NSInteger)loaded total:(NSInteger)total {
-    NSLog(@"*** zipArchiveProgressEvent: loaded: `%d` total: `%d`", (int)loaded, (int)total);
+- (void)zipArchiveProgressEvent:(unsigned long long)loaded total:(unsigned long long)total {
+    NSLog(@"*** zipArchiveProgressEvent: loaded: `%llu` total: `%llu`", loaded, total);
     [progressEvents addObject:@(loaded)];
 }
 
