@@ -299,8 +299,12 @@
     // Get the file attributes of the target file following the unzipping
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:targetFilePath error:nil];
 
+    
+    NSInteger permissions = ((NSNumber *)fileAttributes[NSFilePosixPermissions]).longValue;
+    NSInteger preZipPermissions = ((NSNumber *)preZipAttributes[NSFilePosixPermissions]).longValue;
+
     // Compare the value of the permissions attribute to assert equality
-    XCTAssertEqual(fileAttributes[NSFilePosixPermissions], preZipAttributes[NSFilePosixPermissions], @"File permissions should be retained during compression and de-compression");
+    XCTAssertEqual(permissions, preZipPermissions, @"File permissions should be retained during compression and de-compression");
 }
 
 - (void)testUnzippingWithCancel {

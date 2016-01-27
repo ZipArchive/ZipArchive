@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AFF75A231C37279600F450AC"
-               BuildableName = "ZipArchive-Mac.framework"
+               BuildableName = "ZipArchive.framework"
                BlueprintName = "ZipArchive-Mac"
                ReferencedContainer = "container:ZipArchive.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AFF75A231C37279600F450AC"
-            BuildableName = "ZipArchive-Mac.framework"
+            BuildableName = "ZipArchive.framework"
             BlueprintName = "ZipArchive-Mac"
             ReferencedContainer = "container:ZipArchive.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "AFF75A231C37279600F450AC"
-            BuildableName = "ZipArchive-Mac.framework"
+            BuildableName = "ZipArchive.framework"
             BlueprintName = "ZipArchive-Mac"
             ReferencedContainer = "container:ZipArchive.xcodeproj">
          </BuildableReference>
