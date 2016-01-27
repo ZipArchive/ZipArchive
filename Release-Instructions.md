@@ -1,3 +1,5 @@
+The following steps should be taking by project maintainers if they create a new release.
+
 1. Create a new release and tag for the release.
 
     - Tags should be in the form of vMajor.Minor.Revision
