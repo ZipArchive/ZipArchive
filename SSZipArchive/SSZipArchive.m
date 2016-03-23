@@ -444,11 +444,13 @@
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
+            
+            if (keepParentDirectory)
+            {
+                fileName = [[directoryPath lastPathComponent] stringByAppendingPathComponent:fileName];
+            }
+            
             if (!isDir) {
-                if (keepParentDirectory)
-                {
-                    fileName = [[directoryPath lastPathComponent] stringByAppendingPathComponent:fileName];
-                }
                 [zipArchive writeFileAtPath:fullFilePath withFileName:fileName withPassword:password];
             }
             else
