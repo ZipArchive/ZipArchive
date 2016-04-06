@@ -10,6 +10,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '4.0'
   s.tvos.deployment_target = '9.0'
   s.osx.deployment_target = '10.6'
+  s.watchos.deployment_target = '2.0'
   s.source_files = 'SSZipArchive/*.m', 'SSZipArchive/*.h', 'SSZipArchive/minizip/*', 'SSZipArchive/aes/*'
   s.public_header_files = 'SSZipArchive/*.h'
   s.library = 'z'
