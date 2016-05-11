@@ -457,10 +457,9 @@
             {
                 if([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fullFilePath error:nil].count == 0)
                 {
-                    NSString *tempName = [fullFilePath stringByAppendingPathComponent:@".DS_Store"];
-                    [@"" writeToFile:tempName atomically:YES encoding:NSUTF8StringEncoding error:nil];
-                    [zipArchive writeFileAtPath:tempName withFileName:[fileName stringByAppendingPathComponent:@".DS_Store"] withPassword:password];
-                    [[NSFileManager defaultManager] removeItemAtPath:tempName error:nil];
+                    NSString *tempFilePath = [self _temporaryPathForDiscardableFile];
+                    NSString *tempFileFilename = [fileName stringByAppendingPathComponent:tempFilePath.lastPathComponent];
+                    [zipArchive writeFileAtPath:tempFilePath withFileName:tempFileFilename withPassword:password];
                 }
             }
         }
@@ -475,6 +474,20 @@
     return success;
 }
 
++ (NSString *)_temporaryPathForDiscardableFile
+{
+    static NSString *discardableFileName = @".DS_Store";
+    static NSString *discardableFilePath = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString *temporaryDirectoryName = [[NSUUID UUID] UUIDString];
+        NSString *temporaryDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:temporaryDirectoryName];
+        BOOL directoryCreated = [[NSFileManager defaultManager] createDirectoryAtPath:temporaryDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+        discardableFilePath = directoryCreated ? [temporaryDirectory stringByAppendingPathComponent:discardableFileName] : nil;
+        [@"" writeToFile:discardableFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    });
+    return discardableFilePath;
+}
 
 - (instancetype)initWithPath:(NSString *)path
 {
