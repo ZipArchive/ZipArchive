@@ -474,20 +474,6 @@
     return success;
 }
 
-+ (NSString *)_temporaryPathForDiscardableFile
-{
-    static NSString *discardableFileName = @".DS_Store";
-    static NSString *discardableFilePath = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSString *temporaryDirectoryName = [[NSUUID UUID] UUIDString];
-        NSString *temporaryDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:temporaryDirectoryName];
-        BOOL directoryCreated = [[NSFileManager defaultManager] createDirectoryAtPath:temporaryDirectory withIntermediateDirectories:YES attributes:nil error:nil];
-        discardableFilePath = directoryCreated ? [temporaryDirectory stringByAppendingPathComponent:discardableFileName] : nil;
-        [@"" writeToFile:discardableFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-    });
-    return discardableFilePath;
-}
 
 - (instancetype)initWithPath:(NSString *)path
 {
@@ -676,6 +662,21 @@
 }
 
 #pragma mark - Private
+
++ (NSString *)_temporaryPathForDiscardableFile
+{
+    static NSString *discardableFileName = @".DS_Store";
+    static NSString *discardableFilePath = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString *temporaryDirectoryName = [[NSUUID UUID] UUIDString];
+        NSString *temporaryDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:temporaryDirectoryName];
+        BOOL directoryCreated = [[NSFileManager defaultManager] createDirectoryAtPath:temporaryDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+        discardableFilePath = directoryCreated ? [temporaryDirectory stringByAppendingPathComponent:discardableFileName] : nil;
+        [@"" writeToFile:discardableFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    });
+    return discardableFilePath;
+}
 
 // Format from http://newsgroups.derkeiler.com/Archive/Comp/comp.os.msdos.programmer/2009-04/msg00060.html
 // Two consecutive words, or a longword, YYYYYYYMMMMDDDDD hhhhhmmmmmmsssss
