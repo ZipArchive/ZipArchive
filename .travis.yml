@@ -1,5 +1,5 @@
  language: objective-c
-osx_image: xcode7.1
+osx_image: xcode7.3
 podfile: ObjectiveCExample/Podfile
 xcode_workspace: ObjectiveCExample/ObjectiveCExample.xcworkspace
 xcode_scheme: ObjectiveCExample
