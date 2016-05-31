@@ -26,6 +26,10 @@
 #pragma mark - Life Cycle
 - (void)viewDidLoad {
   [super viewDidLoad];
+    
+    _file1.text = @"";
+    _file2.text = @"";
+    _file3.text = @"";
 }
 
 - (void)didReceiveMemoryWarning {
