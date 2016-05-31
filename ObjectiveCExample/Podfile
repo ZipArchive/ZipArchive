@@ -3,6 +3,14 @@ source 'https://github.com/CocoaPods/Specs.git'
 # inhibit_all_warnings!
 use_frameworks!
 
+def testing_pods
+	pod 'SSZipArchive', :path => '..'
+end
+
 target 'ObjectiveCExample' do
-  pod 'SSZipArchive', :path => '..'
+  testing_pods
+end
+
+target 'ObjectiveCExampleTests' do
+  testing_pods
 end

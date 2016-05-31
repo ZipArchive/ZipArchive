@@ -6,7 +6,7 @@
 //  Copyright (c) 2011-2014 Sam Soffes. All rights reserved.
 //
 
-#import <SSZipArchive/SSZipArchive.h>
+#import "SSZipArchive.h"
 #import <XCTest/XCTest.h>
 #import <CommonCrypto/CommonDigest.h>
 

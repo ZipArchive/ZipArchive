@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import <SSZipArchive/SSZipArchive.h>
+#import "SSZipArchive.h"
 
 /**
  * Test delegate by collecting its calls
