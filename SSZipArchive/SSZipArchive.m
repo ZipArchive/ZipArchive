@@ -26,6 +26,39 @@
     zipFile _zip;
 }
 
+#pragma mark - Password check
+
++ (BOOL)isFilePasswordProtectedAtPath:(NSString *)path {
+    // Begin opening
+    zipFile zip = unzOpen((const char*)[path UTF8String]);
+    if (zip == NULL) {
+        return NO;
+    }
+    
+    int ret = unzGoToFirstFile(zip);
+    if (ret == UNZ_OK) {
+        do {
+            ret = unzOpenCurrentFile(zip);
+            if( ret!=UNZ_OK ) {
+                return NO;
+            }
+            unz_file_info   fileInfo ={0};
+            ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
+            if (ret!= UNZ_OK) {
+                return NO;
+            } else if((fileInfo.flag & 1) == 1) {
+                return YES;
+            }
+            
+            unzCloseCurrentFile(zip);
+            ret = unzGoToNextFile(zip);
+        } while( ret==UNZ_OK && UNZ_OK!=UNZ_END_OF_LIST_OF_FILE );
+        
+    }
+    
+    return NO;
+}
+
 #pragma mark - Unzipping
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination

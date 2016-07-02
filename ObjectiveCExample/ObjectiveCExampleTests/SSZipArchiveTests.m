@@ -173,6 +173,19 @@
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
 
+- (void)testPasswordCheck {
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
+    
+    BOOL protected = [SSZipArchive isFilePasswordProtectedAtPath:zipPath];
+    XCTAssertFalse(protected, @"has no password");
+    
+    
+    NSString *zipWithPasswordPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestPasswordArchive" ofType:@"zip"];
+    
+    protected = [SSZipArchive isFilePasswordProtectedAtPath:zipWithPasswordPath];
+    XCTAssertTrue(protected, @"has password");
+}
+
 //Temp Disabled test, fix is not yet in the AES version of the unzip lib
 
 //- (void)testUnzippingTruncatedFileFix {
