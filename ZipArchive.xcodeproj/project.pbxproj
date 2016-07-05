@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		87ACF3EA1D2DAFAD00ED2F7E /* SSZipArchive+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87ACF3E91D2DAFAD00ED2F7E /* SSZipArchive+Swift.swift */; };
 		AFF75A2D1C3727F000F450AC /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AFF75A2E1C37280200F450AC /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE481C0DF7950004A2F1 /* SSZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AFF75A2F1C37280200F450AC /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = B423AE491C0DF7950004A2F1 /* SSZipArchive.m */; };
@@ -80,6 +81,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		87ACF3E91D2DAFAD00ED2F7E /* SSZipArchive+Swift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SSZipArchive+Swift.swift"; sourceTree = "<group>"; };
 		AFF75A241C37279600F450AC /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B423AE1A1C0DF76A0004A2F1 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B423AE271C0DF7950004A2F1 /* aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aes.h; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				B423AE3E1C0DF7950004A2F1 /* minizip */,
 				B423AE481C0DF7950004A2F1 /* SSZipArchive.h */,
 				B423AE491C0DF7950004A2F1 /* SSZipArchive.m */,
+				87ACF3E91D2DAFAD00ED2F7E /* SSZipArchive+Swift.swift */,
 				B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */,
 			);
 			path = SSZipArchive;
@@ -318,6 +321,7 @@
 		B423AE111C0DF76A0004A2F1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = smumryak;
 				TargetAttributes = {
@@ -392,6 +396,7 @@
 			files = (
 				B423AE5C1C0DF7950004A2F1 /* pwd2key.c in Sources */,
 				B423AE581C0DF7950004A2F1 /* hmac.c in Sources */,
+				87ACF3EA1D2DAFAD00ED2F7E /* SSZipArchive+Swift.swift in Sources */,
 				B423AE4D1C0DF7950004A2F1 /* aescrypt.c in Sources */,
 				B423AE5E1C0DF7950004A2F1 /* sha1.c in Sources */,
 				B423AE631C0DF7950004A2F1 /* ioapi.c in Sources */,
@@ -544,6 +549,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				BITCODE_GENERATION_MODE = marker;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -556,6 +562,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.ZipArchive;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -564,6 +571,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				BITCODE_GENERATION_MODE = bitcode;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -589,6 +597,7 @@
 				AFF75A2B1C37279600F450AC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B423AE141C0DF76A0004A2F1 /* Build configuration list for PBXProject "ZipArchive" */ = {
 			isa = XCConfigurationList;
