@@ -16,6 +16,9 @@
 
 @interface SSZipArchive : NSObject
 
+// Password check
++ (BOOL)isFilePasswordProtectedAtPath:(NSString *)path;
+
 // Unzip
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination;
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination delegate:(id<SSZipArchiveDelegate>)delegate;
