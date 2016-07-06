@@ -165,6 +165,7 @@
     }
     
     NSInteger currentFileNumber = 0;
+    NSError *unzippingError;
     do {
         @autoreleasepool {
             if ([password length] == 0) {
@@ -262,6 +263,13 @@
                 [fileManager createDirectoryAtPath:[fullPath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:directoryAttr error:&err];
             }
             if (nil != err) {
+                if ([err.domain isEqualToString:NSCocoaErrorDomain] &&
+                    err.code == 640) {
+                    unzippingError = err;
+                    unzCloseCurrentFile(zip);
+                    success = NO;
+                    break;
+                }
                 NSLog(@"[SSZipArchive] Error: %@", err.localizedDescription);
             }
             
@@ -333,6 +341,19 @@
 #endif
                     }
                 }
+                else
+                {
+                    // if we couldn't open file descriptor we can validate global errno to see the reason
+                    if (errno == ENOSPC) {
+                        NSError *enospcError = [NSError errorWithDomain:NSPOSIXErrorDomain
+                                                                   code:ENOSPC
+                                                               userInfo:nil];
+                        unzippingError = enospcError;
+                        unzCloseCurrentFile(zip);
+                        success = NO;
+                        break;
+                    }
+                }
             }
             else
             {
@@ -386,19 +407,20 @@
     // The process of decompressing the .zip archive causes the modification times on the folders
     // to be set to the present time. So, when we are done, they need to be explicitly set.
     // set the modification date on all of the directories.
-    NSError * err = nil;
-    for (NSDictionary * d in directoriesModificationDates) {
-        if (![[NSFileManager defaultManager] setAttributes:@{NSFileModificationDate: d[@"modDate"]} ofItemAtPath:d[@"path"] error:&err]) {
-            NSLog(@"[SSZipArchive] Set attributes failed for directory: %@.", d[@"path"]);
+    if (success) {
+        NSError * err = nil;
+        for (NSDictionary * d in directoriesModificationDates) {
+            if (![[NSFileManager defaultManager] setAttributes:@{NSFileModificationDate: d[@"modDate"]} ofItemAtPath:d[@"path"] error:&err]) {
+                NSLog(@"[SSZipArchive] Set attributes failed for directory: %@.", d[@"path"]);
+            }
+            if (err) {
+                NSLog(@"[SSZipArchive] Error setting directory file modification date attribute: %@",err.localizedDescription);
+            }
         }
-        if (err) {
-            NSLog(@"[SSZipArchive] Error setting directory file modification date attribute: %@",err.localizedDescription);
-        }
-    }
-    
 #if !__has_feature(objc_arc)
-    [directoriesModificationDates release];
+        [directoriesModificationDates release];
 #endif
+    }
     
     // Message delegate
     if (success && [delegate respondsToSelector:@selector(zipArchiveDidUnzipArchiveAtPath:zipInfo:unzippedPath:)]) {
@@ -415,13 +437,24 @@
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"crc check failed for file"};
         retErr = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-3 userInfo:userInfo];
     }
-    if (error)
-    {
-        *error = retErr;
+    
+    if (error) {
+        if (unzippingError) {
+            *error = unzippingError;
+        }
+        else {
+            *error = retErr;
+        }
     }
     if (completionHandler)
     {
-        completionHandler(path, success, retErr);
+        if (unzippingError) {
+            completionHandler(path, success, unzippingError);
+        }
+        else
+        {
+            completionHandler(path, success, retErr);
+        }
     }
     return success;
 }
