@@ -68,17 +68,17 @@
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(nullable NSString *)password error:(NSError **)error
 {
-    return [self unzipFileAtPath:path toDestination:destination overwrite:overwrite password:password error:error delegate:nil progressHandler:nil completionHandler:nil];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:error delegate:nil progressHandler:nil completionHandler:nil];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination delegate:(nullable id<SSZipArchiveDelegate>)delegate
 {
-    return [self unzipFileAtPath:path toDestination:destination overwrite:YES password:nil error:nil delegate:delegate progressHandler:nil completionHandler:nil];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:nil delegate:delegate progressHandler:nil completionHandler:nil];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(nullable NSString *)password error:(NSError **)error delegate:(nullable id<SSZipArchiveDelegate>)delegate
 {
-    return [self unzipFileAtPath:path toDestination:destination overwrite:overwrite password:password error:error delegate:delegate progressHandler:nil completionHandler:nil];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:error delegate:delegate progressHandler:nil completionHandler:nil];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -88,7 +88,7 @@
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError *error))completionHandler
 {
-    return [self unzipFileAtPath:path toDestination:destination overwrite:overwrite password:password error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -96,11 +96,23 @@
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError *error))completionHandler
 {
-    return [self unzipFileAtPath:path toDestination:destination overwrite:YES password:nil error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
           toDestination:(NSString *)destination
+     preserveAttributes:(BOOL)preserveAttributes
+              overwrite:(BOOL)overwrite
+               password:(nullable NSString *)password
+                  error:(NSError * *)error
+               delegate:(nullable id<SSZipArchiveDelegate>)delegate
+{
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:preserveAttributes overwrite:overwrite password:password error:error delegate:delegate progressHandler:nil completionHandler:nil];
+}
+
++ (BOOL)unzipFileAtPath:(NSString *)path
+          toDestination:(NSString *)destination
+     preserveAttributes:(BOOL)preserveAttributes
               overwrite:(BOOL)overwrite
                password:(NSString *)password
                   error:(NSError **)error
@@ -154,7 +166,7 @@
     int crc_ret =0;
     unsigned char buffer[4096] = {0};
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
+    NSMutableArray *directoriesModificationDates = [[NSMutableArray alloc] init];
     
     // Message delegate
     if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:zipInfo:)]) {
@@ -254,9 +266,12 @@
             
             NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
             NSError *err = nil;
-            NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
-            NSDictionary *directoryAttr = @{NSFileCreationDate: modDate, NSFileModificationDate: modDate};
-            
+            NSDictionary *directoryAttr;
+            if (preserveAttributes) {
+                NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+                directoryAttr = @{NSFileCreationDate: modDate, NSFileModificationDate: modDate};
+                [directoriesModificationDates addObject: @{@"path": fullPath, @"modDate": modDate}];
+            }
             if (isDirectory) {
                 [fileManager createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:directoryAttr  error:&err];
             } else {
@@ -272,9 +287,6 @@
                 }
                 NSLog(@"[SSZipArchive] Error: %@", err.localizedDescription);
             }
-            
-            if(!fileIsSymbolicLink)
-                [directoriesModificationDates addObject: @{@"path": fullPath, @"modDate": modDate}];
             
             if ([fileManager fileExistsAtPath:fullPath] && !isDirectory && !overwrite) {
                 //FIXME: couldBe CRC Check?
@@ -305,40 +317,43 @@
                     
                     fclose(fp);
                     
-                    // Set the original datetime property
-                    if (fileInfo.dosDate != 0) {
-                        NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
-                        NSDictionary *attr = @{NSFileModificationDate: orgDate};
+                    if (preserveAttributes) {
                         
-                        if (attr) {
-                            if ([fileManager setAttributes:attr ofItemAtPath:fullPath error:nil] == NO) {
-                                // Can't set attributes
-                                NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting modification date");
+                        // Set the original datetime property
+                        if (fileInfo.dosDate != 0) {
+                            NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+                            NSDictionary *attr = @{NSFileModificationDate: orgDate};
+
+                            if (attr) {
+                                if ([fileManager setAttributes:attr ofItemAtPath:fullPath error:nil] == NO) {
+                                    // Can't set attributes
+                                    NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting modification date");
+                                }
                             }
                         }
-                    }
-                    
-                    // Set the original permissions on the file
-                    uLong permissions = fileInfo.external_fa >> 16;
-                    if (permissions != 0) {
-                        // Store it into a NSNumber
-                        NSNumber *permissionsValue = @(permissions);
                         
-                        // Retrieve any existing attributes
-                        NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:[fileManager attributesOfItemAtPath:fullPath error:nil]];
-                        
-                        // Set the value in the attributes dict
-                        attrs[NSFilePosixPermissions] = permissionsValue;
-                        
-                        // Update attributes
-                        if ([fileManager setAttributes:attrs ofItemAtPath:fullPath error:nil] == NO) {
-                            // Unable to set the permissions attribute
-                            NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting permissions");
-                        }
-                        
+                        // Set the original permissions on the file
+                        uLong permissions = fileInfo.external_fa >> 16;
+                        if (permissions != 0) {
+                            // Store it into a NSNumber
+                            NSNumber *permissionsValue = @(permissions);
+
+                            // Retrieve any existing attributes
+                            NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:[fileManager attributesOfItemAtPath:fullPath error:nil]];
+
+                            // Set the value in the attributes dict
+                            attrs[NSFilePosixPermissions] = permissionsValue;
+
+                            // Update attributes
+                            if ([fileManager setAttributes:attrs ofItemAtPath:fullPath error:nil] == NO) {
+                                // Unable to set the permissions attribute
+                                NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting permissions");
+                            }
+
 #if !__has_feature(objc_arc)
-                        [attrs release];
+                            [attrs release];
 #endif
+                        }
                     }
                 }
                 else
@@ -407,7 +422,7 @@
     // The process of decompressing the .zip archive causes the modification times on the folders
     // to be set to the present time. So, when we are done, they need to be explicitly set.
     // set the modification date on all of the directories.
-    if (success) {
+    if (success && preserveAttributes) {
         NSError * err = nil;
         for (NSDictionary * d in directoriesModificationDates) {
             if (![[NSFileManager defaultManager] setAttributes:@{NSFileModificationDate: d[@"modDate"]} ofItemAtPath:d[@"path"] error:&err]) {
