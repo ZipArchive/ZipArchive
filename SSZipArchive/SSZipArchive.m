@@ -236,7 +236,7 @@
             
             BOOL fileIsSymbolicLink = NO;
             if (((fileInfo.version >> 8) == ZipUNIXVersion) && BSD_IFLNK == (BSD_SFMT & (fileInfo.external_fa >> 16))) {
-                fileIsSymbolicLink = NO;
+                fileIsSymbolicLink = YES;
             }
             
             // Check if it contains directory
