@@ -6,7 +6,7 @@
 //  Copyright (c) 2011-2014 Sam Soffes. All rights reserved.
 //
 
-#import "SSZipArchive.h"
+#import <SSZipArchive/SSZipArchive.h>
 #import <XCTest/XCTest.h>
 #import <CommonCrypto/CommonDigest.h>
 
@@ -215,8 +215,8 @@
 
     NSError *error = nil;
     NSDictionary *info = [[NSFileManager defaultManager] attributesOfItemAtPath: testSymlink error: &error];
-
-    XCTAssertTrue(info, @"Symbolic links should persist from the original archive to the outputted files.");
+    BOOL fileIsSymbolicLink = info[NSFileType] == NSFileTypeSymbolicLink;
+    XCTAssertTrue(fileIsSymbolicLink, @"Symbolic links should persist from the original archive to the outputted files.");
 }
 
 - (void)testUnzippingWithRelativeSymlink {
@@ -233,13 +233,13 @@
     NSString *testSymlinkFolder = [NSString pathWithComponents:@[testBasePath, subfolderName, @"folderSymlink"]];
     NSString *testSymlinkFile = [NSString pathWithComponents:@[testBasePath, subfolderName, @"fileSymlink"]];
 
-    BOOL found = [[NSFileManager defaultManager] attributesOfItemAtPath: testSymlinkFile error: nil];
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:testSymlinkFile error: nil];
+    BOOL fileIsSymbolicLink = fileAttributes[NSFileType] == NSFileTypeSymbolicLink;
+    XCTAssertTrue(fileIsSymbolicLink, @"Relative symbolic links should persist from the original archive to the outputted files.");
 
-    XCTAssertTrue(found, @"Relative symbolic links should persist from the original archive to the outputted files (and also remain relative).");
-
-    found = [[NSFileManager defaultManager] attributesOfItemAtPath: testSymlinkFolder error: nil];
-
-    XCTAssertTrue(found, @"Relative symbolic links should persist from the original archive to the outputted files (and also remain relative).");
+    NSDictionary *folderAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:testSymlinkFolder error: nil];
+    BOOL folderIsSymbolicLink = folderAttributes[NSFileType] == NSFileTypeSymbolicLink;
+    XCTAssertTrue(folderIsSymbolicLink, @"Relative symbolic links should persist from the original archive to the outputted files.");
 }
 
 - (void)testUnzippingWithUnicodeFilenameInside {
