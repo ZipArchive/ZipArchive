@@ -154,7 +154,7 @@
     int crc_ret =0;
     unsigned char buffer[4096] = {0};
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSMutableSet *directoriesModificationDates = [[NSMutableSet alloc] init];
+    NSMutableArray *directoriesModificationDates = [[NSMutableArray alloc] init];
     
     // Message delegate
     if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:zipInfo:)]) {
