@@ -14,7 +14,7 @@
    See the accompanying LICENSE file for the full text of the license.
 */
 
-#include "Common.h"
+#include "SSZipCommon.h"
 
 #ifndef _UNZ_H
 #define _UNZ_H

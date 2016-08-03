@@ -28,7 +28,7 @@
 #include "zlib.h"
 #include "unzip.h"
 
-#include "Common.h"
+#include "SSZipCommon.h"
 
 #ifdef STDC
 #  include <stddef.h>
