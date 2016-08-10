@@ -252,7 +252,15 @@
             }
             
             // Check if it contains directory
-            NSString *strPath = @(filename);
+            //            NSString * strPath = @(filename);
+            NSString * strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
+            //if filename contains chinese dir transform Encoding
+            if (!strPath) {
+                NSStringEncoding enc = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+                strPath = [NSString  stringWithCString:filename encoding:enc];
+            }
+            //end by skyfox
+            
             BOOL isDirectory = NO;
             if (filename[fileInfo.size_filename-1] == '/' || filename[fileInfo.size_filename-1] == '\\') {
                 isDirectory = YES;
