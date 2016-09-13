@@ -10,12 +10,12 @@ import Foundation
 
 extension SSZipArchive {
     
-    static func unzipFileAtPath(path: String, toDestination destination: String, overwrite: Bool, password: String?, delegate: SSZipArchiveDelegate?) throws -> Bool {
+    static func unzipFileAtPath(_ path: String, toDestination destination: String, overwrite: Bool, password: String?, delegate: SSZipArchiveDelegate?) throws -> Bool {
         
         var success = false
         var error: NSError?
         
-        success = __unzipFileAtPath(path, toDestination: destination, overwrite: overwrite, password: password, error: &error, delegate: delegate)
+        success = __unzipFile(atPath: path, toDestination: destination, overwrite: overwrite, password: password, error: &error, delegate: delegate)
         if let throwableError = error {
             throw throwableError
         }
