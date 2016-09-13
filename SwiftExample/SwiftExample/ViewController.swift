@@ -39,13 +39,13 @@ class ViewController: UIViewController {
     // MARK: IBAction
 
     @IBAction func zipPressed(_: UIButton) {
-        let sampleDataPath = NSBundle.mainBundle().bundleURL.URLByAppendingPathComponent("Sample Data").path
+        let sampleDataPath = Bundle.main.bundleURL.appendingPathComponent("Sample Data").path
         zipPath = tempZipPath()
 
-        let success = SSZipArchive.createZipFileAtPath(zipPath!, withContentsOfDirectory: sampleDataPath!)
+        let success = SSZipArchive.createZipFile(atPath: zipPath!, withContentsOfDirectory: sampleDataPath)
         if success {
-            unzipButton.enabled = true
-            zipButton.enabled = false
+            unzipButton.isEnabled = true
+            zipButton.isEnabled = false
         }
     }
 
@@ -58,19 +58,19 @@ class ViewController: UIViewController {
             return
         }
 
-        let success = SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
+        let success = SSZipArchive.unzipFile(atPath: zipPath, toDestination: unzipPath)
         if !success {
             return
         }
 
         var items: [String]
         do {
-            items = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(unzipPath)
+            items = try FileManager.default.contentsOfDirectory(atPath: unzipPath)
         } catch {
             return
         }
 
-        for (index, item) in items.enumerate() {
+        for (index, item) in items.enumerated() {
             switch index {
             case 0:
                 file1.text = item
@@ -83,43 +83,40 @@ class ViewController: UIViewController {
             }
         }
 
-        unzipButton.enabled = false
-        resetButton.enabled = true
+        unzipButton.isEnabled = false
+        resetButton.isEnabled = true
     }
 
     @IBAction func resetPressed(_: UIButton) {
         file1.text = ""
         file2.text = ""
         file3.text = ""
-        zipButton.enabled = true
-        unzipButton.enabled = false
-        resetButton.enabled = false
+        zipButton.isEnabled = true
+        unzipButton.isEnabled = false
+        resetButton.isEnabled = false
     }
 
     // MARK: Private
 
     func tempZipPath() -> String {
-        var path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0]
-        path += "/\(NSUUID().UUIDString).zip"
+        var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+        path += "/\(UUID().uuidString).zip"
         return path
     }
 
     func tempUnzipPath() -> String? {
-        var path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0]
-        path += "/\(NSUUID().UUIDString)"
-        let url = NSURL(fileURLWithPath: path)
+        var path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+        path += "/\(UUID().uuidString)"
+        let url = URL(fileURLWithPath: path)
 
         do {
-            try NSFileManager.defaultManager().createDirectoryAtURL(url, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
         } catch {
             return nil
         }
 
-        if let path = url.path {
-            return path
-        }
 
-        return nil
+        return url.path
     }
     
 }
