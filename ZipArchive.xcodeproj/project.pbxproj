@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01DB08731D88095600D335B9 /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 389869341D5BC30100F18782 /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		389869351D5BC30100F18782 /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 389869341D5BC30100F18782 /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		87ACF3EA1D2DAFAD00ED2F7E /* SSZipArchive+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87ACF3E91D2DAFAD00ED2F7E /* SSZipArchive+Swift.swift */; };
 		AFF75A2D1C3727F000F450AC /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -230,6 +231,7 @@
 				AFF75A311C37281700F450AC /* aes.h in Headers */,
 				AFF75A3F1C37281700F450AC /* hmac.h in Headers */,
 				AFF75A3D1C37281700F450AC /* fileenc.h in Headers */,
+				01DB08731D88095600D335B9 /* SSZipCommon.h in Headers */,
 				AFF75A2D1C3727F000F450AC /* ZipArchive.h in Headers */,
 				AFF75A351C37281700F450AC /* aesopt.h in Headers */,
 				AFF75A381C37281700F450AC /* brg_endian.h in Headers */,
