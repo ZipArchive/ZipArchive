@@ -40,9 +40,7 @@ SSZipArchive requires ARC.
 [SSZipArchive unzipFileAtPath:zipPath toDestination: unzipPath];
 ```
 
-### Swift (Swift 3 Only)
-
-(For Swift 2.3 and below support please use continue to use version 1.4 or 1.5)
+### Swift
 
 ```swift
 // Create
