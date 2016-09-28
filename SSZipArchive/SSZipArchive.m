@@ -272,16 +272,7 @@
                 strPath = [strPath stringByReplacingOccurrencesOfString:@"\\" withString:@"/"];
             }
             
-            NSString *fullPath;
-            BOOL isDir = NO;
-            if([[NSFileManager defaultManager]
-                fileExistsAtPath:destination isDirectory:&isDir] && isDir){
-                fullPath = [destination stringByAppendingPathComponent:strPath];
-            }
-            else {
-                fullPath = destination;
-            }
-            
+            NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
             NSError *err = nil;
             NSDictionary *directoryAttr;
             if (preserveAttributes) {
