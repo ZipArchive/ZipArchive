@@ -373,77 +373,80 @@
             }
             
             if (!fileIsSymbolicLink) {
-                FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
-                while (fp) {
-                    int readBytes = unzReadCurrentFile(zip, buffer, 4096);
-                    
-                    if (readBytes > 0) {
-                        fwrite(buffer, readBytes, 1, fp );
-                    } else {
-                        break;
-                    }
-                }
-                
-                if (fp) {
-                    if ([[[fullPath pathExtension] lowercaseString] isEqualToString:@"zip"]) {
-                        NSLog(@"Unzipping nested .zip file:  %@", [fullPath lastPathComponent]);
-                        if ([self unzipFileAtPath:fullPath toDestination:[fullPath stringByDeletingLastPathComponent] overwrite:overwrite password:password error:nil delegate:nil ]) {
-                            [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
+                // ensure we are not creating stale file entries
+                int readBytes = unzReadCurrentFile(zip, buffer, 4096);
+                if (readBytes >= 0) {
+                    FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
+                    while (fp) {
+                        if (readBytes > 0) {
+                            fwrite(buffer, readBytes, 1, fp );
+                        } else {
+                            break;
                         }
+                        readBytes = unzReadCurrentFile(zip, buffer, 4096);
                     }
-                    
-                    fclose(fp);
-                    
-                    if (preserveAttributes) {
-                        
-                        // Set the original datetime property
-                        if (fileInfo.dosDate != 0) {
-                            NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
-                            NSDictionary *attr = @{NSFileModificationDate: orgDate};
 
-                            if (attr) {
-                                if ([fileManager setAttributes:attr ofItemAtPath:fullPath error:nil] == NO) {
-                                    // Can't set attributes
-                                    NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting modification date");
+                    if (fp) {
+                        if ([[[fullPath pathExtension] lowercaseString] isEqualToString:@"zip"]) {
+                            NSLog(@"Unzipping nested .zip file:  %@", [fullPath lastPathComponent]);
+                            if ([self unzipFileAtPath:fullPath toDestination:[fullPath stringByDeletingLastPathComponent] overwrite:overwrite password:password error:nil delegate:nil ]) {
+                                [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
+                            }
+                        }
+
+                        fclose(fp);
+
+                        if (preserveAttributes) {
+
+                            // Set the original datetime property
+                            if (fileInfo.dosDate != 0) {
+                                NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+                                NSDictionary *attr = @{NSFileModificationDate: orgDate};
+
+                                if (attr) {
+                                    if ([fileManager setAttributes:attr ofItemAtPath:fullPath error:nil] == NO) {
+                                        // Can't set attributes
+                                        NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting modification date");
+                                    }
                                 }
                             }
-                        }
-                        
-                        // Set the original permissions on the file
-                        uLong permissions = fileInfo.external_fa >> 16;
-                        if (permissions != 0) {
-                            // Store it into a NSNumber
-                            NSNumber *permissionsValue = @(permissions);
 
-                            // Retrieve any existing attributes
-                            NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:[fileManager attributesOfItemAtPath:fullPath error:nil]];
+                            // Set the original permissions on the file
+                            uLong permissions = fileInfo.external_fa >> 16;
+                            if (permissions != 0) {
+                                // Store it into a NSNumber
+                                NSNumber *permissionsValue = @(permissions);
 
-                            // Set the value in the attributes dict
-                            attrs[NSFilePosixPermissions] = permissionsValue;
+                                // Retrieve any existing attributes
+                                NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:[fileManager attributesOfItemAtPath:fullPath error:nil]];
 
-                            // Update attributes
-                            if ([fileManager setAttributes:attrs ofItemAtPath:fullPath error:nil] == NO) {
-                                // Unable to set the permissions attribute
-                                NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting permissions");
-                            }
+                                // Set the value in the attributes dict
+                                attrs[NSFilePosixPermissions] = permissionsValue;
+
+                                // Update attributes
+                                if ([fileManager setAttributes:attrs ofItemAtPath:fullPath error:nil] == NO) {
+                                    // Unable to set the permissions attribute
+                                    NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting permissions");
+                                }
 
 #if !__has_feature(objc_arc)
-                            [attrs release];
+                                [attrs release];
 #endif
+                            }
                         }
                     }
-                }
-                else
-                {
-                    // if we couldn't open file descriptor we can validate global errno to see the reason
-                    if (errno == ENOSPC) {
-                        NSError *enospcError = [NSError errorWithDomain:NSPOSIXErrorDomain
-                                                                   code:ENOSPC
-                                                               userInfo:nil];
-                        unzippingError = enospcError;
-                        unzCloseCurrentFile(zip);
-                        success = NO;
-                        break;
+                    else
+                    {
+                        // if we couldn't open file descriptor we can validate global errno to see the reason
+                        if (errno == ENOSPC) {
+                            NSError *enospcError = [NSError errorWithDomain:NSPOSIXErrorDomain
+                                                                       code:ENOSPC
+                                                                   userInfo:nil];
+                            unzippingError = enospcError;
+                            unzCloseCurrentFile(zip);
+                            success = NO;
+                            break;
+                        }
                     }
                 }
             }
