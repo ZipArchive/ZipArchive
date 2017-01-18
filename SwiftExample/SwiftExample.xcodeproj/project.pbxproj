@@ -257,11 +257,11 @@
 				TargetAttributes = {
 					8DFE19081BDA74F800709011 = {
 						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 					};
 					8DFE191C1BDA74F800709011 = {
 						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0820;
 						TestTargetID = 8DFE19081BDA74F800709011;
 					};
 				};
