@@ -537,8 +537,10 @@
         // use a local filemanager (queue/thread compatibility)
         fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
+        NSArray *allObjects = dirEnumerator.allObjects;
+        NSUInteger total = allObjects.count, complete = 0;
         NSString *fileName;
-        while ((fileName = [dirEnumerator nextObject])) {
+        for (fileName in allObjects) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
@@ -559,6 +561,10 @@
                     NSString *tempFileFilename = [fileName stringByAppendingPathComponent:tempFilePath.lastPathComponent];
                     [zipArchive writeFileAtPath:tempFilePath withFileName:tempFileFilename withPassword:password];
                 }
+            }
+            complete++;
+            if (progressHandler) {
+                progressHandler(complete, total);
             }
         }
         success = [zipArchive close];
