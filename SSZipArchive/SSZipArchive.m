@@ -519,6 +519,15 @@
 
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password{
+    return [self createZipFileAtPath:password
+             withContentsOfDirectory:directoryPath
+                 keepParentDirectory:keepParentDirectory
+                        withPassword:password
+                  andProgressHandler:nil
+            ];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
     BOOL success = NO;
     
     NSFileManager *fileManager = nil;
