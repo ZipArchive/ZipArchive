@@ -57,6 +57,7 @@ typedef voidp unzFile;
 #define UNZ_BADZIPFILE                  (-103)
 #define UNZ_INTERNALERROR               (-104)
 #define UNZ_CRCERROR                    (-105)
+#define UNZ_BADPASSWORD                 (-106)
 
 
 /***************************************************************************/

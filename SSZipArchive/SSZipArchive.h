@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Password check
 + (BOOL)isFilePasswordProtectedAtPath:(NSString *)path;
++ (BOOL)isPasswordValidForArchiveAtPath:(NSString *)path password:(NSString *)pw error:(NSError * __nullable * __nullable)error NS_SWIFT_NOTHROW;
 
 // Unzip
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination;
