@@ -40,14 +40,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)unzipFileAtPath:(NSString *)path
     toDestination:(NSString *)destination
     progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
-    completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError *error))completionHandler;
+    completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * __nullable error))completionHandler;
 
 + (BOOL)unzipFileAtPath:(NSString *)path
     toDestination:(NSString *)destination
     overwrite:(BOOL)overwrite
     password:(nullable NSString *)password
     progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
-    completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError *error))completionHandler;
+    completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * __nullable error))completionHandler;
 
 // Zip
 
