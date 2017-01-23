@@ -591,15 +591,6 @@
 
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password{
-    return [self createZipFileAtPath:password
-             withContentsOfDirectory:directoryPath
-                 keepParentDirectory:keepParentDirectory
-                        withPassword:password
-                  andProgressHandler:nil
-            ];
-}
-
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
     BOOL success = NO;
     
     NSFileManager *fileManager = nil;
@@ -609,10 +600,8 @@
         // use a local filemanager (queue/thread compatibility)
         fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
-        NSArray *allObjects = dirEnumerator.allObjects;
-        NSUInteger total = allObjects.count, complete = 0;
         NSString *fileName;
-        for (fileName in allObjects) {
+        while ((fileName = [dirEnumerator nextObject])) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
@@ -633,10 +622,6 @@
                     NSString *tempFileFilename = [fileName stringByAppendingPathComponent:tempFilePath.lastPathComponent];
                     [zipArchive writeFileAtPath:tempFilePath withFileName:tempFileFilename withPassword:password];
                 }
-            }
-            complete++;
-            if (progressHandler) {
-                progressHandler(complete, total);
             }
         }
         success = [zipArchive close];
