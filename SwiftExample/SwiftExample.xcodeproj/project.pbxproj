@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B4B24671C21500E00CC99E5 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE19391BDA7D8C00709011 /* mztools.c */; };
 		2B4B24681C21500E00CC99E5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE190E1BDA74F800709011 /* ViewController.swift */; };
 		2B4B24691C21500E00CC99E5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE190C1BDA74F800709011 /* AppDelegate.swift */; };
 		2B4B246D1C21500E00CC99E5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19151BDA74F800709011 /* LaunchScreen.storyboard */; };
@@ -21,7 +20,6 @@
 		8DFE19141BDA74F800709011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19131BDA74F800709011 /* Assets.xcassets */; };
 		8DFE19171BDA74F800709011 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19151BDA74F800709011 /* LaunchScreen.storyboard */; };
 		8DFE19221BDA74F800709011 /* SwiftExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE19211BDA74F800709011 /* SwiftExampleTests.swift */; };
-		8DFE19421BDA7D8D00709011 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE19391BDA7D8C00709011 /* mztools.c */; };
 		8DFE19471BDA82EA00709011 /* Sample Data in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE19461BDA82EA00709011 /* Sample Data */; };
 		9C98C3B4F9B653B83DA9D5F1 /* Pods_SwiftExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B957B9DCEA770A395AA9EF69 /* Pods_SwiftExample.framework */; };
 /* End PBXBuildFile section */
@@ -51,18 +49,6 @@
 		8DFE191D1BDA74F800709011 /* SwiftExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DFE19211BDA74F800709011 /* SwiftExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftExampleTests.swift; sourceTree = "<group>"; };
 		8DFE19231BDA74F800709011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8DFE19341BDA7D8C00709011 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
-		8DFE19361BDA7D8C00709011 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
-		8DFE19371BDA7D8C00709011 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
-		8DFE19381BDA7D8C00709011 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
-		8DFE19391BDA7D8C00709011 /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mztools.c; sourceTree = "<group>"; };
-		8DFE193A1BDA7D8C00709011 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mztools.h; sourceTree = "<group>"; };
-		8DFE193B1BDA7D8C00709011 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
-		8DFE193C1BDA7D8C00709011 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
-		8DFE193D1BDA7D8C00709011 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
-		8DFE193E1BDA7D8C00709011 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
-		8DFE193F1BDA7D8C00709011 /* SSZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipArchive.h; sourceTree = "<group>"; };
-		8DFE19401BDA7D8D00709011 /* SSZipArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchive.m; sourceTree = "<group>"; };
 		8DFE19461BDA82EA00709011 /* Sample Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Sample Data"; sourceTree = "<group>"; };
 		9F41DD1EB899AECA3DE54836 /* Pods-SwiftExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftExample/Pods-SwiftExample.debug.xcconfig"; sourceTree = "<group>"; };
 		B957B9DCEA770A395AA9EF69 /* Pods_SwiftExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,7 +103,6 @@
 		8DFE19001BDA74F800709011 = {
 			isa = PBXGroup;
 			children = (
-				8DFE19331BDA7D8C00709011 /* SSZipArchive */,
 				8DFE190B1BDA74F800709011 /* SwiftExample */,
 				8DFE19201BDA74F800709011 /* SwiftExampleTests */,
 				8DFE190A1BDA74F800709011 /* Products */,
@@ -157,34 +142,6 @@
 				8DFE19231BDA74F800709011 /* Info.plist */,
 			);
 			path = SwiftExampleTests;
-			sourceTree = "<group>";
-		};
-		8DFE19331BDA7D8C00709011 /* SSZipArchive */ = {
-			isa = PBXGroup;
-			children = (
-				8DFE19341BDA7D8C00709011 /* Common.h */,
-				8DFE193F1BDA7D8C00709011 /* SSZipArchive.h */,
-				8DFE19401BDA7D8D00709011 /* SSZipArchive.m */,
-				8DFE19351BDA7D8C00709011 /* minizip */,
-			);
-			name = SSZipArchive;
-			path = ../SSZipArchive;
-			sourceTree = "<group>";
-		};
-		8DFE19351BDA7D8C00709011 /* minizip */ = {
-			isa = PBXGroup;
-			children = (
-				8DFE19361BDA7D8C00709011 /* crypt.h */,
-				8DFE19371BDA7D8C00709011 /* ioapi.c */,
-				8DFE19381BDA7D8C00709011 /* ioapi.h */,
-				8DFE19391BDA7D8C00709011 /* mztools.c */,
-				8DFE193A1BDA7D8C00709011 /* mztools.h */,
-				8DFE193B1BDA7D8C00709011 /* unzip.c */,
-				8DFE193C1BDA7D8C00709011 /* unzip.h */,
-				8DFE193D1BDA7D8C00709011 /* zip.c */,
-				8DFE193E1BDA7D8C00709011 /* zip.h */,
-			);
-			path = minizip;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -386,7 +343,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B4B24671C21500E00CC99E5 /* mztools.c in Sources */,
 				2B4B24681C21500E00CC99E5 /* ViewController.swift in Sources */,
 				2B4B24691C21500E00CC99E5 /* AppDelegate.swift in Sources */,
 			);
@@ -396,7 +352,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DFE19421BDA7D8D00709011 /* mztools.c in Sources */,
 				8DFE190F1BDA74F800709011 /* ViewController.swift in Sources */,
 				8DFE190D1BDA74F800709011 /* AppDelegate.swift in Sources */,
 			);
@@ -453,6 +408,7 @@
 				OTHER_SWIFT_FLAGS = "-DUseCarthage";
 				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.SwiftExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -469,6 +425,7 @@
 				OTHER_SWIFT_FLAGS = "-DUseCarthage";
 				PRODUCT_BUNDLE_IDENTIFIER = com.samsoffes.SwiftExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
