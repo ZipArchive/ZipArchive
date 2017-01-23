@@ -173,7 +173,22 @@
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
 
-- (void)testPasswordCheck {
+- (void)testValidatePassword {
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestPasswordArchive" ofType:@"zip"];
+    
+    NSError *error = nil;
+    
+    BOOL fileHasValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd" error:&error];
+    
+    XCTAssertTrue(fileHasValidPassword,@"Valid password reports true.");
+    
+    BOOL fileHasInvalidValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd123" error:&error];
+    
+    XCTAssertFalse(fileHasInvalidValidPassword,@"Invalid password reports false.");
+    
+}
+
+- (void)testFilePasswordCheck {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     
     BOOL protected = [SSZipArchive isFilePasswordProtectedAtPath:zipPath];
