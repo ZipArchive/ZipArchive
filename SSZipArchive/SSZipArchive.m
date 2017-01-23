@@ -586,11 +586,20 @@
 }
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath withPassword:(nullable NSString *)password{
-    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:NO withPassword:password];
+    return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:NO withPassword:password];
 }
 
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password{
+    return [SSZipArchive createZipFileAtPath:path
+             withContentsOfDirectory:directoryPath
+                 keepParentDirectory:keepParentDirectory
+                        withPassword:password
+                  andProgressHandler:nil
+            ];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
     BOOL success = NO;
     
     NSFileManager *fileManager = nil;
@@ -600,8 +609,10 @@
         // use a local filemanager (queue/thread compatibility)
         fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
+        NSArray *allObjects = dirEnumerator.allObjects;
+        NSUInteger total = allObjects.count, complete = 0;
         NSString *fileName;
-        while ((fileName = [dirEnumerator nextObject])) {
+        for (fileName in allObjects) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
@@ -622,6 +633,10 @@
                     NSString *tempFileFilename = [fileName stringByAppendingPathComponent:tempFilePath.lastPathComponent];
                     [zipArchive writeFileAtPath:tempFilePath withFileName:tempFileFilename withPassword:password];
                 }
+            }
+            complete++;
+            if (progressHandler) {
+                progressHandler(complete, total);
             }
         }
         success = [zipArchive close];
