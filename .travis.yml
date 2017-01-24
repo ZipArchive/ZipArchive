@@ -3,3 +3,4 @@ osx_image: xcode8.2
 podfile: ObjectiveCExample/Podfile
 xcode_workspace: ObjectiveCExample/ObjectiveCExample.xcworkspace
 xcode_scheme: ObjectiveCExample
+script: xcodebuild test -scheme ObjectiveCExample -sdk iphonesimulator -destination "name=iPhone SE"
