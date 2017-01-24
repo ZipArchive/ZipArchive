@@ -180,11 +180,11 @@
     
     BOOL fileHasValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd2" error:&error];
     
-    XCTAssertTrue(fileHasValidPassword,@"Valid password reports true.");
+    XCTAssertTrue(fileHasValidPassword,@"Valid password reports false.");
     
     BOOL fileHasInvalidValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd123" error:&error];
     
-    XCTAssertFalse(fileHasInvalidValidPassword,@"Invalid password reports false.");
+    XCTAssertFalse(fileHasInvalidValidPassword,@"Invalid password reports true.");
     
 }
 
