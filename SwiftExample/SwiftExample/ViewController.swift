@@ -29,6 +29,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        file1.text = ""
+        file2.text = ""
+        file3.text = ""
     }
 
     override func didReceiveMemoryWarning() {
