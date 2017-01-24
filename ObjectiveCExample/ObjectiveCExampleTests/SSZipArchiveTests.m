@@ -178,7 +178,7 @@
     
     NSError *error = nil;
     
-    BOOL fileHasValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd2" error:&error];
+    BOOL fileHasValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd" error:&error];
     
     XCTAssertTrue(fileHasValidPassword,@"Valid password reports false.");
     
