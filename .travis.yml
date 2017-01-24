@@ -4,4 +4,4 @@ podfile: ObjectiveCExample/Podfile
 xcode_workspace: ObjectiveCExample/ObjectiveCExample.xcworkspace
 xcode_scheme: ObjectiveCExample
 script:
-— xcodebuild clean build -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace -scheme ObjectiveCExample -destination “platform=iOS Simulator,name=iPhone 6S”
+—xcodebuild clean build -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace -scheme ObjectiveCExample -destination “platform=iOS Simulator,name=iPhone 6S”
