@@ -3,5 +3,5 @@ osx_image: xcode8.2
 podfile: ObjectiveCExample/Podfile
 xcode_workspace: ObjectiveCExample/ObjectiveCExample.xcworkspace
 xcode_scheme: ObjectiveCExample
-script: -xcodebuild -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace -scheme ObjectiveCExample -sdk iphonesimulator -destination "OS:10.2,name=iPhone SE" -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES test | xcpretty
+script: xcodebuild -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace -scheme ObjectiveCExample -sdk iphonesimulator -destination "OS:10.2,name=iPhone SE" -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES test | xcpretty
 
