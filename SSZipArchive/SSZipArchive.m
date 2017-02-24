@@ -256,6 +256,7 @@
             }
             
             if (ret != UNZ_OK) {
+                unzippingError = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-2 userInfo:@{NSLocalizedDescriptionKey: @"failed to open file in zip file"}];
                 success = NO;
                 break;
             }
@@ -266,6 +267,7 @@
             
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
             if (ret != UNZ_OK) {
+                unzippingError = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-3 userInfo:@{NSLocalizedDescriptionKey: @"failed to retrieve info for file"}];
                 success = NO;
                 unzCloseCurrentFile(zip);
                 break;
@@ -294,7 +296,8 @@
             char *filename = (char *)malloc(fileInfo.size_filename + 1);
             if (filename == NULL)
             {
-                return NO;
+                success = NO;
+                break;
             }
             
             unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
