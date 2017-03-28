@@ -13,6 +13,8 @@
 
 #include <sys/stat.h>
 
+NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
+
 #define CHUNK 16384
 
 @interface SSZipArchive ()
