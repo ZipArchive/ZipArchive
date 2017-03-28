@@ -13,6 +13,8 @@
 
 #include <sys/stat.h>
 
+NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
+
 #define CHUNK 16384
 
 @interface SSZipArchive ()
@@ -66,8 +68,8 @@
     zipFile zip = unzOpen((const char*)[path UTF8String]);
     if (zip == NULL) {
         if (error) {
-            *error = [NSError errorWithDomain:@"SSZipArchiveErrorDomain"
-                                         code:-1
+            *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                         code:SSZipArchiveErrorCodeFailedOpenZipFile
                                      userInfo:@{NSLocalizedDescriptionKey: @"failed to open zip file"}];
         }
         return NO;
@@ -84,8 +86,8 @@
             if (ret != UNZ_OK) {
                 if (ret != UNZ_BADPASSWORD) {
                     if (error) {
-                        *error = [NSError errorWithDomain:@"SSZipArchiveErrorDomain"
-                                                     code:-2
+                        *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                                     code:SSZipArchiveErrorCodeFailedOpenFirstFile
                                                  userInfo:@{NSLocalizedDescriptionKey: @"failed to open first file in zip file"}];
                     }
                 }
@@ -95,8 +97,8 @@
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
             if (ret != UNZ_OK) {
                 if (error) {
-                    *error = [NSError errorWithDomain:@"SSZipArchiveErrorDomain"
-                                                 code:-3
+                    *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                                 code:SSZipArchiveErrorCodeFileInfoNotLoadable
                                              userInfo:@{NSLocalizedDescriptionKey: @"failed to retrieve info for file"}];
                 }
                 return NO;
@@ -107,8 +109,8 @@
                     // Let's assume the invalid password caused this error
                     if (readBytes != Z_DATA_ERROR) {
                         if (error) {
-                            *error = [NSError errorWithDomain:@"SSZipArchiveErrorDomain"
-                                                         code:-4
+                            *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                                         code:SSZipArchiveErrorCodeFileContentNotReadable
                                                      userInfo:@{NSLocalizedDescriptionKey: @"failed to read contents of file entry"}];
                         }
                     }
@@ -192,7 +194,7 @@
     if (zip == NULL)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"failed to open zip file"};
-        NSError *err = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-1 userInfo:userInfo];
+        NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFailedOpenZipFile userInfo:userInfo];
         if (error)
         {
             *error = err;
@@ -215,7 +217,7 @@
     if (unzGoToFirstFile(zip) != UNZ_OK)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"failed to open first file in zip file"};
-        NSError *err = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-2 userInfo:userInfo];
+        NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFailedOpenFirstFile userInfo:userInfo];
         if (error)
         {
             *error = err;
@@ -531,7 +533,7 @@
     if (crc_ret == UNZ_CRCERROR)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"crc check failed for file"};
-        retErr = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-3 userInfo:userInfo];
+        retErr = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFileInfoNotLoadable userInfo:userInfo];
     }
     
     if (error) {
