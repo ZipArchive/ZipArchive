@@ -32,7 +32,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 + (BOOL)isFilePasswordProtectedAtPath:(NSString *)path {
     // Begin opening
-    zipFile zip = unzOpen((const char*)[path UTF8String]);
+    zipFile zip = unzOpen((const char*)[path fileSystemRepresentation]);
     if (zip == NULL) {
         return NO;
     }
@@ -65,7 +65,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         *error = nil;
     }
 
-    zipFile zip = unzOpen((const char*)[path UTF8String]);
+    zipFile zip = unzOpen((const char*)[path fileSystemRepresentation]);
     if (zip == NULL) {
         if (error) {
             *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
@@ -190,7 +190,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
       completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * __nullable error))completionHandler
 {
     // Begin opening
-    zipFile zip = unzOpen((const char*)[path UTF8String]);
+    zipFile zip = unzOpen((const char*)[path fileSystemRepresentation]);
     if (zip == NULL)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"failed to open zip file"};
@@ -379,7 +379,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 // ensure we are not creating stale file entries
                 int readBytes = unzReadCurrentFile(zip, buffer, 4096);
                 if (readBytes >= 0) {
-                    FILE *fp = fopen((const char*)[fullPath UTF8String], "wb");
+                    FILE *fp = fopen((const char*)[fullPath fileSystemRepresentation], "wb");
                     while (fp) {
                         if (readBytes > 0) {
                             fwrite(buffer, readBytes, 1, fp);
@@ -675,7 +675,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 - (BOOL)open
 {
     NSAssert((_zip == NULL), @"Attempting open an archive which is already open");
-    _zip = zipOpen([_path UTF8String], APPEND_STATUS_CREATE);
+    _zip = zipOpen([_path fileSystemRepresentation], APPEND_STATUS_CREATE);
     return (NULL != _zip);
 }
 
@@ -731,7 +731,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     }
     
     unsigned int len = 0;
-    zipOpenNewFileInZip3(_zip, [[folderName stringByAppendingString:@"/"] UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_NO_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL,
+    zipOpenNewFileInZip3(_zip, [[folderName stringByAppendingString:@"/"] fileSystemRepresentation], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_NO_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL,
                          Z_DEFAULT_STRATEGY, [password UTF8String], 0);
     zipWriteInFileInZip(_zip, &len, 0);
     zipCloseFileInZip(_zip);
@@ -750,17 +750,17 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
     
-    FILE *input = fopen([path UTF8String], "r");
+    FILE *input = fopen([path fileSystemRepresentation], "r");
     if (NULL == input) {
         return NO;
     }
     
     const char *afileName;
     if (!fileName) {
-        afileName = [path.lastPathComponent UTF8String];
+        afileName = [path.lastPathComponent fileSystemRepresentation];
     }
     else {
-        afileName = [fileName UTF8String];
+        afileName = [fileName fileSystemRepresentation];
     }
     
     zip_fileinfo zipInfo = {{0}};
@@ -824,7 +824,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     zip_fileinfo zipInfo = {{0,0,0,0,0,0},0,0,0};
     [self zipInfo:&zipInfo setDate:[NSDate date]];
     
-    zipOpenNewFileInZip3(_zip, [filename UTF8String], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, [password UTF8String], 0);
+    zipOpenNewFileInZip3(_zip, [filename fileSystemRepresentation], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, [password UTF8String], 0);
     
     zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
     
