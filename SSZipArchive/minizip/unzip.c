@@ -1206,7 +1206,7 @@ extern int ZEXPORT unzOpenCurrentFile3(unzFile file, int *method, int *level, in
             if (ZREAD64(s->z_filefunc, s->filestream, passverify_archive, AES_PWVERIFYSIZE) != AES_PWVERIFYSIZE)
                 return UNZ_INTERNALERROR;
 
-            fcrypt_init(s->cur_file_info_internal.aes_encryption_mode, password, strlen(password), saltvalue,
+            fcrypt_init((unsigned int)s->cur_file_info_internal.aes_encryption_mode, (unsigned char *)password, (unsigned int)strlen(password), saltvalue,
                 passverify_password, &s->pfile_in_zip_read->aes_ctx);
 
             if (memcmp(passverify_archive, passverify_password, AES_PWVERIFYSIZE) != 0)
