@@ -375,6 +375,11 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 continue;
             }
             
+            if ([delegate respondsToSelector: @selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:unzippedFilePath:)]) {
+                [delegate zipArchiveWillUnzipFileAtIndex: currentFileNumber totalFiles: (NSInteger)globalInfo.number_entry
+                                             archivePath:path unzippedFilePath: fullPath];
+            }
+            
             if (!fileIsSymbolicLink) {
                 // ensure we are not creating stale file entries
                 int readBytes = unzReadCurrentFile(zip, buffer, 4096);
