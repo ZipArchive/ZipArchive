@@ -967,6 +967,7 @@ local int unz64local_CheckCurrentFileCoherencyHeader(unz64_s *s, uInt *piSizeVar
     uLong size_extra_field;
     int err = UNZ_OK;
     int compression_method = 0;
+    int check_compression_method;
 
     *piSizeVar = 0;
     *poffset_local_extrafield = 0;
@@ -1002,11 +1003,12 @@ local int unz64local_CheckCurrentFileCoherencyHeader(unz64_s *s, uInt *piSizeVar
         compression_method = (int)s->cur_file_info_internal.aes_compression_method;
 #endif
 
-    if ((err == UNZ_OK) && (compression_method != 0) &&
+    check_compression_method = ((err == UNZ_OK) && (compression_method != 0));
 #ifdef HAVE_BZIP2
-        (compression_method != Z_BZIP2ED) &&
+    check_compression_method = (check_compression_method && (compression_method != Z_BZIP2ED));
 #endif
-        (compression_method != Z_DEFLATED))
+    check_compression_method = (check_compression_method && (compression_method != Z_DEFLATED));
+    if (check_compression_method)
         err = UNZ_BADZIPFILE;
 
     if (unz64local_getLong(&s->z_filefunc, s->filestream, &uL) != UNZ_OK) /* date/time */
@@ -1053,6 +1055,7 @@ extern int ZEXPORT unzOpenCurrentFile3(unzFile file, int *method, int *level, in
     file_in_zip64_read_info_s *pfile_in_zip_read_info;
     ZPOS64_T offset_local_extrafield;
     uInt size_local_extrafield;
+    int check_compression_method;
 #ifndef NOUNCRYPT
     char source[12];
 #else
@@ -1106,11 +1109,12 @@ extern int ZEXPORT unzOpenCurrentFile3(unzFile file, int *method, int *level, in
         }
     }
 
-    if ((compression_method != 0) &&
+    check_compression_method = (compression_method != 0);
 #ifdef HAVE_BZIP2
-        (compression_method != Z_BZIP2ED) &&
+    check_compression_method = (check_compression_method && (compression_method != Z_BZIP2ED));
 #endif
-        (compression_method != Z_DEFLATED))
+    check_compression_method = (check_compression_method && (compression_method != Z_DEFLATED));
+    if (check_compression_method)
         err = UNZ_BADZIPFILE;
 
     pfile_in_zip_read_info->crc32_wait = s->cur_file_info.crc;
@@ -1287,7 +1291,7 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, unsigned len)
             pfile_in_zip_read_info->stream.avail_out = (uInt)pfile_in_zip_read_info->rest_read_compressed +
                                                        pfile_in_zip_read_info->stream.avail_in;
     } else {
-        
+
         // NOTE:
         // This bit of code seems to try to set the amount of space in the output buffer based on the
         // value stored in the headers stored in the .zip file. However, if those values are incorrect
@@ -1299,18 +1303,18 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, unsigned len)
         //
         // See: https://github.com/ZipArchive/ziparchive/issues/16
         //
-        
+
         /*
-        
-         
+
+
          FIXME: Upgrading to minizip 1.1 caused issues here, Uncommented the code that was commented before. 11/24/2015
          */
-        
+
         if (len > pfile_in_zip_read_info->rest_read_uncompressed)
             pfile_in_zip_read_info->stream.avail_out = (uInt)pfile_in_zip_read_info->rest_read_uncompressed;
-        
-         
-    
+
+
+
     }
 
     while (pfile_in_zip_read_info->stream.avail_out > 0) {
@@ -1840,4 +1844,3 @@ extern int ZEXPORT unzeof(unzFile file)
         return 1;
     return 0;
 }
-
