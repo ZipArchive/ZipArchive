@@ -87,7 +87,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 if (ret != UNZ_BADPASSWORD) {
                     if (error) {
                         *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
-                                                     code:SSZipArchiveErrorCodeFailedOpenFirstFile
+                                                     code:SSZipArchiveErrorCodeFailedOpenFileInZip
                                                  userInfo:@{NSLocalizedDescriptionKey: @"failed to open first file in zip file"}];
                     }
                 }
@@ -217,7 +217,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     if (unzGoToFirstFile(zip) != UNZ_OK)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"failed to open first file in zip file"};
-        NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFailedOpenFirstFile userInfo:userInfo];
+        NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFailedOpenFileInZip userInfo:userInfo];
         if (error)
         {
             *error = err;
@@ -256,7 +256,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             }
             
             if (ret != UNZ_OK) {
-                unzippingError = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-2 userInfo:@{NSLocalizedDescriptionKey: @"failed to open file in zip file"}];
+                unzippingError = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:SSZipArchiveErrorCodeFailedOpenFileInZip userInfo:@{NSLocalizedDescriptionKey: @"failed to open file in zip file"}];
                 success = NO;
                 break;
             }
@@ -267,7 +267,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
             if (ret != UNZ_OK) {
-                unzippingError = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:-3 userInfo:@{NSLocalizedDescriptionKey: @"failed to retrieve info for file"}];
+                unzippingError = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:SSZipArchiveErrorCodeFileInfoNotLoadable userInfo:@{NSLocalizedDescriptionKey: @"failed to retrieve info for file"}];
                 success = NO;
                 unzCloseCurrentFile(zip);
                 break;
