@@ -1,12 +1,12 @@
 /*
-   ---------------------------------------------------------------------------
-   Copyright (c) 2002, Dr Brian Gladman <                 >, Worcester, UK.
-   All rights reserved.
+ ---------------------------------------------------------------------------
+ Copyright (c) 2002, Dr Brian Gladman <                 >, Worcester, UK.
+ All rights reserved.
 
-   LICENSE TERMS
+ LICENSE TERMS
 
-   The free distribution and use of this software in both source and binary
-   form is allowed (with or without changes) provided that:
+ The free distribution and use of this software in both source and binary
+ form is allowed (with or without changes) provided that:
 
    1. distributions of this source code include the above copyright
       notice, this list of conditions and the following disclaimer;
@@ -18,23 +18,23 @@
    3. the copyright holder's name is not used to endorse products
       built using this software without specific written permission.
 
-   ALTERNATIVELY, provided that this notice is retained in full, this product
-   may be distributed under the terms of the GNU General Public License (GPL),
-   in which case the provisions of the GPL apply INSTEAD OF those given above.
+ ALTERNATIVELY, provided that this notice is retained in full, this product
+ may be distributed under the terms of the GNU General Public License (GPL),
+ in which case the provisions of the GPL apply INSTEAD OF those given above.
 
-   DISCLAIMER
+ DISCLAIMER
 
-   This software is provided 'as is' with no explicit or implied warranties
-   in respect of its properties, including, but not limited to, correctness
-   and/or fitness for purpose.
-   -------------------------------------------------------------------------
-   Issue Date: 24/01/2003
+ This software is provided 'as is' with no explicit or implied warranties
+ in respect of its properties, including, but not limited to, correctness
+ and/or fitness for purpose.
+ -------------------------------------------------------------------------
+ Issue Date: 24/01/2003
 
-   This file implements password based file encryption and authentication
-   using AES in CTR mode, HMAC-SHA1 authentication and RFC2898 password
-   based key derivation.
+ This file implements password based file encryption and authentication 
+ using AES in CTR mode, HMAC-SHA1 authentication and RFC2898 password 
+ based key derivation.
 
- */
+*/
 
 #include <memory.h>
 
@@ -51,10 +51,12 @@ extern "C"
 
 static void encr_data(unsigned char data[], unsigned long d_len, fcrypt_ctx cx[1])
 {
-    unsigned long i = 0, pos = cx->encr_pos;
+    unsigned int i = 0, pos = cx->encr_pos;
 
-    while (i < d_len) {
-        if (pos == AES_BLOCK_SIZE) {
+    while (i < d_len)
+    {
+        if (pos == AES_BLOCK_SIZE)
+        {
             unsigned int j = 0;
             /* increment encryption nonce   */
             while (j < 8 && !++cx->nonce[j])
@@ -67,7 +69,7 @@ static void encr_data(unsigned char data[], unsigned long d_len, fcrypt_ctx cx[1
         data[i++] ^= cx->encr_bfr[pos++];
     }
 
-    cx->encr_pos = (unsigned int)pos;
+    cx->encr_pos = pos;
 }
 
 int fcrypt_init(
@@ -78,9 +80,8 @@ int fcrypt_init(
 #ifdef PASSWORD_VERIFIER
     unsigned char pwd_ver[PWD_VER_LENGTH],  /* 2 byte password verifier (output)    */
 #endif
-    fcrypt_ctx cx[1])                       /* the file encryption context (output) */
-{
-    unsigned char kbuf[2 * MAX_KEY_LENGTH + PWD_VER_LENGTH];
+    fcrypt_ctx      cx[1])                  /* the file encryption context (output) */
+{   unsigned char kbuf[2 * MAX_KEY_LENGTH + PWD_VER_LENGTH];
 
     if (pwd_len > MAX_PWD_LENGTH)
         return PASSWORD_TOO_LONG;
@@ -93,7 +94,7 @@ int fcrypt_init(
 
     /* derive the encryption and authentication keys and the password verifier   */
     derive_key(pwd, pwd_len, salt, SALT_LENGTH(mode), KEYING_ITERATIONS,
-               kbuf, 2 * KEY_LENGTH(mode) + PWD_VER_LENGTH);
+                        kbuf, 2 * KEY_LENGTH(mode) + PWD_VER_LENGTH);
 
     /* initialise the encryption nonce and buffer pos   */
     cx->encr_pos = AES_BLOCK_SIZE;
@@ -105,7 +106,7 @@ int fcrypt_init(
     aes_encrypt_key(kbuf, KEY_LENGTH(mode), cx->encr_ctx);
 
     /* initialise for authentication using key 2        */
-    hmac_sha_begin(cx->auth_ctx);
+    hmac_sha_begin(HMAC_SHA1, cx->auth_ctx);
     hmac_sha_key(kbuf + KEY_LENGTH(mode), KEY_LENGTH(mode), cx->auth_ctx);
 
 #ifdef PASSWORD_VERIFIER

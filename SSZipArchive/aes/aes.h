@@ -1,6 +1,6 @@
 /*
 ---------------------------------------------------------------------------
-Copyright (c) 1998-2010, Brian Gladman, Worcester, UK. All rights reserved.
+Copyright (c) 1998-2013, Brian Gladman, Worcester, UK. All rights reserved.
 
 The redistribution and use of this software (with or without changes)
 is allowed without the payment of fees or royalties provided that:
@@ -44,7 +44,6 @@ extern "C"
 
 #define AES_ENCRYPT /* if support for encryption is needed          */
 #define AES_DECRYPT /* if support for decryption is needed          */
-#define AES_REV_DKS /* define to reverse decryption key schedule    */
 
 #define AES_BLOCK_SIZE  16  /* the AES block size in bytes          */
 #define N_COLS           4  /* the number of columns in the state   */
@@ -69,19 +68,35 @@ extern "C"
 /* elements can be used by code that implements additional modes    */
 
 typedef union
-{   uint_32t l;
-    uint_8t b[4];
+{   uint32_t l;
+    uint8_t b[4];
 } aes_inf;
 
-typedef struct
-{   uint_32t ks[KS_LENGTH];
+#ifdef _MSC_VER
+#  pragma warning( disable : 4324 )
+#endif
+
+#if defined(_MSC_VER) && defined(_WIN64)
+#define ALIGNED_(x) __declspec(align(x))
+#elif defined(__GNUC__) && defined(__x86_64__)
+#define ALIGNED_(x) __attribute__ ((aligned(x)))
+#else
+#define ALIGNED_(x)
+#endif
+
+typedef struct ALIGNED_(16)
+{   uint32_t ks[KS_LENGTH];
     aes_inf inf;
 } aes_encrypt_ctx;
 
-typedef struct
-{   uint_32t ks[KS_LENGTH];
+typedef struct ALIGNED_(16)
+{   uint32_t ks[KS_LENGTH];
     aes_inf inf;
 } aes_decrypt_ctx;
+
+#ifdef _MSC_VER
+#  pragma warning( default : 4324 )
+#endif
 
 /* This routine must be called before first use if non-static       */
 /* tables are being used                                            */
@@ -139,14 +154,14 @@ AES_RETURN aes_decrypt(const unsigned char *in, unsigned char *out, const aes_de
 
 /* Multiple calls to the following subroutines for multiple block   */
 /* ECB, CBC, CFB, OFB and CTR mode encryption can be used to handle */
-/* long messages incremantally provided that the context AND the iv */
+/* long messages incrementally provided that the context AND the iv */
 /* are preserved between all such calls.  For the ECB and CBC modes */
 /* each individual call within a series of incremental calls must   */
 /* process only full blocks (i.e. len must be a multiple of 16) but */
 /* the CFB, OFB and CTR mode calls can handle multiple incremental  */
-/* calls of any length. Each mode is reset when a new AES key is    */
-/* set but ECB and CBC operations can be reset without setting a    */
-/* new key by setting a new IV value.  To reset CFB, OFB and CTR    */
+/* calls of any length.  Each mode is reset when a new AES key is   */
+/* set but ECB needs no reset and CBC can be reset without setting  */
+/* a new key by setting a new IV value.  To reset CFB, OFB and CTR  */
 /* without setting the key, aes_mode_reset() must be called and the */
 /* IV must be set.  NOTE: All these calls update the IV on exit so  */
 /* this has to be reset if a new operation with the same IV as the  */
@@ -189,6 +204,63 @@ typedef void cbuf_inc(unsigned char *cbuf);
 AES_RETURN aes_ctr_crypt(const unsigned char *ibuf, unsigned char *obuf,
             int len, unsigned char *cbuf, cbuf_inc ctr_inc, aes_encrypt_ctx cx[1]);
 
+#endif
+
+#if 0
+#  define ADD_AESNI_MODE_CALLS
+#endif
+
+#if 0 && defined( ADD_AESNI_MODE_CALLS )
+#  define USE_AES_CONTEXT
+#endif
+
+#ifdef ADD_AESNI_MODE_CALLS
+#  ifdef USE_AES_CONTEXT
+
+AES_RETURN aes_CBC_encrypt(const unsigned char *in,
+    unsigned char *out,
+    unsigned char ivec[16],
+    unsigned long length,
+    const aes_encrypt_ctx cx[1]);
+
+AES_RETURN aes_CBC_decrypt(const unsigned char *in,
+    unsigned char *out,
+    unsigned char ivec[16],
+    unsigned long length,
+    const aes_decrypt_ctx cx[1]);
+
+AES_RETURN AES_CTR_encrypt(const unsigned char *in,
+    unsigned char *out,
+    const unsigned char ivec[8],
+    const unsigned char nonce[4],
+    unsigned long length,
+    const aes_encrypt_ctx cx[1]);
+
+#  else
+
+void aes_CBC_encrypt(const unsigned char *in,
+    unsigned char *out,
+    unsigned char ivec[16],
+    unsigned long length,
+    unsigned char *key,
+    int number_of_rounds);
+
+void aes_CBC_decrypt(const unsigned char *in,
+    unsigned char *out,
+    unsigned char ivec[16],
+    unsigned long length,
+    unsigned char *key,
+    int number_of_rounds);
+
+void AES_CTR_encrypt(const unsigned char *in,
+    unsigned char *out,
+    const unsigned char ivec[8],
+    const unsigned char nonce[4],
+    unsigned long length,
+    const unsigned char *key,
+    int number_of_rounds);
+
+#  endif
 #endif
 
 #if defined(__cplusplus)

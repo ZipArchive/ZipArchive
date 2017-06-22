@@ -1,6 +1,6 @@
 /*
 ---------------------------------------------------------------------------
-Copyright (c) 1998-2010, Brian Gladman, Worcester, UK. All rights reserved.
+Copyright (c) 1998-2013, Brian Gladman, Worcester, UK. All rights reserved.
 
 The redistribution and use of this software (with or without changes)
 is allowed without the payment of fees or royalties provided that:
@@ -37,8 +37,8 @@ Issue Date: 20/12/2007
  The cipher interface is implemented as an array of bytes in which lower
  AES bit sequence indexes map to higher numeric significance within bytes.
 
-  uint_8t                 (an unsigned  8-bit type)
-  uint_32t                (an unsigned 32-bit type)
+  uint8_t                 (an unsigned  8-bit type)
+  uint32_t                (an unsigned 32-bit type)
   struct aes_encrypt_ctx  (structure for the cipher encryption context)
   struct aes_decrypt_ctx  (structure for the cipher decryption context)
   AES_RETURN                the function return type
@@ -161,12 +161,35 @@ Issue Date: 20/12/2007
 #  error The algorithm byte order is not defined
 #endif
 
-/*  2. VIA ACE SUPPORT */
+/*  2. Intel AES AND VIA ACE SUPPORT */
 
-#if !defined(__APPLE__) && defined( __GNUC__ ) && defined( __i386__ ) \
- || defined( _WIN32   ) && defined( _M_IX86  ) \
- && !(defined( _WIN64 ) || defined( _WIN32_WCE ) || defined( _MSC_VER ) && ( _MSC_VER <= 800 ))
+#if defined( __GNUC__ ) && defined( __i386__ ) \
+ || defined( _WIN32 ) && defined( _M_IX86 ) && !(defined( _WIN64 ) \
+ || defined( _WIN32_WCE ) || defined( _MSC_VER ) && ( _MSC_VER <= 800 ))
 #  define VIA_ACE_POSSIBLE
+#endif
+
+#if (defined( _WIN64 ) && defined( _MSC_VER )) \
+ || (defined( __GNUC__ ) && defined( __x86_64__ )) && !(defined( __APPLE__ ))\
+ && !(defined( INTEL_AES_POSSIBLE ))
+#  define INTEL_AES_POSSIBLE
+#endif
+
+/*  Define this option if support for the Intel AESNI is required
+    If USE_INTEL_AES_IF_PRESENT is defined then AESNI will be used
+    if it is detected (both present and enabled).
+
+	AESNI uses a decryption key schedule with the first decryption
+	round key at the high end of the key scedule with the following
+	round keys at lower positions in memory.  So AES_REV_DKS must NOT
+	be defined when AESNI will be used.  ALthough it is unlikely that
+	assembler code will be used with an AESNI build, if it is then
+	AES_REV_DKS must NOT be defined when the assembler files are
+	built
+*/
+
+#if 1 && defined( INTEL_AES_POSSIBLE ) && !defined( USE_INTEL_AES_IF_PRESENT )
+#  define USE_INTEL_AES_IF_PRESENT
 #endif
 
 /*  Define this option if support for the VIA ACE is required. This uses
@@ -182,9 +205,11 @@ Issue Date: 20/12/2007
     but there are very large performance gains if this can be arranged.
     VIA ACE also requires the decryption key schedule to be in reverse
     order (which later checks below ensure).
+
+	AES_REV_DKS must be set for assembler code used with a VIA ACE build
 */
 
-#if 1 && defined( VIA_ACE_POSSIBLE ) && !defined( USE_VIA_ACE_IF_PRESENT )
+#if 0 && defined( VIA_ACE_POSSIBLE ) && !defined( USE_VIA_ACE_IF_PRESENT )
 #  define USE_VIA_ACE_IF_PRESENT
 #endif
 
@@ -221,8 +246,14 @@ Issue Date: 20/12/2007
 #  define ASM_AMD64_C
 #endif
 
+#if defined( __i386 ) || defined( _M_IX86 )
+#  define A32_
+#elif defined( __x86_64__ ) || defined( _M_X64 )
+#  define A64_
+#endif
+
 #if (defined ( ASM_X86_V1C ) || defined( ASM_X86_V2 ) || defined( ASM_X86_V2C )) \
-      && !defined( _M_IX86 ) || defined( ASM_AMD64_C ) && !defined( _M_X64 )
+       && !defined( A32_ )  || defined( ASM_AMD64_C ) && !defined( A64_ )
 #  error Assembler code is only available for x86 and AMD64 systems
 #endif
 
@@ -284,7 +315,7 @@ Issue Date: 20/12/2007
 /*  6. FAST FINITE FIELD OPERATIONS
 
     If this section is included, tables are used to provide faster finite
-    field arithmetic (this has no effect if FIXED_TABLES is defined).
+    field arithmetic (this has no effect if STATIC_TABLES is defined).
 */
 #if 1
 #  define FF_TABLES
@@ -308,16 +339,16 @@ Issue Date: 20/12/2007
     must be called to compute them before the code is first used.
 */
 #if 1 && !(defined( _MSC_VER ) && ( _MSC_VER <= 800 ))
-#  define FIXED_TABLES
+#  define STATIC_TABLES
 #endif
 
 /*  9. MASKING OR CASTING FROM LONGER VALUES TO BYTES
 
-    In some systems it is better to mask longer values to extract bytes 
+    In some systems it is better to mask longer values to extract bytes
     rather than using a cast. This option allows this choice.
 */
 #if 0
-#  define to_byte(x)  ((uint_8t)(x))
+#  define to_byte(x)  ((uint8_t)(x))
 #else
 #  define to_byte(x)  ((x) & 0xff)
 #endif
@@ -426,8 +457,14 @@ Issue Date: 20/12/2007
 #  define USE_VIA_ACE_IF_PRESENT
 #endif
 
-#if defined( USE_VIA_ACE_IF_PRESENT ) && !defined ( AES_REV_DKS )
+/* define to reverse decryption key schedule    */
+#if 1 || defined( USE_VIA_ACE_IF_PRESENT ) && !defined ( AES_REV_DKS )
 #  define AES_REV_DKS
+#endif
+
+/* Intel AESNI uses a decryption key schedule in the encryption order */
+#if defined( USE_INTEL_AES_IF_PRESENT ) && defined ( AES_REV_DKS )
+#  undef AES_REV_DKS
 #endif
 
 /* Assembler support requires the use of platform byte order */
@@ -522,7 +559,7 @@ Issue Date: 20/12/2007
 #elif defined( bswap_32 )
 #  define aes_sw32    bswap_32
 #else
-#  define brot(x,n)   (((uint_32t)(x) <<  n) | ((uint_32t)(x) >> (32 - n)))
+#  define brot(x,n)   (((uint32_t)(x) <<  n) | ((uint32_t)(x) >> (32 - n)))
 #  define aes_sw32(x) ((brot((x),8) & 0x00ff00ff) | (brot((x),24) & 0xff00ff00))
 #endif
 
@@ -538,32 +575,32 @@ Issue Date: 20/12/2007
 */
 
 #if ( ALGORITHM_BYTE_ORDER == IS_LITTLE_ENDIAN )
-#  define upr(x,n)      (((uint_32t)(x) << (8 * (n))) | ((uint_32t)(x) >> (32 - 8 * (n))))
-#  define ups(x,n)      ((uint_32t) (x) << (8 * (n)))
+#  define upr(x,n)      (((uint32_t)(x) << (8 * (n))) | ((uint32_t)(x) >> (32 - 8 * (n))))
+#  define ups(x,n)      ((uint32_t) (x) << (8 * (n)))
 #  define bval(x,n)     to_byte((x) >> (8 * (n)))
 #  define bytes2word(b0, b1, b2, b3)  \
-        (((uint_32t)(b3) << 24) | ((uint_32t)(b2) << 16) | ((uint_32t)(b1) << 8) | (b0))
+        (((uint32_t)(b3) << 24) | ((uint32_t)(b2) << 16) | ((uint32_t)(b1) << 8) | (b0))
 #endif
 
 #if ( ALGORITHM_BYTE_ORDER == IS_BIG_ENDIAN )
-#  define upr(x,n)      (((uint_32t)(x) >> (8 * (n))) | ((uint_32t)(x) << (32 - 8 * (n))))
-#  define ups(x,n)      ((uint_32t) (x) >> (8 * (n)))
+#  define upr(x,n)      (((uint32_t)(x) >> (8 * (n))) | ((uint32_t)(x) << (32 - 8 * (n))))
+#  define ups(x,n)      ((uint32_t) (x) >> (8 * (n)))
 #  define bval(x,n)     to_byte((x) >> (24 - 8 * (n)))
 #  define bytes2word(b0, b1, b2, b3)  \
-        (((uint_32t)(b0) << 24) | ((uint_32t)(b1) << 16) | ((uint_32t)(b2) << 8) | (b3))
+        (((uint32_t)(b0) << 24) | ((uint32_t)(b1) << 16) | ((uint32_t)(b2) << 8) | (b3))
 #endif
 
 #if defined( SAFE_IO )
-#  define word_in(x,c)    bytes2word(((const uint_8t*)(x)+4*c)[0], ((const uint_8t*)(x)+4*c)[1], \
-                                   ((const uint_8t*)(x)+4*c)[2], ((const uint_8t*)(x)+4*c)[3])
-#  define word_out(x,c,v) { ((uint_8t*)(x)+4*c)[0] = bval(v,0); ((uint_8t*)(x)+4*c)[1] = bval(v,1); \
-                          ((uint_8t*)(x)+4*c)[2] = bval(v,2); ((uint_8t*)(x)+4*c)[3] = bval(v,3); }
+#  define word_in(x,c)    bytes2word(((const uint8_t*)(x)+4*c)[0], ((const uint8_t*)(x)+4*c)[1], \
+                                   ((const uint8_t*)(x)+4*c)[2], ((const uint8_t*)(x)+4*c)[3])
+#  define word_out(x,c,v) { ((uint8_t*)(x)+4*c)[0] = bval(v,0); ((uint8_t*)(x)+4*c)[1] = bval(v,1); \
+                          ((uint8_t*)(x)+4*c)[2] = bval(v,2); ((uint8_t*)(x)+4*c)[3] = bval(v,3); }
 #elif ( ALGORITHM_BYTE_ORDER == PLATFORM_BYTE_ORDER )
-#  define word_in(x,c)    (*((uint_32t*)(x)+(c)))
-#  define word_out(x,c,v) (*((uint_32t*)(x)+(c)) = (v))
+#  define word_in(x,c)    (*((uint32_t*)(x)+(c)))
+#  define word_out(x,c,v) (*((uint32_t*)(x)+(c)) = (v))
 #else
-#  define word_in(x,c)    aes_sw32(*((uint_32t*)(x)+(c)))
-#  define word_out(x,c,v) (*((uint_32t*)(x)+(c)) = aes_sw32(v))
+#  define word_in(x,c)    aes_sw32(*((uint32_t*)(x)+(c)))
+#  define word_out(x,c,v) (*((uint32_t*)(x)+(c)) = aes_sw32(v))
 #endif
 
 /* the finite field modular polynomial and elements */
@@ -648,7 +685,7 @@ Issue Date: 20/12/2007
 #if !(defined( REDUCE_CODE_SIZE ) && (defined( ASM_X86_V2 ) || defined( ASM_X86_V2C )))
 #  if ((FUNCS_IN_C & ENC_KEYING_IN_C) || (FUNCS_IN_C & DEC_KEYING_IN_C))
 #    if KEY_SCHED == ONE_TABLE
-#      if !defined( FL1_SET )  && !defined( FL4_SET ) 
+#      if !defined( FL1_SET )  && !defined( FL4_SET )
 #        define LS1_SET
 #      endif
 #    elif KEY_SCHED == FOUR_TABLES
@@ -697,14 +734,14 @@ Issue Date: 20/12/2007
 /* perform forward and inverse column mix operation on four bytes in long word x in */
 /* parallel. NOTE: x must be a simple variable, NOT an expression in these macros.  */
 
-#if !(defined( REDUCE_CODE_SIZE ) && (defined( ASM_X86_V2 ) || defined( ASM_X86_V2C ))) 
+#if !(defined( REDUCE_CODE_SIZE ) && (defined( ASM_X86_V2 ) || defined( ASM_X86_V2C )))
 
 #if defined( FM4_SET )      /* not currently used */
 #  define fwd_mcol(x)       four_tables(x,t_use(f,m),vf1,rf1,0)
 #elif defined( FM1_SET )    /* not currently used */
 #  define fwd_mcol(x)       one_table(x,upr,t_use(f,m),vf1,rf1,0)
 #else
-#  define dec_fmvars        uint_32t g2
+#  define dec_fmvars        uint32_t g2
 #  define fwd_mcol(x)       (g2 = gf_mulx(x), g2 ^ upr((x) ^ g2, 3) ^ upr((x), 2) ^ upr((x), 1))
 #endif
 
@@ -713,7 +750,7 @@ Issue Date: 20/12/2007
 #elif defined( IM1_SET )
 #  define inv_mcol(x)       one_table(x,upr,t_use(i,m),vf1,rf1,0)
 #else
-#  define dec_imvars        uint_32t g2, g4, g9
+#  define dec_imvars        uint32_t g2, g4, g9
 #  define inv_mcol(x)       (g2 = gf_mulx(x), g4 = gf_mulx(g2), g9 = (x) ^ gf_mulx(g4), g4 ^= g9, \
                             (x) ^ g2 ^ g4 ^ upr(g2 ^ g9, 3) ^ upr(g4, 2) ^ upr(g9, 1))
 #endif

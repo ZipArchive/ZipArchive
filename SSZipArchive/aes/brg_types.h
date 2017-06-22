@@ -1,6 +1,6 @@
 /*
 ---------------------------------------------------------------------------
-Copyright (c) 1998-2010, Brian Gladman, Worcester, UK. All rights reserved.
+Copyright (c) 1998-2013, Brian Gladman, Worcester, UK. All rights reserved.
 
 The redistribution and use of this software (with or without changes)
 is allowed without the payment of fees or royalties provided that:
@@ -19,7 +19,7 @@ Issue Date: 20/12/2007
 
  The unsigned integer types defined here are of the form uint_<nn>t where
  <nn> is the length of the type; for example, the unsigned 32-bit type is
- 'uint_32t'.  These are NOT the same as the 'C99 integer types' that are
+ 'uint32_t'.  These are NOT the same as the 'C99 integer types' that are
  defined in the inttypes.h and stdint.h headers since attempts to use these
  types have shown that support for them is still highly variable.  However,
  since the latter are of the form uint<nn>_t, a regular expression search
@@ -35,6 +35,7 @@ extern "C" {
 #endif
 
 #include <limits.h>
+#include <stdint.h>
 
 #if defined( _MSC_VER ) && ( _MSC_VER >= 1300 )
 #  include <stddef.h>
@@ -43,42 +44,21 @@ extern "C" {
 #  define intptr_t unsigned int
 #  define ptrint_t intptr_t
 #elif defined( __GNUC__ ) && ( __GNUC__ >= 3 )
-#  include <stdint.h>
 #  define ptrint_t intptr_t
 #else
 #  define ptrint_t int
-#endif
-
-#ifndef BRG_UI8
-#  define BRG_UI8
-#  if UCHAR_MAX == 255u
-     typedef unsigned char uint_8t;
-#  else
-#    error Please define uint_8t as an 8-bit unsigned integer type in brg_types.h
-#  endif
-#endif
-
-#ifndef BRG_UI16
-#  define BRG_UI16
-#  if USHRT_MAX == 65535u
-     typedef unsigned short uint_16t;
-#  else
-#    error Please define uint_16t as a 16-bit unsigned short type in brg_types.h
-#  endif
 #endif
 
 #ifndef BRG_UI32
 #  define BRG_UI32
 #  if UINT_MAX == 4294967295u
 #    define li_32(h) 0x##h##u
-     typedef unsigned int uint_32t;
 #  elif ULONG_MAX == 4294967295u
 #    define li_32(h) 0x##h##ul
-     typedef unsigned long uint_32t;
 #  elif defined( _CRAY )
 #    error This code needs 32-bit data types, which Cray machines do not provide
 #  else
-#    error Please define uint_32t as a 32-bit unsigned integer type in brg_types.h
+#    error Please define uint32_t as a 32-bit unsigned integer type in brg_types.h
 #  endif
 #endif
 
@@ -86,49 +66,41 @@ extern "C" {
 #  if defined( __BORLANDC__ ) && !defined( __MSDOS__ )
 #    define BRG_UI64
 #    define li_64(h) 0x##h##ui64
-     typedef unsigned __int64 uint_64t;
 #  elif defined( _MSC_VER ) && ( _MSC_VER < 1300 )    /* 1300 == VC++ 7.0 */
 #    define BRG_UI64
 #    define li_64(h) 0x##h##ui64
-     typedef unsigned __int64 uint_64t;
 #  elif defined( __sun ) && defined( ULONG_MAX ) && ULONG_MAX == 0xfffffffful
 #    define BRG_UI64
 #    define li_64(h) 0x##h##ull
-     typedef unsigned long long uint_64t;
 #  elif defined( __MVS__ )
 #    define BRG_UI64
 #    define li_64(h) 0x##h##ull
-     typedef unsigned int long long uint_64t;
 #  elif defined( UINT_MAX ) && UINT_MAX > 4294967295u
 #    if UINT_MAX == 18446744073709551615u
 #      define BRG_UI64
 #      define li_64(h) 0x##h##u
-       typedef unsigned int uint_64t;
 #    endif
 #  elif defined( ULONG_MAX ) && ULONG_MAX > 4294967295u
 #    if ULONG_MAX == 18446744073709551615ul
 #      define BRG_UI64
 #      define li_64(h) 0x##h##ul
-       typedef unsigned long uint_64t;
 #    endif
 #  elif defined( ULLONG_MAX ) && ULLONG_MAX > 4294967295u
 #    if ULLONG_MAX == 18446744073709551615ull
 #      define BRG_UI64
 #      define li_64(h) 0x##h##ull
-       typedef unsigned long long uint_64t;
 #    endif
 #  elif defined( ULONG_LONG_MAX ) && ULONG_LONG_MAX > 4294967295u
 #    if ULONG_LONG_MAX == 18446744073709551615ull
 #      define BRG_UI64
 #      define li_64(h) 0x##h##ull
-       typedef unsigned long long uint_64t;
 #    endif
 #  endif
 #endif
 
 #if !defined( BRG_UI64 )
 #  if defined( NEED_UINT_64T )
-#    error Please define uint_64t as an unsigned 64 bit type in brg_types.h
+#    error Please define uint64_t as an unsigned 64 bit type in brg_types.h
 #  endif
 #endif
 
@@ -183,8 +155,8 @@ extern "C" {
 */
 
 #define ALIGN_OFFSET(x,n)	(((ptrint_t)(x)) & ((n) - 1))
-#define ALIGN_FLOOR(x,n)	((uint_8t*)(x) - ( ((ptrint_t)(x)) & ((n) - 1)))
-#define ALIGN_CEIL(x,n)		((uint_8t*)(x) + (-((ptrint_t)(x)) & ((n) - 1)))
+#define ALIGN_FLOOR(x,n)	((uint8_t*)(x) - ( ((ptrint_t)(x)) & ((n) - 1)))
+#define ALIGN_CEIL(x,n)		((uint8_t*)(x) + (-((ptrint_t)(x)) & ((n) - 1)))
 
 /*  These defines are used to declare buffers in a way that allows
     faster operations on longer variables to be used.  In all these
@@ -206,7 +178,7 @@ extern "C" {
                                 varaiable of length 'size' bits
 */
 
-#define UI_TYPE(size)               uint_##size##t
+#define UI_TYPE(size)               uint##size##_t
 #define UNIT_TYPEDEF(x,size)        typedef UI_TYPE(size) x
 #define BUFR_TYPEDEF(x,size,bsize)  typedef UI_TYPE(size) x[bsize / (size >> 3)]
 #define UNIT_CAST(x,size)           ((UI_TYPE(size) )(x))  
