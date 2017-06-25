@@ -9,8 +9,10 @@ end
 
 target 'ObjectiveCExample' do
   testing_pods
+  platform :ios
 end
 
 target 'ObjectiveCExampleTests' do
   testing_pods
+  platform :ios
 end
