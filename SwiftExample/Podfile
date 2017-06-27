@@ -5,4 +5,5 @@ use_frameworks!
 
 target 'SwiftExample' do
   pod 'SSZipArchive', :path => '..'
+  platform :ios
 end
