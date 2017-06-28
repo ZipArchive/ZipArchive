@@ -3,5 +3,5 @@ osx_image: xcode8.3
 podfile: ObjectiveCExample/Podfile
 xcode_workspace: ObjectiveCExample/ObjectiveCExample.xcworkspace
 xcode_scheme: ObjectiveCExample
-script: xcodebuild -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace -scheme ObjectiveCExample -sdk iphonesimulator -destination "id=99F4F45C-3B72-4473-A6C5-3FD81EF3C25D" -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES test
+script: xcodebuild -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace -scheme ObjectiveCExample -sdk iphonesimulator -destination "id=F60B87EC-8969-41A7-90ED-D0826ECC32DB" -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES test
 
