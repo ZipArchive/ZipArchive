@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SSZipArchive'
-  s.version      = '1.8.1'
+  s.version      = '2.0.0'
   s.summary      = 'Utility class for zipping and unzipping files on iOS, tvOS, watchOS, and Mac.'
   s.description  = 'SSZipArchive is a simple utility class for zipping and unzipping files on iOS, tvOS, watchOS, and Mac.'
   s.homepage     = 'https://github.com/ZipArchive/ZipArchive'
@@ -14,5 +14,4 @@ Pod::Spec.new do |s|
   s.source_files = 'SSZipArchive/*.{m,h}', 'SSZipArchive/minizip/*.{c,h}', 'SSZipArchive/minizip/aes/*.{c,h}'
   s.public_header_files = 'SSZipArchive/*.h'
   s.library = 'z'
-  s.requires_arc = true
 end
