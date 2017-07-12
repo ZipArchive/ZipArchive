@@ -11,6 +11,7 @@
 
 @interface ViewController ()
 
+@property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UIButton *zipButton;
 @property (weak, nonatomic) IBOutlet UIButton *unzipButton;
 @property (weak, nonatomic) IBOutlet UIButton *resetButton;
@@ -42,12 +43,15 @@
                               URLByAppendingPathComponent:@"Sample Data"
                               isDirectory:YES].path;
   _zipPath = [self tempZipPath];
+  NSString *password = _passwordField.text;
   BOOL success = [SSZipArchive createZipFileAtPath:_zipPath
-                           withContentsOfDirectory:sampleDataPath];
+                           withContentsOfDirectory:sampleDataPath
+                                      withPassword:password.length > 0 ? password : nil];
   if (success) {
     _unzipButton.enabled = YES;
     _zipButton.enabled = NO;
   }
+  _resetButton.enabled = YES;
 }
 
 - (IBAction)unzipPressed:(id)sender {
@@ -58,9 +62,14 @@
   if (!unzipPath) {
     return;
   }
+  NSString *password = _passwordField.text;
   BOOL success = [SSZipArchive unzipFileAtPath:_zipPath
-                                 toDestination:unzipPath];
+                                 toDestination:unzipPath
+                                     overwrite:YES
+                                      password:password.length > 0 ? password : nil
+                                         error:nil];
   if (!success) {
+    NSLog(@"No success");
     return;
   }
   NSError *error = nil;
@@ -91,7 +100,6 @@
     }
   }];
   _unzipButton.enabled = NO;
-  _resetButton.enabled = YES;
 }
 
 - (IBAction)resetPressed:(id)sender {

@@ -17,6 +17,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="KJF-p6-1px">
+                                <rect key="frame" x="258.5" y="46" width="83" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uTp-oA-6Sj">
                                 <rect key="frame" x="244" y="84" width="113" height="30"/>
                                 <constraints>
@@ -94,6 +100,8 @@
                             <constraint firstItem="ZxR-a0-kva" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="jRJ-c6-8LV"/>
                             <constraint firstItem="2Ts-JV-yCW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="lEj-O2-aka"/>
                             <constraint firstItem="2Ts-JV-yCW" firstAttribute="top" secondItem="uTp-oA-6Sj" secondAttribute="bottom" constant="8" id="mnz-Ae-5eG"/>
+                            <constraint firstItem="uTp-oA-6Sj" firstAttribute="top" secondItem="KJF-p6-1px" secondAttribute="bottom" constant="8" symbolic="YES" id="uLh-xJ-Xc6"/>
+                            <constraint firstItem="KJF-p6-1px" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wVb-JQ-3pN"/>
                             <constraint firstItem="84L-OB-eyZ" firstAttribute="top" secondItem="b0V-gX-SgI" secondAttribute="bottom" constant="8" id="xAV-Uy-dqy"/>
                         </constraints>
                     </view>
@@ -101,6 +109,7 @@
                         <outlet property="file1" destination="3gB-ZC-0ON" id="GUd-wx-xEa"/>
                         <outlet property="file2" destination="ZxR-a0-kva" id="AZi-Dj-dI8"/>
                         <outlet property="file3" destination="b0V-gX-SgI" id="zwq-l2-xZK"/>
+                        <outlet property="passwordField" destination="KJF-p6-1px" id="3yT-Aw-6uA"/>
                         <outlet property="resetButton" destination="84L-OB-eyZ" id="9VY-KX-sKi"/>
                         <outlet property="unzipButton" destination="2Ts-JV-yCW" id="2LN-kr-Sei"/>
                         <outlet property="zipButton" destination="uTp-oA-6Sj" id="Tl8-0B-gHY"/>
