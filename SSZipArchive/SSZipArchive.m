@@ -8,6 +8,7 @@
 #import "SSZipArchive.h"
 #include "unzip.h"
 #include "zip.h"
+#include "minishared.h"
 #import "zlib.h"
 #import "zconf.h"
 
@@ -348,7 +349,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             NSError *err = nil;
             NSDictionary *directoryAttr;
             if (preserveAttributes) {
-                NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+                NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dos_date];
                 directoryAttr = @{NSFileCreationDate: modDate, NSFileModificationDate: modDate};
                 [directoriesModificationDates addObject: @{@"path": fullPath, @"modDate": modDate}];
             }
@@ -402,8 +403,8 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                         if (preserveAttributes) {
 
                             // Set the original datetime property
-                            if (fileInfo.dosDate != 0) {
-                                NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+                            if (fileInfo.dos_date != 0) {
+                                NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dos_date];
                                 NSDictionary *attr = @{NSFileModificationDate: orgDate};
 
                                 if (attr) {
@@ -689,19 +690,21 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     uint flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
 #endif
     NSDateComponents *components = [currentCalendar components:flags fromDate:date];
-    zipInfo->tmz_date.tm_sec = (unsigned int)components.second;
-    zipInfo->tmz_date.tm_min = (unsigned int)components.minute;
-    zipInfo->tmz_date.tm_hour = (unsigned int)components.hour;
-    zipInfo->tmz_date.tm_mday = (unsigned int)components.day;
-    zipInfo->tmz_date.tm_mon = (unsigned int)components.month - 1;
-    zipInfo->tmz_date.tm_year = (unsigned int)components.year;
+    struct tm tmz_date;
+    tmz_date.tm_sec = (unsigned int)components.second;
+    tmz_date.tm_min = (unsigned int)components.minute;
+    tmz_date.tm_hour = (unsigned int)components.hour;
+    tmz_date.tm_mday = (unsigned int)components.day;
+    tmz_date.tm_mon = (unsigned int)components.month - 1;
+    tmz_date.tm_year = (unsigned int)components.year;
+    zipInfo->dos_date = tm_to_dosdate(&tmz_date);
 }
 
 - (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName withPassword:(nullable NSString *)password
 {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
     
-    zip_fileinfo zipInfo = {{0}};
+    zip_fileinfo zipInfo = {0,0,0};
     
     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
     if (attr)
@@ -763,7 +766,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         afileName = [fileName fileSystemRepresentation];
     }
     
-    zip_fileinfo zipInfo = {{0}};
+    zip_fileinfo zipInfo = {0,0,0};
     
     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
     if (attr)
@@ -821,7 +824,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     if (!data) {
         return NO;
     }
-    zip_fileinfo zipInfo = {{0,0,0,0,0,0},0,0,0};
+    zip_fileinfo zipInfo = {0,0,0};
     [self zipInfo:&zipInfo setDate:[NSDate date]];
     
     zipOpenNewFileInZip3(_zip, [filename fileSystemRepresentation], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, [password UTF8String], 0);

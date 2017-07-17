@@ -22,6 +22,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="password" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Tal-c0-sro">
+                                <rect key="frame" x="166" y="13" width="83" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uwd-kM-cdh">
                                 <rect key="frame" x="150.66666666666669" y="51" width="113.00000000000006" height="30"/>
                                 <state key="normal" title="Zip Sample Data"/>
@@ -67,8 +73,10 @@
                             <constraint firstAttribute="trailingMargin" secondItem="09F-6Q-slx" secondAttribute="trailing" constant="33" id="3S4-8t-aQA"/>
                             <constraint firstItem="XUJ-IR-RIS" firstAttribute="centerX" secondItem="Lbq-oS-Rlj" secondAttribute="centerX" id="AYF-iB-SJU"/>
                             <constraint firstItem="Uwd-kM-cdh" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="CTF-Hv-dt4"/>
+                            <constraint firstItem="Tal-c0-sro" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Czk-W6-E7s"/>
                             <constraint firstItem="XUJ-IR-RIS" firstAttribute="top" secondItem="Uwd-kM-cdh" secondAttribute="bottom" constant="8" symbolic="YES" id="OIr-Yf-tdY"/>
                             <constraint firstItem="09F-6Q-slx" firstAttribute="trailing" secondItem="PSK-Jd-Mwc" secondAttribute="trailing" id="TGC-ob-dm0"/>
+                            <constraint firstItem="Uwd-kM-cdh" firstAttribute="top" secondItem="Tal-c0-sro" secondAttribute="bottom" constant="8" symbolic="YES" id="Udb-33-mrs"/>
                             <constraint firstItem="Uwd-kM-cdh" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="31" id="Uh0-R8-WFe"/>
                             <constraint firstItem="pW5-rw-iqM" firstAttribute="top" secondItem="PSK-Jd-Mwc" secondAttribute="bottom" constant="8" symbolic="YES" id="VfM-Vg-Yai"/>
                             <constraint firstItem="09F-6Q-slx" firstAttribute="top" secondItem="XUJ-IR-RIS" secondAttribute="bottom" constant="8" symbolic="YES" id="Wpv-VU-gb1"/>
@@ -85,6 +93,7 @@
                         <outlet property="file1" destination="09F-6Q-slx" id="Rmp-Xl-xfc"/>
                         <outlet property="file2" destination="PSK-Jd-Mwc" id="Fek-5n-1P2"/>
                         <outlet property="file3" destination="pW5-rw-iqM" id="8cy-pX-Oa9"/>
+                        <outlet property="passwordField" destination="Tal-c0-sro" id="E18-xQ-8Zd"/>
                         <outlet property="resetButton" destination="Lbq-oS-Rlj" id="NMW-xE-8bl"/>
                         <outlet property="unzipButton" destination="XUJ-IR-RIS" id="mVz-FE-G7d"/>
                         <outlet property="zipButton" destination="Uwd-kM-cdh" id="zCa-UM-3rx"/>
