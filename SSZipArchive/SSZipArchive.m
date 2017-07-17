@@ -415,8 +415,8 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                                 }
                             }
 
-                            // Set the original permissions on the file
-                            uLong permissions = fileInfo.external_fa >> 16;
+                            // Set the original permissions on the file (+read/write to solve #293)
+                            uLong permissions = fileInfo.external_fa >> 16 | 0b110000000;
                             if (permissions != 0) {
                                 // Store it into a NSNumber
                                 NSNumber *permissionsValue = @(permissions);
