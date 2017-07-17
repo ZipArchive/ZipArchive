@@ -465,13 +465,34 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                     [destinationPath appendString:@((const char*)buffer)];
                 }
                 
+                // Check if the symlink exists and delete it if we're overwriting
+                if (overwrite)
+                {
+                    if ([fileManager fileExistsAtPath:fullPath])
+                    {
+                        NSError *error = nil;
+                        BOOL success = [fileManager removeItemAtPath:fullPath error:&error];
+                        if (!success)
+                        {
+                            NSString *message = [NSString stringWithFormat:@"Failed to delete existing symbolic link at \"%@\"", error.localizedDescription];
+                            NSLog(@"[SSZipArchive] %@", message);
+                            success = NO;
+                            unzippingError = [NSError errorWithDomain:SSZipArchiveErrorDomain code:error.code userInfo:@{NSLocalizedDescriptionKey: message}];
+                        }
+                    }
+                }
+                
                 // Create the symbolic link (making sure it stays relative if it was relative before)
                 int symlinkError = symlink([destinationPath cStringUsingEncoding:NSUTF8StringEncoding],
                                            [fullPath cStringUsingEncoding:NSUTF8StringEncoding]);
                 
                 if (symlinkError != 0)
                 {
-                    NSLog(@"Failed to create symbolic link at \"%@\" to \"%@\". symlink() error code: %d", fullPath, destinationPath, errno);
+                    // Bubble the error up to the completion handler
+                    NSString *message = [NSString stringWithFormat:@"Failed to create symbolic link at \"%@\" to \"%@\" - symlink() error code: %d", fullPath, destinationPath, errno];
+                    NSLog(@"[SSZipArchive] %@", message);
+                    success = NO;
+                    unzippingError = [NSError errorWithDomain:NSPOSIXErrorDomain code:symlinkError userInfo:@{NSLocalizedDescriptionKey: message}];
                 }
             }
             
