@@ -14,7 +14,7 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS and 
 
 ## Installation and Setup
 
-*The main release branch is configured to support Objective C and Swift 3. There is a 'swift23' branch which is a tied to a older 1.x release and will not be upgraded. Xcode 8.3+ removes supported for Swift 2.3* 
+*The main release branch is configured to support Objective C and Swift 3. There is a 'swift23' branch which is a tied to a older 1.x release and will not be upgraded. Xcode 8.3+ removes support for Swift 2.3* 
 
 ### CocoaPods
 
