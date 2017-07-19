@@ -750,7 +750,9 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             uLong permissionsLong = @(permissionsOctal).unsignedLongValue;
             
             // Store this into the external file attributes once it has been shifted 16 places left to form part of the second from last byte
-            zipInfo.external_fa = permissionsLong << 16L;
+            
+            //Casted back to an unsigned int to match type of external_fa in minizip
+            zipInfo.external_fa = (unsigned int)(permissionsLong << 16L);
         }
     }
     
@@ -812,7 +814,9 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             uLong permissionsLong = @(permissionsOctal).unsignedLongValue;
             
             // Store this into the external file attributes once it has been shifted 16 places left to form part of the second from last byte
-            zipInfo.external_fa = permissionsLong << 16L;
+            
+            //Casted back to an unsigned int to match type of external_fa in minizip
+            zipInfo.external_fa = (unsigned int)(permissionsLong << 16L);
         }
     }
     
