@@ -247,7 +247,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     }
     
     NSInteger currentFileNumber = 0;
-    NSError *unzippingError;
+    NSError *unzippingError = nil;
     do {
         @autoreleasepool {
             if ([password length] == 0) {
