@@ -249,7 +249,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     NSInteger currentFileNumber = 0;
     NSError *unzippingError;
     do {
-        @autoreleasepool {
+        @autoreleasepool { //TODO: please, remove all "__has_feature(objc_arc)", because this lib does not support MRC
             if ([password length] == 0) {
                 ret = unzOpenCurrentFile(zip);
             } else {
@@ -383,7 +383,15 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                     FILE *fp = fopen((const char*)[fullPath fileSystemRepresentation], "wb");
                     while (fp) {
                         if (readBytes > 0) {
-                            fwrite(buffer, readBytes, 1, fp);
+                            if (0 == fwrite(buffer, readBytes, 1, fp)) {
+                                if (ferror(fp)) {
+                                    NSString *message = [NSString stringWithFormat:@"Failed to write file (check your free space)"];
+                                    NSLog(@"[SSZipArchive] %@", message);
+                                    success = NO;
+                                    *error = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:SSZipArchiveErrorCodeFailedToWriteFile userInfo:@{NSLocalizedDescriptionKey: message}];
+                                    break;
+                                }
+                            }
                         } else {
                             break;
                         }
@@ -519,7 +527,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 progressHandler(strPath, fileInfo, currentFileNumber, globalInfo.number_entry);
             }
         }
-    } while (ret == UNZ_OK && ret != UNZ_END_OF_LIST_OF_FILE);
+    } while (ret == UNZ_OK && YES == success);
     
     // Close
     unzClose(zip);
