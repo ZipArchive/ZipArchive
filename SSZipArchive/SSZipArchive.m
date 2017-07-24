@@ -432,10 +432,6 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                                     // Unable to set the permissions attribute
                                     NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting permissions");
                                 }
-
-#if !__has_feature(objc_arc)
-                                [attrs release];
-#endif
                             }
                         }
                     }
@@ -537,9 +533,6 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 NSLog(@"[SSZipArchive] Error setting directory file modification date attribute: %@",err.localizedDescription);
             }
         }
-#if !__has_feature(objc_arc)
-        [directoriesModificationDates release];
-#endif
     }
     
     // Message delegate
@@ -602,11 +595,6 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         }
         success = [zipArchive close];
     }
-    
-#if !__has_feature(objc_arc)
-    [zipArchive release];
-#endif
-    
     return success;
 }
 
@@ -666,12 +654,6 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         }
         success = [zipArchive close];
     }
-    
-#if !__has_feature(objc_arc)
-    [fileManager release];
-    [zipArchive release];
-#endif
-    
     return success;
 }
 
@@ -683,15 +665,6 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     }
     return self;
 }
-
-
-#if !__has_feature(objc_arc)
-- (void)dealloc
-{
-    [_path release];
-    [super dealloc];
-}
-#endif
 
 
 - (BOOL)open
@@ -925,11 +898,6 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     [components setSecond:(msdosDateTime & kSecondMask) * 2];
     
     NSDate *date = [NSDate dateWithTimeInterval:0 sinceDate:[gregorian dateFromComponents:components]];
-    
-#if !__has_feature(objc_arc)
-    [components release];
-#endif
-    
     return date;
 }
 
