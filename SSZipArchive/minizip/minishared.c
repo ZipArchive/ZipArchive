@@ -238,42 +238,6 @@ int is_large_file(const char *path)
     return (pos >= UINT32_MAX);
 }
 
-int get_file_crc(const char *path, void *buf, uint32_t size_buf, uint32_t *result_crc)
-{
-    FILE *handle = NULL;
-    uint32_t calculate_crc = 0;
-    uint32_t size_read = 0;
-    int err = 0;
-
-    handle = fopen64(path, "rb");
-    if (handle == NULL)
-    {
-        err = -1;
-    }
-    else
-    {
-        do
-        {
-            size_read = (int)fread(buf, 1, size_buf, handle);
-
-            if ((size_read < size_buf) && (feof(handle) == 0))
-            {
-                printf("error in reading %s\n", path);
-                err = -1;
-            }
-
-            if (size_read > 0)
-                calculate_crc = (uint32_t)crc32(calculate_crc, buf, size_read);
-        }
-        while ((err == Z_OK) && (size_read > 0));
-        fclose(handle);
-    }
-
-    printf("file %s crc %x\n", path, calculate_crc);
-    *result_crc = calculate_crc;
-    return err;
-}
-
 void display_zpos64(uint64_t n, int size_char)
 {
     /* To avoid compatibility problem we do here the conversion */

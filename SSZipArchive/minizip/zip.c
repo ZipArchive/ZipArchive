@@ -1229,11 +1229,22 @@ extern int ZEXPORT zipOpenNewFileInZip4_64(zipFile file, const char *filename, c
         {
             unsigned char buf_head[RAND_HEAD_LEN];
             uint32_t size_head = 0;
+            uint8_t verify1 = 0;
+            uint8_t verify2 = 0;
 
             zi->ci.pcrc_32_tab = get_crc_table();
-            /*init_keys(password, zi->ci.keys, zi->ci.pcrc_32_tab);*/
 
-            size_head = crypthead(password, buf_head, RAND_HEAD_LEN, zi->ci.keys, zi->ci.pcrc_32_tab, (unsigned int)crc_for_crypting);
+            /*
+            Info-ZIP modification to ZipCrypto format:
+            If bit 3 of the general purpose bit flag is set, it uses high byte of 16-bit File Time. 
+
+            verify1 = (uint8_t)((crc_for_crypting >> 16) & 0xff);
+            verify2 = (uint8_t)((crc_for_crypting >> 24) & 0xff); */
+
+            verify1 = (uint8_t)((zi->ci.dos_date >> 16) & 0xff);
+            verify2 = (uint8_t)((zi->ci.dos_date >> 8) & 0xff);
+
+            size_head = crypthead(password, buf_head, RAND_HEAD_LEN, zi->ci.keys, zi->ci.pcrc_32_tab, verify1, verify2);
             zi->ci.total_compressed += size_head;
 
             if (ZWRITE64(zi->z_filefunc, zi->filestream, buf_head, size_head) != size_head)

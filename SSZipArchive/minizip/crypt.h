@@ -46,7 +46,7 @@ int cryptrand(unsigned char *buf, unsigned int len);
 
 /* Create encryption header */
 int crypthead(const char *passwd, uint8_t *buf, int buf_size, uint32_t *pkeys, 
-    const z_crc_t *pcrc_32_tab, uint32_t crc_for_crypting);
+    const z_crc_t *pcrc_32_tab, uint8_t verify1, uint8_t verify2);
 
 /***************************************************************************/
 

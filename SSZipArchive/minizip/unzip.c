@@ -33,8 +33,8 @@
 #  define AES_HEADERSIZE      (11)
 #  define AES_KEYSIZE(mode)   (64 + (mode * 64))
 
-#  include "aes.h"
-#  include "fileenc.h"
+#  include "aes/aes.h"
+#  include "aes/fileenc.h"
 #endif
 #ifdef HAVE_APPLE_COMPRESSION
 #  include <compression.h>
