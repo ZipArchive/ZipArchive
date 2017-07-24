@@ -249,7 +249,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     NSInteger currentFileNumber = 0;
     NSError *unzippingError;
     do {
-        @autoreleasepool { //TODO: please, remove all "__has_feature(objc_arc)", because this lib does not support MRC
+        @autoreleasepool {
             if ([password length] == 0) {
                 ret = unzOpenCurrentFile(zip);
             } else {
