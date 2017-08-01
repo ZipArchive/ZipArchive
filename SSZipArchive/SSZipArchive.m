@@ -388,7 +388,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                                     NSString *message = [NSString stringWithFormat:@"Failed to write file (check your free space)"];
                                     NSLog(@"[SSZipArchive] %@", message);
                                     success = NO;
-                                    *error = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:SSZipArchiveErrorCodeFailedToWriteFile userInfo:@{NSLocalizedDescriptionKey: message}];
+                                    unzippingError = [NSError errorWithDomain:@"SSZipArchiveErrorDomain" code:SSZipArchiveErrorCodeFailedToWriteFile userInfo:@{NSLocalizedDescriptionKey: message}];
                                     break;
                                 }
                             }
