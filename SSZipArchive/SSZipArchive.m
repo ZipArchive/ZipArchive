@@ -184,7 +184,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
           toDestination:(NSString *)destination
      preserveAttributes:(BOOL)preserveAttributes
               overwrite:(BOOL)overwrite
-               password:(NSString *)password
+               password:(nullable NSString *)password
                   error:(NSError **)error
                delegate:(id<SSZipArchiveDelegate>)delegate
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
