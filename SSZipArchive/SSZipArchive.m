@@ -184,12 +184,28 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
           toDestination:(NSString *)destination
      preserveAttributes:(BOOL)preserveAttributes
               overwrite:(BOOL)overwrite
-               password:(NSString *)password
+               password:(nullable NSString *)password
                   error:(NSError **)error
                delegate:(id<SSZipArchiveDelegate>)delegate
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * __nullable error))completionHandler
 {
+    
+    // Guard against empty strings
+    if ([path length] == 0 || [destination length] == 0)
+    {
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"received invalid argument(s)"};
+        NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeInvalidArguments userInfo:userInfo];
+        if (error)
+        {
+            *error = err;
+        }
+        if (completionHandler)
+        {
+            completionHandler(nil, NO, err);
+        }
+    }
+    
     // Begin opening
     zipFile zip = unzOpen((const char*)[path fileSystemRepresentation]);
     if (zip == NULL)
