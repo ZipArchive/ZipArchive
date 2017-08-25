@@ -491,8 +491,8 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                     if ([fileManager fileExistsAtPath:fullPath])
                     {
                         NSError *error = nil;
-                        BOOL success = [fileManager removeItemAtPath:fullPath error:&error];
-                        if (!success)
+                        BOOL removeSuccess = [fileManager removeItemAtPath:fullPath error:&error];
+                        if (!removeSuccess)
                         {
                             NSString *message = [NSString stringWithFormat:@"Failed to delete existing symbolic link at \"%@\"", error.localizedDescription];
                             NSLog(@"[SSZipArchive] %@", message);
