@@ -43,9 +43,11 @@ uint32_t get_file_date(const char *path, uint32_t *dos_date)
         ret = 1;
     }
 #else
-    struct stat s = { 0 };
+    struct stat s;
     struct tm *filedate = NULL;
     time_t tm_t = 0;
+
+    memset(&s, 0, sizeof(s));
 
     if (strcmp(path, "-") != 0)
     {

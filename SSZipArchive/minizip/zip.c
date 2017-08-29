@@ -1332,8 +1332,6 @@ static int zipFlushWriteBuffer(zip64_internal *zi)
     uint32_t total_written = 0;
     uint32_t write = 0;
     uint32_t max_write = 0;
-    uint32_t i = 0;
-    uint8_t t = 0;
     int err = ZIP_OK;
 
     if ((zi->ci.flag & 1) != 0)
@@ -1347,6 +1345,9 @@ static int zipFlushWriteBuffer(zip64_internal *zi)
         else
 #endif
         {
+            uint32_t i = 0;
+            uint8_t t = 0;
+
             for (i = 0; i < zi->ci.pos_in_buffered_data; i++)
                 zi->ci.buffered_data[i] = (uint8_t)zencode(zi->ci.keys, zi->ci.pcrc_32_tab, zi->ci.buffered_data[i], t);
         }

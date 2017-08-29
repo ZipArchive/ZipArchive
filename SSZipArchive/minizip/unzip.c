@@ -947,7 +947,7 @@ static int unzCheckCurrentFileCoherencyHeader(unz64_s *s, uint32_t *psize_variab
     uint32_t magic = 0;
     uint16_t value16 = 0;
     uint32_t value32 = 0;
-    uint32_t flags = 0;;
+    uint32_t flags = 0;
     uint16_t size_filename = 0;
     uint16_t size_extra_field = 0;
     uint16_t compression_method = 0;
@@ -1333,7 +1333,6 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, uint32_t len)
             uint32_t bytes_not_read = 0;
             uint32_t bytes_read = 0;
             uint32_t total_bytes_read = 0;
-            uint32_t i = 0;
 
             if (s->pfile_in_zip_read->stream.next_in != NULL)
                 bytes_not_read = (uint32_t)(s->pfile_in_zip_read->read_buffer + UNZ_BUFSIZE -
@@ -1384,6 +1383,8 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, uint32_t len)
 #endif
                 if (s->pcrc_32_tab != NULL)
                 {
+                    uint32_t i = 0;
+
                     for (i = 0; i < total_bytes_read; i++)
                       s->pfile_in_zip_read->read_buffer[i] =
                           zdecode(s->keys, s->pcrc_32_tab, s->pfile_in_zip_read->read_buffer[i]);
