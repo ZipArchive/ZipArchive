@@ -202,6 +202,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         {
             completionHandler(nil, NO, err);
         }
+        return NO;
     }
     
     // Begin opening
@@ -745,7 +746,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             
             // Store this into the external file attributes once it has been shifted 16 places left to form part of the second from last byte
             
-            //Casted back to an unsigned int to match type of external_fa in minizip
+            // Casted back to an unsigned int to match type of external_fa in minizip
             zipInfo.external_fa = (unsigned int)(permissionsLong << 16L);
         }
     }
@@ -809,7 +810,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             
             // Store this into the external file attributes once it has been shifted 16 places left to form part of the second from last byte
             
-            //Casted back to an unsigned int to match type of external_fa in minizip
+            // Casted back to an unsigned int to match type of external_fa in minizip
             zipInfo.external_fa = (unsigned int)(permissionsLong << 16L);
         }
     }
