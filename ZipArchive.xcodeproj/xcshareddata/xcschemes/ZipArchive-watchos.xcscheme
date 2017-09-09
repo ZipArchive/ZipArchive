@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "37952C251F63B50D00DD6677"
+               BlueprintIdentifier = "37952C5D1F63BB7100DD6677"
                BuildableName = "ZipArchive.framework"
-               BlueprintName = "ZipArchive-tvos"
+               BlueprintName = "ZipArchive-watchos"
                ReferencedContainer = "container:ZipArchive.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "37952C251F63B50D00DD6677"
+            BlueprintIdentifier = "37952C5D1F63BB7100DD6677"
             BuildableName = "ZipArchive.framework"
-            BlueprintName = "ZipArchive-tvos"
+            BlueprintName = "ZipArchive-watchos"
             ReferencedContainer = "container:ZipArchive.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "37952C251F63B50D00DD6677"
+            BlueprintIdentifier = "37952C5D1F63BB7100DD6677"
             BuildableName = "ZipArchive.framework"
-            BlueprintName = "ZipArchive-tvos"
+            BlueprintName = "ZipArchive-watchos"
             ReferencedContainer = "container:ZipArchive.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
