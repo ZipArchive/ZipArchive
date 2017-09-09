@@ -1325,7 +1325,7 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, uint32_t len)
             s->pfile_in_zip_read->stream.avail_out = (uint16_t)s->pfile_in_zip_read->rest_read_uncompressed;
     }
 
-    while (s->pfile_in_zip_read->stream.avail_out > 0)
+    do
     {
         if (s->pfile_in_zip_read->stream.avail_in == 0)
         {
@@ -1526,7 +1526,6 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, uint32_t len)
 #else
         else
         {
-
             uint64_t total_out_before = 0;
             uint64_t total_out_after = 0;
             uint64_t out_bytes = 0;
@@ -1564,6 +1563,7 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, uint32_t len)
         }
 #endif
     }
+    while (s->pfile_in_zip_read->stream.avail_out > 0);
 
     if (err == Z_OK)
         return read;
