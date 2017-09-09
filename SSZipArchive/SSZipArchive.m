@@ -859,8 +859,9 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 - (BOOL)close
 {
     NSAssert((_zip != NULL), @"[SSZipArchive] Attempting to close an archive which was never opened");
-    zipClose(_zip, NULL);
-    return YES;
+    int error = zipClose(_zip, NULL);
+    _zip = nil;
+    return error == UNZ_OK;
 }
 
 #pragma mark - Private
