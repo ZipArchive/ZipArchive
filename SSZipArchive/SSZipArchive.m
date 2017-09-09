@@ -736,7 +736,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         // Write permissions into the external attributes, for details on this see here: http://unix.stackexchange.com/a/14727
         // Get the permissions value from the files attributes
         NSNumber *permissionsValue = (NSNumber *)attr[NSFilePosixPermissions];
-        if (permissionsValue) {
+        if (permissionsValue != nil) {
             // Get the short value for the permissions
             short permissionsShort = permissionsValue.shortValue;
             
@@ -800,7 +800,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         // Write permissions into the external attributes, for details on this see here: http://unix.stackexchange.com/a/14727
         // Get the permissions value from the files attributes
         NSNumber *permissionsValue = (NSNumber *)attr[NSFilePosixPermissions];
-        if (permissionsValue) {
+        if (permissionsValue != nil) {
             // Get the short value for the permissions
             short permissionsShort = permissionsValue.shortValue;
             
