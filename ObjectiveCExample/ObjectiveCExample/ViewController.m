@@ -50,6 +50,8 @@
   if (success) {
     _unzipButton.enabled = YES;
     _zipButton.enabled = NO;
+  } else {
+      NSLog(@"No success");
   }
   _resetButton.enabled = YES;
 }

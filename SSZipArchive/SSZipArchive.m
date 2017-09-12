@@ -600,33 +600,33 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 {
     return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:nil];
 }
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath{
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
     return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath withPassword:nil];
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory{
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory {
     return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory withPassword:nil];
 }
 
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths withPassword:(NSString *)password
 {
-    BOOL success = NO;
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
-    if ([zipArchive open]) {
+    BOOL success = [zipArchive open];
+    if (success) {
         for (NSString *filePath in paths) {
-            [zipArchive writeFile:filePath withPassword:password];
+            success &= [zipArchive writeFile:filePath withPassword:password];
         }
-        success = [zipArchive close];
+        success &= [zipArchive close];
     }
     return success;
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath withPassword:(nullable NSString *)password{
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath withPassword:(nullable NSString *)password {
     return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:NO withPassword:password];
 }
 
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password{
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password {
     return [SSZipArchive createZipFileAtPath:path
                      withContentsOfDirectory:directoryPath
                          keepParentDirectory:keepParentDirectory
@@ -636,11 +636,10 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 }
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
-    BOOL success = NO;
     
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
-    
-    if ([zipArchive open]) {
+    BOOL success = [zipArchive open];
+    if (success) {
         // use a local fileManager (queue/thread compatibility)
         NSFileManager *fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
@@ -658,7 +657,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             }
             
             if (!isDir) {
-                [zipArchive writeFileAtPath:fullFilePath withFileName:fileName withPassword:password];
+                success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName withPassword:password];
             }
             else
             {
@@ -666,7 +665,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 {
                     NSString *tempFilePath = [self _temporaryPathForDiscardableFile];
                     NSString *tempFileFilename = [fileName stringByAppendingPathComponent:tempFilePath.lastPathComponent];
-                    [zipArchive writeFileAtPath:tempFilePath withFileName:tempFileFilename withPassword:password];
+                    success &= [zipArchive writeFileAtPath:tempFilePath withFileName:tempFileFilename withPassword:password];
                 }
             }
             complete++;
@@ -674,7 +673,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 progressHandler(complete, total);
             }
         }
-        success = [zipArchive close];
+        success &= [zipArchive close];
     }
     return success;
 }
