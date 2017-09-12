@@ -52,6 +52,8 @@ class ViewController: UIViewController {
         if success {
             unzipButton.isEnabled = true
             zipButton.isEnabled = false
+        } else {
+            print("No success")
         }
         resetButton.isEnabled = true
     }
@@ -66,7 +68,10 @@ class ViewController: UIViewController {
         }
 
         let password = passwordField.text
-        let success: Void? = try? SSZipArchive.unzipFile(atPath: zipPath, toDestination: unzipPath, overwrite: true, password: password?.isEmpty == false ? password : nil)
+        let success: Void? = try? SSZipArchive.unzipFile(atPath: zipPath,
+                                                         toDestination: unzipPath,
+                                                         overwrite: true,
+                                                         password: password?.isEmpty == false ? password : nil)
         if success == nil {
             print("No success")
             return
@@ -122,7 +127,6 @@ class ViewController: UIViewController {
         } catch {
             return nil
         }
-
 
         return url.path
     }
