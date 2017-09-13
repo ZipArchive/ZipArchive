@@ -19,6 +19,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 @interface SSZipArchive ()
 + (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime;
+- (instancetype)init NS_DESIGNATED_INITIALIZER;
 @end
 
 @implementation SSZipArchive
@@ -31,7 +32,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 + (BOOL)isFilePasswordProtectedAtPath:(NSString *)path {
     // Begin opening
-    zipFile zip = unzOpen([path fileSystemRepresentation]);
+    zipFile zip = unzOpen(path.fileSystemRepresentation);
     if (zip == NULL) {
         return NO;
     }
@@ -64,7 +65,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         *error = nil;
     }
 
-    zipFile zip = unzOpen([path fileSystemRepresentation]);
+    zipFile zip = unzOpen(path.fileSystemRepresentation);
     if (zip == NULL) {
         if (error) {
             *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
@@ -77,7 +78,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     int ret = unzGoToFirstFile(zip);
     if (ret == UNZ_OK) {
         do {
-            if ([pw length] == 0) {
+            if (pw.length == 0) {
                 ret = unzOpenCurrentFile(zip);
             } else {
                 ret = unzOpenCurrentFilePassword(zip, [pw cStringUsingEncoding:NSASCIIStringEncoding]);
@@ -190,7 +191,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 {
     
     // Guard against empty strings
-    if ([path length] == 0 || [destination length] == 0)
+    if (path.length == 0 || destination.length == 0)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"received invalid argument(s)"};
         NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeInvalidArguments userInfo:userInfo];
@@ -206,7 +207,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     }
     
     // Begin opening
-    zipFile zip = unzOpen([path fileSystemRepresentation]);
+    zipFile zip = unzOpen(path.fileSystemRepresentation);
     if (zip == NULL)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"failed to open zip file"};
@@ -251,7 +252,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     int crc_ret = 0;
     unsigned char buffer[4096] = {0};
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSMutableArray *directoriesModificationDates = [[NSMutableArray alloc] init];
+    NSMutableArray<NSDictionary *> *directoriesModificationDates = [[NSMutableArray alloc] init];
     
     // Message delegate
     if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:zipInfo:)]) {
@@ -265,7 +266,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     NSError *unzippingError;
     do {
         @autoreleasepool {
-            if ([password length] == 0) {
+            if (password.length == 0) {
                 ret = unzOpenCurrentFile(zip);
             } else {
                 ret = unzOpenCurrentFilePassword(zip, [password cStringUsingEncoding:NSASCIIStringEncoding]);
@@ -341,7 +342,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             
             // Check if it contains directory
             //            NSString * strPath = @(filename);
-            NSString * strPath = [NSString stringWithCString:filename encoding:NSUTF8StringEncoding];
+            NSString * strPath = @(filename);
             //if filename contains chinese dir transform Encoding
             if (!strPath) {
                 NSStringEncoding enc = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
@@ -371,7 +372,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             if (isDirectory) {
                 [fileManager createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:directoryAttr  error:&err];
             } else {
-                [fileManager createDirectoryAtPath:[fullPath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:directoryAttr error:&err];
+                [fileManager createDirectoryAtPath:fullPath.stringByDeletingLastPathComponent withIntermediateDirectories:YES attributes:directoryAttr error:&err];
             }
             if (nil != err) {
                 if ([err.domain isEqualToString:NSCocoaErrorDomain] &&
@@ -395,7 +396,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 // ensure we are not creating stale file entries
                 int readBytes = unzReadCurrentFile(zip, buffer, 4096);
                 if (readBytes >= 0) {
-                    FILE *fp = fopen([fullPath fileSystemRepresentation], "wb");
+                    FILE *fp = fopen(fullPath.fileSystemRepresentation, "wb");
                     while (fp) {
                         if (readBytes > 0) {
                             if (0 == fwrite(buffer, readBytes, 1, fp)) {
@@ -414,9 +415,9 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                     }
 
                     if (fp) {
-                        if ([[[fullPath pathExtension] lowercaseString] isEqualToString:@"zip"]) {
-                            NSLog(@"Unzipping nested .zip file:  %@", [fullPath lastPathComponent]);
-                            if ([self unzipFileAtPath:fullPath toDestination:[fullPath stringByDeletingLastPathComponent] overwrite:overwrite password:password error:nil delegate:nil]) {
+                        if ([fullPath.pathExtension.lowercaseString isEqualToString:@"zip"]) {
+                            NSLog(@"Unzipping nested .zip file:  %@", fullPath.lastPathComponent);
+                            if ([self unzipFileAtPath:fullPath toDestination:fullPath.stringByDeletingLastPathComponent overwrite:overwrite password:password error:nil delegate:nil]) {
                                 [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
                             }
                         }
@@ -596,7 +597,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 }
 
 #pragma mark - Zipping
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths
 {
     return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:nil];
 }
@@ -608,7 +609,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory withPassword:nil];
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray *)paths withPassword:(NSString *)password
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password
 {
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
     BOOL success = [zipArchive open];
@@ -643,7 +644,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         // use a local fileManager (queue/thread compatibility)
         NSFileManager *fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
-        NSArray *allObjects = dirEnumerator.allObjects;
+        NSArray<NSString *> *allObjects = dirEnumerator.allObjects;
         NSUInteger total = allObjects.count, complete = 0;
         NSString *fileName;
         for (fileName in allObjects) {
@@ -653,7 +654,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             
             if (keepParentDirectory)
             {
-                fileName = [[directoryPath lastPathComponent] stringByAppendingPathComponent:fileName];
+                fileName = [directoryPath.lastPathComponent stringByAppendingPathComponent:fileName];
             }
             
             if (!isDir) {
@@ -678,6 +679,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     return success;
 }
 
+- (instancetype)init { @throw nil; }
 
 - (instancetype)initWithPath:(NSString *)path
 {
@@ -691,7 +693,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 - (BOOL)open
 {
     NSAssert((_zip == NULL), @"Attempting open an archive which is already open");
-    _zip = zipOpen([_path fileSystemRepresentation], APPEND_STATUS_CREATE);
+    _zip = zipOpen(_path.fileSystemRepresentation, APPEND_STATUS_CREATE);
     return (NULL != _zip);
 }
 
@@ -751,8 +753,8 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     }
     
     unsigned int len = 0;
-    zipOpenNewFileInZip3(_zip, [[folderName stringByAppendingString:@"/"] fileSystemRepresentation], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_NO_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL,
-                         Z_DEFAULT_STRATEGY, [password UTF8String], 0);
+    zipOpenNewFileInZip3(_zip, [folderName stringByAppendingString:@"/"].fileSystemRepresentation, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_NO_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL,
+                         Z_DEFAULT_STRATEGY, password.UTF8String, 0);
     zipWriteInFileInZip(_zip, &len, 0);
     zipCloseFileInZip(_zip);
     return YES;
@@ -770,17 +772,17 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
     
-    FILE *input = fopen([path fileSystemRepresentation], "r");
+    FILE *input = fopen(path.fileSystemRepresentation, "r");
     if (NULL == input) {
         return NO;
     }
     
     const char *aFileName;
     if (!fileName) {
-        aFileName = [path.lastPathComponent fileSystemRepresentation];
+        aFileName = path.lastPathComponent.fileSystemRepresentation;
     }
     else {
-        aFileName = [fileName fileSystemRepresentation];
+        aFileName = fileName.fileSystemRepresentation;
     }
     
     zip_fileinfo zipInfo = {0,0,0};
@@ -820,7 +822,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         return NO;
     }
     
-    zipOpenNewFileInZip3(_zip, aFileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, [password UTF8String], 0);
+    zipOpenNewFileInZip3(_zip, aFileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, 0);
     unsigned int len = 0;
     
     while (!feof(input) && !ferror(input))
@@ -846,7 +848,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     zip_fileinfo zipInfo = {0,0,0};
     [self zipInfo:&zipInfo setDate:[NSDate date]];
     
-    zipOpenNewFileInZip3(_zip, [filename fileSystemRepresentation], &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, [password UTF8String], 0);
+    zipOpenNewFileInZip3(_zip, filename.fileSystemRepresentation, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, 0);
     
     zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
     
@@ -871,7 +873,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     static NSString *discardableFilePath = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSString *temporaryDirectoryName = [[NSUUID UUID] UUIDString];
+        NSString *temporaryDirectoryName = [NSUUID UUID].UUIDString;
         NSString *temporaryDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:temporaryDirectoryName];
         BOOL directoryCreated = [[NSFileManager defaultManager] createDirectoryAtPath:temporaryDirectory withIntermediateDirectories:YES attributes:nil error:nil];
         if (directoryCreated) {
@@ -912,12 +914,12 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     
     NSAssert(0xFFFFFFFF == (kYearMask | kMonthMask | kDayMask | kHourMask | kMinuteMask | kSecondMask), @"[SSZipArchive] MSDOS date masks don't add up");
     
-    [components setYear:1980 + ((msdosDateTime & kYearMask) >> 25)];
-    [components setMonth:(msdosDateTime & kMonthMask) >> 21];
-    [components setDay:(msdosDateTime & kDayMask) >> 16];
-    [components setHour:(msdosDateTime & kHourMask) >> 11];
-    [components setMinute:(msdosDateTime & kMinuteMask) >> 5];
-    [components setSecond:(msdosDateTime & kSecondMask) * 2];
+    components.year = 1980 + ((msdosDateTime & kYearMask) >> 25);
+    components.month = (msdosDateTime & kMonthMask) >> 21;
+    components.day = (msdosDateTime & kDayMask) >> 16;
+    components.hour = (msdosDateTime & kHourMask) >> 11;
+    components.minute = (msdosDateTime & kMinuteMask) >> 5;
+    components.second = (msdosDateTime & kSecondMask) * 2;
     
     NSDate *date = [NSDate dateWithTimeInterval:0 sinceDate:[gregorian dateFromComponents:components]];
     return date;

@@ -88,7 +88,6 @@
 
 - (void)testMultipleZippping{
     NSArray *inputPaths = @[[[NSBundle bundleForClass: [self class]]pathForResource:@"0" ofType:@"m4a"],
-
                             [[NSBundle bundleForClass: [self class]]pathForResource:@"1" ofType:@"m4a"],
                             [[NSBundle bundleForClass: [self class]]pathForResource:@"2" ofType:@"m4a"],
                             [[NSBundle bundleForClass: [self class]]pathForResource:@"3" ofType:@"m4a"],
@@ -391,9 +390,9 @@
 -(void)testShouldProvidePathOfUnzippedFileInDelegateCallback {
     CollectingDelegate *collector = [CollectingDelegate new];
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
-   	NSString *outputPath = [self _cachesPath:@"Regular"];
-
-   	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:collector];
+    NSString *outputPath = [self _cachesPath:@"Regular"];
+    
+    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:collector];
 
     //    STAssertEqualObjects([collector.files objectAtIndex:0], @"LICENSE.txt", nil);
     //    STAssertEqualObjects([collector.files objectAtIndex:1], @"README.md", nil);
@@ -434,7 +433,7 @@
 #pragma mark - Private
 
 - (NSString *)_cachesPath:(NSString *)directory {
-    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject
                       stringByAppendingPathComponent:@"com.samsoffes.ssziparchive.tests"];
     if (directory) {
         path = [path stringByAppendingPathComponent:directory];
