@@ -154,7 +154,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
               overwrite:(BOOL)overwrite
                password:(NSString *)password
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
-      completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError *__nullable error))completionHandler
+      completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * __nullable error))completionHandler
 {
     return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
 }
@@ -819,7 +819,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     {
         return NO;
     }
-
+    
     zipOpenNewFileInZip3(_zip, aFileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, [password UTF8String], 0);
     unsigned int len = 0;
     
