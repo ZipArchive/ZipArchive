@@ -5,35 +5,37 @@ xcode_scheme: ObjectiveCExample
 matrix:
   include:
     - osx_image: xcode9
-      before_install: xcrun simctl erase "49D35834-277E-4C67-917F-A4C0769EBAC3"
-      env: DESTINATION="id=49D35834-277E-4C67-917F-A4C0769EBAC3" #`OS:11.0,name:iPhone 7 Plus` #oldest/newest for iOS 11.x
+      env: DESTINATION="iPhone 7 Plus (11.0)" # oldest/newest for iOS 11.x
       
     - osx_image: xcode9
-      before_install: xcrun simctl erase "F60B87EC-8969-41A7-90ED-D0826ECC32DB"
-      env: DESTINATION="id=F60B87EC-8969-41A7-90ED-D0826ECC32DB" #`OS:10.3.1,name:iPhone 7 Plus` #latest for iOS 10.x
+      env: DESTINATION="iPhone 7 Plus (10.3.1)" # latest for iOS 10.x
       
     - osx_image: xcode8.3
-      before_install: xcrun simctl erase "3AA26DE0-C2F0-4CAF-936D-09F1ECCF9BDA"
-      env: DESTINATION="id=3AA26DE0-C2F0-4CAF-936D-09F1ECCF9BDA" #`OS:10.0,name:iPhone 5` #oldest for iOS 10.x
+      env: DESTINATION="iPhone 5 (10.0)" # oldest for iOS 10.x
       
     - osx_image: xcode8.3
-      before_install: xcrun simctl erase "43CD88FF-F754-4EA7-BB04-D879504B943B"
-      env: DESTINATION="id=43CD88FF-F754-4EA7-BB04-D879504B943B" #`OS:9.3,name:iPhone 6s Plus` #latest for iOS 9.x
+      env: DESTINATION="iPhone 6s Plus (9.3)" # latest for iOS 9.x
       
     - osx_image: xcode7.3
-      before_install: xcrun simctl erase "0CFF0929-C816-40DD-82EE-5D39A252BC27"
-      env: DESTINATION="OS=9.0,name=iPhone 4s" #oldest for iOS 9.x
+      env: DESTINATION="iPhone 4s (9.0)" # oldest for iOS 9.x
       
     - osx_image: xcode7.3
-      before_install: xcrun simctl erase "AECF5DE0-D8C3-4FFE-B5B2-FA69A730B17F"
-      env: DESTINATION="OS=8.4,name=iPhone 6 Plus" #latest for iOS 8.x
+      env: DESTINATION="iPhone 6 Plus (8.4)" # latest for iOS 8.x
       
     - osx_image: xcode7.3
-      before_install: xcrun simctl erase "D72029C0-E8E1-4349-B423-E458466135B3"
-      env: DESTINATION="OS=8.1,name=iPhone 4s" #oldest for iOS 8.x
+      env: DESTINATION="iPhone 4s (8.1)" # oldest for iOS 8.x
 
-script: xcodebuild
- `` -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace
- `` -scheme ObjectiveCExample -sdk iphonesimulator
- `` -destination "$DESTINATION"
- `` -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES test
+before_install:
+  # Grepping destination device udid
+  - DESTINATION_UDID=$(instruments -s devices | grep "$DESTINATION \[" | sed -E 's/.*\[([0-9A-F-]+)\].*/\1/g')
+  # Prelaunching simulator to avoid timeout https://github.com/travis-ci/travis-ci/issues/6422
+  - open -a "simulator" --args -CurrentDeviceUDID $DESTINATION_UDID
+
+script:
+  # Testing
+  - xcodebuild
+    `` -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace
+    `` -scheme ObjectiveCExample -sdk iphonesimulator
+    `` -destination "id=$DESTINATION_UDID"
+    `` -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES
+    `` test
