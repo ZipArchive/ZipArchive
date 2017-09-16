@@ -18,12 +18,12 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 #define CHUNK 16384
 
 @interface SSZipArchive ()
-+ (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime;
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 @end
 
 @implementation SSZipArchive
 {
+    /// path for zip file
     NSString *_path;
     zipFile _zip;
 }
@@ -145,7 +145,12 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:nil delegate:delegate progressHandler:nil completionHandler:nil];
 }
 
-+ (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(nullable NSString *)password error:(NSError **)error delegate:(nullable id<SSZipArchiveDelegate>)delegate
++ (BOOL)unzipFileAtPath:(NSString *)path
+          toDestination:(NSString *)destination
+              overwrite:(BOOL)overwrite
+               password:(nullable NSString *)password
+                  error:(NSError **)error
+               delegate:(nullable id<SSZipArchiveDelegate>)delegate
 {
     return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:error delegate:delegate progressHandler:nil completionHandler:nil];
 }
@@ -155,7 +160,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
               overwrite:(BOOL)overwrite
                password:(NSString *)password
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
-      completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * __nullable error))completionHandler
+      completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
 {
     return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
 }
@@ -163,7 +168,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 + (BOOL)unzipFileAtPath:(NSString *)path
           toDestination:(NSString *)destination
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
-      completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * __nullable error))completionHandler
+      completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
 {
     return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
 }
@@ -187,9 +192,8 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                   error:(NSError **)error
                delegate:(id<SSZipArchiveDelegate>)delegate
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
-      completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * __nullable error))completionHandler
+      completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
 {
-    
     // Guard against empty strings
     if (path.length == 0 || destination.length == 0)
     {
@@ -477,12 +481,12 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             else
             {
                 // Assemble the path for the symbolic link
-                NSMutableString* destinationPath = [NSMutableString string];
+                NSMutableString *destinationPath = [NSMutableString string];
                 int bytesRead = 0;
                 while ((bytesRead = unzReadCurrentFile(zip, buffer, 4096)) > 0)
                 {
                     buffer[bytesRead] = (int)0;
-                    [destinationPath appendString:@((const char*)buffer)];
+                    [destinationPath appendString:@((const char *)buffer)];
                 }
                 
                 // Check if the symlink exists and delete it if we're overwriting
@@ -636,7 +640,11 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             ];
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
++ (BOOL)createZipFileAtPath:(NSString *)path
+    withContentsOfDirectory:(NSString *)directoryPath
+        keepParentDirectory:(BOOL)keepParentDirectory
+               withPassword:(nullable NSString *)password
+         andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
     
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
     BOOL success = [zipArchive open];
@@ -679,8 +687,10 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     return success;
 }
 
+// disabling `init` because designated initializer is `initWithPath:`
 - (instancetype)init { @throw nil; }
 
+// designated initializer
 - (instancetype)initWithPath:(NSString *)path
 {
     if ((self = [super init])) {
@@ -692,20 +702,16 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 - (BOOL)open
 {
-    NSAssert((_zip == NULL), @"Attempting open an archive which is already open");
+    NSAssert((_zip == NULL), @"Attempting to open an archive which is already open");
     _zip = zipOpen(_path.fileSystemRepresentation, APPEND_STATUS_CREATE);
     return (NULL != _zip);
 }
 
 
-- (void)zipInfo:(zip_fileinfo*)zipInfo setDate:(NSDate*)date
+- (void)zipInfo:(zip_fileinfo *)zipInfo setDate:(NSDate *)date
 {
     NSCalendar *currentCalendar = [NSCalendar currentCalendar];
-#if defined(__IPHONE_8_0) || defined(__MAC_10_10)
     NSCalendarUnit flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
-#else
-    uint flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
-#endif
     NSDateComponents *components = [currentCalendar components:flags fromDate:date];
     struct tm tmz_date;
     tmz_date.tm_sec = (unsigned int)components.second;
@@ -903,11 +909,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     static NSCalendar *gregorian;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-#if defined(__IPHONE_8_0) || defined(__MAC_10_10)
         gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-#else
-        gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-#endif
     });
     
     NSDateComponents *components = [[NSDateComponents alloc] init];
