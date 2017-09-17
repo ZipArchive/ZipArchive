@@ -710,7 +710,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 - (void)zipInfo:(zip_fileinfo *)zipInfo setDate:(NSDate *)date
 {
-    NSCalendar *currentCalendar = [NSCalendar currentCalendar];
+    NSCalendar *currentCalendar = SSZipArchive._gregorian;
     NSCalendarUnit flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
     NSDateComponents *components = [currentCalendar components:flags fromDate:date];
     struct tm tmz_date;
@@ -718,8 +718,10 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     tmz_date.tm_min = (unsigned int)components.minute;
     tmz_date.tm_hour = (unsigned int)components.hour;
     tmz_date.tm_mday = (unsigned int)components.day;
+    // ISO/IEC 9899 struct tm is 0-indexed for January but NSDateComponents for gregorianCalendar is 1-indexed for January
     tmz_date.tm_mon = (unsigned int)components.month - 1;
-    tmz_date.tm_year = (unsigned int)components.year;
+    // ISO/IEC 9899 struct tm is 0-indexed for AD 1900 but NSDateComponents for gregorianCalendar is 1-indexed for AD 1
+    tmz_date.tm_year = (unsigned int)components.year - 1900;
     zipInfo->dos_date = tm_to_dosdate(&tmz_date);
 }
 
@@ -890,6 +892,17 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     return discardableFilePath;
 }
 
++ (NSCalendar *)_gregorian
+{
+    static NSCalendar *gregorian;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    });
+    
+    return gregorian;
+}
+
 // Format from http://newsgroups.derkeiler.com/Archive/Comp/comp.os.msdos.programmer/2009-04/msg00060.html
 // Two consecutive words, or a longword, YYYYYYYMMMMDDDDD hhhhhmmmmmmsssss
 // YYYYYYY is years from 1980 = 0
@@ -899,6 +912,14 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 // 7423 = 0111 0100 0010 0011 - 01110 100001 00011 = 14 33 3 = 14:33:06
 + (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime
 {
+    /*
+     // the whole `_dateWithMSDOSFormat:` method is equivalent but faster than those four lines,
+     // essentially because `mktime` is slow:
+     struct tm ptm;
+     dosdate_to_tm(msdosDateTime, &ptm);
+     ptm.tm_year -= 1900;
+     NSDate *date = [NSDate dateWithTimeIntervalSince1970:mktime(&ptm)];
+    */
     static const UInt32 kYearMask = 0xFE000000;
     static const UInt32 kMonthMask = 0x1E00000;
     static const UInt32 kDayMask = 0x1F0000;
@@ -906,15 +927,9 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     static const UInt32 kMinuteMask = 0x7E0;
     static const UInt32 kSecondMask = 0x1F;
     
-    static NSCalendar *gregorian;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-    });
+    NSAssert(0xFFFFFFFF == (kYearMask | kMonthMask | kDayMask | kHourMask | kMinuteMask | kSecondMask), @"[SSZipArchive] MSDOS date masks don't add up");
     
     NSDateComponents *components = [[NSDateComponents alloc] init];
-    
-    NSAssert(0xFFFFFFFF == (kYearMask | kMonthMask | kDayMask | kHourMask | kMinuteMask | kSecondMask), @"[SSZipArchive] MSDOS date masks don't add up");
     
     components.year = 1980 + ((msdosDateTime & kYearMask) >> 25);
     components.month = (msdosDateTime & kMonthMask) >> 21;
@@ -923,7 +938,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     components.minute = (msdosDateTime & kMinuteMask) >> 5;
     components.second = (msdosDateTime & kSecondMask) * 2;
     
-    NSDate *date = [NSDate dateWithTimeInterval:0 sinceDate:[gregorian dateFromComponents:components]];
+    NSDate *date = [self._gregorian dateFromComponents:components];
     return date;
 }
 
