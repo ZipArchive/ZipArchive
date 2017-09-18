@@ -3,8 +3,8 @@
 
    This version of ioapi is designed to buffer IO.
 
-   Copyright (C) 1998-2003 Gilles Vollant
-             (C) 2012-2014 Nathan Moinvaziri
+   Copyright (C) 2012-2017 Nathan Moinvaziri
+      https://github.com/nmoinvaz/minizip
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
