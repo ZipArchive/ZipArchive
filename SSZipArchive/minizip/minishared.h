@@ -27,6 +27,9 @@ int dosdate_to_tm(uint64_t dos_date, struct tm *ptm);
 /* Convert struct tm to dos date/time format */
 uint32_t tm_to_dosdate(const struct tm *ptm);
 
+/* Convert dos date/time format to time_t */
+time_t dosdate_to_time_t(uint64_t dos_date);
+
 /* Create a directory and all subdirectories */
 int makedir(const char *newdir);
 

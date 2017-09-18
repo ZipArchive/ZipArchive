@@ -21,7 +21,7 @@ This is an implementation of RFC2898, which specifies key derivation from
 a password and a salt value.
 */
 
-#include <memory.h>
+#include <string.h>
 #include "hmac.h"
 
 #if defined(__cplusplus)

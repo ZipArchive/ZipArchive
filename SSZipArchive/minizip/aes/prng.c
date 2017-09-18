@@ -38,7 +38,7 @@
  its location in memory.
 */
 
-#include <memory.h>
+#include <string.h>
 #include "prng.h"
 
 #if defined(__cplusplus)

@@ -11,8 +11,11 @@
 
    Based on Unzip ioapi.c version 0.22, May 19th, 2003
 
+   Copyright (C) 2012-2017 Nathan Moinvaziri
+     https://github.com/nmoinvaz/minizip
+   Copyright (C) 2003 Justin Fletcher
    Copyright (C) 1998-2003 Gilles Vollant
-             (C) 2003 Justin Fletcher
+     http://www.winimage.com/zLibDll/minizip.html
 
    This file is under the same license as the Unzip tool it is distributed
    with.
@@ -30,14 +33,14 @@
 
 #ifndef IOMEM_BUFFERSIZE
 #  define IOMEM_BUFFERSIZE (UINT16_MAX)
-#endif 
+#endif
 
 voidpf ZCALLBACK fopen_mem_func(voidpf opaque, const char *filename, int mode)
 {
     ourmemory_t *mem = (ourmemory_t *)opaque;
     if (mem == NULL)
         return NULL; /* Mem structure passed in was null */
-    
+
     if (mode & ZLIB_FILEFUNC_MODE_CREATE)
     {
         if (mem->grow)
@@ -128,7 +131,7 @@ long ZCALLBACK fseek_mem_func(voidpf opaque, voidpf stream, uint32_t offset, int
         case ZLIB_FILEFUNC_SEEK_SET:
             new_pos = offset;
             break;
-        default: 
+        default:
             return -1;
     }
 

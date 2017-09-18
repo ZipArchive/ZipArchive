@@ -1,16 +1,17 @@
 /* unzip.c -- IO for uncompress .zip files using zlib
-   Version 1.1, February 14h, 2010
+   Version 1.2.0, September 16th, 2017
    part of the MiniZip project
 
+   Copyright (C) 2010-2017 Nathan Moinvaziri
+     Modifications for AES, PKWARE disk spanning
+     https://github.com/nmoinvaz/minizip
+   Copyright (C) 2009-2010 Mathias Svensson
+     Modifications for Zip64 support on both zip and unzip
+     http://result42.com
+   Copyright (C) 2007-2008 Even Rouault
+     Modifications of Unzip for Zip64
    Copyright (C) 1998-2010 Gilles Vollant
      http://www.winimage.com/zLibDll/minizip.html
-   Modifications of Unzip for Zip64
-     Copyright (C) 2007-2008 Even Rouault
-   Modifications for Zip64 support on both zip and unzip
-     Copyright (C) 2009-2010 Mathias Svensson
-     http://result42.com
-   Modifications for AES, PKWARE disk spanning
-     Copyright (C) 2010-2014 Nathan Moinvaziri
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
@@ -73,8 +74,7 @@
 #  define TRYFREE(p) {if (p) free(p);}
 #endif
 
-const char unz_copyright[] =
-   " unzip 1.01 Copyright 1998-2004 Gilles Vollant - http://www.winimage.com/zLibDll";
+const char unz_copyright[] = " unzip 1.2.0 Copyright 1998-2017 - https://github.com/nmoinvaz/minizip";
 
 /* unz_file_info_internal contain internal info about a file in zipfile*/
 typedef struct unz_file_info64_internal_s
@@ -353,9 +353,6 @@ static unzFile unzOpenInternal(const void *path, zlib_filefunc64_32_def *pzlib_f
     uint64_t value64 = 0;
     voidpf filestream = NULL;
     int err = UNZ_OK;
-
-    if (unz_copyright[0] != ' ')
-        return NULL;
 
     us.filestream = NULL;
     us.filestream_with_CD = NULL;

@@ -90,16 +90,13 @@ void change_file_date(const char *path, uint32_t dos_date)
     }
 #else
     struct utimbuf ut;
-    struct tm newdate;
-
-    dosdate_to_tm(dos_date, &newdate);
-
-    ut.actime = ut.modtime = mktime(&newdate);
+    ut.actime = ut.modtime = dosdate_to_time_t(dos_date);
     utime(path, &ut);
 #endif
 }
 
-int dosdate_to_tm(uint64_t dos_date, struct tm *ptm)
+// convertion without validation
+void dosdate_to_raw_tm(uint64_t dos_date, struct tm *ptm)
 {
     uint64_t date = (uint64_t)(dos_date >> 16);
 
@@ -110,19 +107,28 @@ int dosdate_to_tm(uint64_t dos_date, struct tm *ptm)
     ptm->tm_min = (uint16_t)((dos_date & 0x7E0) / 0x20);
     ptm->tm_sec = (uint16_t)(2 * (dos_date & 0x1f));
     ptm->tm_isdst = -1;
-    
+}
+
+int invalid_date(const struct tm *ptm)
+{
 #define datevalue_in_range(min, max, value) ((min) <= (value) && (value) <= (max))
-    if (!datevalue_in_range(0, 11, ptm->tm_mon) ||
-        !datevalue_in_range(1, 31, ptm->tm_mday) ||
-        !datevalue_in_range(0, 23, ptm->tm_hour) ||
-        !datevalue_in_range(0, 59, ptm->tm_min) ||
-        !datevalue_in_range(0, 59, ptm->tm_sec))
-    {
-        /* Invalid date stored, so don't return it. */
+    return (!datevalue_in_range(0, 11, ptm->tm_mon) ||
+            !datevalue_in_range(1, 31, ptm->tm_mday) ||
+            !datevalue_in_range(0, 23, ptm->tm_hour) ||
+            !datevalue_in_range(0, 59, ptm->tm_min) ||
+            !datevalue_in_range(0, 59, ptm->tm_sec));
+#undef datevalue_in_range
+}
+
+int dosdate_to_tm(uint64_t dos_date, struct tm *ptm)
+{
+    dosdate_to_raw_tm(dos_date, ptm);
+    
+    if (invalid_date(ptm)) {
+        // Invalid date stored, so don't return it.
         memset(ptm, 0, sizeof(struct tm));
         return -1;
     }
-#undef datevalue_in_range
     return 0;
 }
 
@@ -139,11 +145,7 @@ uint32_t tm_to_dosdate(const struct tm *ptm)
     Due to the date format limitations, only years between 1980 and 2107 can be stored.
     */
     if (!(datevalue_in_range(1980, 2107, ptm->tm_year) || datevalue_in_range(0, 207, ptm->tm_year)) ||
-        !datevalue_in_range(0, 11, ptm->tm_mon) ||
-        !datevalue_in_range(1, 31, ptm->tm_mday) ||
-        !datevalue_in_range(0, 23, ptm->tm_hour) ||
-        !datevalue_in_range(0, 59, ptm->tm_min) ||
-        !datevalue_in_range(0, 59, ptm->tm_sec))
+        invalid_date(ptm))
     {
         return 0;
     }
@@ -159,6 +161,15 @@ uint32_t tm_to_dosdate(const struct tm *ptm)
 
     return (uint32_t)(((ptm->tm_mday) + (32 * (ptm->tm_mon + 1)) + (512 * year)) << 16) |
         ((ptm->tm_sec / 2) + (32 * ptm->tm_min) + (2048 * (uint32_t)ptm->tm_hour));
+}
+
+time_t dosdate_to_time_t(uint64_t dos_date)
+{
+    struct tm ptm;
+    dosdate_to_raw_tm(dos_date, &ptm);
+    // standard is year 1900 indexed struct tm, but dosdate_to_raw_tm returns a year 0 indexed struct tm
+    ptm.tm_year %= 1900;
+    return mktime(&ptm);
 }
 
 int makedir(const char *newdir)

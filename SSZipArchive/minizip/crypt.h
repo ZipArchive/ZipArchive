@@ -1,9 +1,12 @@
 /* crypt.h -- base code for traditional PKWARE encryption
-   Version 1.01e, February 12th, 2005
+   Version 1.2.0, September 16th, 2017
 
+   Copyright (C) 2012-2017 Nathan Moinvaziri
+     https://github.com/nmoinvaz/minizip
    Copyright (C) 1998-2005 Gilles Vollant
-   Modifications for Info-ZIP crypting
-     Copyright (C) 2003 Terry Thorsen
+     Modifications for Info-ZIP crypting
+     http://www.winimage.com/zLibDll/minizip.html
+   Copyright (C) 2003 Terry Thorsen
 
    This code is a modified version of crypting code in Info-ZIP distribution
 
@@ -49,7 +52,7 @@ void init_keys(const char *passwd, uint32_t *pkeys, const z_crc_t *pcrc_32_tab);
 int cryptrand(unsigned char *buf, unsigned int len);
 
 /* Create encryption header */
-int crypthead(const char *passwd, uint8_t *buf, int buf_size, uint32_t *pkeys, 
+int crypthead(const char *passwd, uint8_t *buf, int buf_size, uint32_t *pkeys,
     const z_crc_t *pcrc_32_tab, uint8_t verify1, uint8_t verify2);
 
 /***************************************************************************/

@@ -913,12 +913,9 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 + (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime
 {
     /*
-     // the whole `_dateWithMSDOSFormat:` method is equivalent but faster than those four lines,
+     // the whole `_dateWithMSDOSFormat:` method is equivalent but faster than this one line,
      // essentially because `mktime` is slow:
-     struct tm ptm;
-     dosdate_to_tm(msdosDateTime, &ptm);
-     ptm.tm_year -= 1900;
-     NSDate *date = [NSDate dateWithTimeIntervalSince1970:mktime(&ptm)];
+     NSDate *date = [NSDate dateWithTimeIntervalSince1970:dosdate_to_time_t(msdosDateTime)];
     */
     static const UInt32 kYearMask = 0xFE000000;
     static const UInt32 kMonthMask = 0x1E00000;

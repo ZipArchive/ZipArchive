@@ -23,7 +23,7 @@
 
 #ifndef IOBUF_BUFFERSIZE
 #  define IOBUF_BUFFERSIZE (UINT16_MAX)
-#endif 
+#endif
 
 #if defined(_WIN32)
 #  include <conio.h>
@@ -73,7 +73,7 @@ typedef struct ourstream_s {
 #  define print_buf(o,s,f,...) print_buf_internal(o,s,f,__VA_ARGS__);
 #else
 #  define print_buf(o,s,f,...)
-#endif 
+#endif
 
 void print_buf_internal(voidpf opaque, voidpf stream, char *format, ...)
 {
@@ -137,7 +137,7 @@ long fflush_buf(voidpf opaque, voidpf stream)
     uint32_t bytes_to_write = streamio->writebuf_len;
     uint32_t bytes_left_to_write = streamio->writebuf_len;
     long bytes_written = 0;
-    
+
     while (bytes_left_to_write > 0)
     {
         if (bufio->filefunc64.zwrite_file != NULL)
@@ -264,7 +264,7 @@ uint32_t ZCALLBACK fwrite_buf_func(voidpf opaque, voidpf stream, const void *buf
 
             continue;
         }
-        
+
         memcpy(streamio->writebuf + streamio->writebuf_pos, (char *)buf + (bytes_to_write - bytes_left_to_write), bytes_to_copy);
 
         print_buf(opaque, stream, "write copy [remaining %d write %d:%d len %d]\n", bytes_to_copy, bytes_to_write, bytes_left_to_write, streamio->writebuf_len);
@@ -344,7 +344,7 @@ int fseek_buf_internal_func(voidpf opaque, voidpf stream, uint64_t offset, int o
                 {
                     streamio->readbuf_pos += (uint32_t)offset;
                     return 0;
-                } 
+                }
                 offset -= (streamio->readbuf_len - streamio->readbuf_pos);
                 streamio->position += offset;
             }
@@ -419,7 +419,7 @@ int ZCALLBACK fclose_buf_func(voidpf opaque, voidpf stream)
         print_buf(opaque, stream, "write efficency %.02f%%\n", (streamio->writebuf_hits / ((float)streamio->writebuf_hits + streamio->writebuf_misses)) * 100);
     if (bufio->filefunc64.zclose_file != NULL)
         ret = bufio->filefunc64.zclose_file(bufio->filefunc64.opaque, streamio->stream);
-    else 
+    else
         ret = bufio->filefunc.zclose_file(bufio->filefunc.opaque, streamio->stream);
     free(streamio);
     return ret;

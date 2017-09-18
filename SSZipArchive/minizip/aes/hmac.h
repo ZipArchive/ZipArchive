@@ -24,7 +24,7 @@ This is an implementation of HMAC, the FIPS standard keyed hash function
 #define _HMAC2_H
 
 #include <stdlib.h>
-#include <memory.h>
+#include <string.h>
 
 #if defined(__cplusplus)
 extern "C"
