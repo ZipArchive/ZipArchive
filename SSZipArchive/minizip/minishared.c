@@ -160,7 +160,7 @@ uint32_t tm_to_dosdate(const struct tm *ptm)
     else /* range [00, 79] */
         fixed_tm.tm_year += 20;
 
-    if (!invalid_date(ptm))
+    if (invalid_date(ptm))
         return 0;
 
     return (uint32_t)(((fixed_tm.tm_mday) + (32 * (fixed_tm.tm_mon + 1)) + (512 * fixed_tm.tm_year)) << 16) |

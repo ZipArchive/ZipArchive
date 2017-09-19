@@ -558,7 +558,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 NSLog(@"[SSZipArchive] Set attributes failed for directory: %@.", d[@"path"]);
             }
             if (err) {
-                NSLog(@"[SSZipArchive] Error setting directory file modification date attribute: %@",err.localizedDescription);
+                NSLog(@"[SSZipArchive] Error setting directory file modification date attribute: %@", err.localizedDescription);
             }
         }
     }
