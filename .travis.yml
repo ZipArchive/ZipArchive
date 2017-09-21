@@ -5,10 +5,10 @@ xcode_scheme: ObjectiveCExample
 matrix:
   include:
     - osx_image: xcode9
-      env: DESTINATION="iPhone 7 Plus (11.0)" # oldest/newest for iOS 11.x
+      env: DESTINATION="iPhone X (11.0)" # oldest/newest for iOS 11.x
       
     - osx_image: xcode9
-      env: DESTINATION="iPhone 7 Plus (10.3.1)" # latest for iOS 10.x
+      env: DESTINATION="iPhone 8 Plus (10.3.1)" # latest for iOS 10.x
       
     - osx_image: xcode8.3
       env: DESTINATION="iPhone 5 (10.0)" # oldest for iOS 10.x
