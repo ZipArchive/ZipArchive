@@ -516,7 +516,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_ACTIVITY_MODE = "";
-				"DEBUG_ACTIVITY_MODE[sdk=iphonesimulator*]" = disable;
+				"DEBUG_ACTIVITY_MODE[sdk=iphonesimulator*]" = default;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
