@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0820"
+   LastUpgradeVersion = "0900"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8DFE19E91BDA9FF300709011"
-               BuildableName = "ObjectiveCExample.app"
-               BlueprintName = "ObjectiveCExample"
-               ReferencedContainer = "container:ObjectiveCExample.xcodeproj">
+               BlueprintIdentifier = "8DFE19081BDA74F800709011"
+               BuildableName = "SwiftExample.app"
+               BlueprintName = "SwiftExample"
+               ReferencedContainer = "container:SwiftExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,20 +33,20 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8DFE1A021BDA9FF300709011"
-               BuildableName = "ObjectiveCExampleTests.xctest"
-               BlueprintName = "ObjectiveCExampleTests"
-               ReferencedContainer = "container:ObjectiveCExample.xcodeproj">
+               BlueprintIdentifier = "8DFE191C1BDA74F800709011"
+               BuildableName = "SwiftExampleTests.xctest"
+               BlueprintName = "SwiftExampleTests"
+               ReferencedContainer = "container:SwiftExample.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8DFE19E91BDA9FF300709011"
-            BuildableName = "ObjectiveCExample.app"
-            BlueprintName = "ObjectiveCExample"
-            ReferencedContainer = "container:ObjectiveCExample.xcodeproj">
+            BlueprintIdentifier = "8DFE19081BDA74F800709011"
+            BuildableName = "SwiftExample.app"
+            BlueprintName = "SwiftExample"
+            ReferencedContainer = "container:SwiftExample.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -67,10 +67,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8DFE19E91BDA9FF300709011"
-            BuildableName = "ObjectiveCExample.app"
-            BlueprintName = "ObjectiveCExample"
-            ReferencedContainer = "container:ObjectiveCExample.xcodeproj">
+            BlueprintIdentifier = "8DFE19081BDA74F800709011"
+            BuildableName = "SwiftExample.app"
+            BlueprintName = "SwiftExample"
+            ReferencedContainer = "container:SwiftExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -93,10 +93,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8DFE19E91BDA9FF300709011"
-            BuildableName = "ObjectiveCExample.app"
-            BlueprintName = "ObjectiveCExample"
-            ReferencedContainer = "container:ObjectiveCExample.xcodeproj">
+            BlueprintIdentifier = "8DFE19081BDA74F800709011"
+            BuildableName = "SwiftExample.app"
+            BlueprintName = "SwiftExample"
+            ReferencedContainer = "container:SwiftExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
