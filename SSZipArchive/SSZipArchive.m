@@ -344,16 +344,34 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 fileIsSymbolicLink = YES;
             }
             
-            // Check if it contains directory
-            //            NSString * strPath = @(filename);
             NSString * strPath = @(filename);
-            //if filename contains chinese dir transform Encoding
             if (!strPath) {
-                NSStringEncoding enc = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
-                strPath = [NSString  stringWithCString:filename encoding:enc];
+                // if filename is non-unicode, detect and transform Encoding
+                NSData *data = [NSData dataWithBytes:(const void *)filename length:sizeof(unsigned char) * fileInfo.size_filename];
+                if (floor(NSFoundationVersionNumber) >= NSFoundationVersionNumber_iOS_8_0) {
+                    // supported encodings are in [NSString availableStringEncodings]
+                    [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
+                } else {
+                    // fallback to a simple manual detect for iOS 7 or older
+                    NSArray<NSNumber *> *encodings = @[@(kCFStringEncodingGB_18030_2000), @(kCFStringEncodingShiftJIS)];
+                    for (NSNumber *encoding in encodings) {
+                        strPath = [NSString stringWithCString:filename encoding:(NSStringEncoding)CFStringConvertEncodingToNSStringEncoding(encoding.unsignedIntValue)];
+                        if (strPath) {
+                            break;
+                        }
+                    }
+                }
+                if (!strPath) {
+                    // if filename encoding is non-detected, we default to something based on data
+                    strPath = [[data base64EncodedStringWithOptions:0] stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.alphanumericCharacterSet];
+                }
             }
-            //end by skyfox
+            if (!strPath.length) {
+                // if filename data is empty, we default to currentFileNumber
+                strPath = @(currentFileNumber).stringValue;
+            }
             
+            // Check if it contains directory
             BOOL isDirectory = NO;
             if (filename[fileInfo.size_filename-1] == '/' || filename[fileInfo.size_filename-1] == '\\') {
                 isDirectory = YES;
