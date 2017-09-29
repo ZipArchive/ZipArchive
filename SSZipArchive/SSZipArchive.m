@@ -17,6 +17,11 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 #define CHUNK 16384
 
+@interface NSData(SSZipArchive)
+- (NSString *)_base64RFC4648;
+- (NSString *)_hexString;
+@end
+
 @interface SSZipArchive ()
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 @end
@@ -352,11 +357,12 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
                 if (!strPath) {
                     // if filename encoding is non-detected, we default to something based on data
-                    strPath = [[data base64EncodedStringWithOptions:0] stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.alphanumericCharacterSet];
+                    // _hexString is more readable than _base64RFC4648 for debugging unknown encodings
+                    strPath = [data _hexString];
                 }
             }
             if (!strPath.length) {
-                // if filename data is empty, we default to currentFileNumber
+                // if filename data is unsalvageable, we default to currentFileNumber
                 strPath = @(currentFileNumber).stringValue;
             }
             
@@ -944,6 +950,47 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     
     NSDate *date = [self._gregorian dateFromComponents:components];
     return date;
+}
+
+@end
+
+#pragma mark - Private tools for unreadable data
+
+@implementation NSData (SSZipArchive)
+
+// `base64EncodedStringWithOptions` uses a base64 alphabet with '+' and '/'.
+// we got those alternatives to make it compatible with filenames: https://en.wikipedia.org/wiki/Base64
+// * modified Base64 encoding for IMAP mailbox names (RFC 3501): uses '+' and ','
+// * modified Base64 for URL and filenames (RFC 4648): uses '-' and '_'
+- (NSString *)_base64RFC4648
+{
+    NSString *strName = [self base64EncodedStringWithOptions:0];
+    strName = [strName stringByReplacingOccurrencesOfString:@"+" withString:@"-"];
+    strName = [strName stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+    return strName;
+}
+
+// initWithBytesNoCopy from NSProgrammer, Jan 25 '12: https://stackoverflow.com/a/9009321/1033581
+// hexChars from Peter, Aug 19 '14: https://stackoverflow.com/a/25378464/1033581
+// not implemented as too lengthy: a potential mapping improvement from Moose, Nov 3 '15: https://stackoverflow.com/a/33501154/1033581
+- (NSString *)_hexString
+{
+    const char *hexChars = "0123456789ABCDEF";
+    NSUInteger length = self.length;
+    const unsigned char *bytes = self.bytes;
+    char *chars = malloc(length * 2);
+    char *s = chars;
+    NSUInteger i = length;
+    while (i--) {
+        *s++ = hexChars[*bytes >> 4];
+        *s++ = hexChars[*bytes & 0xF];
+        bytes++;
+    }
+    NSString *str = [[NSString alloc] initWithBytesNoCopy:chars
+                                                   length:length * 2
+                                                 encoding:NSASCIIStringEncoding
+                                             freeWhenDone:YES];
+    return str;
 }
 
 @end
