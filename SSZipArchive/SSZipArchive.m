@@ -17,6 +17,11 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 #define CHUNK 16384
 
+@interface NSData(SSZipArchive)
+- (NSString *)_base64RFC4648;
+- (NSString *)_hexString;
+@end
+
 @interface SSZipArchive ()
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 @end
@@ -344,16 +349,24 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 fileIsSymbolicLink = YES;
             }
             
-            // Check if it contains directory
-            //            NSString * strPath = @(filename);
             NSString * strPath = @(filename);
-            //if filename contains chinese dir transform Encoding
             if (!strPath) {
-                NSStringEncoding enc = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
-                strPath = [NSString  stringWithCString:filename encoding:enc];
+                // if filename is non-unicode, detect and transform Encoding
+                NSData *data = [NSData dataWithBytes:(const void *)filename length:sizeof(unsigned char) * fileInfo.size_filename];
+                // supported encodings are in [NSString availableStringEncodings]
+                [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
+                if (!strPath) {
+                    // if filename encoding is non-detected, we default to something based on data
+                    // _hexString is more readable than _base64RFC4648 for debugging unknown encodings
+                    strPath = [data _hexString];
+                }
             }
-            //end by skyfox
+            if (!strPath.length) {
+                // if filename data is unsalvageable, we default to currentFileNumber
+                strPath = @(currentFileNumber).stringValue;
+            }
             
+            // Check if it contains directory
             BOOL isDirectory = NO;
             if (filename[fileInfo.size_filename-1] == '/' || filename[fileInfo.size_filename-1] == '\\') {
                 isDirectory = YES;
@@ -937,6 +950,47 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     
     NSDate *date = [self._gregorian dateFromComponents:components];
     return date;
+}
+
+@end
+
+#pragma mark - Private tools for unreadable data
+
+@implementation NSData (SSZipArchive)
+
+// `base64EncodedStringWithOptions` uses a base64 alphabet with '+' and '/'.
+// we got those alternatives to make it compatible with filenames: https://en.wikipedia.org/wiki/Base64
+// * modified Base64 encoding for IMAP mailbox names (RFC 3501): uses '+' and ','
+// * modified Base64 for URL and filenames (RFC 4648): uses '-' and '_'
+- (NSString *)_base64RFC4648
+{
+    NSString *strName = [self base64EncodedStringWithOptions:0];
+    strName = [strName stringByReplacingOccurrencesOfString:@"+" withString:@"-"];
+    strName = [strName stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+    return strName;
+}
+
+// initWithBytesNoCopy from NSProgrammer, Jan 25 '12: https://stackoverflow.com/a/9009321/1033581
+// hexChars from Peter, Aug 19 '14: https://stackoverflow.com/a/25378464/1033581
+// not implemented as too lengthy: a potential mapping improvement from Moose, Nov 3 '15: https://stackoverflow.com/a/33501154/1033581
+- (NSString *)_hexString
+{
+    const char *hexChars = "0123456789ABCDEF";
+    NSUInteger length = self.length;
+    const unsigned char *bytes = self.bytes;
+    char *chars = malloc(length * 2);
+    char *s = chars;
+    NSUInteger i = length;
+    while (i--) {
+        *s++ = hexChars[*bytes >> 4];
+        *s++ = hexChars[*bytes & 0xF];
+        bytes++;
+    }
+    NSString *str = [[NSString alloc] initWithBytesNoCopy:chars
+                                                   length:length * 2
+                                                 encoding:NSASCIIStringEncoding
+                                             freeWhenDone:YES];
+    return str;
 }
 
 @end
