@@ -42,9 +42,13 @@ INLINE int has_aes_ni(void)
 #elif defined( __GNUC__ )
 
 #include <cpuid.h>
+
+#if !defined(__clang__)
 #pragma GCC target ("ssse3")
 #pragma GCC target ("sse4.1")
 #pragma GCC target ("aes")
+#endif
+
 #include <x86intrin.h>
 #define INLINE  static __inline
 

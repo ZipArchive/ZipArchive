@@ -143,7 +143,7 @@ time_t dosdate_to_time_t(uint64_t dos_date)
 
 uint32_t tm_to_dosdate(const struct tm *ptm)
 {
-    struct tm fixed_tm = { 0 };
+    struct tm fixed_tm;
 
     /* Years supported:
     * [00, 79]      (assumed to be between 2000 and 2079)
@@ -220,9 +220,28 @@ int makedir(const char *newdir)
     return 1;
 }
 
+FILE *get_file_handle(const char *path)
+{
+    FILE *handle = NULL;
+#if defined(WIN32)
+    wchar_t *pathWide = NULL;
+    int pathLength = 0;
+
+    pathLength = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0) + 1;
+    pathWide = (wchar_t*)calloc(pathLength, sizeof(wchar_t));
+    MultiByteToWideChar(CP_UTF8, 0, path, -1, pathWide, pathLength);
+    handle = _wfopen((const wchar_t*)pathWide, L"rb");
+    free(pathWide);
+#else
+    handle = fopen64(path, "rb");
+#endif
+
+    return handle;
+}
+
 int check_file_exists(const char *path)
 {
-    FILE* handle = fopen64(path, "rb");
+    FILE *handle = get_file_handle(path);
     if (handle == NULL)
         return 0;
     fclose(handle);
@@ -231,9 +250,10 @@ int check_file_exists(const char *path)
 
 int is_large_file(const char *path)
 {
+    FILE* handle = NULL;
     uint64_t pos = 0;
-    FILE* handle = fopen64(path, "rb");
 
+    handle = get_file_handle(path);
     if (handle == NULL)
         return 0;
 
