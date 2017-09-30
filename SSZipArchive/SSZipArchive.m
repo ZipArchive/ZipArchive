@@ -17,6 +17,11 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 #define CHUNK 16384
 
+#ifndef API_AVAILABLE
+// Xcode 7- compatibility
+#define API_AVAILABLE(...)
+#endif
+
 @interface NSData(SSZipArchive)
 - (NSString *)_base64RFC4648 API_AVAILABLE(macos(10.9), ios(7.0), watchos(2.0), tvos(9.0));
 - (NSString *)_hexString;
