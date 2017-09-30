@@ -35,7 +35,7 @@ script:
   # Testing
   - xcodebuild
     `` -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace
-    `` -scheme ObjectiveCExample
+    `` -scheme ObjectiveCExample_iOS
     `` -sdk iphonesimulator
     `` -destination "id=$DESTINATION_UDID"
     `` -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES

@@ -18,7 +18,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 #define CHUNK 16384
 
 @interface NSData(SSZipArchive)
-- (NSString *)_base64RFC4648;
+- (NSString *)_base64RFC4648 API_AVAILABLE(macos(10.9), ios(7.0), watchos(2.0), tvos(9.0));
 - (NSString *)_hexString;
 @end
 
@@ -353,8 +353,25 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             if (!strPath) {
                 // if filename is non-unicode, detect and transform Encoding
                 NSData *data = [NSData dataWithBytes:(const void *)filename length:sizeof(unsigned char) * fileInfo.size_filename];
-                // supported encodings are in [NSString availableStringEncodings]
-                [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
+#ifdef __MAC_10_13
+                // Xcode 9+
+                if (@available(macOS 10.10, iOS 8.0, watchOS 2.0, tvOS 9.0, *)) {
+#else
+                // Xcode 8-
+                if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_9_2) {
+#endif
+                    // supported encodings are in [NSString availableStringEncodings]
+                    [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
+                } else {
+                    // fallback to a simple manual detect for macOS 10.9 or older
+                    NSArray<NSNumber *> *encodings = @[@(kCFStringEncodingGB_18030_2000), @(kCFStringEncodingShiftJIS)];
+                    for (NSNumber *encoding in encodings) {
+                        strPath = [NSString stringWithCString:filename encoding:(NSStringEncoding)CFStringConvertEncodingToNSStringEncoding(encoding.unsignedIntValue)];
+                        if (strPath) {
+                            break;
+                        }
+                    }
+                }
                 if (!strPath) {
                     // if filename encoding is non-detected, we default to something based on data
                     // _hexString is more readable than _base64RFC4648 for debugging unknown encodings

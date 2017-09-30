@@ -34,8 +34,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8DFE1A021BDA9FF300709011"
-               BuildableName = "ObjectiveCExampleTests.xctest"
-               BlueprintName = "ObjectiveCExampleTests"
+               BuildableName = "ObjectiveCExampleTests_iOS.xctest"
+               BlueprintName = "ObjectiveCExampleTests_iOS"
                ReferencedContainer = "container:ObjectiveCExample.xcodeproj">
             </BuildableReference>
          </TestableReference>
