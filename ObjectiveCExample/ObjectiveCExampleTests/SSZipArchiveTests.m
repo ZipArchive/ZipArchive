@@ -107,16 +107,15 @@
     for (int test = 0; test < 20; test++)
     {
         // Zipping
-        NSString *archivePath = [outputPath stringByAppendingPathComponent:[NSString stringWithFormat:@"queue_test_%d.zip",test]];
+        NSString *archivePath = [outputPath stringByAppendingPathComponent:[NSString stringWithFormat:@"queue_test_%d.zip", test]];
 
         BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
         XCTAssertTrue(success);
         
         long long threshold = 510000; // 510kB:size slightly smaller than a successful zip, but much larger than a failed one
         long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:archivePath error:nil][NSFileSize] longLongValue];
-        XCTAssertTrue(fileSize > threshold, @"zipping failed at %@!",archivePath);
+        XCTAssertTrue(fileSize > threshold, @"zipping failed at %@!", archivePath);
     }
-
 }
 
 - (void)testUnzipping {
@@ -205,12 +204,11 @@
     
     BOOL fileHasValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd" error:&error];
     
-    XCTAssertTrue(fileHasValidPassword,@"Valid password reports false.");
+    XCTAssertTrue(fileHasValidPassword, @"Valid password reports false.");
     
     BOOL fileHasInvalidValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd123" error:&error];
     
-    XCTAssertFalse(fileHasInvalidValidPassword,@"Invalid password reports true.");
-    
+    XCTAssertFalse(fileHasInvalidValidPassword, @"Invalid password reports true.");
 }
 
 - (void)testIsFilePasswordProtectedAtPath {
@@ -258,7 +256,6 @@
     
     testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
-
 }
     
 //Temp Disabled test, fix is not yet in the AES version of the unzip lib
@@ -428,7 +425,6 @@
     XCTAssertEqual(delegate.numFilesUnzipped, 2);
     XCTAssertTrue(delegate.didUnzipArchive);
     XCTAssertEqual(delegate.loaded, delegate.total);
-
 }
 
 // Commented out to avoid checking in several gig file into the repository. Simply add a file named

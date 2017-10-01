@@ -54,7 +54,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             if (ret != UNZ_OK) {
                 return NO;
             }
-            unz_file_info fileInfo = {0};
+            unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
             if (ret != UNZ_OK) {
                 return NO;
@@ -103,7 +103,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 }
                 return NO;
             }
-            unz_file_info fileInfo = {0};
+            unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
             if (ret != UNZ_OK) {
                 if (error) {
@@ -241,7 +241,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     unsigned long long fileSize = [fileAttributes[NSFileSize] unsignedLongLongValue];
     unsigned long long currentPosition = 0;
     
-    unz_global_info  globalInfo = {0ul, 0ul};
+    unz_global_info globalInfo = {};
     unzGetGlobalInfo(zip, &globalInfo);
     
     // Begin unzipping
@@ -409,7 +409,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 [directoriesModificationDates addObject: @{@"path": fullPath, @"modDate": modDate}];
             }
             if (isDirectory) {
-                [fileManager createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:directoryAttr  error:&err];
+                [fileManager createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:directoryAttr error:&err];
             } else {
                 [fileManager createDirectoryAtPath:fullPath.stringByDeletingLastPathComponent withIntermediateDirectories:YES attributes:directoryAttr error:&err];
             }
@@ -764,7 +764,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
     
-    zip_fileinfo zipInfo = {0,0,0};
+    zip_fileinfo zipInfo = {};
     
     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
     if (attr)
@@ -795,12 +795,12 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         }
     }
     
-    unsigned int len = 0;
-    zipOpenNewFileInZip3(_zip, [folderName stringByAppendingString:@"/"].fileSystemRepresentation, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_NO_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL,
+    int error = zipOpenNewFileInZip3(_zip, [folderName stringByAppendingString:@"/"].fileSystemRepresentation, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_NO_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL,
                          Z_DEFAULT_STRATEGY, password.UTF8String, 0);
+    unsigned int len = 0;
     zipWriteInFileInZip(_zip, &len, 0);
     zipCloseFileInZip(_zip);
-    return YES;
+    return error == ZIP_OK;
 }
 
 - (BOOL)writeFile:(NSString *)path withPassword:(nullable NSString *)password;
@@ -828,7 +828,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         aFileName = fileName.fileSystemRepresentation;
     }
     
-    zip_fileinfo zipInfo = {0,0,0};
+    zip_fileinfo zipInfo = {};
     
     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
     if (attr)
@@ -862,22 +862,22 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     void *buffer = malloc(CHUNK);
     if (buffer == NULL)
     {
+        fclose(input);
         return NO;
     }
     
-    zipOpenNewFileInZip3(_zip, aFileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, 0);
-    unsigned int len = 0;
+    int error = zipOpenNewFileInZip3(_zip, aFileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, 0);
     
     while (!feof(input) && !ferror(input))
     {
-        len = (unsigned int) fread(buffer, 1, CHUNK, input);
+        unsigned int len = (unsigned int) fread(buffer, 1, CHUNK, input);
         zipWriteInFileInZip(_zip, buffer, len);
     }
     
     zipCloseFileInZip(_zip);
     free(buffer);
     fclose(input);
-    return YES;
+    return error == ZIP_OK;
 }
 
 - (BOOL)writeData:(NSData *)data filename:(nullable NSString *)filename withPassword:(nullable NSString *)password;
@@ -888,15 +888,15 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     if (!data) {
         return NO;
     }
-    zip_fileinfo zipInfo = {0,0,0};
+    zip_fileinfo zipInfo = {};
     [self zipInfo:&zipInfo setDate:[NSDate date]];
     
-    zipOpenNewFileInZip3(_zip, filename.fileSystemRepresentation, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, 0);
+    int error = zipOpenNewFileInZip3(_zip, filename.fileSystemRepresentation, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, 0);
     
     zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
     
     zipCloseFileInZip(_zip);
-    return YES;
+    return error == ZIP_OK;
 }
 
 
