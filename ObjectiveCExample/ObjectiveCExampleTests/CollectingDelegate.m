@@ -21,11 +21,8 @@
     return self;
 }
 
-- (void)zipArchiveDidUnzipArchiveFile:(NSString *)zipFile entryPath:(NSString *)entryPath destPath:(NSString *)destPath {
-    [self.files addObject:entryPath];
+- (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath unzippedFilePath:(NSString *)unzippedFilePath {
+    [self.files addObject:unzippedFilePath];
 }
-
-
-
 
 @end

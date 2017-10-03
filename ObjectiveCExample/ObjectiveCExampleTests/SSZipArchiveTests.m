@@ -353,7 +353,7 @@
 
     NSDictionary *createdFileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[outputPath stringByAppendingPathComponent:@"Readme.markdown"] error:nil];
 
-    XCTAssertEqualObjects(originalFileAttributes[NSFileCreationDate], createdFileAttributes[@"NSFileCreationDate"], @"Orginal file creationDate should match created one");
+    XCTAssertEqualObjects(originalFileAttributes[NSFileCreationDate], createdFileAttributes[@"NSFileCreationDate"], @"Original file creationDate should match created one");
 }
 
 
@@ -446,8 +446,8 @@
     BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:collector];
     XCTAssertTrue(success);
     
-    //    STAssertEqualObjects([collector.files objectAtIndex:0], @"LICENSE.txt", nil);
-    //    STAssertEqualObjects([collector.files objectAtIndex:1], @"README.md", nil);
+    XCTAssertEqualObjects(collector.files[0], [outputPath stringByAppendingString:@"/LICENSE"]);
+    XCTAssertEqualObjects(collector.files[1], [outputPath stringByAppendingString:@"/Readme.markdown"]);
 }
 
 #pragma mark - SSZipArchiveDelegate
