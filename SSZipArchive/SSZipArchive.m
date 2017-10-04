@@ -116,7 +116,8 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 unsigned char buffer[10] = {0};
                 int readBytes = unzReadCurrentFile(zip, buffer, (unsigned)MIN(10UL,fileInfo.uncompressed_size));
                 if (readBytes < 0) {
-                    // Let's assume the invalid password caused this error
+                    // Let's assume error Z_DATA_ERROR is caused by an invalid password
+                    // Let's assume other errors are caused by Content Not Readable
                     if (readBytes != Z_DATA_ERROR) {
                         if (error) {
                             *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
@@ -451,6 +452,11 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                             break;
                         }
                         readBytes = unzReadCurrentFile(zip, buffer, 4096);
+                        if (readBytes < 0) {
+                            // Let's assume error Z_DATA_ERROR is caused by an invalid password
+                            // Let's assume other errors are caused by Content Not Readable
+                            success = NO;
+                        }
                     }
 
                     if (fp) {
@@ -511,6 +517,11 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                             break;
                         }
                     }
+                } else {
+                    // Let's assume error Z_DATA_ERROR is caused by an invalid password
+                    // Let's assume other errors are caused by Content Not Readable
+                    success = NO;
+                    break;
                 }
             }
             else
@@ -520,8 +531,14 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                 int bytesRead = 0;
                 while ((bytesRead = unzReadCurrentFile(zip, buffer, 4096)) > 0)
                 {
-                    buffer[bytesRead] = (int)0;
+                    buffer[bytesRead] = 0;
                     [destinationPath appendString:@((const char *)buffer)];
+                }
+                if (bytesRead < 0) {
+                    // Let's assume error Z_DATA_ERROR is caused by an invalid password
+                    // Let's assume other errors are caused by Content Not Readable
+                    success = NO;
+                    break;
                 }
                 
                 // Check if the symlink exists and delete it if we're overwriting

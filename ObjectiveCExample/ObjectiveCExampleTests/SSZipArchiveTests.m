@@ -186,7 +186,7 @@
     
     NSError *error = nil;
     BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:@"passw0rd123" error:&error delegate:self];
-    XCTAssertTrue(success);
+    XCTAssertFalse(success);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
