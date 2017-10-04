@@ -17,6 +17,8 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 #define CHUNK 16384
 
+BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
+
 #ifndef API_AVAILABLE
 // Xcode 7- compatibility
 #define API_AVAILABLE(...)
@@ -134,7 +136,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             ret = unzGoToNextFile(zip);
         } while (ret == UNZ_OK && UNZ_OK != UNZ_END_OF_LIST_OF_FILE);
     }
-
+    
     // No password required
     return YES;
 }
@@ -335,25 +337,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
             unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
             filename[fileInfo.size_filename] = '\0';
             
-            //
-            // Determine whether this is a symbolic link:
-            // - File is stored with 'version made by' value of UNIX (3),
-            //   as per http://www.pkware.com/documents/casestudies/APPNOTE.TXT
-            //   in the upper byte of the version field.
-            // - BSD4.4 st_mode constants are stored in the high 16 bits of the
-            //   external file attributes (defacto standard, verified against libarchive)
-            //
-            // The original constants can be found here:
-            //    http://minnie.tuhs.org/cgi-bin/utree.pl?file=4.4BSD/usr/include/sys/stat.h
-            //
-            const uLong ZipUNIXVersion = 3;
-            const uLong BSD_SFMT = 0170000;
-            const uLong BSD_IFLNK = 0120000;
-            
-            BOOL fileIsSymbolicLink = NO;
-            if (((fileInfo.version >> 8) == ZipUNIXVersion) && BSD_IFLNK == (BSD_SFMT & (fileInfo.external_fa >> 16))) {
-                fileIsSymbolicLink = YES;
-            }
+            BOOL fileIsSymbolicLink = _fileIsSymbolicLink(&fileInfo);
             
             NSString * strPath = @(filename);
             if (!strPath) {
@@ -362,13 +346,17 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 #ifdef __MAC_10_13
                 // Xcode 9+
                 if (@available(macOS 10.10, iOS 8.0, watchOS 2.0, tvOS 9.0, *)) {
+                    // supported encodings are in [NSString availableStringEncodings]
+                    [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
+                }
 #else
                 // Xcode 8-
                 if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_9_2) {
-#endif
                     // supported encodings are in [NSString availableStringEncodings]
                     [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
-                } else {
+                }
+#endif
+                else {
                     // fallback to a simple manual detect for macOS 10.9 or older
                     NSArray<NSNumber *> *encodings = @[@(kCFStringEncodingGB_18030_2000), @(kCFStringEncodingShiftJIS)];
                     for (NSNumber *encoding in encodings) {
@@ -458,7 +446,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                             success = NO;
                         }
                     }
-
+                    
                     if (fp) {
                         if ([fullPath.pathExtension.lowercaseString isEqualToString:@"zip"]) {
                             NSLog(@"Unzipping nested .zip file:  %@", fullPath.lastPathComponent);
@@ -466,16 +454,16 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                                 [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
                             }
                         }
-
+                        
                         fclose(fp);
-
+                        
                         if (preserveAttributes) {
-
+                            
                             // Set the original datetime property
                             if (fileInfo.dos_date != 0) {
                                 NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dos_date];
                                 NSDictionary *attr = @{NSFileModificationDate: orgDate};
-
+                                
                                 if (attr) {
                                     if (![fileManager setAttributes:attr ofItemAtPath:fullPath error:nil]) {
                                         // Can't set attributes
@@ -483,19 +471,19 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
                                     }
                                 }
                             }
-
+                            
                             // Set the original permissions on the file (+read/write to solve #293)
                             uLong permissions = fileInfo.external_fa >> 16 | 0b110000000;
                             if (permissions != 0) {
                                 // Store it into a NSNumber
                                 NSNumber *permissionsValue = @(permissions);
-
+                                
                                 // Retrieve any existing attributes
                                 NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:[fileManager attributesOfItemAtPath:fullPath error:nil]];
-
+                                
                                 // Set the value in the attributes dict
                                 attrs[NSFilePosixPermissions] = permissionsValue;
-
+                                
                                 // Update attributes
                                 if (![fileManager setAttributes:attrs ofItemAtPath:fullPath error:nil]) {
                                     // Unable to set the permissions attribute
@@ -812,8 +800,22 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
         }
     }
     
-    int error = zipOpenNewFileInZip3(_zip, [folderName stringByAppendingString:@"/"].fileSystemRepresentation, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_NO_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL,
-                         Z_DEFAULT_STRATEGY, password.UTF8String, 0);
+    int error = zipOpenNewFileInZip3(_zip,
+                                     [folderName stringByAppendingString:@"/"].fileSystemRepresentation,
+                                     &zipInfo,
+                                     NULL,
+                                     0,
+                                     NULL,
+                                     0,
+                                     NULL,
+                                     Z_DEFLATED,
+                                     Z_NO_COMPRESSION,
+                                     0,
+                                     -MAX_WBITS,
+                                     DEF_MEM_LEVEL,
+                                     Z_DEFAULT_STRATEGY,
+                                     password.UTF8String,
+                                     0);
     unsigned int len = 0;
     zipWriteInFileInZip(_zip, &len, 0);
     zipCloseFileInZip(_zip);
@@ -964,11 +966,9 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 // 7423 = 0111 0100 0010 0011 - 01110 100001 00011 = 14 33 3 = 14:33:06
 + (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime
 {
-    /*
-     // the whole `_dateWithMSDOSFormat:` method is equivalent but faster than this one line,
-     // essentially because `mktime` is slow:
-     NSDate *date = [NSDate dateWithTimeIntervalSince1970:dosdate_to_time_t(msdosDateTime)];
-    */
+    // the whole `_dateWithMSDOSFormat:` method is equivalent but faster than this one line,
+    // essentially because `mktime` is slow:
+    //NSDate *date = [NSDate dateWithTimeIntervalSince1970:dosdate_to_time_t(msdosDateTime)];
     static const UInt32 kYearMask = 0xFE000000;
     static const UInt32 kMonthMask = 0x1E00000;
     static const UInt32 kDayMask = 0x1F0000;
@@ -979,7 +979,6 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
     NSAssert(0xFFFFFFFF == (kYearMask | kMonthMask | kDayMask | kHourMask | kMinuteMask | kSecondMask), @"[SSZipArchive] MSDOS date masks don't add up");
     
     NSDateComponents *components = [[NSDateComponents alloc] init];
-    
     components.year = 1980 + ((msdosDateTime & kYearMask) >> 25);
     components.month = (msdosDateTime & kMonthMask) >> 21;
     components.day = (msdosDateTime & kDayMask) >> 16;
@@ -993,7 +992,30 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 @end
 
-#pragma mark - Private tools for unreadable data
+#pragma mark - Private tools for file info
+
+BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
+{
+    //
+    // Determine whether this is a symbolic link:
+    // - File is stored with 'version made by' value of UNIX (3),
+    //   as per http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+    //   in the upper byte of the version field.
+    // - BSD4.4 st_mode constants are stored in the high 16 bits of the
+    //   external file attributes (defacto standard, verified against libarchive)
+    //
+    // The original constants can be found here:
+    //    http://minnie.tuhs.org/cgi-bin/utree.pl?file=4.4BSD/usr/include/sys/stat.h
+    //
+    const uLong ZipUNIXVersion = 3;
+    const uLong BSD_SFMT = 0170000;
+    const uLong BSD_IFLNK = 0120000;
+    
+    BOOL fileIsSymbolicLink = ((fileInfo->version >> 8) == ZipUNIXVersion) && BSD_IFLNK == (BSD_SFMT & (fileInfo->external_fa >> 16));
+    return fileIsSymbolicLink;
+}
+
+#pragma mark - Private tools for unreadable encodings
 
 @implementation NSData (SSZipArchive)
 
