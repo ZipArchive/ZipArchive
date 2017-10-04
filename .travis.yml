@@ -1,42 +1,66 @@
 language: objective-c
 podfile: ObjectiveCExample/Podfile
 xcode_workspace: ObjectiveCExample/ObjectiveCExample.xcworkspace
-xcode_scheme: ObjectiveCExample
 matrix:
   include:
+    - osx_image: xcode9 # OS X 10.12
+      env: SDK="macosx"
+           DEVICE="OS X 10.12"
+           
+    - osx_image: xcode8.3 # OS X 10.12
+      env: SDK="macosx"
+           DEVICE="OS X 10.12"
+           
+    - osx_image: xcode7.3 # OS X 10.11
+      env: SDK="macosx"
+           DEVICE="OS X 10.11"
+           
     - osx_image: xcode9
-      env: DESTINATION="iPhone X (11.0)" # oldest/newest for iOS 11.x
-      
+      env: SDK="iphonesimulator"
+           DEVICE="iPhone X (11.0)" # oldest/newest for iOS 11.x
+           
     - osx_image: xcode9
-      env: DESTINATION="iPhone 7 Plus (10.3.1)" # latest for iOS 10.x
-      
+      env: SDK="iphonesimulator"
+           DEVICE="iPhone 7 Plus (10.3.1)" # latest for iOS 10.x
+           
     - osx_image: xcode8.3
-      env: DESTINATION="iPhone 5 (10.0)" # oldest for iOS 10.x
-      
+      env: SDK="iphonesimulator"
+           DEVICE="iPhone 5 (10.0)" # oldest for iOS 10.x
+           
     - osx_image: xcode8.3
-      env: DESTINATION="iPhone 6s Plus (9.3)" # latest for iOS 9.x
-      
+      env: SDK="iphonesimulator"
+           DEVICE="iPhone 6s Plus (9.3)" # latest for iOS 9.x
+           
     - osx_image: xcode7.3
-      env: DESTINATION="iPhone 4s (9.0)" # oldest for iOS 9.x
-      
+      env: SDK="iphonesimulator"
+           DEVICE="iPhone 4s (9.0)" # oldest for iOS 9.x
+           
     - osx_image: xcode7.3
-      env: DESTINATION="iPhone 6 Plus (8.4)" # latest for iOS 8.x
-      
+      env: SDK="iphonesimulator"
+           DEVICE="iPhone 6 Plus (8.4)" # latest for iOS 8.x
+           
     - osx_image: xcode7.3
-      env: DESTINATION="iPhone 4s (8.1)" # oldest for iOS 8.x
+      env: SDK="iphonesimulator"
+           DEVICE="iPhone 4s (8.1)" # oldest for iOS 8.x
 
 before_install:
-  # Grepping destination device udid
-  - DESTINATION_UDID=$(instruments -s devices | grep "$DESTINATION \[" | sed -E 's/.*\[([0-9A-F-]+)\].*/\1/g')
-  # Prelaunching simulator to avoid timeout https://github.com/travis-ci/travis-ci/issues/6422
-  - open -a "simulator" --args -CurrentDeviceUDID $DESTINATION_UDID
+  - if [ ${SDK} = "macosx" ]; then
+        SCHEME="ObjectiveCExample_macOS";
+        DESTINATION="platform=macosx";
+    else
+        SCHEME="ObjectiveCExample_iOS";
+        DESTINATION_UDID=$(instruments -s devices | grep "$DEVICE \[" | sed -E 's/.*\[([0-9A-F-]+)\].*/\1/g');
+        `Prelaunching simulator to avoid timeout https://github.com/travis-ci/travis-ci/issues/6422`
+        open -a Simulator --args -CurrentDeviceUDID $DESTINATION_UDID;
+        DESTINATION="id=$DESTINATION_UDID";
+    fi
 
 script:
   # Testing
   - xcodebuild
     `` -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace
-    `` -scheme ObjectiveCExample_iOS
-    `` -sdk iphonesimulator
-    `` -destination "id=$DESTINATION_UDID"
+    `` -scheme $SCHEME
+    `` -sdk $SDK
+    `` -destination "$DESTINATION"
     `` -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES
     `` test
