@@ -339,39 +339,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             
             BOOL fileIsSymbolicLink = _fileIsSymbolicLink(&fileInfo);
             
-            NSString * strPath = @(filename);
-            if (!strPath) {
-                // if filename is non-unicode, detect and transform Encoding
-                NSData *data = [NSData dataWithBytes:(const void *)filename length:sizeof(unsigned char) * fileInfo.size_filename];
-#ifdef __MAC_10_13
-                // Xcode 9+
-                if (@available(macOS 10.10, iOS 8.0, watchOS 2.0, tvOS 9.0, *)) {
-                    // supported encodings are in [NSString availableStringEncodings]
-                    [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
-                }
-#else
-                // Xcode 8-
-                if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_9_2) {
-                    // supported encodings are in [NSString availableStringEncodings]
-                    [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
-                }
-#endif
-                else {
-                    // fallback to a simple manual detect for macOS 10.9 or older
-                    NSArray<NSNumber *> *encodings = @[@(kCFStringEncodingGB_18030_2000), @(kCFStringEncodingShiftJIS)];
-                    for (NSNumber *encoding in encodings) {
-                        strPath = [NSString stringWithCString:filename encoding:(NSStringEncoding)CFStringConvertEncodingToNSStringEncoding(encoding.unsignedIntValue)];
-                        if (strPath) {
-                            break;
-                        }
-                    }
-                }
-                if (!strPath) {
-                    // if filename encoding is non-detected, we default to something based on data
-                    // _hexString is more readable than _base64RFC4648 for debugging unknown encodings
-                    strPath = [data _hexString];
-                }
-            }
+            NSString * strPath = [SSZipArchive _filenameStringWithCString:filename size:fileInfo.size_filename];
             if (!strPath.length) {
                 // if filename data is unsalvageable, we default to currentFileNumber
                 strPath = @(currentFileNumber).stringValue;
@@ -928,6 +896,45 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 }
 
 #pragma mark - Private
+
++ (NSString *)_filenameStringWithCString:(const char *)filename size:(uint16_t)size_filename
+{
+    NSString * strPath = @(filename);
+    if (strPath) {
+        return strPath;
+    }
+    // if filename is non-unicode, detect and transform Encoding
+    NSData *data = [NSData dataWithBytes:(const void *)filename length:sizeof(unsigned char) * size_filename];
+#ifdef __MAC_10_13
+    // Xcode 9+
+    if (@available(macOS 10.10, iOS 8.0, watchOS 2.0, tvOS 9.0, *)) {
+        // supported encodings are in [NSString availableStringEncodings]
+        [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
+    }
+#else
+    // Xcode 8-
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_9_2) {
+        // supported encodings are in [NSString availableStringEncodings]
+        [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
+    }
+#endif
+    else {
+        // fallback to a simple manual detect for macOS 10.9 or older
+        NSArray<NSNumber *> *encodings = @[@(kCFStringEncodingGB_18030_2000), @(kCFStringEncodingShiftJIS)];
+        for (NSNumber *encoding in encodings) {
+            strPath = [NSString stringWithCString:filename encoding:(NSStringEncoding)CFStringConvertEncodingToNSStringEncoding(encoding.unsignedIntValue)];
+            if (strPath) {
+                break;
+            }
+        }
+    }
+    if (!strPath) {
+        // if filename encoding is non-detected, we default to something based on data
+        // _hexString is more readable than _base64RFC4648 for debugging unknown encodings
+        strPath = [data _hexString];
+    }
+    return strPath;
+}
 
 + (NSString *)_temporaryPathForDiscardableFile
 {
