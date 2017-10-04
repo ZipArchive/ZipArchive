@@ -7,11 +7,9 @@
 
 #import "CollectingDelegate.h"
 
-@implementation CollectingDelegate {
-    
-}
-@synthesize files = _files;
+@implementation CollectingDelegate
 
+@synthesize files = _files;
 
 - (instancetype)init {
     self = [super init];

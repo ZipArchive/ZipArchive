@@ -43,6 +43,12 @@
 		3793E6EE1F7F6059000B1A19 /* TestPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1C1BDAA10100709011 /* TestPasswordArchive.zip */; };
 		3793E6EF1F7F6059000B1A19 /* Unicode.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1D1BDAA10100709011 /* Unicode.zip */; };
 		3793E6F01F7F605C000B1A19 /* PermissionsTestApp.app in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A181BDAA10100709011 /* PermissionsTestApp.app */; };
+		37FF0CB31F8533E0006E4361 /* CancelDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB21F8533E0006E4361 /* CancelDelegate.m */; };
+		37FF0CB41F8533E0006E4361 /* CancelDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB21F8533E0006E4361 /* CancelDelegate.m */; };
+		37FF0CB51F8533E0006E4361 /* CancelDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB21F8533E0006E4361 /* CancelDelegate.m */; };
+		37FF0CB81F853459006E4361 /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
+		37FF0CB91F853459006E4361 /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
+		37FF0CBA1F853459006E4361 /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
 		6BFA1E5841DFEC4E21BA7543 /* Pods_core_ObjectiveCExampleTests_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A85B006A1C84E475375AE1 /* Pods_core_ObjectiveCExampleTests_macOS.framework */; };
 		8DFE19EF1BDA9FF300709011 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE19EE1BDA9FF300709011 /* main.m */; };
 		8DFE19F21BDA9FF300709011 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE19F11BDA9FF300709011 /* AppDelegate.m */; };
@@ -79,6 +85,10 @@
 		254DE0B206EE66F57BBE7EEE /* Pods-core-ObjectiveCExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-core-ObjectiveCExample/Pods-core-ObjectiveCExample.release.xcconfig"; sourceTree = "<group>"; };
 		3773ADAE1F7F44D8009A4B2D /* ObjectiveCExampleTests_macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_macOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3793E6D71F7F5F93000B1A19 /* ObjectiveCExampleTests_tvOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_tvOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		37FF0CB11F8533E0006E4361 /* CancelDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CancelDelegate.h; sourceTree = "<group>"; };
+		37FF0CB21F8533E0006E4361 /* CancelDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CancelDelegate.m; sourceTree = "<group>"; };
+		37FF0CB61F853459006E4361 /* ProgressDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProgressDelegate.h; sourceTree = "<group>"; };
+		37FF0CB71F853459006E4361 /* ProgressDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProgressDelegate.m; sourceTree = "<group>"; };
 		38A85B006A1C84E475375AE1 /* Pods_core_ObjectiveCExampleTests_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExampleTests_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48AB7DF053F85FCC6AFB0C26 /* Pods-core-ObjectiveCExampleTests_macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_macOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-core-ObjectiveCExampleTests_macOS/Pods-core-ObjectiveCExampleTests_macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		49974600DB985CD98FC3AD39 /* Pods_core_ObjectiveCExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,7 +104,7 @@
 		8DFE19FC1BDA9FF300709011 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8DFE19FE1BDA9FF300709011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DFE1A031BDA9FF300709011 /* ObjectiveCExampleTests_iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_iOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		8DFE1A071BDA9FF300709011 /* SSZipArchiveTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSZipArchiveTests.m; sourceTree = "<group>"; };
+		8DFE1A071BDA9FF300709011 /* SSZipArchiveTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchiveTests.m; sourceTree = "<group>"; };
 		8DFE1A091BDA9FF300709011 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DFE1A121BDAA0A800709011 /* CollectingDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectingDelegate.h; sourceTree = "<group>"; };
 		8DFE1A131BDAA0A800709011 /* CollectingDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectingDelegate.m; sourceTree = "<group>"; };
@@ -228,6 +238,10 @@
 				8DFE1A1E1BDAA10100709011 /* Multi_Zip_Test */,
 				8DFE1A121BDAA0A800709011 /* CollectingDelegate.h */,
 				8DFE1A131BDAA0A800709011 /* CollectingDelegate.m */,
+				37FF0CB11F8533E0006E4361 /* CancelDelegate.h */,
+				37FF0CB21F8533E0006E4361 /* CancelDelegate.m */,
+				37FF0CB61F853459006E4361 /* ProgressDelegate.h */,
+				37FF0CB71F853459006E4361 /* ProgressDelegate.m */,
 				8DFE1A071BDA9FF300709011 /* SSZipArchiveTests.m */,
 				8DFE1A091BDA9FF300709011 /* Info.plist */,
 			);
@@ -699,7 +713,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3773ADB71F7F4541009A4B2D /* SSZipArchiveTests.m in Sources */,
+				37FF0CB91F853459006E4361 /* ProgressDelegate.m in Sources */,
 				3773ADB61F7F453E009A4B2D /* CollectingDelegate.m in Sources */,
+				37FF0CB41F8533E0006E4361 /* CancelDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -708,7 +724,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3793E6E01F7F604B000B1A19 /* SSZipArchiveTests.m in Sources */,
+				37FF0CBA1F853459006E4361 /* ProgressDelegate.m in Sources */,
 				3793E6DF1F7F6048000B1A19 /* CollectingDelegate.m in Sources */,
+				37FF0CB51F8533E0006E4361 /* CancelDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -727,7 +745,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DFE1A141BDAA0A800709011 /* CollectingDelegate.m in Sources */,
+				37FF0CB81F853459006E4361 /* ProgressDelegate.m in Sources */,
 				8DFE1A081BDA9FF300709011 /* SSZipArchiveTests.m in Sources */,
+				37FF0CB31F8533E0006E4361 /* CancelDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
