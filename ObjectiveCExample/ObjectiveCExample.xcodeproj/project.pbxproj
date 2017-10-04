@@ -74,16 +74,6 @@
 		F7D6D86D1CFB2C4900DA6DA6 /* Sample Data in Resources */ = {isa = PBXBuildFile; fileRef = F7D6D86C1CFB2C4900DA6DA6 /* Sample Data */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		8DFE1A041BDA9FF300709011 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8DFE19E21BDA9FF300709011 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DFE19E91BDA9FF300709011;
-			remoteInfo = ObjectiveCExample;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		04CB37570807602F7E5C66D9 /* Pods-core-ObjectiveCExampleTests_macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_macOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-core-ObjectiveCExampleTests_macOS/Pods-core-ObjectiveCExampleTests_macOS.release.xcconfig"; sourceTree = "<group>"; };
 		254DE0B206EE66F57BBE7EEE /* Pods-core-ObjectiveCExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-core-ObjectiveCExample/Pods-core-ObjectiveCExample.release.xcconfig"; sourceTree = "<group>"; };
@@ -362,7 +352,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				8DFE1A051BDA9FF300709011 /* PBXTargetDependency */,
 			);
 			name = ObjectiveCExampleTests_iOS;
 			productName = ObjectiveCExampleTests;
@@ -390,7 +379,6 @@
 					};
 					8DFE1A021BDA9FF300709011 = {
 						CreatedOnToolsVersion = 7.1;
-						TestTargetID = 8DFE19E91BDA9FF300709011;
 					};
 				};
 			};
@@ -745,14 +733,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		8DFE1A051BDA9FF300709011 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8DFE19E91BDA9FF300709011 /* ObjectiveCExample */;
-			targetProxy = 8DFE1A041BDA9FF300709011 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		8DFE19F61BDA9FF300709011 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -994,12 +974,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A2E5B3BB819D409D02E989BC /* Pods-core-ObjectiveCExampleTests_iOS.debug.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = ObjectiveCExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ziparchive.ObjectiveCExampleTests-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ObjectiveCExample.app/ObjectiveCExample";
 			};
 			name = Debug;
 		};
@@ -1007,12 +985,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CD7C1D2CFA646F90A02312F4 /* Pods-core-ObjectiveCExampleTests_iOS.release.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = ObjectiveCExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ziparchive.ObjectiveCExampleTests-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ObjectiveCExample.app/ObjectiveCExample";
 			};
 			name = Release;
 		};
