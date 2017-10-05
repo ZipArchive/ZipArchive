@@ -53,12 +53,6 @@ typedef voidp zipFile;
 #define ZIP_BADZIPFILE                  (-103)
 #define ZIP_INTERNALERROR               (-104)
 
-#ifdef __GNUC__
-#  define ZIP_UNUSED __attribute__((__unused__))
-#else
-#  define ZIP_UNUSED
-#endif
-
 #ifndef DEF_MEM_LEVEL
 #  if MAX_MEM_LEVEL >= 8
 #    define DEF_MEM_LEVEL 8

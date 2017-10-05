@@ -22,6 +22,12 @@
 
 #include "zlib.h"
 
+#ifdef __GNUC__
+#  define ZIP_UNUSED __attribute__((__unused__))
+#else
+#  define ZIP_UNUSED
+#endif
+
 #if defined(USE_FILE32API)
 #  define fopen64 fopen
 #  define ftello64 ftell
