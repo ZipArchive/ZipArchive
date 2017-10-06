@@ -66,7 +66,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             
             unzCloseCurrentFile(zip);
             ret = unzGoToNextFile(zip);
-        } while (ret == UNZ_OK && UNZ_OK != UNZ_END_OF_LIST_OF_FILE);
+        } while (ret == UNZ_OK);
     }
     
     return NO;
@@ -134,7 +134,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             
             unzCloseCurrentFile(zip);
             ret = unzGoToNextFile(zip);
-        } while (ret == UNZ_OK && UNZ_OK != UNZ_END_OF_LIST_OF_FILE);
+        } while (ret == UNZ_OK);
     }
     
     // No password required
