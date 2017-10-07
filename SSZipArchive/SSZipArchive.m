@@ -683,9 +683,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             {
                 if ([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fullFilePath error:nil].count == 0)
                 {
-                    NSString *tempFilePath = [self _temporaryPathForDiscardableFile];
-                    NSString *tempFileFilename = [fileName stringByAppendingPathComponent:tempFilePath.lastPathComponent];
-                    success &= [zipArchive writeFileAtPath:tempFilePath withFileName:tempFileFilename withPassword:password];
+                    success &= [zipArchive writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
                 }
             }
             complete++;
@@ -742,8 +740,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                      Z_DEFAULT_STRATEGY,
                                      password.UTF8String,
                                      0);
-    unsigned int len = 0;
-    zipWriteInFileInZip(_zip, &len, 0);
+    const void *buffer = NULL;
+    zipWriteInFileInZip(_zip, buffer, 0);
     zipCloseFileInZip(_zip);
     return error == ZIP_OK;
 }
@@ -765,13 +763,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         return NO;
     }
     
-    const char *aFileName;
     if (!fileName) {
-        aFileName = path.lastPathComponent.fileSystemRepresentation;
+        fileName = path.lastPathComponent;
     }
-    else {
-        aFileName = fileName.fileSystemRepresentation;
-    }
+    const char *aFileName = fileName.fileSystemRepresentation;
     
     zip_fileinfo zipInfo = {};
     
@@ -865,23 +860,6 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         strPath = [data _hexString];
     }
     return strPath;
-}
-
-+ (NSString *)_temporaryPathForDiscardableFile
-{
-    static NSString *discardableFileName = @".DS_Store";
-    static NSString *discardableFilePath = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSString *temporaryDirectoryName = [NSUUID UUID].UUIDString;
-        NSString *temporaryDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:temporaryDirectoryName];
-        BOOL directoryCreated = [[NSFileManager defaultManager] createDirectoryAtPath:temporaryDirectory withIntermediateDirectories:YES attributes:nil error:nil];
-        if (directoryCreated) {
-            discardableFilePath = [temporaryDirectory stringByAppendingPathComponent:discardableFileName];
-            [@"" writeToFile:discardableFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-        }
-    });
-    return discardableFilePath;
 }
 
 + (void)zipInfo:(zip_fileinfo *)zipInfo setAttributesOfItemAtPath:(NSString *)path
