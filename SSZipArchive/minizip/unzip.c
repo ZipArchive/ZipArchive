@@ -1300,17 +1300,9 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, uint32_t len)
     s->pfile_in_zip_read->stream.next_out = (uint8_t*)buf;
     s->pfile_in_zip_read->stream.avail_out = (uint16_t)len;
 
-    if (s->pfile_in_zip_read->raw)
-    {
-        if (len > s->pfile_in_zip_read->rest_read_compressed + s->pfile_in_zip_read->stream.avail_in)
-            s->pfile_in_zip_read->stream.avail_out = (uint16_t)s->pfile_in_zip_read->rest_read_compressed +
-                s->pfile_in_zip_read->stream.avail_in;
-    }
-    else
-    {
-        if (len > s->pfile_in_zip_read->rest_read_uncompressed)
-            s->pfile_in_zip_read->stream.avail_out = (uint16_t)s->pfile_in_zip_read->rest_read_uncompressed;
-    }
+    if (len > s->pfile_in_zip_read->rest_read_compressed + s->pfile_in_zip_read->stream.avail_in)
+        s->pfile_in_zip_read->stream.avail_out = (uint16_t)s->pfile_in_zip_read->rest_read_compressed +
+        s->pfile_in_zip_read->stream.avail_in;
 
     do
     {
