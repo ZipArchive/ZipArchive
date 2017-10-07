@@ -36,11 +36,6 @@ class ViewController: UIViewController {
         file3.text = ""
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     // MARK: IBAction
 
     @IBAction func zipPressed(_: UIButton) {
@@ -50,10 +45,11 @@ class ViewController: UIViewController {
 
         let success = SSZipArchive.createZipFile(atPath: zipPath!, withContentsOfDirectory: sampleDataPath, withPassword: password?.isEmpty == false ? password : nil)
         if success {
+            print("Success zip")
             unzipButton.isEnabled = true
             zipButton.isEnabled = false
         } else {
-            print("No success")
+            print("No success zip")
         }
         resetButton.isEnabled = true
     }
@@ -72,8 +68,10 @@ class ViewController: UIViewController {
                                                          toDestination: unzipPath,
                                                          overwrite: true,
                                                          password: password?.isEmpty == false ? password : nil)
-        if success == nil {
-            print("No success")
+        if success != nil {
+            print("Success unzip")
+        } else {
+            print("No success unzip")
             return
         }
 
@@ -127,7 +125,6 @@ class ViewController: UIViewController {
         } catch {
             return nil
         }
-
         return url.path
     }
     
