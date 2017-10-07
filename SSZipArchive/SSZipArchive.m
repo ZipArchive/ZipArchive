@@ -715,58 +715,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return (NULL != _zip);
 }
 
-
-- (void)zipInfo:(zip_fileinfo *)zipInfo setDate:(NSDate *)date
-{
-    NSCalendar *currentCalendar = SSZipArchive._gregorian;
-    NSCalendarUnit flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
-    NSDateComponents *components = [currentCalendar components:flags fromDate:date];
-    struct tm tmz_date;
-    tmz_date.tm_sec = (unsigned int)components.second;
-    tmz_date.tm_min = (unsigned int)components.minute;
-    tmz_date.tm_hour = (unsigned int)components.hour;
-    tmz_date.tm_mday = (unsigned int)components.day;
-    // ISO/IEC 9899 struct tm is 0-indexed for January but NSDateComponents for gregorianCalendar is 1-indexed for January
-    tmz_date.tm_mon = (unsigned int)components.month - 1;
-    // ISO/IEC 9899 struct tm is 0-indexed for AD 1900 but NSDateComponents for gregorianCalendar is 1-indexed for AD 1
-    tmz_date.tm_year = (unsigned int)components.year - 1900;
-    zipInfo->dos_date = tm_to_dosdate(&tmz_date);
-}
-
 - (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName withPassword:(nullable NSString *)password
 {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
     
     zip_fileinfo zipInfo = {};
     
-    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
-    if (attr)
-    {
-        NSDate *fileDate = (NSDate *)attr[NSFileModificationDate];
-        if (fileDate)
-        {
-            [self zipInfo:&zipInfo setDate: fileDate];
-        }
-        
-        // Write permissions into the external attributes, for details on this see here: http://unix.stackexchange.com/a/14727
-        // Get the permissions value from the files attributes
-        NSNumber *permissionsValue = (NSNumber *)attr[NSFilePosixPermissions];
-        if (permissionsValue != nil) {
-            // Get the short value for the permissions
-            short permissionsShort = permissionsValue.shortValue;
-            
-            // Convert this into an octal by adding 010000, 010000 being the flag for a regular file
-            NSInteger permissionsOctal = 0100000 + permissionsShort;
-            
-            // Convert this into a long value
-            uLong permissionsLong = @(permissionsOctal).unsignedLongValue;
-            
-            // Store this into the external file attributes once it has been shifted 16 places left to form part of the second from last byte
-            
-            // Casted back to an unsigned int to match type of external_fa in minizip
-            zipInfo.external_fa = (unsigned int)(permissionsLong << 16L);
-        }
-    }
+    [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
     
     int error = zipOpenNewFileInZip3(_zip,
                                      [folderName stringByAppendingString:@"/"].fileSystemRepresentation,
@@ -817,34 +772,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     
     zip_fileinfo zipInfo = {};
     
-    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
-    if (attr)
-    {
-        NSDate *fileDate = (NSDate *)attr[NSFileModificationDate];
-        if (fileDate)
-        {
-            [self zipInfo:&zipInfo setDate: fileDate];
-        }
-        
-        // Write permissions into the external attributes, for details on this see here: http://unix.stackexchange.com/a/14727
-        // Get the permissions value from the files attributes
-        NSNumber *permissionsValue = (NSNumber *)attr[NSFilePosixPermissions];
-        if (permissionsValue != nil) {
-            // Get the short value for the permissions
-            short permissionsShort = permissionsValue.shortValue;
-            
-            // Convert this into an octal by adding 010000, 010000 being the flag for a regular file
-            NSInteger permissionsOctal = 0100000 + permissionsShort;
-            
-            // Convert this into a long value
-            uLong permissionsLong = @(permissionsOctal).unsignedLongValue;
-            
-            // Store this into the external file attributes once it has been shifted 16 places left to form part of the second from last byte
-            
-            // Casted back to an unsigned int to match type of external_fa in minizip
-            zipInfo.external_fa = (unsigned int)(permissionsLong << 16L);
-        }
-    }
+    [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
     
     void *buffer = malloc(CHUNK);
     if (buffer == NULL)
@@ -876,7 +804,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         return NO;
     }
     zip_fileinfo zipInfo = {};
-    [self zipInfo:&zipInfo setDate:[NSDate date]];
+    [SSZipArchive zipInfo:&zipInfo setDate:[NSDate date]];
     
     int error = zipOpenNewFileInZip3(_zip, filename.fileSystemRepresentation, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, 0);
     
@@ -951,6 +879,55 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         }
     });
     return discardableFilePath;
+}
+
++ (void)zipInfo:(zip_fileinfo *)zipInfo setAttributesOfItemAtPath:(NSString *)path
+{
+    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
+    if (attr)
+    {
+        NSDate *fileDate = (NSDate *)attr[NSFileModificationDate];
+        if (fileDate)
+        {
+            [self zipInfo:zipInfo setDate:fileDate];
+        }
+        
+        // Write permissions into the external attributes, for details on this see here: http://unix.stackexchange.com/a/14727
+        // Get the permissions value from the files attributes
+        NSNumber *permissionsValue = (NSNumber *)attr[NSFilePosixPermissions];
+        if (permissionsValue != nil) {
+            // Get the short value for the permissions
+            short permissionsShort = permissionsValue.shortValue;
+            
+            // Convert this into an octal by adding 010000, 010000 being the flag for a regular file
+            NSInteger permissionsOctal = 0100000 + permissionsShort;
+            
+            // Convert this into a long value
+            uLong permissionsLong = @(permissionsOctal).unsignedLongValue;
+            
+            // Store this into the external file attributes once it has been shifted 16 places left to form part of the second from last byte
+            
+            // Casted back to an unsigned int to match type of external_fa in minizip
+            zipInfo->external_fa = (unsigned int)(permissionsLong << 16L);
+        }
+    }
+}
+
++ (void)zipInfo:(zip_fileinfo *)zipInfo setDate:(NSDate *)date
+{
+    NSCalendar *currentCalendar = SSZipArchive._gregorian;
+    NSCalendarUnit flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+    NSDateComponents *components = [currentCalendar components:flags fromDate:date];
+    struct tm tmz_date;
+    tmz_date.tm_sec = (unsigned int)components.second;
+    tmz_date.tm_min = (unsigned int)components.minute;
+    tmz_date.tm_hour = (unsigned int)components.hour;
+    tmz_date.tm_mday = (unsigned int)components.day;
+    // ISO/IEC 9899 struct tm is 0-indexed for January but NSDateComponents for gregorianCalendar is 1-indexed for January
+    tmz_date.tm_mon = (unsigned int)components.month - 1;
+    // ISO/IEC 9899 struct tm is 0-indexed for AD 1900 but NSDateComponents for gregorianCalendar is 1-indexed for AD 1
+    tmz_date.tm_year = (unsigned int)components.year - 1900;
+    zipInfo->dos_date = tm_to_dosdate(&tmz_date);
 }
 
 + (NSCalendar *)_gregorian
