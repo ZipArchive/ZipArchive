@@ -313,6 +313,14 @@
     XCTAssertTrue(unicodeFolderWasExtracted, @"Folders with names in unicode should be extracted propertly.");
 }
 
+- (void)testUnzippingEmptyArchive {
+    
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"Empty" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"Empty"];
+    
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:nil];
+    XCTAssertTrue(success);
+}
 
 - (void)testZippingAndUnzippingForDate {
 

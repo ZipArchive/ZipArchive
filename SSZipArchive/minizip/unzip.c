@@ -252,19 +252,19 @@ static int unzReadUInt64(const zlib_filefunc64_32_def *pzlib_filefunc_def, voidp
 }
 
 /* Locate the Central directory of a zip file (at the end, just before the global comment) */
-static uint64_t unzSearchCentralDir(const zlib_filefunc64_32_def *pzlib_filefunc_def, voidpf filestream)
+static int unzSearchCentralDir(const zlib_filefunc64_32_def *pzlib_filefunc_def, uint64_t *pos_found, voidpf filestream)
 {
     uint8_t buf[BUFREADCOMMENT + 4];
     uint64_t file_size = 0;
     uint64_t back_read = 4;
     uint64_t max_back = UINT16_MAX; /* maximum size of global comment */
-    uint64_t pos_found = 0;
     uint32_t read_size = 0;
     uint64_t read_pos = 0;
     uint32_t i = 0;
+    *pos_found = 0;
 
     if (ZSEEK64(*pzlib_filefunc_def, filestream, 0, ZLIB_FILEFUNC_SEEK_END) != 0)
-        return 0;
+        return UNZ_ERRNO;
 
     file_size = ZTELL64(*pzlib_filefunc_def, filestream);
 
@@ -293,52 +293,49 @@ static uint64_t unzSearchCentralDir(const zlib_filefunc64_32_def *pzlib_filefunc
                 ((*(buf+i+2)) == (ENDHEADERMAGIC >> 16 & 0xff)) &&
                 ((*(buf+i+3)) == (ENDHEADERMAGIC >> 24 & 0xff)))
             {
-                pos_found = read_pos+i;
-                break;
+                *pos_found = read_pos+i;
+                return UNZ_OK;
             }
-
-        if (pos_found != 0)
-            break;
     }
 
-    return pos_found;
+    return UNZ_ERRNO;
 }
 
 /* Locate the Central directory 64 of a zipfile (at the end, just before the global comment) */
-static uint64_t unzSearchCentralDir64(const zlib_filefunc64_32_def *pzlib_filefunc_def, voidpf filestream,
+static int unzSearchCentralDir64(const zlib_filefunc64_32_def *pzlib_filefunc_def, uint64_t *offset, voidpf filestream,
     const uint64_t endcentraloffset)
 {
-    uint64_t offset = 0;
     uint32_t value32 = 0;
+    *offset = 0;
 
     /* Zip64 end of central directory locator */
     if (ZSEEK64(*pzlib_filefunc_def, filestream, endcentraloffset - SIZECENTRALHEADERLOCATOR, ZLIB_FILEFUNC_SEEK_SET) != 0)
-        return 0;
+        return UNZ_ERRNO;
 
     /* Read locator signature */
     if (unzReadUInt32(pzlib_filefunc_def, filestream, &value32) != UNZ_OK)
-        return 0;
+        return UNZ_ERRNO;
     if (value32 != ZIP64ENDLOCHEADERMAGIC)
-        return 0;
+        return UNZ_ERRNO;
     /* Number of the disk with the start of the zip64 end of  central directory */
     if (unzReadUInt32(pzlib_filefunc_def, filestream, &value32) != UNZ_OK)
-        return 0;
+        return UNZ_ERRNO;
     /* Relative offset of the zip64 end of central directory record */
-    if (unzReadUInt64(pzlib_filefunc_def, filestream, &offset) != UNZ_OK)
-        return 0;
+    if (unzReadUInt64(pzlib_filefunc_def, filestream, offset) != UNZ_OK)
+        return UNZ_ERRNO;
     /* Total number of disks */
     if (unzReadUInt32(pzlib_filefunc_def, filestream, &value32) != UNZ_OK)
-        return 0;
+        return UNZ_ERRNO;
     /* Goto end of central directory record */
-    if (ZSEEK64(*pzlib_filefunc_def, filestream, offset, ZLIB_FILEFUNC_SEEK_SET) != 0)
-        return 0;
+    if (ZSEEK64(*pzlib_filefunc_def, filestream, *offset, ZLIB_FILEFUNC_SEEK_SET) != 0)
+        return UNZ_ERRNO;
      /* The signature */
     if (unzReadUInt32(pzlib_filefunc_def, filestream, &value32) != UNZ_OK)
-        return 0;
+        return UNZ_ERRNO;
     if (value32 != ZIP64ENDHEADERMAGIC)
-        return 0;
+        return UNZ_ERRNO;
 
-    return offset;
+    return UNZ_OK;
 }
 
 static unzFile unzOpenInternal(const void *path, zlib_filefunc64_32_def *pzlib_filefunc64_32_def)
@@ -373,8 +370,8 @@ static unzFile unzOpenInternal(const void *path, zlib_filefunc64_32_def *pzlib_f
     us.is_zip64 = 0;
 
     /* Search for end of central directory header */
-    central_pos = unzSearchCentralDir(&us.z_filefunc, us.filestream);
-    if (central_pos)
+    err = unzSearchCentralDir(&us.z_filefunc, &central_pos, us.filestream);
+    if (err == UNZ_OK)
     {
         if (ZSEEK64(us.z_filefunc, us.filestream, central_pos, ZLIB_FILEFUNC_SEEK_SET) != 0)
             err = UNZ_ERRNO;
@@ -415,8 +412,8 @@ static unzFile unzOpenInternal(const void *path, zlib_filefunc64_32_def *pzlib_f
         if (err == UNZ_OK)
         {
             /* Search for Zip64 end of central directory header */
-            central_pos64 = unzSearchCentralDir64(&us.z_filefunc, us.filestream, central_pos);
-            if (central_pos64)
+            int err64 = unzSearchCentralDir64(&us.z_filefunc, &central_pos64, us.filestream, central_pos);
+            if (err64 == UNZ_OK)
             {
                 central_pos = central_pos64;
                 us.is_zip64 = 1;
@@ -1667,6 +1664,9 @@ extern int ZEXPORT unzGoToFirstFile2(unzFile file, unz_file_info64 *pfile_info, 
     if (file == NULL)
         return UNZ_PARAMERROR;
     s = (unz64_internal*)file;
+
+    if (s->gi.number_entry == 0)
+        return UNZ_END_OF_LIST_OF_FILE;
 
     s->pos_in_central_dir = s->offset_central_dir;
     s->num_file = 0;

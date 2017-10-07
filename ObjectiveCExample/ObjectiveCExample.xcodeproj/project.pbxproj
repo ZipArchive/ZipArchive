@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3754B1331F88961C00A58AA0 /* Empty.zip in Resources */ = {isa = PBXBuildFile; fileRef = 3754B1311F88961800A58AA0 /* Empty.zip */; };
+		3754B1341F88961D00A58AA0 /* Empty.zip in Resources */ = {isa = PBXBuildFile; fileRef = 3754B1311F88961800A58AA0 /* Empty.zip */; };
+		3754B1351F88961E00A58AA0 /* Empty.zip in Resources */ = {isa = PBXBuildFile; fileRef = 3754B1311F88961800A58AA0 /* Empty.zip */; };
 		3773ADB61F7F453E009A4B2D /* CollectingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE1A131BDAA0A800709011 /* CollectingDelegate.m */; };
 		3773ADB71F7F4541009A4B2D /* SSZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE1A071BDA9FF300709011 /* SSZipArchiveTests.m */; };
 		3773ADB81F7F4D13009A4B2D /* hello.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A161BDAA10100709011 /* hello.zip */; };
@@ -83,6 +86,7 @@
 /* Begin PBXFileReference section */
 		04CB37570807602F7E5C66D9 /* Pods-core-ObjectiveCExampleTests_macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_macOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-core-ObjectiveCExampleTests_macOS/Pods-core-ObjectiveCExampleTests_macOS.release.xcconfig"; sourceTree = "<group>"; };
 		254DE0B206EE66F57BBE7EEE /* Pods-core-ObjectiveCExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-core-ObjectiveCExample/Pods-core-ObjectiveCExample.release.xcconfig"; sourceTree = "<group>"; };
+		3754B1311F88961800A58AA0 /* Empty.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Empty.zip; sourceTree = "<group>"; };
 		3773ADAE1F7F44D8009A4B2D /* ObjectiveCExampleTests_macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_macOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3793E6D71F7F5F93000B1A19 /* ObjectiveCExampleTests_tvOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_tvOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37FF0CB11F8533E0006E4361 /* CancelDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CancelDelegate.h; sourceTree = "<group>"; };
@@ -251,6 +255,7 @@
 		8DFE1A151BDAA10100709011 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				3754B1311F88961800A58AA0 /* Empty.zip */,
 				8DFE1A161BDAA10100709011 /* hello.zip */,
 				8DFE1A171BDAA10100709011 /* IncorrectHeaders.zip */,
 				8DFE1A181BDAA10100709011 /* PermissionsTestApp.app */,
@@ -425,6 +430,7 @@
 				3773ADC31F7F4D1C009A4B2D /* 3.m4a in Resources */,
 				3773ADC21F7F4D1C009A4B2D /* 2.m4a in Resources */,
 				3773ADC41F7F4D1C009A4B2D /* 4.m4a in Resources */,
+				3754B1341F88961D00A58AA0 /* Empty.zip in Resources */,
 				3773ADC01F7F4D1C009A4B2D /* 0.m4a in Resources */,
 				3773ADC51F7F4D1C009A4B2D /* 5.m4a in Resources */,
 				3773ADB91F7F4D13009A4B2D /* IncorrectHeaders.zip in Resources */,
@@ -448,6 +454,7 @@
 				3793E6E71F7F6052000B1A19 /* 6.m4a in Resources */,
 				3793E6E91F7F6059000B1A19 /* hello.zip in Resources */,
 				3793E6F01F7F605C000B1A19 /* PermissionsTestApp.app in Resources */,
+				3754B1351F88961E00A58AA0 /* Empty.zip in Resources */,
 				3793E6ED1F7F6059000B1A19 /* TestArchive.zip in Resources */,
 				3793E6E61F7F6052000B1A19 /* 5.m4a in Resources */,
 				3793E6E41F7F6052000B1A19 /* 3.m4a in Resources */,
@@ -482,6 +489,7 @@
 				8DFE1A321BDAA10100709011 /* 3.m4a in Resources */,
 				8DFE1A311BDAA10100709011 /* 2.m4a in Resources */,
 				8DFE1A331BDAA10100709011 /* 4.m4a in Resources */,
+				3754B1331F88961C00A58AA0 /* Empty.zip in Resources */,
 				8DFE1A2F1BDAA10100709011 /* 0.m4a in Resources */,
 				8DFE1A341BDAA10100709011 /* 5.m4a in Resources */,
 				8DFE1A2D1BDAA10100709011 /* TestPasswordArchive.zip in Resources */,

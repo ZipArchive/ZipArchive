@@ -248,7 +248,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     unzGetGlobalInfo(zip, &globalInfo);
     
     // Begin unzipping
-    if (unzGoToFirstFile(zip) != UNZ_OK)
+    int ret = 0;
+    ret = unzGoToFirstFile(zip);
+    if (ret != UNZ_OK && ret != UNZ_END_OF_LIST_OF_FILE)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"failed to open first file in zip file"};
         NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFailedOpenFileInZip userInfo:userInfo];
@@ -265,7 +267,6 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     
     BOOL success = YES;
     BOOL canceled = NO;
-    int ret = 0;
     int crc_ret = 0;
     unsigned char buffer[4096] = {0};
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -282,6 +283,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     NSInteger currentFileNumber = 0;
     NSError *unzippingError;
     do {
+        if (ret == UNZ_END_OF_LIST_OF_FILE)
+            break;
         @autoreleasepool {
             if (password.length == 0) {
                 ret = unzOpenCurrentFile(zip);
