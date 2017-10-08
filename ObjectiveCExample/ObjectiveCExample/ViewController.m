@@ -42,7 +42,11 @@
     NSString *password = _passwordField.text;
     BOOL success = [SSZipArchive createZipFileAtPath:_zipPath
                              withContentsOfDirectory:sampleDataPath
-                                        withPassword:password.length > 0 ? password : nil];
+                                 keepParentDirectory:NO
+                                    compressionLevel:-1
+                                            password:password.length > 0 ? password : nil
+                                                 AES:YES
+                                     progressHandler:nil];
     if (success) {
         NSLog(@"Success zip");
         _unzipButton.enabled = YES;
