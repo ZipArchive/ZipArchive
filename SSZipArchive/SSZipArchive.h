@@ -91,8 +91,11 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
 - (instancetype)initWithPath:(NSString *)path NS_DESIGNATED_INITIALIZER;
 - (BOOL)open;
 - (BOOL)writeFile:(NSString *)path withPassword:(nullable NSString *)password;
+/// write empty folder
 - (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName withPassword:(nullable NSString *)password;
+/// write file
 - (BOOL)writeFileAtPath:(NSString *)path withFileName:(nullable NSString *)fileName withPassword:(nullable NSString *)password;
+/// write data
 - (BOOL)writeData:(NSData *)data filename:(nullable NSString *)filename withPassword:(nullable NSString *)password;
 - (BOOL)close;
 
