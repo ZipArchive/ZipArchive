@@ -17,6 +17,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 #define CHUNK 16384
 
+int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes);
 BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 #ifndef API_AVAILABLE
@@ -656,6 +657,16 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         keepParentDirectory:(BOOL)keepParentDirectory
                withPassword:(nullable NSString *)password
          andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
+    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory compressionLevel:Z_DEFAULT_COMPRESSION password:password AES:YES progressHandler:progressHandler];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path
+    withContentsOfDirectory:(NSString *)directoryPath
+        keepParentDirectory:(BOOL)keepParentDirectory
+           compressionLevel:(int)compressionLevel
+                   password:(nullable NSString *)password
+                        AES:(BOOL)aes
+            progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
     
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
     BOOL success = [zipArchive open];
@@ -677,7 +688,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
             
             if (!isDir) {
-                success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName withPassword:password];
+                success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
             }
             else
             {
@@ -724,37 +735,27 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     
     [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
     
-    int error = zipOpenNewFileInZip3(_zip,
-                                     [folderName stringByAppendingString:@"/"].fileSystemRepresentation,
-                                     &zipInfo,
-                                     NULL,
-                                     0,
-                                     NULL,
-                                     0,
-                                     NULL,
-                                     Z_DEFLATED,
-                                     Z_NO_COMPRESSION,
-                                     0,
-                                     -MAX_WBITS,
-                                     DEF_MEM_LEVEL,
-                                     Z_DEFAULT_STRATEGY,
-                                     password.UTF8String,
-                                     0);
+    int error = _zipOpenEntry(_zip, [folderName stringByAppendingString:@"/"], &zipInfo, Z_NO_COMPRESSION, password, 0);
     const void *buffer = NULL;
     zipWriteInFileInZip(_zip, buffer, 0);
     zipCloseFileInZip(_zip);
     return error == ZIP_OK;
 }
 
-- (BOOL)writeFile:(NSString *)path withPassword:(nullable NSString *)password;
+- (BOOL)writeFile:(NSString *)path withPassword:(nullable NSString *)password
 {
     return [self writeFileAtPath:path withFileName:nil withPassword:password];
+}
+
+- (BOOL)writeFileAtPath:(NSString *)path withFileName:(nullable NSString *)fileName withPassword:(nullable NSString *)password
+{
+    return [self writeFileAtPath:path withFileName:fileName compressionLevel:Z_DEFAULT_COMPRESSION password:password AES:YES];
 }
 
 // supports writing files with logical folder/directory structure
 // *path* is the absolute path of the file that will be compressed
 // *fileName* is the relative name of the file how it is stored within the zip e.g. /folder/subfolder/text1.txt
-- (BOOL)writeFileAtPath:(NSString *)path withFileName:(nullable NSString *)fileName withPassword:(nullable NSString *)password
+- (BOOL)writeFileAtPath:(NSString *)path withFileName:(nullable NSString *)fileName compressionLevel:(int)compressionLevel password:(nullable NSString *)password AES:(BOOL)aes
 {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
     
@@ -766,7 +767,6 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     if (!fileName) {
         fileName = path.lastPathComponent;
     }
-    const char *aFileName = fileName.fileSystemRepresentation;
     
     zip_fileinfo zipInfo = {};
     
@@ -779,7 +779,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         return NO;
     }
     
-    int error = zipOpenNewFileInZip3(_zip, aFileName, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, 0);
+    int error = _zipOpenEntry(_zip, fileName, &zipInfo, compressionLevel, password, aes);
     
     while (!feof(input) && !ferror(input))
     {
@@ -793,7 +793,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return error == ZIP_OK;
 }
 
-- (BOOL)writeData:(NSData *)data filename:(nullable NSString *)filename withPassword:(nullable NSString *)password;
+- (BOOL)writeData:(NSData *)data filename:(nullable NSString *)filename withPassword:(nullable NSString *)password
+{
+    return [self writeData:data filename:filename compressionLevel:Z_DEFAULT_COMPRESSION password:password AES:YES];
+}
+
+- (BOOL)writeData:(NSData *)data filename:(nullable NSString *)filename compressionLevel:(int)compressionLevel password:(nullable NSString *)password AES:(BOOL)aes
 {
     if (!_zip) {
         return NO;
@@ -804,14 +809,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     zip_fileinfo zipInfo = {};
     [SSZipArchive zipInfo:&zipInfo setDate:[NSDate date]];
     
-    int error = zipOpenNewFileInZip3(_zip, filename.fileSystemRepresentation, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, 0);
+    int error = _zipOpenEntry(_zip, filename, &zipInfo, compressionLevel, password, aes);
     
     zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
     
     zipCloseFileInZip(_zip);
     return error == ZIP_OK;
 }
-
 
 - (BOOL)close
 {
@@ -956,6 +960,11 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 }
 
 @end
+
+int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes)
+{
+    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, 0, 0, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes);
+}
 
 #pragma mark - Private tools for file info
 

@@ -43,7 +43,13 @@ class ViewController: UIViewController {
         zipPath = tempZipPath()
         let password = passwordField.text
 
-        let success = SSZipArchive.createZipFile(atPath: zipPath!, withContentsOfDirectory: sampleDataPath, withPassword: password?.isEmpty == false ? password : nil)
+        let success = SSZipArchive.createZipFile(atPath: zipPath!,
+                                                 withContentsOfDirectory: sampleDataPath,
+                                                 keepParentDirectory: false,
+                                                 compressionLevel: -1,
+                                                 password: password?.isEmpty == false ? password : nil,
+                                                 aes: true,
+                                                 progressHandler: nil)
         if success {
             print("Success zip")
             unzipButton.isEnabled = true

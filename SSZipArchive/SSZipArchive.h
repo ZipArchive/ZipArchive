@@ -70,6 +70,7 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
       completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler;
 
 // Zip
+// default compression level is Z_DEFAULT_COMPRESSION (from "zlib.h")
 
 // without password
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths;
@@ -77,7 +78,8 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
 
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory;
 
-// with password, password could be nil
+// with optional password, default encryption is AES
+// don't use AES if you need compatibility with native macOS unzip and Archive Utility
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(nullable NSString *)password;
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath withPassword:(nullable NSString *)password;
 + (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password;
@@ -86,17 +88,28 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
         keepParentDirectory:(BOOL)keepParentDirectory
                withPassword:(nullable NSString *)password
          andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler;
++ (BOOL)createZipFileAtPath:(NSString *)path
+    withContentsOfDirectory:(NSString *)directoryPath
+        keepParentDirectory:(BOOL)keepParentDirectory
+           compressionLevel:(int)compressionLevel
+                   password:(nullable NSString *)password
+                        AES:(BOOL)aes
+            progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithPath:(NSString *)path NS_DESIGNATED_INITIALIZER;
 - (BOOL)open;
-- (BOOL)writeFile:(NSString *)path withPassword:(nullable NSString *)password;
+
 /// write empty folder
 - (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName withPassword:(nullable NSString *)password;
 /// write file
+- (BOOL)writeFile:(NSString *)path withPassword:(nullable NSString *)password;
 - (BOOL)writeFileAtPath:(NSString *)path withFileName:(nullable NSString *)fileName withPassword:(nullable NSString *)password;
+- (BOOL)writeFileAtPath:(NSString *)path withFileName:(nullable NSString *)fileName compressionLevel:(int)compressionLevel password:(nullable NSString *)password AES:(BOOL)aes;
 /// write data
 - (BOOL)writeData:(NSData *)data filename:(nullable NSString *)filename withPassword:(nullable NSString *)password;
+- (BOOL)writeData:(NSData *)data filename:(nullable NSString *)filename compressionLevel:(int)compressionLevel password:(nullable NSString *)password AES:(BOOL)aes;
+
 - (BOOL)close;
 
 @end

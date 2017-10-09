@@ -166,6 +166,26 @@ extern int ZEXPORT zipOpenNewFileInZip4_64(zipFile file, const char *filename, c
     int strategy, const char *password, ZIP_UNUSED uint32_t crc_for_crypting, uint16_t version_madeby, uint16_t flag_base, int zip64);
 /* Same as zipOpenNewFileInZip4 with zip64 support */
 
+extern int ZEXPORT zipOpenNewFileInZip5(zipFile file,
+                                        const char *filename,
+                                        const zip_fileinfo *zipfi,
+                                        const void *extrafield_local,
+                                        uint16_t size_extrafield_local,
+                                        const void *extrafield_global,
+                                        uint16_t size_extrafield_global,
+                                        const char *comment,
+                                        uint16_t flag_base,
+                                        int zip64,
+                                        uint16_t method,
+                                        int level,
+                                        int raw,
+                                        int windowBits,
+                                        int memLevel,
+                                        int strategy,
+                                        const char *password,
+                                        int aes);
+/* Allowing optional aes */
+
 extern int ZEXPORT zipWriteInFileInZip(zipFile file, const void *buf, uint32_t len);
 /* Write data in the zipfile */
 
