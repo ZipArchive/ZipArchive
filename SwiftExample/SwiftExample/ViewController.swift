@@ -70,11 +70,17 @@ class ViewController: UIViewController {
         }
 
         let password = passwordField.text
-        let success: Void? = try? SSZipArchive.unzipFile(atPath: zipPath,
-                                                         toDestination: unzipPath,
-                                                         overwrite: true,
-                                                         password: password?.isEmpty == false ? password : nil)
-        if success != nil {
+        let success: Bool = SSZipArchive.unzipFile(atPath: zipPath,
+                                                   toDestination: unzipPath,
+                                                   preserveAttributes: true,
+                                                   overwrite: true,
+                                                   nestedZipLevel: 1,
+                                                   password: password?.isEmpty == false ? password : nil,
+                                                   error: nil,
+                                                   delegate: nil,
+                                                   progressHandler: nil,
+                                                   completionHandler: nil)
+        if success != false {
             print("Success unzip")
         } else {
             print("No success unzip")

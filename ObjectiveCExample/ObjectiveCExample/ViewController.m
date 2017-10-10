@@ -68,9 +68,14 @@
     NSString *password = _passwordField.text;
     BOOL success = [SSZipArchive unzipFileAtPath:_zipPath
                                    toDestination:unzipPath
+                              preserveAttributes:YES
                                        overwrite:YES
+                                  nestedZipLevel:0
                                         password:password.length > 0 ? password : nil
-                                           error:nil];
+                                           error:nil
+                                        delegate:nil
+                                 progressHandler:nil
+                               completionHandler:nil];
     if (success) {
         NSLog(@"Success unzip");
     } else {
