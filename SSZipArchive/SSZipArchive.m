@@ -295,9 +295,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         [delegate zipArchiveProgressEvent:currentPosition total:fileSize];
     }
     
-    NSInteger currentFileNumber = 0;
+    NSInteger currentFileNumber = -1;
     NSError *unzippingError;
     do {
+        currentFileNumber++;
         if (ret == UNZ_END_OF_LIST_OF_FILE)
             break;
         @autoreleasepool {
@@ -331,7 +332,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             if ([delegate respondsToSelector:@selector(zipArchiveShouldUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
                 if (![delegate zipArchiveShouldUnzipFileAtIndex:currentFileNumber
                                                      totalFiles:(NSInteger)globalInfo.number_entry
-                                                    archivePath:path fileInfo:fileInfo]) {
+                                                    archivePath:path
+                                                       fileInfo:fileInfo]) {
                     success = NO;
                     canceled = YES;
                     break;
@@ -358,6 +360,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             BOOL fileIsSymbolicLink = _fileIsSymbolicLink(&fileInfo);
             
             NSString * strPath = [SSZipArchive _filenameStringWithCString:filename size:fileInfo.size_filename];
+            if ([strPath hasPrefix:@"__MACOSX/"]) {
+                // ignoring resource forks: https://superuser.com/questions/104500/what-is-macosx-folder
+                unzCloseCurrentFile(zip);
+                ret = unzGoToNextFile(zip);
+                continue;
+            }
             if (!strPath.length) {
                 // if filename data is unsalvageable, we default to currentFileNumber
                 strPath = @(currentFileNumber).stringValue;
@@ -556,7 +564,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             
             crc_ret = unzCloseCurrentFile(zip);
             if (crc_ret == UNZ_CRCERROR) {
-                //CRC ERROR
+                // CRC ERROR
                 success = NO;
                 break;
             }
@@ -571,7 +579,6 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                             archivePath:path unzippedFilePath: fullPath];
             }
             
-            currentFileNumber++;
             if (progressHandler)
             {
                 progressHandler(strPath, fileInfo, currentFileNumber, globalInfo.number_entry);
