@@ -17,7 +17,7 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS, mac
 
 ## Installation and Setup
 
-*The main release branch is configured to support Objective C and Swift 3+. There is a 'swift23' branch which is a tied to a older 1.x release and will not be upgraded.* 
+*The main release branch is configured to support Objective C and Swift 3+.*
 
 SSZipArchive works on Xcode 7-9 and above, iOS 8-11 and above.
 
