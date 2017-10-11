@@ -100,6 +100,8 @@ extern int ZEXPORT unzGetGlobalComment(unzFile file, char *comment, uint16_t com
    uSizeBuf is the size of the szComment buffer.
    return the number of byte copied or an error code <0 */
 
+extern uint64_t ZEXPORT unzCountEntries(const unzFile file);
+
 /***************************************************************************/
 /* Reading the content of the current zipfile, you can open it, read data from it, and close it
    (you can close it before reading all the file) */
