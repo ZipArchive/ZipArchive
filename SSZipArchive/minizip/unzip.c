@@ -350,6 +350,7 @@ static unzFile unzOpenInternal(const void *path, zlib_filefunc64_32_def *pzlib_f
     uint64_t value64 = 0;
     voidpf filestream = NULL;
     int err = UNZ_OK;
+    int err64 = UNZ_OK;
 
     us.filestream = NULL;
     us.filestream_with_CD = NULL;
@@ -412,7 +413,7 @@ static unzFile unzOpenInternal(const void *path, zlib_filefunc64_32_def *pzlib_f
         if (err == UNZ_OK)
         {
             /* Search for Zip64 end of central directory header */
-            int err64 = unzSearchCentralDir64(&us.z_filefunc, &central_pos64, us.filestream, central_pos);
+            err64 = unzSearchCentralDir64(&us.z_filefunc, &central_pos64, us.filestream, central_pos);
             if (err64 == UNZ_OK)
             {
                 central_pos = central_pos64;
@@ -454,7 +455,7 @@ static unzFile unzOpenInternal(const void *path, zlib_filefunc64_32_def *pzlib_f
                 if (unzReadUInt64(&us.z_filefunc, us.filestream, &us.offset_central_dir) != UNZ_OK)
                     err = UNZ_ERRNO;
             }
-            else if ((us.gi.number_entry == UINT16_MAX) || (us.size_central_dir == UINT16_MAX) || (us.offset_central_dir == UINT32_MAX))
+            else if ((us.size_central_dir == UINT16_MAX) || (us.offset_central_dir == UINT32_MAX))
                 err = UNZ_BADZIPFILE;
         }
     }
@@ -491,6 +492,10 @@ static unzFile unzOpenInternal(const void *path, zlib_filefunc64_32_def *pzlib_f
     if (s != NULL)
     {
         *s = us;
+        if (err64 != UNZ_OK)
+            // workaround incorrect count #184
+            s->gi.number_entry = unzCountEntries(s);
+        
         unzGoToFirstFile((unzFile)s);
     }
     return (unzFile)s;
@@ -1024,6 +1029,29 @@ static int unzCheckCurrentFileCoherencyHeader(unz64_internal *s, uint32_t *psize
     *psize_variable += size_extra_field;
 
     return err;
+}
+
+extern uint64_t ZEXPORT unzCountEntries(const unzFile file)
+{
+    if (file == NULL)
+        return 0;
+    
+    unz64_internal s = *(unz64_internal*)file;
+    
+    s.pos_in_central_dir = s.offset_central_dir;
+    s.num_file = 0;
+    while (UNZ_OK == unzGetCurrentFileInfoInternal(&s,
+                                                   &s.cur_file_info,
+                                                   &s.cur_file_info_internal,
+                                                   NULL, 0, NULL, 0, NULL, 0))
+    {
+        s.pos_in_central_dir += SIZECENTRALDIRITEM
+        + s.cur_file_info.size_filename
+        + s.cur_file_info.size_file_extra
+        + s.cur_file_info.size_file_comment;
+        s.num_file += 1;
+    }
+    return s.num_file;
 }
 
 /*
