@@ -434,24 +434,23 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                     }
                     
                     if (fp) {
-                        if (nestedZipLevel && [fullPath.pathExtension.lowercaseString isEqualToString:@"zip"]) {
-                            if ([self unzipFileAtPath:fullPath
-                                        toDestination:fullPath.stringByDeletingLastPathComponent
-                                   preserveAttributes:preserveAttributes
-                                            overwrite:overwrite
-                                       nestedZipLevel:nestedZipLevel - 1
-                                             password:password
-                                                error:nil
-                                             delegate:nil
-                                      progressHandler:nil
-                                    completionHandler:nil]) {
-                                [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
-                            }
-                        }
-                        
                         fclose(fp);
                         
-                        if (preserveAttributes) {
+                        if (nestedZipLevel
+                            && [fullPath.pathExtension.lowercaseString isEqualToString:@"zip"]
+                            && [self unzipFileAtPath:fullPath
+                                       toDestination:fullPath.stringByDeletingLastPathComponent
+                                  preserveAttributes:preserveAttributes
+                                           overwrite:overwrite
+                                      nestedZipLevel:nestedZipLevel - 1
+                                            password:password
+                                               error:nil
+                                            delegate:nil
+                                     progressHandler:nil
+                                   completionHandler:nil]) {
+                            [directoriesModificationDates removeLastObject];
+                            [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
+                        } else if (preserveAttributes) {
                             
                             // Set the original datetime property
                             if (fileInfo.dos_date != 0) {
