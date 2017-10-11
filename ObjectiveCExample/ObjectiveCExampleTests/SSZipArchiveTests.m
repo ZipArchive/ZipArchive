@@ -240,10 +240,8 @@
     NSString *outputPath = [self _cachesPath:@"IncorrectHeaders"];
 
     id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
-    __unused BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
-    // Temp disabled test, it's unclear if it's supposed to be a success of failure
-    // as Z_BUF_ERROR is returned for "__MACOSX/IncorrectHeaders/._Readme.txt"
-    //XCTAssertTrue(success);
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
 
     NSString *intendedReadmeTxtMD5 = @"31ac96301302eb388070c827447290b5";
 
