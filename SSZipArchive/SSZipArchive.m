@@ -364,6 +364,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 // ignoring resource forks: https://superuser.com/questions/104500/what-is-macosx-folder
                 unzCloseCurrentFile(zip);
                 ret = unzGoToNextFile(zip);
+                free(filename);
                 continue;
             }
             if (!strPath.length) {
