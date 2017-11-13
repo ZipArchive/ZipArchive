@@ -707,20 +707,35 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         NSUInteger total = allObjects.count, complete = 0;
         NSString *fileName;
         for (fileName in allObjects) {
-            BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
-            [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
             
             if (keepParentDirectory)
             {
                 fileName = [directoryPath.lastPathComponent stringByAppendingPathComponent:fileName];
             }
             
-            if (!isDir) {
+            NSString* fileType = dirEnumerator.fileAttributes[NSFileType];
+            if ([fileType isEqualToString:NSFileTypeRegular]) {
                 success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
-            }
-            else
-            {
+            } else if([fileType isEqualToString:NSFileTypeSymbolicLink]) {
+                
+                // silently ignore symlinks that cannot resolve
+                NSString* target = [fileManager destinationOfSymbolicLinkAtPath:fullFilePath error:NULL];
+                if(!target) continue;
+                
+                // silently ignore symlinks leaving zip contents, and I'm not sure it wouldn't be nicer to
+                // preserve external symlinks
+                NSString* fullSymlinkTarget = [[fullFilePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:target];
+                if(![fullSymlinkTarget hasPrefix:directoryPath]) continue;
+                
+                // calculate path relative to directory we are inside, which is only OK because we stopped
+                // when target was outside
+                NSString* symlinkTarget = [fullSymlinkTarget substringFromIndex:directoryPath.length];
+                if([symlinkTarget hasPrefix:@"/"]) symlinkTarget = [symlinkTarget substringFromIndex:1];
+                
+                [zipArchive writeSymlinkAtPath:fullFilePath withFilename:fileName targetName:symlinkTarget withPassword:password];
+                
+            } else {
                 if ([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fullFilePath error:nil].count == 0)
                 {
                     success &= [zipArchive writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
@@ -767,6 +782,25 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     int error = _zipOpenEntry(_zip, [folderName stringByAppendingString:@"/"], &zipInfo, Z_NO_COMPRESSION, password, 0);
     const void *buffer = NULL;
     zipWriteInFileInZip(_zip, buffer, 0);
+    zipCloseFileInZip(_zip);
+    return error == ZIP_OK;
+}
+
+- (BOOL)writeSymlinkAtPath:(NSString*)path withFilename:(NSString *)fileName targetName:(NSString *)targetName withPassword:(nullable NSString *)password {
+    
+    NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
+    
+    zip_fileinfo zipInfo = {};
+    [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
+    
+    // adjust to mark as symlink
+    const uLong BSD_SFMT = 0170000;
+    const uLong BSD_IFLNK = 0120000;
+    zipInfo.external_fa = (zipInfo.external_fa & ~(BSD_SFMT << 16)) | (BSD_IFLNK << 16);
+    
+    int error = _zipOpenEntry(_zip, fileName, &zipInfo, Z_NO_COMPRESSION, password, 0);
+    const void *buffer = targetName.fileSystemRepresentation;
+    zipWriteInFileInZip(_zip, buffer, (uint32_t)strlen(buffer));
     zipCloseFileInZip(_zip);
     return error == ZIP_OK;
 }
