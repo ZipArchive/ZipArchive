@@ -707,35 +707,46 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         NSUInteger total = allObjects.count, complete = 0;
         NSString *fileName;
         for (fileName in allObjects) {
+            
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
+            NSDictionary* attributes = [fileManager attributesOfItemAtPath:fullFilePath error:NULL];
+            NSString* fileType = attributes[NSFileType];
+            BOOL isDir = [fileType isEqualToString: NSFileTypeDirectory];
             
             if (keepParentDirectory)
             {
                 fileName = [directoryPath.lastPathComponent stringByAppendingPathComponent:fileName];
             }
             
-            NSString* fileType = dirEnumerator.fileAttributes[NSFileType];
-            if ([fileType isEqualToString:NSFileTypeRegular]) {
-                success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
-            } else if([fileType isEqualToString:NSFileTypeSymbolicLink]) {
+            if (!isDir) {
+
+                if ([fileType isEqualToString:NSFileTypeRegular]) {
+
+                    success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
+                    
+                } else if([fileType isEqualToString:NSFileTypeSymbolicLink]) {
+                    
+                    // silently ignore symlinks that cannot resolve
+                    NSString* target = [fileManager destinationOfSymbolicLinkAtPath:fullFilePath error:NULL];
+                    if(!target) continue;
+                    
+                    // silently ignore symlinks leaving zip contents, and I'm not sure it wouldn't be nicer to
+                    // preserve external symlinks
+                    NSString* fullSymlinkTarget = [[fullFilePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:target];
+                    if(![fullSymlinkTarget hasPrefix:directoryPath]) continue;
+                    
+                    // calculate path relative to directory we are inside, which is only OK because we stopped
+                    // when target was outside
+                    NSString* symlinkTarget = [fullSymlinkTarget substringFromIndex:directoryPath.length];
+                    if([symlinkTarget hasPrefix:@"/"]) symlinkTarget = [symlinkTarget substringFromIndex:1];
+                    
+                    [zipArchive writeSymlinkAtPath:fullFilePath withFilename:fileName targetName:symlinkTarget withPassword:password];
+                    
+                }
+            }
+            else
+            {
                 
-                // silently ignore symlinks that cannot resolve
-                NSString* target = [fileManager destinationOfSymbolicLinkAtPath:fullFilePath error:NULL];
-                if(!target) continue;
-                
-                // silently ignore symlinks leaving zip contents, and I'm not sure it wouldn't be nicer to
-                // preserve external symlinks
-                NSString* fullSymlinkTarget = [[fullFilePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:target];
-                if(![fullSymlinkTarget hasPrefix:directoryPath]) continue;
-                
-                // calculate path relative to directory we are inside, which is only OK because we stopped
-                // when target was outside
-                NSString* symlinkTarget = [fullSymlinkTarget substringFromIndex:directoryPath.length];
-                if([symlinkTarget hasPrefix:@"/"]) symlinkTarget = [symlinkTarget substringFromIndex:1];
-                
-                [zipArchive writeSymlinkAtPath:fullFilePath withFilename:fileName targetName:symlinkTarget withPassword:password];
-                
-            } else {
                 if ([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fullFilePath error:nil].count == 0)
                 {
                     success &= [zipArchive writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
