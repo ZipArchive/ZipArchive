@@ -438,6 +438,45 @@
     XCTAssertEqualObjects(collector.files[1], [outputPath stringByAppendingString:@"/Readme.markdown"]);
 }
 
+-(void)testSymlinkZipping {
+    NSString *outputDir = [self _cachesPath:@"SymlinkTest"];
+    
+    // put stuff in inner directory
+    NSString* innerDir = [outputDir stringByAppendingPathComponent:@"inner"];
+    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:innerDir withIntermediateDirectories:YES attributes:nil error:NULL];
+    XCTAssertTrue(success);
+
+    // write real file
+    NSString* realFilePath = [innerDir stringByAppendingPathComponent:@"file"];
+    success = [@"Hello World!" writeToFile:realFilePath atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+    XCTAssertTrue(success);
+    
+    // make symlink to file
+    NSString* symlinkPath = [innerDir stringByAppendingPathComponent:@"link"];
+    success = [[NSFileManager defaultManager] createSymbolicLinkAtPath:symlinkPath withDestinationPath:realFilePath error:NULL];
+    XCTAssertTrue(success);
+    
+    // zip it up
+    NSString *archivePath = [outputDir stringByAppendingPathComponent:@"SymlinkArchive.zip"];
+    success = [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:innerDir];
+    XCTAssertTrue(success);
+    
+    // remove files in inner dir, to make sure what we check is unzipped
+    success = [[NSFileManager defaultManager] removeItemAtPath:innerDir error:NULL];
+    XCTAssertTrue(success);
+    success = [[NSFileManager defaultManager] createDirectoryAtPath:innerDir withIntermediateDirectories:YES attributes:nil error:NULL];
+    XCTAssertTrue(success);
+
+    // unzip
+    success = [SSZipArchive unzipFileAtPath:archivePath toDestination:innerDir];
+    XCTAssertTrue(success);
+
+    // check that it is still a symlink
+    NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:symlinkPath error:NULL];
+    NSString* fileType = attr[NSFileType];
+    XCTAssertTrue([fileType isEqualToString:NSFileTypeSymbolicLink]);
+}
+
 #pragma mark - Private
 
 - (NSString *)_cachesPath:(NSString *)directory {
