@@ -475,6 +475,10 @@
     NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:symlinkPath error:NULL];
     NSString* fileType = attr[NSFileType];
     XCTAssertTrue([fileType isEqualToString:NSFileTypeSymbolicLink]);
+    
+    // check that symlink points correctly
+    NSString* realFilePath2 = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath: symlinkPath error:NULL];
+    XCTAssertEqualObjects(realFilePath, realFilePath2);
 }
 
 #pragma mark - Private
