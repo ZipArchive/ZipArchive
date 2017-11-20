@@ -725,22 +725,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                     success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
                     
                 } else if([fileType isEqualToString:NSFileTypeSymbolicLink]) {
-                    
-                    // silently ignore symlinks that cannot resolve
-                    NSString* target = [fileManager destinationOfSymbolicLinkAtPath:fullFilePath error:NULL];
-                    if(!target) continue;
-                    
-                    // silently ignore symlinks leaving zip contents, and I'm not sure it wouldn't be nicer to
-                    // preserve external symlinks
-                    NSString* fullSymlinkTarget = [[fullFilePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:target];
-                    if(![fullSymlinkTarget hasPrefix:directoryPath]) continue;
-                    
-                    // calculate path relative to directory we are inside, which is only OK because we stopped
-                    // when target was outside
-                    NSString* symlinkTarget = [fullSymlinkTarget substringFromIndex:directoryPath.length];
-                    if([symlinkTarget hasPrefix:@"/"]) symlinkTarget = [symlinkTarget substringFromIndex:1];
-                    
-                    [zipArchive writeSymlinkAtPath:fullFilePath withFilename:fileName targetName:symlinkTarget withPassword:password];
+                                        
+                    success &= [zipArchive writeSymlinkAtPath:fullFilePath withFilename:fileName withPassword:password];
                     
                 }
             }
@@ -797,23 +783,46 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return error == ZIP_OK;
 }
 
-- (BOOL)writeSymlinkAtPath:(NSString*)path withFilename:(NSString *)fileName targetName:(NSString *)targetName withPassword:(nullable NSString *)password {
+- (BOOL)writeSymlinkAtPath:(NSString*)path withFilename:(NSString *)fileName withPassword:(nullable NSString *)password {
     
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
     
-    zip_fileinfo zipInfo = {};
-    [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
+    // determine size of symlink value
+    char const* filename = path.fileSystemRepresentation;
+    struct stat sb;
+    if (lstat(filename, &sb) == -1) return NO;
     
-    // adjust to mark as symlink
-    const uLong BSD_SFMT = 0170000;
-    const uLong BSD_IFLNK = 0120000;
-    zipInfo.external_fa = (zipInfo.external_fa & ~(BSD_SFMT << 16)) | (BSD_IFLNK << 16);
+    // allocate size including room for null-terminator
+    BOOL ok = NO;
+    char *linktarget = malloc(sb.st_size + 1);
+    if(linktarget != NULL) {
+        // read symlink value
+        ssize_t r = readlink(filename, linktarget, sb.st_size + 1);
+        
+        // make sure value is valid and hasn't grown to not fit in allocated space
+        if(r >= 0 && r <= sb.st_size) {
+            linktarget[sb.st_size] = '\0';
+            
+
+            zip_fileinfo zipInfo = {};
+            [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
+            
+            // adjust to mark as symlink
+            const uLong BSD_SFMT = 0170000;
+            const uLong BSD_IFLNK = 0120000;
+            zipInfo.external_fa = (zipInfo.external_fa & ~(BSD_SFMT << 16)) | (BSD_IFLNK << 16);
+            
+            int error = _zipOpenEntry(_zip, fileName, &zipInfo, Z_NO_COMPRESSION, password, 0);
+            const void *buffer = fileName.fileSystemRepresentation;
+            zipWriteInFileInZip(_zip, buffer, (uint32_t)strlen(buffer));
+            zipCloseFileInZip(_zip);
+            ok = error == ZIP_OK;
+        }
+        
+        free(linktarget);
+    }
     
-    int error = _zipOpenEntry(_zip, fileName, &zipInfo, Z_NO_COMPRESSION, password, 0);
-    const void *buffer = targetName.fileSystemRepresentation;
-    zipWriteInFileInZip(_zip, buffer, (uint32_t)strlen(buffer));
-    zipCloseFileInZip(_zip);
-    return error == ZIP_OK;
+    return ok;
 }
 
 - (BOOL)writeFile:(NSString *)path withPassword:(nullable NSString *)password
