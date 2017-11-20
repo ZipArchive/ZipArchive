@@ -813,8 +813,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             zipInfo.external_fa = (zipInfo.external_fa & ~(BSD_SFMT << 16)) | (BSD_IFLNK << 16);
             
             int error = _zipOpenEntry(_zip, fileName, &zipInfo, Z_NO_COMPRESSION, password, 0);
-            const void *buffer = fileName.fileSystemRepresentation;
-            zipWriteInFileInZip(_zip, buffer, (uint32_t)strlen(buffer));
+            zipWriteInFileInZip(_zip, linktarget, sb.st_size);
             zipCloseFileInZip(_zip);
             ok = error == ZIP_OK;
         }
