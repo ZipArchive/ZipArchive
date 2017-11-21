@@ -105,11 +105,12 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
            compressionLevel:(int)compressionLevel
                    password:(nullable NSString *)password
                         AES:(BOOL)aes
+                   diskSize:(int)diskSize
             progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler;
 
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithPath:(NSString *)path NS_DESIGNATED_INITIALIZER;
-- (BOOL)open;
+- (BOOL)openWithSplitSize:(int)disk_size;
 
 /// write empty folder
 - (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName withPassword:(nullable NSString *)password;
