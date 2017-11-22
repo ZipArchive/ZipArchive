@@ -18,6 +18,7 @@ typedef struct unz_global_info_s
 } unz_global_info;
 
 /* unz_file_info contain information about a file in the zipfile */
+/* https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT */
 typedef struct unz_file_info64_s
 {
     uint16_t version;               /* version made by                 2 bytes */
