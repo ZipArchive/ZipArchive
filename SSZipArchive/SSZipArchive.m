@@ -18,6 +18,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 #define CHUNK 16384
 
 int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes);
+int _zipOpenUnixEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes);
 BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 #ifndef API_AVAILABLE
@@ -812,8 +813,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             const uLong BSD_IFLNK = 0120000;
             zipInfo.external_fa = (zipInfo.external_fa & ~(BSD_SFMT << 16)) | (BSD_IFLNK << 16);
             
-            int error = _zipOpenEntry(_zip, fileName, &zipInfo, Z_NO_COMPRESSION, password, 0);
-            zipWriteInFileInZip(_zip, linktarget, sb.st_size);
+            // unix file entry is created, which is needed for the symlink options to be respected
+            int error = _zipOpenUnixEntry(_zip, fileName, &zipInfo, Z_NO_COMPRESSION, password, 0);
+
+            zipWriteInFileInZip(_zip, linktarget, (uint32_t)sb.st_size);
             zipCloseFileInZip(_zip);
             ok = error == ZIP_OK;
         }
@@ -1050,6 +1053,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes)
 {
     return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, 0, 0, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, 0);
+}
+
+int _zipOpenUnixEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes)
+{
+    uint16_t versionMadebyUnix = 3 << 8; // http://www.pkware.com/documents/casestudies/APPNOTE.TXT section 4.4.2.2
+    
+    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, 0, 0, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, versionMadebyUnix);
 }
 
 #pragma mark - Private tools for file info
