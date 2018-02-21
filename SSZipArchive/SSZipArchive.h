@@ -10,7 +10,7 @@
 #define _SSZIPARCHIVE_H
 
 #import <Foundation/Foundation.h>
-#include "SSZipCommon.h"
+#include "mz_compat.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

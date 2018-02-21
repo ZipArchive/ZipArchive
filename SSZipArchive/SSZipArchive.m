@@ -7,9 +7,8 @@
 //
 
 #import "SSZipArchive.h"
-#include "unzip.h"
-#include "zip.h"
-#include "minishared.h"
+#include "mz_compat.h"
+#include "mz_zip.h"
 
 #include <sys/stat.h>
 
@@ -945,7 +944,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     tmz_date.tm_mon = (unsigned int)components.month - 1;
     // ISO/IEC 9899 struct tm is 0-indexed for AD 1900 but NSDateComponents for gregorianCalendar is 1-indexed for AD 1
     tmz_date.tm_year = (unsigned int)components.year - 1900;
-    zipInfo->dos_date = tm_to_dosdate(&tmz_date);
+    zipInfo->dos_date = mz_zip_tm_to_dosdate(&tmz_date);
 }
 
 + (NSCalendar *)_gregorian
