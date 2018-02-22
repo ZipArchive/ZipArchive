@@ -11,10 +11,12 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
   s.osx.deployment_target = '10.8'
   s.watchos.deployment_target = '2.0'
-  s.source_files = 'SSZipArchive/*.{m,h}', 'SSZipArchive/minizip/*.{c,h}', 'SSZipArchive/minizip/aes/*.{c,h}'
-  s.public_header_files = 'SSZipArchive/*.h'
-  s.library = 'z'
   s.xcconfig = { "GCC_PREPROCESSOR_DEFINITIONS" => 'HAVE_AES HAVE_CRYPT HAVE_ZLIB' }
+  s.source_files =  'SSZipArchive/minizip/*.{c,h}', 'SSZipArchive/minizip/aes/*.{c,h}', 'SSZipArchive/*.{m,h}'
+  s.public_header_files = 'SSZipArchive/minizip/mz_compat.h', 'SSZipArchive/*.h'
+  s.library = 'z'
+
+
 end
 
 

@@ -7,7 +7,6 @@
 //
 
 #import "SSZipArchive.h"
-#include "mz_compat.h"
 #include "mz_zip.h"
 
 #include <sys/stat.h>
@@ -52,19 +51,15 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     int ret = unzGoToFirstFile(zip);
     if (ret == UNZ_OK) {
         do {
-            ret = unzOpenCurrentFile(zip);
-            if (ret != UNZ_OK) {
-                return NO;
-            }
+
             unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
             if (ret != UNZ_OK) {
                 return NO;
-            } else if ((fileInfo.flag & 1) == 1) {
+            } else if ((fileInfo.flag & ZIP_FLAG_ENCRYPTED) == 1) {
                 return YES;
             }
             
-            unzCloseCurrentFile(zip);
             ret = unzGoToNextFile(zip);
         } while (ret == UNZ_OK);
     }
@@ -995,7 +990,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes)
 {
-    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, 0, 0, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, 0);
+    
+    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, 0, 0, 0);
 }
 
 #pragma mark - Private tools for file info

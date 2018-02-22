@@ -96,7 +96,6 @@
 		37952C8B1F63BBE400DD6677 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		37952C8C1F63BBED00DD6677 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B423AE6E1C0DF83F0004A2F1 /* libz.tbd */; };
 		3883778920365FA100AF5090 /* mz_zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883776820365FA000AF5090 /* mz_zip.c */; };
-		3883778A20365FA100AF5090 /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776920365FA000AF5090 /* mz_compat.h */; };
 		3883778B20365FA100AF5090 /* mz_zip.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776A20365FA000AF5090 /* mz_zip.h */; };
 		3883778C20365FA100AF5090 /* mz.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776B20365FA000AF5090 /* mz.h */; };
 		3883778D20365FA100AF5090 /* mz_strm_zlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883776C20365FA000AF5090 /* mz_strm_zlib.c */; };
@@ -104,7 +103,6 @@
 		3883778F20365FA100AF5090 /* mz_strm_buf.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776E20365FA000AF5090 /* mz_strm_buf.h */; };
 		3883779020365FA100AF5090 /* mz_strm_aes.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776F20365FA000AF5090 /* mz_strm_aes.h */; };
 		3883779120365FA100AF5090 /* mz_strm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777020365FA000AF5090 /* mz_strm.c */; };
-		3883779320365FA100AF5090 /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777220365FA000AF5090 /* mz_compat.c */; };
 		3883779420365FA100AF5090 /* mz_os.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777320365FA000AF5090 /* mz_os.c */; };
 		3883779520365FA100AF5090 /* mz_strm.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777420365FA000AF5090 /* mz_strm.h */; };
 		3883779620365FA100AF5090 /* mz_strm_split.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777520365FA000AF5090 /* mz_strm_split.c */; };
@@ -120,6 +118,83 @@
 		388377A220365FA100AF5090 /* mz_strm_zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883778120365FA100AF5090 /* mz_strm_zlib.h */; };
 		388377A320365FA100AF5090 /* mz_strm_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883778220365FA100AF5090 /* mz_strm_posix.h */; };
 		388377A620365FA100AF5090 /* mz_strm_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883778520365FA100AF5090 /* mz_strm_mem.c */; };
+		38841BE7203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; };
+		38841BE8203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; };
+		38841BE9203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; };
+		38841BEA203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; };
+		38841BEB203E010E000F0CFD /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 38841BE6203E010E000F0CFD /* mz_compat.c */; };
+		38841BEC203E010E000F0CFD /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 38841BE6203E010E000F0CFD /* mz_compat.c */; };
+		38841BED203E010E000F0CFD /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 38841BE6203E010E000F0CFD /* mz_compat.c */; };
+		38841BEE203E010E000F0CFD /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 38841BE6203E010E000F0CFD /* mz_compat.c */; };
+		38841BF4203E143F000F0CFD /* mz_os_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777620365FA000AF5090 /* mz_os_posix.c */; };
+		38841BF5203E143F000F0CFD /* mz_os_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777F20365FA000AF5090 /* mz_os_posix.h */; };
+		38841BF6203E143F000F0CFD /* mz_os.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777320365FA000AF5090 /* mz_os.c */; };
+		38841BF7203E143F000F0CFD /* mz_os.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777D20365FA000AF5090 /* mz_os.h */; };
+		38841BF8203E143F000F0CFD /* mz_strm_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777E20365FA000AF5090 /* mz_strm_aes.c */; };
+		38841BF9203E143F000F0CFD /* mz_strm_aes.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776F20365FA000AF5090 /* mz_strm_aes.h */; };
+		38841BFA203E143F000F0CFD /* mz_strm_buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777A20365FA000AF5090 /* mz_strm_buf.c */; };
+		38841BFB203E143F000F0CFD /* mz_strm_buf.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776E20365FA000AF5090 /* mz_strm_buf.h */; };
+		38841BFC203E143F000F0CFD /* mz_strm_crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777820365FA000AF5090 /* mz_strm_crypt.c */; };
+		38841BFD203E143F000F0CFD /* mz_strm_crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777C20365FA000AF5090 /* mz_strm_crypt.h */; };
+		38841BFE203E143F000F0CFD /* mz_strm_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883778520365FA100AF5090 /* mz_strm_mem.c */; };
+		38841BFF203E143F000F0CFD /* mz_strm_mem.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777720365FA000AF5090 /* mz_strm_mem.h */; };
+		38841C00203E143F000F0CFD /* mz_strm_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777B20365FA000AF5090 /* mz_strm_posix.c */; };
+		38841C01203E143F000F0CFD /* mz_strm_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883778220365FA100AF5090 /* mz_strm_posix.h */; };
+		38841C02203E143F000F0CFD /* mz_strm_split.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777520365FA000AF5090 /* mz_strm_split.c */; };
+		38841C03203E143F000F0CFD /* mz_strm_split.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776D20365FA000AF5090 /* mz_strm_split.h */; };
+		38841C04203E143F000F0CFD /* mz_strm_zlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883776C20365FA000AF5090 /* mz_strm_zlib.c */; };
+		38841C05203E143F000F0CFD /* mz_strm_zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883778120365FA100AF5090 /* mz_strm_zlib.h */; };
+		38841C06203E143F000F0CFD /* mz_strm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777020365FA000AF5090 /* mz_strm.c */; };
+		38841C07203E143F000F0CFD /* mz_strm.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777420365FA000AF5090 /* mz_strm.h */; };
+		38841C08203E143F000F0CFD /* mz_zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883776820365FA000AF5090 /* mz_zip.c */; };
+		38841C09203E143F000F0CFD /* mz_zip.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776A20365FA000AF5090 /* mz_zip.h */; };
+		38841C0A203E143F000F0CFD /* mz.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776B20365FA000AF5090 /* mz.h */; };
+		38841C0B203E1440000F0CFD /* mz_os_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777620365FA000AF5090 /* mz_os_posix.c */; };
+		38841C0C203E1440000F0CFD /* mz_os_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777F20365FA000AF5090 /* mz_os_posix.h */; };
+		38841C0D203E1440000F0CFD /* mz_os.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777320365FA000AF5090 /* mz_os.c */; };
+		38841C0E203E1440000F0CFD /* mz_os.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777D20365FA000AF5090 /* mz_os.h */; };
+		38841C0F203E1440000F0CFD /* mz_strm_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777E20365FA000AF5090 /* mz_strm_aes.c */; };
+		38841C10203E1440000F0CFD /* mz_strm_aes.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776F20365FA000AF5090 /* mz_strm_aes.h */; };
+		38841C11203E1440000F0CFD /* mz_strm_buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777A20365FA000AF5090 /* mz_strm_buf.c */; };
+		38841C12203E1440000F0CFD /* mz_strm_buf.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776E20365FA000AF5090 /* mz_strm_buf.h */; };
+		38841C13203E1440000F0CFD /* mz_strm_crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777820365FA000AF5090 /* mz_strm_crypt.c */; };
+		38841C14203E1440000F0CFD /* mz_strm_crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777C20365FA000AF5090 /* mz_strm_crypt.h */; };
+		38841C15203E1440000F0CFD /* mz_strm_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883778520365FA100AF5090 /* mz_strm_mem.c */; };
+		38841C16203E1440000F0CFD /* mz_strm_mem.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777720365FA000AF5090 /* mz_strm_mem.h */; };
+		38841C17203E1440000F0CFD /* mz_strm_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777B20365FA000AF5090 /* mz_strm_posix.c */; };
+		38841C18203E1440000F0CFD /* mz_strm_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883778220365FA100AF5090 /* mz_strm_posix.h */; };
+		38841C19203E1440000F0CFD /* mz_strm_split.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777520365FA000AF5090 /* mz_strm_split.c */; };
+		38841C1A203E1440000F0CFD /* mz_strm_split.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776D20365FA000AF5090 /* mz_strm_split.h */; };
+		38841C1B203E1440000F0CFD /* mz_strm_zlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883776C20365FA000AF5090 /* mz_strm_zlib.c */; };
+		38841C1C203E1440000F0CFD /* mz_strm_zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883778120365FA100AF5090 /* mz_strm_zlib.h */; };
+		38841C1D203E1440000F0CFD /* mz_strm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777020365FA000AF5090 /* mz_strm.c */; };
+		38841C1E203E1440000F0CFD /* mz_strm.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777420365FA000AF5090 /* mz_strm.h */; };
+		38841C1F203E1440000F0CFD /* mz_zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883776820365FA000AF5090 /* mz_zip.c */; };
+		38841C20203E1440000F0CFD /* mz_zip.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776A20365FA000AF5090 /* mz_zip.h */; };
+		38841C21203E1440000F0CFD /* mz.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776B20365FA000AF5090 /* mz.h */; };
+		38841C22203E1441000F0CFD /* mz_os_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777620365FA000AF5090 /* mz_os_posix.c */; };
+		38841C23203E1441000F0CFD /* mz_os_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777F20365FA000AF5090 /* mz_os_posix.h */; };
+		38841C24203E1441000F0CFD /* mz_os.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777320365FA000AF5090 /* mz_os.c */; };
+		38841C25203E1441000F0CFD /* mz_os.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777D20365FA000AF5090 /* mz_os.h */; };
+		38841C26203E1441000F0CFD /* mz_strm_aes.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777E20365FA000AF5090 /* mz_strm_aes.c */; };
+		38841C27203E1441000F0CFD /* mz_strm_aes.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776F20365FA000AF5090 /* mz_strm_aes.h */; };
+		38841C28203E1441000F0CFD /* mz_strm_buf.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777A20365FA000AF5090 /* mz_strm_buf.c */; };
+		38841C29203E1441000F0CFD /* mz_strm_buf.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776E20365FA000AF5090 /* mz_strm_buf.h */; };
+		38841C2A203E1441000F0CFD /* mz_strm_crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777820365FA000AF5090 /* mz_strm_crypt.c */; };
+		38841C2B203E1441000F0CFD /* mz_strm_crypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777C20365FA000AF5090 /* mz_strm_crypt.h */; };
+		38841C2C203E1441000F0CFD /* mz_strm_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883778520365FA100AF5090 /* mz_strm_mem.c */; };
+		38841C2D203E1441000F0CFD /* mz_strm_mem.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777720365FA000AF5090 /* mz_strm_mem.h */; };
+		38841C2E203E1441000F0CFD /* mz_strm_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777B20365FA000AF5090 /* mz_strm_posix.c */; };
+		38841C2F203E1441000F0CFD /* mz_strm_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883778220365FA100AF5090 /* mz_strm_posix.h */; };
+		38841C30203E1441000F0CFD /* mz_strm_split.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777520365FA000AF5090 /* mz_strm_split.c */; };
+		38841C31203E1441000F0CFD /* mz_strm_split.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776D20365FA000AF5090 /* mz_strm_split.h */; };
+		38841C32203E1441000F0CFD /* mz_strm_zlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883776C20365FA000AF5090 /* mz_strm_zlib.c */; };
+		38841C33203E1441000F0CFD /* mz_strm_zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883778120365FA100AF5090 /* mz_strm_zlib.h */; };
+		38841C34203E1441000F0CFD /* mz_strm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883777020365FA000AF5090 /* mz_strm.c */; };
+		38841C35203E1441000F0CFD /* mz_strm.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883777420365FA000AF5090 /* mz_strm.h */; };
+		38841C36203E1441000F0CFD /* mz_zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883776820365FA000AF5090 /* mz_zip.c */; };
+		38841C37203E1441000F0CFD /* mz_zip.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776A20365FA000AF5090 /* mz_zip.h */; };
+		38841C38203E1441000F0CFD /* mz.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776B20365FA000AF5090 /* mz.h */; };
 		AFF75A2D1C3727F000F450AC /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AFF75A2E1C37280200F450AC /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE481C0DF7950004A2F1 /* SSZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AFF75A2F1C37280200F450AC /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = B423AE491C0DF7950004A2F1 /* SSZipArchive.m */; };
@@ -154,7 +229,6 @@
 		37952C261F63B50D00DD6677 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		37952C5E1F63BB7100DD6677 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3883776820365FA000AF5090 /* mz_zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_zip.c; sourceTree = "<group>"; };
-		3883776920365FA000AF5090 /* mz_compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_compat.h; sourceTree = "<group>"; };
 		3883776A20365FA000AF5090 /* mz_zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_zip.h; sourceTree = "<group>"; };
 		3883776B20365FA000AF5090 /* mz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz.h; sourceTree = "<group>"; };
 		3883776C20365FA000AF5090 /* mz_strm_zlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_zlib.c; sourceTree = "<group>"; };
@@ -162,7 +236,6 @@
 		3883776E20365FA000AF5090 /* mz_strm_buf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_strm_buf.h; sourceTree = "<group>"; };
 		3883776F20365FA000AF5090 /* mz_strm_aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_strm_aes.h; sourceTree = "<group>"; };
 		3883777020365FA000AF5090 /* mz_strm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm.c; sourceTree = "<group>"; };
-		3883777220365FA000AF5090 /* mz_compat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_compat.c; sourceTree = "<group>"; };
 		3883777320365FA000AF5090 /* mz_os.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_os.c; sourceTree = "<group>"; };
 		3883777420365FA000AF5090 /* mz_strm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_strm.h; sourceTree = "<group>"; };
 		3883777520365FA000AF5090 /* mz_strm_split.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_split.c; sourceTree = "<group>"; };
@@ -178,6 +251,8 @@
 		3883778120365FA100AF5090 /* mz_strm_zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_strm_zlib.h; sourceTree = "<group>"; };
 		3883778220365FA100AF5090 /* mz_strm_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_strm_posix.h; sourceTree = "<group>"; };
 		3883778520365FA100AF5090 /* mz_strm_mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_mem.c; sourceTree = "<group>"; };
+		38841BE5203E010E000F0CFD /* mz_compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_compat.h; sourceTree = "<group>"; };
+		38841BE6203E010E000F0CFD /* mz_compat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_compat.c; sourceTree = "<group>"; };
 		AFF75A241C37279600F450AC /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B423AE1A1C0DF76A0004A2F1 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B423AE3D1C0DF7950004A2F1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -285,8 +360,8 @@
 		B423AE3E1C0DF7950004A2F1 /* minizip */ = {
 			isa = PBXGroup;
 			children = (
-				3883777220365FA000AF5090 /* mz_compat.c */,
-				3883776920365FA000AF5090 /* mz_compat.h */,
+				38841BE6203E010E000F0CFD /* mz_compat.c */,
+				38841BE5203E010E000F0CFD /* mz_compat.h */,
 				3883777620365FA000AF5090 /* mz_os_posix.c */,
 				3883777F20365FA000AF5090 /* mz_os_posix.h */,
 				3883777320365FA000AF5090 /* mz_os.c */,
@@ -322,13 +397,26 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38841C0C203E1440000F0CFD /* mz_os_posix.h in Headers */,
 				37952C4D1F63B7A000DD6677 /* brg_types.h in Headers */,
+				38841C18203E1440000F0CFD /* mz_strm_posix.h in Headers */,
 				37952C551F63B7A000DD6677 /* pwd2key.h in Headers */,
 				37952C441F63B79900DD6677 /* aes.h in Headers */,
 				37952C321F63B6FB00DD6677 /* SSZipArchive.h in Headers */,
+				38841C1A203E1440000F0CFD /* mz_strm_split.h in Headers */,
+				38841C0E203E1440000F0CFD /* mz_os.h in Headers */,
 				37952C4C1F63B7A000DD6677 /* brg_endian.h in Headers */,
 				37952C491F63B7A000DD6677 /* aesopt.h in Headers */,
+				38841C1C203E1440000F0CFD /* mz_strm_zlib.h in Headers */,
+				38841C1E203E1440000F0CFD /* mz_strm.h in Headers */,
 				37952C571F63B7A000DD6677 /* sha1.h in Headers */,
+				38841C14203E1440000F0CFD /* mz_strm_crypt.h in Headers */,
+				38841BE9203E010E000F0CFD /* mz_compat.h in Headers */,
+				38841C10203E1440000F0CFD /* mz_strm_aes.h in Headers */,
+				38841C20203E1440000F0CFD /* mz_zip.h in Headers */,
+				38841C12203E1440000F0CFD /* mz_strm_buf.h in Headers */,
+				38841C16203E1440000F0CFD /* mz_strm_mem.h in Headers */,
+				38841C21203E1440000F0CFD /* mz.h in Headers */,
 				37952C511F63B7A000DD6677 /* hmac.h in Headers */,
 				37952C4B1F63B7A000DD6677 /* aestab.h in Headers */,
 				37952C461F63B7A000DD6677 /* aes_ni.h in Headers */,
@@ -342,13 +430,26 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38841C23203E1441000F0CFD /* mz_os_posix.h in Headers */,
 				37952C791F63BBC000DD6677 /* aesopt.h in Headers */,
+				38841C2F203E1441000F0CFD /* mz_strm_posix.h in Headers */,
 				37952C851F63BBC000DD6677 /* pwd2key.h in Headers */,
 				37952C7F1F63BBC000DD6677 /* fileenc.h in Headers */,
 				37952C831F63BBC000DD6677 /* prng.h in Headers */,
+				38841C31203E1441000F0CFD /* mz_strm_split.h in Headers */,
+				38841C25203E1441000F0CFD /* mz_os.h in Headers */,
 				37952C7D1F63BBC000DD6677 /* brg_types.h in Headers */,
 				37952C881F63BBD500DD6677 /* SSZipArchive.h in Headers */,
+				38841C33203E1441000F0CFD /* mz_strm_zlib.h in Headers */,
+				38841C35203E1441000F0CFD /* mz_strm.h in Headers */,
 				37952C761F63BBC000DD6677 /* aes_ni.h in Headers */,
+				38841C2B203E1441000F0CFD /* mz_strm_crypt.h in Headers */,
+				38841BEA203E010E000F0CFD /* mz_compat.h in Headers */,
+				38841C27203E1441000F0CFD /* mz_strm_aes.h in Headers */,
+				38841C37203E1441000F0CFD /* mz_zip.h in Headers */,
+				38841C29203E1441000F0CFD /* mz_strm_buf.h in Headers */,
+				38841C2D203E1441000F0CFD /* mz_strm_mem.h in Headers */,
+				38841C38203E1441000F0CFD /* mz.h in Headers */,
 				37952C8B1F63BBE400DD6677 /* ZipArchive.h in Headers */,
 				37952C741F63BBC000DD6677 /* aes.h in Headers */,
 				37952C811F63BBC000DD6677 /* hmac.h in Headers */,
@@ -362,13 +463,26 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38841BF5203E143F000F0CFD /* mz_os_posix.h in Headers */,
 				3739142B1F000A000094DB3B /* brg_types.h in Headers */,
+				38841C01203E143F000F0CFD /* mz_strm_posix.h in Headers */,
 				373914331F000A000094DB3B /* pwd2key.h in Headers */,
 				373914111F0009E90094DB3B /* aes.h in Headers */,
 				3739142A1F000A000094DB3B /* brg_endian.h in Headers */,
+				38841C03203E143F000F0CFD /* mz_strm_split.h in Headers */,
+				38841BF7203E143F000F0CFD /* mz_os.h in Headers */,
 				373914271F000A000094DB3B /* aesopt.h in Headers */,
 				AFF75A2D1C3727F000F450AC /* ZipArchive.h in Headers */,
+				38841C05203E143F000F0CFD /* mz_strm_zlib.h in Headers */,
+				38841C07203E143F000F0CFD /* mz_strm.h in Headers */,
 				373914351F000A000094DB3B /* sha1.h in Headers */,
+				38841BFD203E143F000F0CFD /* mz_strm_crypt.h in Headers */,
+				38841BE8203E010E000F0CFD /* mz_compat.h in Headers */,
+				38841BF9203E143F000F0CFD /* mz_strm_aes.h in Headers */,
+				38841C09203E143F000F0CFD /* mz_zip.h in Headers */,
+				38841BFB203E143F000F0CFD /* mz_strm_buf.h in Headers */,
+				38841BFF203E143F000F0CFD /* mz_strm_mem.h in Headers */,
+				38841C0A203E143F000F0CFD /* mz.h in Headers */,
 				AFF75A2E1C37280200F450AC /* SSZipArchive.h in Headers */,
 				3739142F1F000A000094DB3B /* hmac.h in Headers */,
 				373914291F000A000094DB3B /* aestab.h in Headers */,
@@ -384,6 +498,7 @@
 			files = (
 				3739141A1F0009FF0094DB3B /* brg_types.h in Headers */,
 				3883779520365FA100AF5090 /* mz_strm.h in Headers */,
+				38841BE7203E010E000F0CFD /* mz_compat.h in Headers */,
 				3883779820365FA100AF5090 /* mz_strm_mem.h in Headers */,
 				388377A020365FA100AF5090 /* mz_os_posix.h in Headers */,
 				388377A220365FA100AF5090 /* mz_strm_zlib.h in Headers */,
@@ -397,7 +512,6 @@
 				B423AE6B1C0DF7950004A2F1 /* SSZipArchive.h in Headers */,
 				373914241F0009FF0094DB3B /* sha1.h in Headers */,
 				3739141E1F0009FF0094DB3B /* hmac.h in Headers */,
-				3883778A20365FA100AF5090 /* mz_compat.h in Headers */,
 				373914181F0009FF0094DB3B /* aestab.h in Headers */,
 				373914121F0009F20094DB3B /* aes_ni.h in Headers */,
 				3883778F20365FA100AF5090 /* mz_strm_buf.h in Headers */,
@@ -567,15 +681,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38841C15203E1440000F0CFD /* mz_strm_mem.c in Sources */,
+				38841C0B203E1440000F0CFD /* mz_os_posix.c in Sources */,
 				37952C541F63B7A000DD6677 /* pwd2key.c in Sources */,
 				37952C521F63B7A000DD6677 /* prng.c in Sources */,
 				37952C561F63B7A000DD6677 /* sha1.c in Sources */,
 				37952C4A1F63B7A000DD6677 /* aestab.c in Sources */,
+				38841C11203E1440000F0CFD /* mz_strm_buf.c in Sources */,
+				38841C19203E1440000F0CFD /* mz_strm_split.c in Sources */,
 				37952C481F63B7A000DD6677 /* aeskey.c in Sources */,
 				37952C4E1F63B7A000DD6677 /* fileenc.c in Sources */,
 				37952C451F63B7A000DD6677 /* aes_ni.c in Sources */,
+				38841C0F203E1440000F0CFD /* mz_strm_aes.c in Sources */,
+				38841C1F203E1440000F0CFD /* mz_zip.c in Sources */,
 				37952C501F63B7A000DD6677 /* hmac.c in Sources */,
+				38841BED203E010E000F0CFD /* mz_compat.c in Sources */,
 				37952C331F63B70000DD6677 /* SSZipArchive.m in Sources */,
+				38841C1B203E1440000F0CFD /* mz_strm_zlib.c in Sources */,
+				38841C17203E1440000F0CFD /* mz_strm_posix.c in Sources */,
+				38841C1D203E1440000F0CFD /* mz_strm.c in Sources */,
+				38841C13203E1440000F0CFD /* mz_strm_crypt.c in Sources */,
+				38841C0D203E1440000F0CFD /* mz_os.c in Sources */,
 				37952C471F63B7A000DD6677 /* aescrypt.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -584,15 +710,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38841C2C203E1441000F0CFD /* mz_strm_mem.c in Sources */,
+				38841C22203E1441000F0CFD /* mz_os_posix.c in Sources */,
 				37952C801F63BBC000DD6677 /* hmac.c in Sources */,
 				37952C841F63BBC000DD6677 /* pwd2key.c in Sources */,
 				37952C7E1F63BBC000DD6677 /* fileenc.c in Sources */,
 				37952C891F63BBDA00DD6677 /* SSZipArchive.m in Sources */,
+				38841C28203E1441000F0CFD /* mz_strm_buf.c in Sources */,
+				38841C30203E1441000F0CFD /* mz_strm_split.c in Sources */,
 				37952C7A1F63BBC000DD6677 /* aestab.c in Sources */,
 				37952C861F63BBC000DD6677 /* sha1.c in Sources */,
 				37952C751F63BBC000DD6677 /* aes_ni.c in Sources */,
+				38841C26203E1441000F0CFD /* mz_strm_aes.c in Sources */,
+				38841C36203E1441000F0CFD /* mz_zip.c in Sources */,
 				37952C771F63BBC000DD6677 /* aescrypt.c in Sources */,
+				38841BEE203E010E000F0CFD /* mz_compat.c in Sources */,
 				37952C821F63BBC000DD6677 /* prng.c in Sources */,
+				38841C32203E1441000F0CFD /* mz_strm_zlib.c in Sources */,
+				38841C2E203E1441000F0CFD /* mz_strm_posix.c in Sources */,
+				38841C34203E1441000F0CFD /* mz_strm.c in Sources */,
+				38841C2A203E1441000F0CFD /* mz_strm_crypt.c in Sources */,
+				38841C24203E1441000F0CFD /* mz_os.c in Sources */,
 				37952C781F63BBC000DD6677 /* aeskey.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -601,15 +739,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38841BFE203E143F000F0CFD /* mz_strm_mem.c in Sources */,
+				38841BF4203E143F000F0CFD /* mz_os_posix.c in Sources */,
 				373914321F000A000094DB3B /* pwd2key.c in Sources */,
 				373914301F000A000094DB3B /* prng.c in Sources */,
 				373914341F000A000094DB3B /* sha1.c in Sources */,
 				373914281F000A000094DB3B /* aestab.c in Sources */,
+				38841BFA203E143F000F0CFD /* mz_strm_buf.c in Sources */,
+				38841C02203E143F000F0CFD /* mz_strm_split.c in Sources */,
 				373914261F000A000094DB3B /* aeskey.c in Sources */,
 				3739142C1F000A000094DB3B /* fileenc.c in Sources */,
 				3739140F1F0009E60094DB3B /* aes_ni.c in Sources */,
+				38841BF8203E143F000F0CFD /* mz_strm_aes.c in Sources */,
+				38841C08203E143F000F0CFD /* mz_zip.c in Sources */,
 				3739142E1F000A000094DB3B /* hmac.c in Sources */,
+				38841BEC203E010E000F0CFD /* mz_compat.c in Sources */,
 				AFF75A2F1C37280200F450AC /* SSZipArchive.m in Sources */,
+				38841C04203E143F000F0CFD /* mz_strm_zlib.c in Sources */,
+				38841C00203E143F000F0CFD /* mz_strm_posix.c in Sources */,
+				38841C06203E143F000F0CFD /* mz_strm.c in Sources */,
+				38841BFC203E143F000F0CFD /* mz_strm_crypt.c in Sources */,
+				38841BF6203E143F000F0CFD /* mz_os.c in Sources */,
 				373914251F000A000094DB3B /* aescrypt.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -626,7 +776,7 @@
 				373914151F0009FF0094DB3B /* aeskey.c in Sources */,
 				3883779720365FA100AF5090 /* mz_os_posix.c in Sources */,
 				373914141F0009FF0094DB3B /* aescrypt.c in Sources */,
-				3883779320365FA100AF5090 /* mz_compat.c in Sources */,
+				38841BEB203E010E000F0CFD /* mz_compat.c in Sources */,
 				373914231F0009FF0094DB3B /* sha1.c in Sources */,
 				3883779920365FA100AF5090 /* mz_strm_crypt.c in Sources */,
 				3739141B1F0009FF0094DB3B /* fileenc.c in Sources */,
