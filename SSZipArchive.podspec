@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.watchos.deployment_target = '2.0'
   s.xcconfig = { "GCC_PREPROCESSOR_DEFINITIONS" => 'HAVE_AES HAVE_CRYPT HAVE_ZLIB' }
   s.source_files =  'SSZipArchive/minizip/*.{c,h}', 'SSZipArchive/minizip/aes/*.{c,h}', 'SSZipArchive/*.{m,h}'
-  s.public_header_files = 'SSZipArchive/minizip/mz_compat.h', 'SSZipArchive/*.h'
+  s.public_header_files = 'SSZipArchive/minizip/*.h', 'SSZipArchive/*.h'
   s.library = 'z'
 
 
