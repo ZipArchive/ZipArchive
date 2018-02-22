@@ -118,10 +118,10 @@
 		388377A220365FA100AF5090 /* mz_strm_zlib.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883778120365FA100AF5090 /* mz_strm_zlib.h */; };
 		388377A320365FA100AF5090 /* mz_strm_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883778220365FA100AF5090 /* mz_strm_posix.h */; };
 		388377A620365FA100AF5090 /* mz_strm_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883778520365FA100AF5090 /* mz_strm_mem.c */; };
-		38841BE7203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; };
-		38841BE8203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; };
-		38841BE9203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; };
-		38841BEA203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; };
+		38841BE7203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		38841BE8203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		38841BE9203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		38841BEA203E010E000F0CFD /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 38841BE5203E010E000F0CFD /* mz_compat.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		38841BEB203E010E000F0CFD /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 38841BE6203E010E000F0CFD /* mz_compat.c */; };
 		38841BEC203E010E000F0CFD /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 38841BE6203E010E000F0CFD /* mz_compat.c */; };
 		38841BED203E010E000F0CFD /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 38841BE6203E010E000F0CFD /* mz_compat.c */; };
