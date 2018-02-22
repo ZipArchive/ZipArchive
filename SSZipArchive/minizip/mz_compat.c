@@ -22,7 +22,7 @@
 #include "mz_zip.h"
 
 #include "mz_compat.h"
-
+#include "SSZipCommon.h"
 /***************************************************************************/
 
 typedef struct mz_compat_s {

@@ -95,6 +95,10 @@
 		37952C891F63BBDA00DD6677 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = B423AE491C0DF7950004A2F1 /* SSZipArchive.m */; };
 		37952C8B1F63BBE400DD6677 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		37952C8C1F63BBED00DD6677 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B423AE6E1C0DF83F0004A2F1 /* libz.tbd */; };
+		3803CF9A203F6A35002DA470 /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 3803CF99203F6A35002DA470 /* SSZipCommon.h */; };
+		3803CF9B203F6A35002DA470 /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 3803CF99203F6A35002DA470 /* SSZipCommon.h */; };
+		3803CF9C203F6A35002DA470 /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 3803CF99203F6A35002DA470 /* SSZipCommon.h */; };
+		3803CF9D203F6A35002DA470 /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 3803CF99203F6A35002DA470 /* SSZipCommon.h */; };
 		3883778920365FA100AF5090 /* mz_zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 3883776820365FA000AF5090 /* mz_zip.c */; };
 		3883778B20365FA100AF5090 /* mz_zip.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776A20365FA000AF5090 /* mz_zip.h */; };
 		3883778C20365FA100AF5090 /* mz.h in Headers */ = {isa = PBXBuildFile; fileRef = 3883776B20365FA000AF5090 /* mz.h */; };
@@ -228,6 +232,7 @@
 		373913FA1F0009310094DB3B /* sha1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
 		37952C261F63B50D00DD6677 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		37952C5E1F63BB7100DD6677 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3803CF99203F6A35002DA470 /* SSZipCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipCommon.h; sourceTree = "<group>"; };
 		3883776820365FA000AF5090 /* mz_zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_zip.c; sourceTree = "<group>"; };
 		3883776A20365FA000AF5090 /* mz_zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_zip.h; sourceTree = "<group>"; };
 		3883776B20365FA000AF5090 /* mz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz.h; sourceTree = "<group>"; };
@@ -352,6 +357,7 @@
 				B423AE3E1C0DF7950004A2F1 /* minizip */,
 				B423AE481C0DF7950004A2F1 /* SSZipArchive.h */,
 				B423AE491C0DF7950004A2F1 /* SSZipArchive.m */,
+				3803CF99203F6A35002DA470 /* SSZipCommon.h */,
 				B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */,
 			);
 			path = SSZipArchive;
@@ -408,6 +414,7 @@
 				37952C4C1F63B7A000DD6677 /* brg_endian.h in Headers */,
 				37952C491F63B7A000DD6677 /* aesopt.h in Headers */,
 				38841C1C203E1440000F0CFD /* mz_strm_zlib.h in Headers */,
+				3803CF9C203F6A35002DA470 /* SSZipCommon.h in Headers */,
 				38841C1E203E1440000F0CFD /* mz_strm.h in Headers */,
 				37952C571F63B7A000DD6677 /* sha1.h in Headers */,
 				38841C14203E1440000F0CFD /* mz_strm_crypt.h in Headers */,
@@ -441,6 +448,7 @@
 				37952C7D1F63BBC000DD6677 /* brg_types.h in Headers */,
 				37952C881F63BBD500DD6677 /* SSZipArchive.h in Headers */,
 				38841C33203E1441000F0CFD /* mz_strm_zlib.h in Headers */,
+				3803CF9D203F6A35002DA470 /* SSZipCommon.h in Headers */,
 				38841C35203E1441000F0CFD /* mz_strm.h in Headers */,
 				37952C761F63BBC000DD6677 /* aes_ni.h in Headers */,
 				38841C2B203E1441000F0CFD /* mz_strm_crypt.h in Headers */,
@@ -474,6 +482,7 @@
 				373914271F000A000094DB3B /* aesopt.h in Headers */,
 				AFF75A2D1C3727F000F450AC /* ZipArchive.h in Headers */,
 				38841C05203E143F000F0CFD /* mz_strm_zlib.h in Headers */,
+				3803CF9B203F6A35002DA470 /* SSZipCommon.h in Headers */,
 				38841C07203E143F000F0CFD /* mz_strm.h in Headers */,
 				373914351F000A000094DB3B /* sha1.h in Headers */,
 				38841BFD203E143F000F0CFD /* mz_strm_crypt.h in Headers */,
@@ -507,6 +516,7 @@
 				373914221F0009FF0094DB3B /* pwd2key.h in Headers */,
 				373914101F0009E80094DB3B /* aes.h in Headers */,
 				B423AE6D1C0DF7950004A2F1 /* ZipArchive.h in Headers */,
+				3803CF9A203F6A35002DA470 /* SSZipCommon.h in Headers */,
 				373914191F0009FF0094DB3B /* brg_endian.h in Headers */,
 				373914161F0009FF0094DB3B /* aesopt.h in Headers */,
 				B423AE6B1C0DF7950004A2F1 /* SSZipArchive.h in Headers */,

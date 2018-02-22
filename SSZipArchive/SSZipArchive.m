@@ -8,6 +8,7 @@
 
 #import "SSZipArchive.h"
 #include "mz_zip.h"
+#include "mz_compat.h"
 
 #include <sys/stat.h>
 
