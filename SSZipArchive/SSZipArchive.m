@@ -866,20 +866,17 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     
     // if filename is non-unicode, detect and transform Encoding
     NSData *data = [NSData dataWithBytes:(const void *)filename length:sizeof(unsigned char) * size_filename];
-#ifdef __MAC_10_13
-    // Xcode 9+
-    if (@available(macOS 10.10, iOS 8.0, watchOS 2.0, tvOS 9.0, *)) {
-        // supported encodings are in [NSString availableStringEncodings]
-        [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
-    }
-#else
+// Testing availability of @available (https://stackoverflow.com/a/46927445/1033581)
+#if __clang_major__ < 9
     // Xcode 8-
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_9_2) {
+#else
+    // Xcode 9+
+    if (@available(macOS 10.10, iOS 8.0, watchOS 2.0, tvOS 9.0, *)) {
+#endif
         // supported encodings are in [NSString availableStringEncodings]
         [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
-    }
-#endif
-    else {
+    } else {
         // fallback to a simple manual detect for macOS 10.9 or older
         NSArray<NSNumber *> *encodings = @[@(kCFStringEncodingGB_18030_2000), @(kCFStringEncodingShiftJIS)];
         for (NSNumber *encoding in encodings) {
