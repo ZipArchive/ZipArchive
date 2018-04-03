@@ -256,7 +256,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     }
     
     NSDictionary * fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
-    unsigned long long fileSize = [fileAttributes[NSFileSize] unsignedLongLongValue];
+    unsigned long long fileSize = [[fileAttributes objectForKey:NSFileSize] unsignedLongLongValue];
     unsigned long long currentPosition = 0;
     
     unz_global_info globalInfo = {};
@@ -484,7 +484,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                 NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:[fileManager attributesOfItemAtPath:fullPath error:nil]];
                                 
                                 // Set the value in the attributes dict
-                                attrs[NSFilePosixPermissions] = permissionsValue;
+                                [attrs setObject:permissionsValue forKey:NSFilePosixPermissions];
                                 
                                 // Update attributes
                                 if (![fileManager setAttributes:attrs ofItemAtPath:fullPath error:nil]) {
@@ -595,8 +595,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     if (success && preserveAttributes) {
         NSError * err = nil;
         for (NSDictionary * d in directoriesModificationDates) {
-            if (![[NSFileManager defaultManager] setAttributes:@{NSFileModificationDate: d[@"modDate"]} ofItemAtPath:d[@"path"] error:&err]) {
-                NSLog(@"[SSZipArchive] Set attributes failed for directory: %@.", d[@"path"]);
+            if (![[NSFileManager defaultManager] setAttributes:@{NSFileModificationDate: [d objectForKey:@"modDate"]} ofItemAtPath:[d objectForKey:@"path"] error:&err]) {
+                NSLog(@"[SSZipArchive] Set attributes failed for directory: %@.", [d objectForKey:@"path"]);
             }
             if (err) {
                 NSLog(@"[SSZipArchive] Error setting directory file modification date attribute: %@", err.localizedDescription);
@@ -901,7 +901,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
     if (attr)
     {
-        NSDate *fileDate = (NSDate *)attr[NSFileModificationDate];
+        NSDate *fileDate = (NSDate *)[attr objectForKey:NSFileModificationDate];
         if (fileDate)
         {
             [self zipInfo:zipInfo setDate:fileDate];
@@ -909,7 +909,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         
         // Write permissions into the external attributes, for details on this see here: http://unix.stackexchange.com/a/14727
         // Get the permissions value from the files attributes
-        NSNumber *permissionsValue = (NSNumber *)attr[NSFilePosixPermissions];
+        NSNumber *permissionsValue = (NSNumber *)[attr objectForKey:NSFilePosixPermissions];
         if (permissionsValue != nil) {
             // Get the short value for the permissions
             short permissionsShort = permissionsValue.shortValue;
