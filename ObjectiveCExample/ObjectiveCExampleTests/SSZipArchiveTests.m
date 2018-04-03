@@ -43,8 +43,55 @@
     BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
     
     XCTAssertTrue(success);
-    // TODO: Make sure the files are actually unzipped. They are, but the test should be better.
+    // TODO: Make sure the files are actually zipped. They are, but the test should be better.
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+    
+    BOOL protected = [SSZipArchive isFilePasswordProtectedAtPath:archivePath];
+    XCTAssertFalse(protected, @"has no password");
+}
+
+
+- (void)testZippingWithPassword {
+    // use extracted files from [-testUnzipping]
+    [self testUnzipping];
+    
+    NSString *inputPath = [self _cachesPath:@"Regular"];
+    NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"],
+                            [inputPath stringByAppendingPathComponent:@"LICENSE"]];
+    
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@"dolphins🐋"];
+    
+    XCTAssertTrue(success);
+    // TODO: Make sure the files are actually zipped. They are, but the test should be better.
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+    
+    BOOL protected = [SSZipArchive isFilePasswordProtectedAtPath:archivePath];
+    XCTAssertTrue(protected, @"has password");
+}
+
+
+- (void)testZippingWithZeroLengthPassword {
+    // use extracted files from [-testUnzipping]
+    [self testUnzipping];
+    
+    NSString *inputPath = [self _cachesPath:@"Regular"];
+    NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"],
+                            [inputPath stringByAppendingPathComponent:@"LICENSE"]];
+    
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@""];
+    
+    XCTAssertTrue(success);
+    // TODO: Make sure the files are actually zipped. They are, but the test should be better.
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+    
+    BOOL protected = [SSZipArchive isFilePasswordProtectedAtPath:archivePath];
+    XCTAssertTrue(protected, @"has password");
 }
 
 

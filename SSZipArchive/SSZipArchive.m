@@ -55,17 +55,23 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         do {
             ret = unzOpenCurrentFile(zip);
             if (ret != UNZ_OK) {
+                // attempting with an arbitrary password to workaround `unzOpenCurrentFile` limitation on AES encrypted files
+                ret = unzOpenCurrentFilePassword(zip, "");
+                unzCloseCurrentFile(zip);
+                if (ret == UNZ_OK || ret == UNZ_BADPASSWORD) {
+                    return YES;
+                }
                 return NO;
             }
             unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
+            unzCloseCurrentFile(zip);
             if (ret != UNZ_OK) {
                 return NO;
             } else if ((fileInfo.flag & 1) == 1) {
                 return YES;
             }
             
-            unzCloseCurrentFile(zip);
             ret = unzGoToNextFile(zip);
         } while (ret == UNZ_OK);
     }
