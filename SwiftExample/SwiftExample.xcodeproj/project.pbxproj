@@ -174,7 +174,6 @@
 				8DFE19061BDA74F800709011 /* Frameworks */,
 				8DFE19071BDA74F800709011 /* Resources */,
 				DCD3E35CEAE544A09342C9A1 /* [CP] Embed Pods Frameworks */,
-				BF62E47EADC15C45329B0E7E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -289,21 +288,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
-			showEnvVarsInLog = 0;
-		};
-		BF62E47EADC15C45329B0E7E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwiftExample/Pods-SwiftExample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		DCD3E35CEAE544A09342C9A1 /* [CP] Embed Pods Frameworks */ = {
