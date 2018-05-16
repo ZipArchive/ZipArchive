@@ -53,6 +53,7 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
           toDestination:(NSString *)destination
      preserveAttributes:(BOOL)preserveAttributes
               overwrite:(BOOL)overwrite
+               security:(BOOL)security
                password:(nullable NSString *)password
                   error:(NSError * *)error
                delegate:(nullable id<SSZipArchiveDelegate>)delegate;
@@ -73,6 +74,7 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
           toDestination:(NSString *)destination
      preserveAttributes:(BOOL)preserveAttributes
               overwrite:(BOOL)overwrite
+               security:(BOOL)security
          nestedZipLevel:(NSInteger)nestedZipLevel
                password:(nullable NSString *)password
                   error:(NSError **)error
