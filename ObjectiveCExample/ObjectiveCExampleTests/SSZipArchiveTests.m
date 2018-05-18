@@ -485,6 +485,23 @@
     XCTAssertEqualObjects(collector.files[1], [outputPath stringByAppendingString:@"/Readme.markdown"]);
 }
 
+- (void)testUnzippingFileWithPathTraversalName {
+    
+    // This zip archive contains a file titled '../../../../../../../../../../..//tmp/test.txt'. SSZipArchive should
+    // ignore the path traversing and write the file to "tmp/test.txt"
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"PathTraversal" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"Traversal"];
+    
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
+    
+    NSString *expectedFile = [outputPath stringByAppendingPathComponent:@"tmp/test.txt"];
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:expectedFile];
+    
+    XCTAssertTrue(fileExists, @"Path traversal characters should not be followed when unarchiving a file");
+}
+
 #pragma mark - Private
 
 - (NSString *)_cachesPath:(NSString *)directory {

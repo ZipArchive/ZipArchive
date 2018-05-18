@@ -393,6 +393,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 strPath = [strPath stringByReplacingOccurrencesOfString:@"\\" withString:@"/"];
             }
             
+            // Sanitize path traversal characters if they're present in the file name to prevent directory backtracking. Ignoring these characters mimicks the default behavior of the Unarchiving tool on macOS.
+            if ([strPath rangeOfString:@"../"].location != NSNotFound) {
+                // "../../../../../../../../../../../tmp/test.txt" -> "tmp/test.txt"
+                strPath = [[[NSURL URLWithString:strPath] standardizedURL] absoluteString];
+            }
+            
             NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
             NSError *err = nil;
             NSDictionary *directoryAttr;

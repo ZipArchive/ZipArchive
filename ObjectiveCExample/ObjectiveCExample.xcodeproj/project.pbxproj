@@ -52,6 +52,10 @@
 		37FF0CB81F853459006E4361 /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
 		37FF0CB91F853459006E4361 /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
 		37FF0CBA1F853459006E4361 /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
+		5FBB318220AF99BC003BA18F /* PathTraversal.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5FBB318120AF99BC003BA18F /* PathTraversal.zip */; };
+		5FBB318320AF99C9003BA18F /* PathTraversal.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5FBB318120AF99BC003BA18F /* PathTraversal.zip */; };
+		5FBB318420AF99CF003BA18F /* PathTraversal.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5FBB318120AF99BC003BA18F /* PathTraversal.zip */; };
+		5FBB318520AF99D4003BA18F /* PathTraversal.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5FBB318120AF99BC003BA18F /* PathTraversal.zip */; };
 		6BFA1E5841DFEC4E21BA7543 /* Pods_core_ObjectiveCExampleTests_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38A85B006A1C84E475375AE1 /* Pods_core_ObjectiveCExampleTests_macOS.framework */; };
 		8DFE19EF1BDA9FF300709011 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE19EE1BDA9FF300709011 /* main.m */; };
 		8DFE19F21BDA9FF300709011 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE19F11BDA9FF300709011 /* AppDelegate.m */; };
@@ -97,6 +101,7 @@
 		48AB7DF053F85FCC6AFB0C26 /* Pods-core-ObjectiveCExampleTests_macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_macOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-core-ObjectiveCExampleTests_macOS/Pods-core-ObjectiveCExampleTests_macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		49974600DB985CD98FC3AD39 /* Pods_core_ObjectiveCExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		51F30FF220ECFD8DC810E21A /* Pods-core-ObjectiveCExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-core-ObjectiveCExample/Pods-core-ObjectiveCExample.debug.xcconfig"; sourceTree = "<group>"; };
+		5FBB318120AF99BC003BA18F /* PathTraversal.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = PathTraversal.zip; sourceTree = "<group>"; };
 		8DFE19EA1BDA9FF300709011 /* ObjectiveCExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjectiveCExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DFE19EE1BDA9FF300709011 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		8DFE19F01BDA9FF300709011 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -255,6 +260,7 @@
 		8DFE1A151BDAA10100709011 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				5FBB318120AF99BC003BA18F /* PathTraversal.zip */,
 				3754B1311F88961800A58AA0 /* Empty.zip */,
 				8DFE1A161BDAA10100709011 /* hello.zip */,
 				8DFE1A171BDAA10100709011 /* IncorrectHeaders.zip */,
@@ -423,6 +429,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FBB318420AF99CF003BA18F /* PathTraversal.zip in Resources */,
 				3773ADC31F7F4D1C009A4B2D /* 3.m4a in Resources */,
 				3773ADC21F7F4D1C009A4B2D /* 2.m4a in Resources */,
 				3773ADC41F7F4D1C009A4B2D /* 4.m4a in Resources */,
@@ -447,6 +454,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FBB318520AF99D4003BA18F /* PathTraversal.zip in Resources */,
 				3793E6E71F7F6052000B1A19 /* 6.m4a in Resources */,
 				3793E6E91F7F6059000B1A19 /* hello.zip in Resources */,
 				3793E6F01F7F605C000B1A19 /* PermissionsTestApp.app in Resources */,
@@ -471,6 +479,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FBB318220AF99BC003BA18F /* PathTraversal.zip in Resources */,
 				8DFE19FD1BDA9FF300709011 /* LaunchScreen.storyboard in Resources */,
 				8DFE19FA1BDA9FF300709011 /* Assets.xcassets in Resources */,
 				8DFE19F81BDA9FF300709011 /* Main.storyboard in Resources */,
@@ -482,6 +491,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FBB318320AF99C9003BA18F /* PathTraversal.zip in Resources */,
 				8DFE1A321BDAA10100709011 /* 3.m4a in Resources */,
 				8DFE1A311BDAA10100709011 /* 2.m4a in Resources */,
 				8DFE1A331BDAA10100709011 /* 4.m4a in Resources */,
