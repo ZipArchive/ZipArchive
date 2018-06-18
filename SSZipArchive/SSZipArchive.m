@@ -390,6 +390,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                         cancelled = YES;
                         break;
                     }
+                    unzCloseCurrentFile(zip);
+                    ret = unzGoToNextFile(zip);
                     continue;
                 }
             }
