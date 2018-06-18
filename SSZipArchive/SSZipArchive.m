@@ -157,22 +157,22 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination overwrite:(BOOL)overwrite password:(nullable NSString *)password error:(NSError **)error
 {
-    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:error delegate:nil progressHandler:nil completionHandler:nil];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password delegate:nil progressHandler:nil completionHandler:nil error:error];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination delegate:(nullable id<SSZipArchiveDelegate>)delegate
 {
-    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:nil delegate:delegate progressHandler:nil completionHandler:nil];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil delegate:delegate progressHandler:nil completionHandler:nil error:nil];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
           toDestination:(NSString *)destination
               overwrite:(BOOL)overwrite
                password:(nullable NSString *)password
-                  error:(NSError **)error
                delegate:(nullable id<SSZipArchiveDelegate>)delegate
+                  error:(NSError **)error
 {
-    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:error delegate:delegate progressHandler:nil completionHandler:nil];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password delegate:delegate progressHandler:nil completionHandler:nil error:error];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -182,7 +182,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
 {
-    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password delegate:nil progressHandler:progressHandler completionHandler:completionHandler error:nil];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -190,7 +190,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         progressHandler:(void (^_Nullable)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^_Nullable)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
 {
-    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler error:nil];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -198,10 +198,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
      preserveAttributes:(BOOL)preserveAttributes
               overwrite:(BOOL)overwrite
                password:(nullable NSString *)password
+               delegate:(nullable id<SSZipArchiveDelegate>)delegate
                   error:(NSError * *)error
-               delegate:(nullable id<SSZipArchiveDelegate>)delegate
 {
-    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:preserveAttributes overwrite:overwrite password:password error:error delegate:delegate progressHandler:nil completionHandler:nil];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:preserveAttributes overwrite:overwrite password:password delegate:delegate progressHandler:nil completionHandler:nil error:error];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -209,12 +209,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
      preserveAttributes:(BOOL)preserveAttributes
               overwrite:(BOOL)overwrite
                password:(nullable NSString *)password
-                  error:(NSError **)error
                delegate:(nullable id<SSZipArchiveDelegate>)delegate
         progressHandler:(void (^_Nullable)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^_Nullable)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
+                  error:(NSError **)error
 {
-    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:preserveAttributes overwrite:overwrite nestedZipLevel:0 password:password error:error delegate:delegate progressHandler:progressHandler completionHandler:completionHandler];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:preserveAttributes overwrite:overwrite nestedZipLevel:0 password:password delegate:delegate progressHandler:progressHandler completionHandler:completionHandler error:error];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -223,10 +223,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
               overwrite:(BOOL)overwrite
          nestedZipLevel:(NSInteger)nestedZipLevel
                password:(nullable NSString *)password
-                  error:(NSError **)error
                delegate:(nullable id<SSZipArchiveDelegate>)delegate
         progressHandler:(void (^_Nullable)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^_Nullable)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
+                  error:(NSError **)error
 {
     // Guard against empty strings
     if (path.length == 0 || destination.length == 0)
@@ -470,10 +470,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                            overwrite:overwrite
                                       nestedZipLevel:nestedZipLevel - 1
                                             password:password
-                                               error:nil
                                             delegate:nil
                                      progressHandler:nil
-                                   completionHandler:nil]) {
+                                   completionHandler:nil
+                                               error:nil]) {
                             [directoriesModificationDates removeLastObject];
                             [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
                         } else if (preserveAttributes) {

@@ -15,7 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const SSZipArchiveErrorDomain;
-typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
+typedef NS_ERROR_ENUM(SSZipArchiveErrorDomain, SSZipArchiveError) {
     SSZipArchiveErrorCodeFailedOpenZipFile      = -1,
     SSZipArchiveErrorCodeFailedOpenFileInZip    = -2,
     SSZipArchiveErrorCodeFileInfoNotLoadable    = -3,
@@ -46,16 +46,16 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
           toDestination:(NSString *)destination
               overwrite:(BOOL)overwrite
                password:(nullable NSString *)password
-                  error:(NSError * *)error
-               delegate:(nullable id<SSZipArchiveDelegate>)delegate NS_REFINED_FOR_SWIFT;
+               delegate:(nullable id<SSZipArchiveDelegate>)delegate
+                  error:(NSError * *)error NS_REFINED_FOR_SWIFT;
 
 + (BOOL)unzipFileAtPath:(NSString *)path
           toDestination:(NSString *)destination
      preserveAttributes:(BOOL)preserveAttributes
               overwrite:(BOOL)overwrite
                password:(nullable NSString *)password
-                  error:(NSError * *)error
-               delegate:(nullable id<SSZipArchiveDelegate>)delegate;
+               delegate:(nullable id<SSZipArchiveDelegate>)delegate
+                  error:(NSError * *)error;
 
 + (BOOL)unzipFileAtPath:(NSString *)path
           toDestination:(NSString *)destination
@@ -75,10 +75,10 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
               overwrite:(BOOL)overwrite
          nestedZipLevel:(NSInteger)nestedZipLevel
                password:(nullable NSString *)password
-                  error:(NSError **)error
                delegate:(nullable id<SSZipArchiveDelegate>)delegate
         progressHandler:(void (^_Nullable)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
-      completionHandler:(void (^_Nullable)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler;
+      completionHandler:(void (^_Nullable)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
+                  error:(NSError **)error;
 
 // Zip
 // default compression level is Z_DEFAULT_COMPRESSION (from "zlib.h")
