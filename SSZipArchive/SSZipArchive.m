@@ -287,7 +287,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     }
     
     BOOL success = YES;
-    BOOL canceled = NO;
+    BOOL cancelled = NO;
     int crc_ret = 0;
     unsigned char buffer[4096] = {0};
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -333,25 +333,6 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
             
             currentPosition += fileInfo.compressed_size;
-            
-            // Message delegate
-            if ([delegate respondsToSelector:@selector(zipArchiveShouldUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
-                if (![delegate zipArchiveShouldUnzipFileAtIndex:currentFileNumber
-                                                     totalFiles:(NSInteger)globalInfo.number_entry
-                                                    archivePath:path
-                                                       fileInfo:fileInfo]) {
-                    success = NO;
-                    canceled = YES;
-                    break;
-                }
-            }
-            if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
-                [delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
-                                             archivePath:path fileInfo:fileInfo];
-            }
-            if ([delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
-                [delegate zipArchiveProgressEvent:(NSInteger)currentPosition total:(NSInteger)fileSize];
-            }
             
             char *filename = (char *)malloc(fileInfo.size_filename + 1);
             if (filename == NULL)
@@ -400,6 +381,27 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
             
             NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
+            if ([delegate respondsToSelector:@selector(zipArchiveShouldUnzipFileAtPath:index:toPath:totalFiles:archivePath:fileInfo:stop:)]) {
+                BOOL stop = NO;
+                if (![delegate zipArchiveShouldUnzipFileAtPath:strPath index:currentFileNumber toPath:fullPath totalFiles:(NSInteger)globalInfo.number_entry
+                                                   archivePath:path fileInfo:fileInfo stop:&stop]) {
+                    if (stop) {
+                        success = NO;
+                        cancelled = YES;
+                        break;
+                    }
+                    continue;
+                }
+            }
+            
+            if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:fileInfo:)]) {
+                [delegate zipArchiveWillUnzipFileAtIndex:currentFileNumber totalFiles:(NSInteger)globalInfo.number_entry
+                                             archivePath:path fileInfo:fileInfo];
+            }
+            if ([delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
+                [delegate zipArchiveProgressEvent:(NSInteger)currentPosition total:(NSInteger)fileSize];
+            }
+            
             NSError *err = nil;
             NSDictionary *directoryAttr;
             if (preserveAttributes) {
@@ -624,7 +626,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         [delegate zipArchiveDidUnzipArchiveAtPath:path zipInfo:globalInfo unzippedPath:destination];
     }
     // final progress event = 100%
-    if (!canceled && [delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
+    if (!cancelled && [delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
         [delegate zipArchiveProgressEvent:fileSize total:fileSize];
     }
     
