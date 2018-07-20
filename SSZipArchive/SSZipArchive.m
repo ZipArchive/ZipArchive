@@ -136,7 +136,6 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                     }
                     return NO;
                 }
-                return YES;
             }
             
             unzCloseCurrentFile(zip);
