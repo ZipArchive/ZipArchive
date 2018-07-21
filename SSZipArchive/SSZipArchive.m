@@ -124,11 +124,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
             unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
-            if (ret == UNZ_OK) {
-                char *filename = (char *)malloc(fileInfo.size_filename + 1);
-                if (filename != NULL) {
-                    ret = unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
-                }
+            char *filename = (char *)malloc(fileInfo.size_filename + 1);
+            if (ret == UNZ_OK && filename != NULL) {
+                ret = unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
             }
             if (ret != UNZ_OK || filename == NULL) {
                 if (error) {
