@@ -124,7 +124,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
             unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
-            if (ret != UNZ_OK) {
+            if (ret == UNZ_OK) {
+                char *filename = (char *)malloc(fileInfo.size_filename + 1);
+                if (filename != NULL) {
+                    ret = unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
+                }
+            }
+            if (ret != UNZ_OK || filename == NULL) {
                 if (error) {
                     *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
                                                  code:SSZipArchiveErrorCodeFileInfoNotLoadable
@@ -132,6 +138,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 }
                 passwordValid = NO;
                 break;
+            }
+            if (filename[fileInfo.size_filename-1] == '/' || filename[fileInfo.size_filename-1] == '\\') {
+                // file is a directory, skip to next file
             } else if ((fileInfo.flag & 1) == 1) {
                 unsigned char buffer[10] = {0};
                 int readBytes = unzReadCurrentFile(zip, buffer, (unsigned)MIN(10UL,fileInfo.uncompressed_size));
@@ -151,6 +160,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 passwordValid = YES;
                 break;
             }
+            free(filename);
             
             unzCloseCurrentFile(zip);
             ret = unzGoToNextFile(zip);
