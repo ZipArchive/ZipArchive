@@ -114,29 +114,42 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
             unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
-            if (ret != UNZ_OK) {
+            if (ret == UNZ_OK) {
+                char *filename = (char *)malloc(fileInfo.size_filename + 1);
+                if (filename != NULL) {
+                    ret = unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
+                }
+            }
+            if (ret != UNZ_OK || filename == NULL) {
                 if (error) {
                     *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
                                                  code:SSZipArchiveErrorCodeFileInfoNotLoadable
                                              userInfo:@{NSLocalizedDescriptionKey: @"failed to retrieve info for file"}];
                 }
                 return NO;
-            } else if ((fileInfo.flag & 1) == 1) {
-                unsigned char buffer[10] = {0};
-                int readBytes = unzReadCurrentFile(zip, buffer, (unsigned)MIN(10UL,fileInfo.uncompressed_size));
-                if (readBytes < 0) {
-                    // Let's assume error Z_DATA_ERROR is caused by an invalid password
-                    // Let's assume other errors are caused by Content Not Readable
-                    if (readBytes != Z_DATA_ERROR) {
-                        if (error) {
-                            *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
-                                                         code:SSZipArchiveErrorCodeFileContentNotReadable
-                                                     userInfo:@{NSLocalizedDescriptionKey: @"failed to read contents of file entry"}];
+            }
+            if (filename[fileInfo.size_filename-1] == '/' || filename[fileInfo.size_filename-1] == '\\') {
+                // file is a directory, skip to next file
+            } else  {
+                if ((fileInfo.flag & 1) == 1) {
+                    unsigned char buffer[10] = {0};
+                    int readBytes = unzReadCurrentFile(zip, buffer, (unsigned)MIN(10UL,fileInfo.uncompressed_size));
+                    if (readBytes < 0) {
+                        // Let's assume error Z_DATA_ERROR is caused by an invalid password
+                        // Let's assume other errors are caused by Content Not Readable
+                        if (readBytes != Z_DATA_ERROR) {
+                            if (error) {
+                                *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                                             code:SSZipArchiveErrorCodeFileContentNotReadable
+                                                         userInfo:@{NSLocalizedDescriptionKey: @"failed to read contents of file entry"}];
+                            }
                         }
+                        return NO;
                     }
-                    return NO;
+                    return YES;
                 }
             }
+            free(filename);
             
             unzCloseCurrentFile(zip);
             ret = unzGoToNextFile(zip);
