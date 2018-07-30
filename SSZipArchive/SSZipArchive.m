@@ -726,18 +726,17 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
             
-            if (keepParentDirectory)
-            {
+            if (keepParentDirectory) {
                 fileName = [directoryPath.lastPathComponent stringByAppendingPathComponent:fileName];
             }
             
             if (!isDir) {
+                // file
                 success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
-            }
-            else
-            {
-                if ([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fullFilePath error:nil].count == 0)
-                {
+            } else {
+                // directory
+                if ([fileManager contentsOfDirectoryAtPath:fullFilePath error:nil].count == 0) {
+                    // empty directory
                     success &= [zipArchive writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
                 }
             }
