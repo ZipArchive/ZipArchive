@@ -866,7 +866,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     NSAssert((_zip != NULL), @"[SSZipArchive] Attempting to close an archive which was never opened");
     int error = zipClose(_zip, NULL);
     _zip = nil;
-    return error == UNZ_OK;
+    return error == ZIP_OK;
 }
 
 #pragma mark - Private
