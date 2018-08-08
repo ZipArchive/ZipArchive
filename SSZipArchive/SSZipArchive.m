@@ -719,25 +719,27 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         NSFileManager *fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
         NSArray<NSString *> *allObjects = dirEnumerator.allObjects;
+        if (keepParentDirectory) {
+            success &= [zipArchive writeFolderAtPath:directoryPath withFolderName:directoryPath.lastPathComponent withPassword:password];
+        }
         NSUInteger total = allObjects.count, complete = 0;
         NSString *fileName;
         for (fileName in allObjects) {
             BOOL isDir;
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
-            
-            if (keepParentDirectory)
-            {
+
+            if (keepParentDirectory) {
                 fileName = [directoryPath.lastPathComponent stringByAppendingPathComponent:fileName];
             }
-            
+
             if (!isDir) {
+                // file
                 success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
-            }
-            else
-            {
-                if ([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fullFilePath error:nil].count == 0)
-                {
+            } else {
+                // directory
+                if ([[NSFileManager defaultManager] subpathsOfDirectoryAtPath:fullFilePath error:nil].count == 0) {
+                    // empty directory
                     success &= [zipArchive writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
                 }
             }
@@ -745,7 +747,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             if (progressHandler) {
                 progressHandler(complete, total);
             }
-        }
+        } // for loop
         success &= [zipArchive close];
     }
     return success;
