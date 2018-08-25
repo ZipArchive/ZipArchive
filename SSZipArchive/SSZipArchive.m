@@ -720,8 +720,11 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
         NSArray<NSString *> *allObjects = dirEnumerator.allObjects;
         NSUInteger total = allObjects.count, complete = 0;
-        NSString *fileName;
-        for (fileName in allObjects) {
+        if (keepParentDirectory && !total) {
+            allObjects = @[@""];
+            total = 1;
+        }
+        for (__strong NSString *fileName in allObjects) {
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
             
             if (keepParentDirectory) {
