@@ -13,5 +13,6 @@ Pod::Spec.new do |s|
   s.watchos.deployment_target = '2.0'
   s.source_files = 'SSZipArchive/*.{m,h}', 'SSZipArchive/minizip/*.{c,h}', 'SSZipArchive/minizip/aes/*.{c,h}'
   s.public_header_files = 'SSZipArchive/*.h'
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
   s.library = 'z'
 end
