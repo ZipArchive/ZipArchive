@@ -135,6 +135,28 @@
     }
 }
 
+- (void)testZippingPerformance {
+    [self measureBlock:^{
+        
+        // Input file can be changed to test zipping performance on different file types.
+        // 0.4ma is used as an example
+        NSString *inputPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"0.m4a" ofType:nil];
+        
+        NSString *outputPath = [self _cachesPath:@"Zipped"];
+        NSString *archivePath = [outputPath stringByAppendingString:@"outputZip_performance"];
+        
+        BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:@[inputPath]];
+        XCTAssertTrue(success);
+        
+        long long inputFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:inputPath
+                                                                                    error:nil][NSFileSize] longLongValue];
+        long long outputFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:archivePath
+                                                                                     error:nil][NSFileSize] longLongValue];
+        NSLog(@"Input file of size %lld compressed to %lld sized zip file", inputFileSize, outputFileSize);
+        
+    }];
+}
+
 - (void)testUnzipping {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Regular"];
