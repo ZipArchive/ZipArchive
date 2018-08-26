@@ -376,6 +376,24 @@
     XCTAssert(fileSize < fileSize2, @"keepParentDirectory should produce a strictly bigger archive.");
 }
 
+- (void)testZippingAndUnzippingEmptyDirectoryWithPassword {
+    
+    NSString *inputPath = [self _cachesPath:@"Empty"];
+    XCTAssert(![[NSFileManager defaultManager] enumeratorAtPath:inputPath].nextObject, @"The Empty cache folder should always be empty.");
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    NSString *zipPath = [outputPath stringByAppendingPathComponent:@"EmptyWithParentDirectory.zip"];
+    
+    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:inputPath keepParentDirectory:YES withPassword:@"password"];
+    XCTAssertTrue(success);
+    
+    outputPath = [self _cachesPath:@"EmptyDirectory"];
+    
+    // unzipping a directory doesn't require a password
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:nil error:nil delegate:delegate];
+    XCTAssertTrue(success);
+}
+
 - (void)testUnzippingEmptyArchive {
     
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"Empty" ofType:@"zip"];
