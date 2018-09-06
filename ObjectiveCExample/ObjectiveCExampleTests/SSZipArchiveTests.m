@@ -17,6 +17,10 @@
 @interface SSZipArchiveTests : XCTestCase
 @end
 
+@interface NSString (SSZipArchive)
+- (NSString *)_sanitizedPath;
+@end
+
 @implementation SSZipArchiveTests
 
 - (void)setUp {
@@ -535,6 +539,30 @@
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:expectedFile];
     
     XCTAssertTrue(fileExists, @"Path traversal characters should not be followed when unarchiving a file");
+}
+
+- (void)testPathSanitation {
+    NSDictionary<NSString *, NSString *> *tests =
+    @{
+      // path traversal
+      @"../../../../../../../../../../../tmp/test.txt": @"tmp/test.txt",
+      // path traversal, Windows style
+      @"..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp\\test.txt": @"tmp/test.txt",
+      // relative path
+      @"a/b/../c.txt": @"a/c.txt",
+      // path traversal without slash
+      @"..": @"",
+      // permissions override
+      @".": @"",
+      // unicode in folder name and file name
+      @"example/../à: 𝚨 󌞑/你好.txt": @"à: 𝚨 󌞑/你好.txt",
+      // scheme in name
+      @"file:a/../../../usr/bin": @"usr/bin",
+      };
+    for (NSString *str in tests) {
+        //NSLog(@"%@", str);
+        XCTAssertTrue([tests[str] isEqualToString:[str _sanitizedPath]], @"Path should be sanitized for traversal");
+    }
 }
 
 #pragma mark - Private

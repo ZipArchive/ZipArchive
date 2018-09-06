@@ -30,6 +30,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 - (NSString *)_hexString;
 @end
 
+@interface NSString (SSZipArchive)
+- (NSString *)_sanitizedPath;
+@end
+
 @interface SSZipArchive ()
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 @end
@@ -388,16 +392,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
             free(filename);
             
-            // Contains a path
-            if ([strPath rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"/\\"]].location != NSNotFound) {
-                strPath = [strPath stringByReplacingOccurrencesOfString:@"\\" withString:@"/"];
-            }
-            
-            // Sanitize path traversal characters if they're present in the file name to prevent directory backtracking. Ignoring these characters mimicks the default behavior of the Unarchiving tool on macOS.
-            if ([strPath rangeOfString:@"../"].location != NSNotFound) {
-                // "../../../../../../../../../../../tmp/test.txt" -> "tmp/test.txt"
-                strPath = [[[NSURL URLWithString:strPath] standardizedURL] absoluteString];
-            }
+            // Sanitize paths in the file name.
+            strPath = [strPath _sanitizedPath];
             
             NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
             NSError *err = nil;
@@ -1109,6 +1105,40 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
                                                  encoding:NSASCIIStringEncoding
                                              freeWhenDone:YES];
     return str;
+}
+
+@end
+
+#pragma mark Private tools for security
+
+@implementation NSString (SSZipArchive)
+
+- (NSString *)_sanitizedPath
+{
+    // Change Windows paths to Unix paths: https://en.wikipedia.org/wiki/Path_(computing)
+    // Possible improvement: only do this if the archive was created on a non-Unix system
+    NSString *strPath = [self stringByReplacingOccurrencesOfString:@"\\" withString:@"/"];
+    
+    // Percent-encode file path (where path is defined by https://tools.ietf.org/html/rfc8089)
+    // The key part is to allow characters "." and "/" and disallow "%".
+    // CharacterSet.urlPathAllowed seems to do the job
+    strPath = [strPath stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLPathAllowedCharacterSet];
+    
+    // Add scheme "file:///" to support sanitation on names with a colon like "file:a/../../../usr/bin"
+    strPath = [@"file:///" stringByAppendingString:strPath];
+    
+    // Sanitize path traversal characters to prevent directory backtracking. Ignoring these characters mimicks the default behavior of the Unarchiving tool on macOS.
+    // "../../../../../../../../../../../tmp/test.txt" -> "tmp/test.txt"
+    // "a/b/../c.txt" -> "a/c.txt"
+    strPath = [NSURL URLWithString:strPath].standardizedURL.absoluteString;
+    
+    // Remove the "file:///" scheme
+    strPath = [strPath substringFromIndex:8];
+    
+    // Remove the percent-encoding
+    strPath = strPath.stringByRemovingPercentEncoding;
+    
+    return strPath;
 }
 
 @end
