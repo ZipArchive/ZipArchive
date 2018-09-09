@@ -1113,6 +1113,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
 
 @implementation NSString (SSZipArchive)
 
+// One alternative would be to use the algorithm found at mz_path_resolve from https://github.com/nmoinvaz/minizip/blob/dev/mz_os.c,
+// but making sure to work with unichar values and not ascii values to avoid breaking Unicode characters containing 2E ('.') or 2F ('/') in their decomposition
 - (NSString *)_sanitizedPath
 {
     // Change Windows paths to Unix paths: https://en.wikipedia.org/wiki/Path_(computing)

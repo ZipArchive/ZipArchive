@@ -553,9 +553,13 @@
       // path traversal without slash
       @"..": @"",
       // permissions override
+      @"./": @"",
       @".": @"",
-      // unicode in folder name and file name
-      @"example/../à: 𝚨 󌞑/你好.txt": @"à: 𝚨 󌞑/你好.txt",
+      // unicode and spaces in folder name and file name
+      @"example/../à: 𝚨 󌞑/你 好.txt": @"à: 𝚨 󌞑/你 好.txt",
+      // unicode that looks like '.' or '/' in ascii decomposition
+      @"a/ğ/../b": @"a/b",
+      @"a/⸮/b/.ⸯ/c/⼮./d": @"a/⸮/b/.ⸯ/c/⼮./d",
       // scheme in name
       @"file:a/../../../usr/bin": @"usr/bin",
       };
