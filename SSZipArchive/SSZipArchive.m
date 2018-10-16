@@ -63,16 +63,20 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 ret = unzOpenCurrentFilePassword(zip, "");
                 unzCloseCurrentFile(zip);
                 if (ret == UNZ_OK || ret == UNZ_BADPASSWORD) {
+                    unzClose(zip);
                     return YES;
                 }
+                unzClose(zip);
                 return NO;
             }
             unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
             unzCloseCurrentFile(zip);
             if (ret != UNZ_OK) {
+                unzClose(zip);
                 return NO;
             } else if ((fileInfo.flag & 1) == 1) {
+                unzClose(zip);
                 return YES;
             }
             
@@ -80,6 +84,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         } while (ret == UNZ_OK);
     }
     
+    unzClose(zip);
     return NO;
 }
 
