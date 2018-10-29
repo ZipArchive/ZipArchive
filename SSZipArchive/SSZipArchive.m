@@ -309,8 +309,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     NSError *unzippingError;
     do {
         currentFileNumber++;
-        if (ret == UNZ_END_OF_LIST_OF_FILE)
+        if (ret == UNZ_END_OF_LIST_OF_FILE) {
             break;
+        }
         @autoreleasepool {
             if (password.length == 0) {
                 ret = unzOpenCurrentFile(zip);
@@ -380,10 +381,6 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 free(filename);
                 continue;
             }
-            if (!strPath.length) {
-                // if filename data is unsalvageable, we default to currentFileNumber
-                strPath = @(currentFileNumber).stringValue;
-            }
             
             // Check if it contains directory
             BOOL isDirectory = NO;
@@ -394,6 +391,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             
             // Sanitize paths in the file name.
             strPath = [strPath _sanitizedPath];
+            if (!strPath.length) {
+                // if filename data is unsalvageable, we default to currentFileNumber
+                strPath = @(currentFileNumber).stringValue;
+            }
             
             NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
             NSError *err = nil;
@@ -886,7 +887,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     uint16_t made_by = version_made_by >> 8;
     BOOL made_on_dos = made_by == 0;
     BOOL languageEncoding = (flag & (1 << 11)) != 0;
-    if(!languageEncoding && made_on_dos) {
+    if (!languageEncoding && made_on_dos) {
         // APPNOTE.TXT D.1:
         //   D.2 If general purpose bit 11 is unset, the file name and comment should conform
         //   to the original ZIP character encoding.  If general purpose bit 11 is set, the
@@ -899,7 +900,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         //  Code Page 437 corresponds to kCFStringEncodingDOSLatinUS
         NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingDOSLatinUS);
         NSString* strPath = [NSString stringWithCString:filename encoding:encoding];
-        if(strPath) return strPath;
+        if (strPath) {
+            return strPath;
+        }
     }
     
     // attempting unicode encoding
@@ -1113,8 +1116,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
 
 @implementation NSString (SSZipArchive)
 
-// One alternative would be to use the algorithm found at mz_path_resolve from https://github.com/nmoinvaz/minizip/blob/dev/mz_os.c,
+// One implementation alternative would be to use the algorithm found at mz_path_resolve from https://github.com/nmoinvaz/minizip/blob/dev/mz_os.c,
 // but making sure to work with unichar values and not ascii values to avoid breaking Unicode characters containing 2E ('.') or 2F ('/') in their decomposition
+/// Sanitize path traversal characters to prevent directory backtracking. Ignoring these characters mimicks the default behavior of the Unarchiving tool on macOS.
 - (NSString *)_sanitizedPath
 {
     // Change Windows paths to Unix paths: https://en.wikipedia.org/wiki/Path_(computing)
@@ -1135,6 +1139,14 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
         strPath = [strPath stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLPathAllowedCharacterSet];
     } else {
         strPath = [strPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    }
+    
+    // `NSString.stringByAddingPercentEncodingWithAllowedCharacters:` may theorically fail: https://stackoverflow.com/questions/33558933/
+    // But because we auto-detect encoding using `NSString.stringEncodingForData:encodingOptions:convertedString:usedLossyConversion:`,
+    // we likely already prevent UTF-16, UTF-32 and invalid Unicode in the form of unpaired surrogate chars: https://stackoverflow.com/questions/53043876/
+    // To be on the safe side, we will still perform a guard check.
+    if (strPath == nil) {
+        return nil;
     }
     
     // Add scheme "file:///" to support sanitation on names with a colon like "file:a/../../../usr/bin"
