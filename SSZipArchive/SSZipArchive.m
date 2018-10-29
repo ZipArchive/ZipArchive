@@ -1124,7 +1124,18 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
     // Percent-encode file path (where path is defined by https://tools.ietf.org/html/rfc8089)
     // The key part is to allow characters "." and "/" and disallow "%".
     // CharacterSet.urlPathAllowed seems to do the job
-    strPath = [strPath stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLPathAllowedCharacterSet];
+    // Testing availability of @available (https://stackoverflow.com/a/46927445/1033581)
+#if __clang_major__ < 9
+    // Xcode 8-
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_8_4) {
+#else
+    // Xcode 9+
+    if (@available(macOS 10.9, iOS 7.0, watchOS 2.0, tvOS 9.0, *)) {
+#endif
+        strPath = [strPath stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLPathAllowedCharacterSet];
+    } else {
+        strPath = [strPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    }
     
     // Add scheme "file:///" to support sanitation on names with a colon like "file:a/../../../usr/bin"
     strPath = [@"file:///" stringByAppendingString:strPath];
@@ -1138,7 +1149,18 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
     strPath = [strPath substringFromIndex:8];
     
     // Remove the percent-encoding
-    strPath = strPath.stringByRemovingPercentEncoding;
+    // Testing availability of @available (https://stackoverflow.com/a/46927445/1033581)
+#if __clang_major__ < 9
+    // Xcode 8-
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_8_4) {
+#else
+    // Xcode 9+
+    if (@available(macOS 10.9, iOS 7.0, watchOS 2.0, tvOS 9.0, *)) {
+#endif
+        strPath = strPath.stringByRemovingPercentEncoding;
+    } else {
+        strPath = [strPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    }
     
     return strPath;
 }
