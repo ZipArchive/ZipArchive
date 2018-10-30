@@ -6,21 +6,34 @@ use_frameworks!
 abstract_target 'core' do
 
   pod 'SSZipArchive', :path => '..'
+  pod 'Zip', '~> 1.1'
 
   target 'ObjectiveCExample' do
-    platform :ios
+    platform :ios, '8.0'
   end
 
   target 'ObjectiveCExampleTests_iOS' do
-    platform :ios
+    platform :ios, '8.0'
   end
 
   target 'ObjectiveCExampleTests_macOS' do
-    platform :osx, '10.8'
+    platform :osx, '10.9'
   end
 
   target 'ObjectiveCExampleTests_tvOS' do
     platform :tvos, '9.0'
   end
 
+end
+
+
+# an alternative is to use 'Zip' master branch
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+      if ['Zip'].include? target.name
+          target.build_configurations.each do |config|
+              config.build_settings['SWIFT_VERSION'] = '4.1'
+          end
+      end
+  end
 end

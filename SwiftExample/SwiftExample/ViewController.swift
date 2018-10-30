@@ -13,6 +13,7 @@ import UIKit
 #else
     import SSZipArchive
 #endif
+import Zip
 
 class ViewController: UIViewController {
 

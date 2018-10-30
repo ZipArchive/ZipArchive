@@ -5,5 +5,17 @@ use_frameworks!
 
 target 'SwiftExample' do
   pod 'SSZipArchive', :path => '..'
-  platform :ios
+  pod 'Zip', '~> 1.1'
+  platform :ios, '8.0'
+end
+
+# an alternative is to use 'Zip' master branch
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+      if ['Zip'].include? target.name
+          target.build_configurations.each do |config|
+              config.build_settings['SWIFT_VERSION'] = '4.1'
+          end
+      end
+  end
 end
