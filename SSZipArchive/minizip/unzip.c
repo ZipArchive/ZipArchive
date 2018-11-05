@@ -1324,16 +1324,17 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, uint32_t len)
         return UNZ_END_OF_LIST_OF_FILE;
     if (len == 0)
         return 0;
-    if (len > UINT16_MAX)
+    // avail_out is uInt, so uint32_t len might allow requesting a larger buffer than zlib can support
+    if (len > UINT_MAX)
         return UNZ_PARAMERROR;
 
     s->pfile_in_zip_read->stream.next_out = (uint8_t*)buf;
-    s->pfile_in_zip_read->stream.avail_out = (uint16_t)len;
+    s->pfile_in_zip_read->stream.avail_out = (uInt)len;
 
     if ((s->pfile_in_zip_read->compression_method == 0) || (s->pfile_in_zip_read->raw))
     {
         if (len > s->pfile_in_zip_read->rest_read_compressed + s->pfile_in_zip_read->stream.avail_in)
-            s->pfile_in_zip_read->stream.avail_out = (uint16_t)s->pfile_in_zip_read->rest_read_compressed +
+            s->pfile_in_zip_read->stream.avail_out = (uInt)s->pfile_in_zip_read->rest_read_compressed +
             s->pfile_in_zip_read->stream.avail_in;
     }
 
@@ -1353,7 +1354,7 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, uint32_t len)
             if (bytes_not_read > 0)
                 memmove(s->pfile_in_zip_read->read_buffer, s->pfile_in_zip_read->stream.next_in, bytes_not_read);
             if (s->pfile_in_zip_read->rest_read_compressed < bytes_to_read)
-                bytes_to_read = (uint16_t)s->pfile_in_zip_read->rest_read_compressed;
+                bytes_to_read = (uint32_t)s->pfile_in_zip_read->rest_read_compressed;
 
             while (total_bytes_read != bytes_to_read)
             {
@@ -1406,7 +1407,7 @@ extern int ZEXPORT unzReadCurrentFile(unzFile file, voidp buf, uint32_t len)
 
             s->pfile_in_zip_read->rest_read_compressed -= total_bytes_read;
             s->pfile_in_zip_read->stream.next_in = (uint8_t*)s->pfile_in_zip_read->read_buffer;
-            s->pfile_in_zip_read->stream.avail_in = (uint16_t)(bytes_not_read + total_bytes_read);
+            s->pfile_in_zip_read->stream.avail_in = (uInt)(bytes_not_read + total_bytes_read);
         }
 
         if ((s->pfile_in_zip_read->compression_method == 0) || (s->pfile_in_zip_read->raw))

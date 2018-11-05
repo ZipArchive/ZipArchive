@@ -36,24 +36,6 @@
 
 //#define IOBUF_VERBOSE
 
-#ifdef __GNUC__
-#ifndef max
-#define max(x,y) ({ \
-const __typeof__(x) _x = (x);	\
-const __typeof__(y) _y = (y);	\
-(void) (&_x == &_y);		\
-_x > _y ? _x : _y; })
-#endif /* __GNUC__ */
-
-#ifndef min
-#define min(x,y) ({ \
-const __typeof__(x) _x = (x);	\
-const __typeof__(y) _y = (y);	\
-(void) (&_x == &_y);		\
-_x < _y ? _x : _y; })
-#endif
-#endif
-
 typedef struct ourstream_s {
   char      readbuf[IOBUF_BUFFERSIZE];
   uint32_t  readbuf_len;
@@ -207,7 +189,10 @@ uint32_t ZCALLBACK fread_buf_func(voidpf opaque, voidpf stream, void *buf, uint3
 
         if ((streamio->readbuf_len - streamio->readbuf_pos) > 0)
         {
-            bytes_to_copy = min(bytes_left_to_read, (uint32_t)(streamio->readbuf_len - streamio->readbuf_pos));
+            bytes_to_copy = streamio->readbuf_len - streamio->readbuf_pos;
+            if (bytes_to_copy > bytes_left_to_read)
+                bytes_to_copy = bytes_left_to_read;
+
             memcpy((char *)buf + buf_len, streamio->readbuf + streamio->readbuf_pos, bytes_to_copy);
 
             buf_len += bytes_to_copy;
@@ -230,6 +215,7 @@ uint32_t ZCALLBACK fwrite_buf_func(voidpf opaque, voidpf stream, const void *buf
     uint32_t bytes_to_write = size;
     uint32_t bytes_left_to_write = size;
     uint32_t bytes_to_copy = 0;
+    uint32_t bytes_used = 0;
     int64_t ret = 0;
 
     print_buf(opaque, stream, "write [size %ld len %d pos %lld]\n", size, streamio->writebuf_len, streamio->position);
@@ -255,7 +241,12 @@ uint32_t ZCALLBACK fwrite_buf_func(voidpf opaque, voidpf stream, const void *buf
 
     while (bytes_left_to_write > 0)
     {
-        bytes_to_copy = min(bytes_left_to_write, (uint32_t)(IOBUF_BUFFERSIZE - min(streamio->writebuf_len, streamio->writebuf_pos)));
+        bytes_used = streamio->writebuf_len;
+        if (bytes_used > streamio->writebuf_pos)
+            bytes_used = streamio->writebuf_pos;
+        bytes_to_copy = (uint32_t)(IOBUF_BUFFERSIZE - bytes_used);
+        if (bytes_to_copy > bytes_left_to_write)
+            bytes_to_copy = bytes_left_to_write;
 
         if (bytes_to_copy == 0)
         {
