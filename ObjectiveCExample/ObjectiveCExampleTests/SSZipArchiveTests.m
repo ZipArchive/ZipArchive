@@ -11,46 +11,20 @@
 #import <CommonCrypto/CommonDigest.h>
 
 #import "CollectingDelegate.h"
+#import "CancelDelegate.h"
+#import "ProgressDelegate.h"
 
-@interface CancelDelegate : NSObject <SSZipArchiveDelegate>
-@property (nonatomic, assign) int numFilesUnzipped;
-@property (nonatomic, assign) int numFilesToUnzip;
-@property (nonatomic, assign) BOOL didUnzipArchive;
-@property (nonatomic, assign) int loaded;
-@property (nonatomic, assign) int total;
+@interface SSZipArchiveTests : XCTestCase
 @end
 
-@implementation CancelDelegate
-- (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo
-{
-    _numFilesUnzipped = (int)fileIndex + 1;
-}
-- (BOOL)zipArchiveShouldUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo
-{
-    //return YES;
-    return _numFilesUnzipped < _numFilesToUnzip;
-}
-- (void)zipArchiveDidUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo unzippedPath:(NSString *)unzippedPath
-{
-    _didUnzipArchive = YES;
-}
-- (void)zipArchiveProgressEvent:(unsigned long long)loaded total:(unsigned long long)total
-{
-    _loaded = (int)loaded;
-    _total = (int)total;
-}
+@interface NSString (SSZipArchive)
+- (NSString *)_sanitizedPath;
 @end
 
-@interface SSZipArchiveTests : XCTestCase <SSZipArchiveDelegate>
-@end
-
-@implementation SSZipArchiveTests {
-    NSMutableArray *progressEvents;
-}
+@implementation SSZipArchiveTests
 
 - (void)setUp {
     [super setUp];
-    progressEvents = [NSMutableArray array];
 }
 
 - (void)tearDown {
@@ -61,6 +35,8 @@
 
 - (void)testZipping {
     // use extracted files from [-testUnzipping]
+    [self testUnzipping];
+    
     NSString *inputPath = [self _cachesPath:@"Regular"];
     NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"],
                             [inputPath stringByAppendingPathComponent:@"LICENSE"]];
@@ -68,10 +44,58 @@
     NSString *outputPath = [self _cachesPath:@"Zipped"];
 
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
-    [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
-
-    // TODO: Make sure the files are actually unzipped. They are, but the test should be better.
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
+    
+    XCTAssertTrue(success);
+    // TODO: Make sure the files are actually zipped. They are, but the test should be better.
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+    
+    BOOL protected = [SSZipArchive isFilePasswordProtectedAtPath:archivePath];
+    XCTAssertFalse(protected, @"has no password");
+}
+
+
+- (void)testZippingWithPassword {
+    // use extracted files from [-testUnzipping]
+    [self testUnzipping];
+    
+    NSString *inputPath = [self _cachesPath:@"Regular"];
+    NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"],
+                            [inputPath stringByAppendingPathComponent:@"LICENSE"]];
+    
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@"dolphins🐋"];
+    
+    XCTAssertTrue(success);
+    // TODO: Make sure the files are actually zipped. They are, but the test should be better.
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+    
+    BOOL protected = [SSZipArchive isFilePasswordProtectedAtPath:archivePath];
+    XCTAssertTrue(protected, @"has password");
+}
+
+
+- (void)testZippingWithZeroLengthPassword {
+    // use extracted files from [-testUnzipping]
+    [self testUnzipping];
+    
+    NSString *inputPath = [self _cachesPath:@"Regular"];
+    NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"],
+                            [inputPath stringByAppendingPathComponent:@"LICENSE"]];
+    
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@""];
+    
+    XCTAssertTrue(success);
+    // TODO: Make sure the files are actually zipped. They are, but the test should be better.
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+    
+    BOOL protected = [SSZipArchive isFilePasswordProtectedAtPath:archivePath];
+    XCTAssertTrue(protected, @"has password");
 }
 
 
@@ -82,13 +106,13 @@
     NSString *outputPath = [self _cachesPath:@"FolderZipped"];
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"ArchiveWithFolders.zip"];
 
-    [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputPath];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputPath];
+    XCTAssertTrue(success);
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Folder Archive created");
 }
 
 - (void)testMultipleZippping{
     NSArray *inputPaths = @[[[NSBundle bundleForClass: [self class]]pathForResource:@"0" ofType:@"m4a"],
-
                             [[NSBundle bundleForClass: [self class]]pathForResource:@"1" ofType:@"m4a"],
                             [[NSBundle bundleForClass: [self class]]pathForResource:@"2" ofType:@"m4a"],
                             [[NSBundle bundleForClass: [self class]]pathForResource:@"3" ofType:@"m4a"],
@@ -104,23 +128,25 @@
     for (int test = 0; test < 20; test++)
     {
         // Zipping
-        NSString *archivePath = [outputPath stringByAppendingPathComponent:[NSString stringWithFormat:@"queue_test_%d.zip",test]];
+        NSString *archivePath = [outputPath stringByAppendingPathComponent:[NSString stringWithFormat:@"queue_test_%d.zip", test]];
 
-        [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
-
+        BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
+        XCTAssertTrue(success);
+        
         long long threshold = 510000; // 510kB:size slightly smaller than a successful zip, but much larger than a failed one
         long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:archivePath error:nil][NSFileSize] longLongValue];
-        XCTAssertTrue(fileSize > threshold, @"zipping failed at %@!",archivePath);
+        XCTAssertTrue(fileSize > threshold, @"zipping failed at %@!", archivePath);
     }
-
 }
 
 - (void)testUnzipping {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Regular"];
 
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
-
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
@@ -128,12 +154,15 @@
     testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
+
 - (void)testSmallFileUnzipping {
     NSString *zipPath = [[NSBundle bundleForClass: [self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Regular"];
 
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
-
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
@@ -141,20 +170,21 @@
     testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
+
 - (void)testUnzippingProgress {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Progress"];
 
-    [progressEvents removeAllObjects];
-
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
-
+    ProgressDelegate *delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
+    
     // 4 events: the first, then for each of the two files one, then the final event
-    XCTAssertTrue(4 == [progressEvents count], @"Expected 4 progress events");
-    XCTAssertTrue(0 == [progressEvents[0] intValue]);
-    XCTAssertTrue(619 == [progressEvents[1] intValue]);
-    XCTAssertTrue(1114 == [progressEvents[2] intValue]);
-    XCTAssertTrue(1436 == [progressEvents[3] intValue]);
+    XCTAssertTrue(4 == [delegate->progressEvents count], @"Expected 4 progress events");
+    XCTAssertTrue(0 == [delegate->progressEvents[0] intValue]);
+    XCTAssertTrue(619 == [delegate->progressEvents[1] intValue]);
+    XCTAssertTrue(1114 == [delegate->progressEvents[2] intValue]);
+    XCTAssertTrue(1436 == [delegate->progressEvents[3] intValue]);
 }
 
 
@@ -163,8 +193,10 @@
     NSString *outputPath = [self _cachesPath:@"Password"];
 
     NSError *error = nil;
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:@"passw0rd" error:&error delegate:self];
-
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:@"passw0rd" error:&error delegate:delegate];
+    XCTAssertTrue(success);
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
@@ -178,7 +210,9 @@
     NSString *outputPath = [self _cachesPath:@"Password"];
     
     NSError *error = nil;
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:@"passw0rd123" error:&error delegate:self];
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:@"passw0rd123" error:&error delegate:delegate];
+    XCTAssertFalse(success);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
@@ -196,12 +230,11 @@
     
     BOOL fileHasValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd" error:&error];
     
-    XCTAssertTrue(fileHasValidPassword,@"Valid password reports false.");
+    XCTAssertTrue(fileHasValidPassword, @"Valid password reports false.");
     
     BOOL fileHasInvalidValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd123" error:&error];
     
-    XCTAssertFalse(fileHasInvalidValidPassword,@"Invalid password reports true.");
-    
+    XCTAssertFalse(fileHasInvalidValidPassword, @"Invalid password reports true.");
 }
 
 - (void)testIsFilePasswordProtectedAtPath {
@@ -217,31 +250,69 @@
     XCTAssertTrue(protected, @"has password");
 }
 
-//Temp Disabled test, fix is not yet in the AES version of the unzip lib
+- (void)testZippingAndUnzippingWithUnicodePassword {
+    
+    /********** Zipping ********/
+    
+    // use extracted files from [-testUnzipping]
+    [self testUnzipping];
+    NSString *inputPath = [self _cachesPath:@"Regular"];
+    NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"],
+                            [inputPath stringByAppendingPathComponent:@"LICENSE"]];
+    
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedUnicodePasswordArchive.zip"];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@"ꊐ⌒Ⅳ🤐"];
+    
+    XCTAssertTrue(success);
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+    
+    /********** Unzipping ********/
+    
+    outputPath = [self _cachesPath:@"UnicodePassword"];
+    
+    NSError *error = nil;
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    success = [SSZipArchive unzipFileAtPath:archivePath toDestination:outputPath overwrite:YES password:@"ꊐ⌒Ⅳ🤐" error:&error delegate:delegate];
+    XCTAssertTrue(success);
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *testPath = [outputPath stringByAppendingPathComponent:@"Readme.markdown"];
+    XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
+    
+    testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
+    XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
+}
 
-//- (void)testUnzippingTruncatedFileFix {
-//    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IncorrectHeaders" ofType:@"zip"];
-//    NSString* outputPath = [self _cachesPath:@"IncorrectHeaders"];
-//
-//    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
-//
-//    NSString* intendedReadmeTxtMD5 = @"31ac96301302eb388070c827447290b5";
-//
-//    NSString* filePath = [outputPath stringByAppendingPathComponent:@"IncorrectHeaders/Readme.txt"];
-//    NSData* data = [NSData dataWithContentsOfFile:filePath];
-//
-//    NSString* actualReadmeTxtMD5 = [self _calculateMD5Digest:data];
-//    XCTAssertTrue([actualReadmeTxtMD5 isEqualToString:intendedReadmeTxtMD5], @"Readme.txt MD5 digest should match original.");
-//}
+
+- (void)testUnzippingTruncatedFileFix {
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IncorrectHeaders" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"IncorrectHeaders"];
+
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
+
+    NSString *intendedReadmeTxtMD5 = @"31ac96301302eb388070c827447290b5";
+
+    NSString *filePath = [outputPath stringByAppendingPathComponent:@"IncorrectHeaders/Readme.txt"];
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+
+    NSString *actualReadmeTxtMD5 = [self _calculateMD5Digest:data];
+    XCTAssertTrue([actualReadmeTxtMD5 isEqualToString:intendedReadmeTxtMD5], @"Readme.txt MD5 digest should match original.");
+}
 
 
 - (void)testUnzippingWithSymlinkedFileInside {
 
-    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"SymbolicLink" ofType:@"zip"];
-    NSString* outputPath = [self _cachesPath:@"SymbolicLink"];
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"SymbolicLink" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"SymbolicLink"];
 
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
-
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
+    
     NSString *testSymlink = [outputPath stringByAppendingPathComponent:@"SymbolicLink/Xcode.app"];
 
     NSError *error = nil;
@@ -253,11 +324,13 @@
 - (void)testUnzippingWithRelativeSymlink {
 
     NSString *resourceName = @"RelativeSymbolicLink";
-    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:resourceName ofType:@"zip"];
-    NSString* outputPath = [self _cachesPath:resourceName];
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:resourceName ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:resourceName];
 
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
-
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
+    
     // Determine where the symlinks are
     NSString *subfolderName = @"symlinks";
     NSString *testBasePath = [NSString pathWithComponents:@[outputPath]];
@@ -275,11 +348,13 @@
 
 - (void)testUnzippingWithUnicodeFilenameInside {
 
-    NSString* zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"Unicode" ofType:@"zip"];
-    NSString* outputPath = [self _cachesPath:@"Unicode"];
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"Unicode" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"Unicode"];
 
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:self];
-
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
+    
     bool unicodeFilenameWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:[outputPath stringByAppendingPathComponent:@"Accént.txt"]];
 
     bool unicodeFolderWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:[outputPath stringByAppendingPathComponent:@"Fólder/Nothing.txt"]];
@@ -288,9 +363,54 @@
     XCTAssertTrue(unicodeFolderWasExtracted, @"Folders with names in unicode should be extracted propertly.");
 }
 
+- (void)testZippingEmptyArchive {
+    
+    NSString *inputPath = [self _cachesPath:@"Empty"];
+    XCTAssert(![[NSFileManager defaultManager] enumeratorAtPath:inputPath].nextObject, @"The Empty cache folder should always be empty.");
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    NSString *zipPath = [outputPath stringByAppendingPathComponent:@"Empty.zip"];
+    NSString *zipPath2 = [outputPath stringByAppendingPathComponent:@"EmptyWithParentDirectory.zip"];
+    
+    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:inputPath keepParentDirectory:NO];
+    XCTAssertTrue(success);
+    success = [SSZipArchive createZipFileAtPath:zipPath2 withContentsOfDirectory:inputPath keepParentDirectory:YES];
+    XCTAssertTrue(success);
+    long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:zipPath error:nil][NSFileSize] longLongValue];
+    long long fileSize2 = [[[NSFileManager defaultManager] attributesOfItemAtPath:zipPath2 error:nil][NSFileSize] longLongValue];
+    XCTAssert(fileSize < fileSize2, @"keepParentDirectory should produce a strictly bigger archive.");
+}
+
+- (void)testZippingAndUnzippingEmptyDirectoryWithPassword {
+    
+    NSString *inputPath = [self _cachesPath:@"Empty"];
+    XCTAssert(![[NSFileManager defaultManager] enumeratorAtPath:inputPath].nextObject, @"The Empty cache folder should always be empty.");
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    NSString *zipPath = [outputPath stringByAppendingPathComponent:@"EmptyWithParentDirectory.zip"];
+    
+    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:inputPath keepParentDirectory:YES withPassword:@"password"];
+    XCTAssertTrue(success);
+    
+    outputPath = [self _cachesPath:@"EmptyDirectory"];
+    
+    // unzipping a directory doesn't require a password
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:nil error:nil delegate:delegate];
+    XCTAssertTrue(success);
+}
+
+- (void)testUnzippingEmptyArchive {
+    
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"Empty" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"Empty"];
+    
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:nil];
+    XCTAssertTrue(success);
+}
 
 - (void)testZippingAndUnzippingForDate {
 
+    // use extracted files from [-testUnzipping]
+    [self testUnzipping];
     NSString *inputPath = [self _cachesPath:@"Regular"];
     NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"]];
 
@@ -299,12 +419,15 @@
     NSString *outputPath = [self _cachesPath:@"ZippedDate"];
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
 
-    [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
-    [SSZipArchive unzipFileAtPath:archivePath toDestination:outputPath delegate:self];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
+    XCTAssertTrue(success);
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    success = [SSZipArchive unzipFileAtPath:archivePath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
 
     NSDictionary *createdFileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[outputPath stringByAppendingPathComponent:@"Readme.markdown"] error:nil];
 
-    XCTAssertEqualObjects(originalFileAttributes[NSFileCreationDate], createdFileAttributes[@"NSFileCreationDate"], @"Orginal file creationDate should match created one");
+    XCTAssertEqualObjects(originalFileAttributes[NSFileCreationDate], createdFileAttributes[@"NSFileCreationDate"], @"Original file creationDate should match created one");
 }
 
 
@@ -330,14 +453,15 @@
     NSString *archivePath = [outputDir stringByAppendingPathComponent:@"TestAppArchive.zip"];
 
     // Create the zip file using the contents of the .app file as the input
-    [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputFile];
-
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputFile];
+    XCTAssertTrue(success);
 
     /********** Un-zipping *******/
 
     // Using this newly created zip file, unzip it
-    [SSZipArchive unzipFileAtPath:archivePath toDestination:outputDir];
-
+    success = [SSZipArchive unzipFileAtPath:archivePath toDestination:outputDir];
+    XCTAssertTrue(success);
+    
     // Get the path to the target file after unzipping
     NSString *targetFilePath = [outputDir stringByAppendingPathComponent:@"/Contents/MacOS/TestProject"];
 
@@ -359,8 +483,8 @@
     CancelDelegate *delegate = [[CancelDelegate alloc] init];
     delegate.numFilesToUnzip = 1;
 
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
-
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertFalse(success);
     XCTAssertEqual(delegate.numFilesUnzipped, 1);
     XCTAssertFalse(delegate.didUnzipArchive);
     XCTAssertNotEqual(delegate.loaded, delegate.total);
@@ -370,12 +494,11 @@
     delegate = [[CancelDelegate alloc] init];
     delegate.numFilesToUnzip = 1000;
 
-    [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
-
+    success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
     XCTAssertEqual(delegate.numFilesUnzipped, 2);
     XCTAssertTrue(delegate.didUnzipArchive);
     XCTAssertEqual(delegate.loaded, delegate.total);
-
 }
 
 // Commented out to avoid checking in several gig file into the repository. Simply add a file named
@@ -385,65 +508,77 @@
 //	NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"LargeArchive" ofType:@"zip"];
 //	NSString *outputPath = [self _cachesPath:@"Large"];
 //
-//	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
+//  BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath];
+//  XCTAssertTrue(success);
 //}
 
 -(void)testShouldProvidePathOfUnzippedFileInDelegateCallback {
     CollectingDelegate *collector = [CollectingDelegate new];
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
-   	NSString *outputPath = [self _cachesPath:@"Regular"];
-
-   	[SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:collector];
-
-    //    STAssertEqualObjects([collector.files objectAtIndex:0], @"LICENSE.txt", nil);
-    //    STAssertEqualObjects([collector.files objectAtIndex:1], @"README.md", nil);
+    NSString *outputPath = [self _cachesPath:@"Regular"];
+    
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:collector];
+    XCTAssertTrue(success);
+    
+    XCTAssertEqualObjects(collector.files[0], [outputPath stringByAppendingString:@"/LICENSE"]);
+    XCTAssertEqualObjects(collector.files[1], [outputPath stringByAppendingString:@"/Readme.markdown"]);
 }
 
-#pragma mark - SSZipArchiveDelegate
-
-- (void)zipArchiveWillUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo {
-    NSLog(@"*** zipArchiveWillUnzipArchiveAtPath: `%@` zipInfo:", path);
+- (void)testUnzippingFileWithPathTraversalName {
+    
+    // This zip archive contains a file titled '../../../../../../../../../../..//tmp/test.txt'. SSZipArchive should
+    // ignore the path traversing and write the file to "tmp/test.txt"
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"PathTraversal" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"Traversal"];
+    
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success);
+    
+    NSString *expectedFile = [outputPath stringByAppendingPathComponent:@"tmp/test.txt"];
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:expectedFile];
+    
+    XCTAssertTrue(fileExists, @"Path traversal characters should not be followed when unarchiving a file");
 }
 
-
-- (void)zipArchiveDidUnzipArchiveAtPath:(NSString *)path zipInfo:(unz_global_info)zipInfo unzippedPath:(NSString *)unzippedPath {
-    NSLog(@"*** zipArchiveDidUnzipArchiveAtPath: `%@` zipInfo: unzippedPath: `%@`", path, unzippedPath);
+- (void)testPathSanitation {
+    NSDictionary<NSString *, NSString *> *tests =
+    @{
+      // path traversal
+      @"../../../../../../../../../../../tmp/test.txt": @"tmp/test.txt",
+      // path traversal, Windows style
+      @"..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp\\test.txt": @"tmp/test.txt",
+      // relative path
+      @"a/b/../c.txt": @"a/c.txt",
+      // path traversal without slash
+      @"..": @"",
+      // permissions override
+      @"./": @"",
+      @".": @"",
+      // unicode and spaces in folder name and file name
+      @"example/../à: 𝚨 󌞑/你 好.txt": @"à: 𝚨 󌞑/你 好.txt",
+      // unicode that looks like '.' or '/' in ascii decomposition
+      @"a/ğ/../b": @"a/b",
+      @"a/⸮/b/.ⸯ/c/⼮./d": @"a/⸮/b/.ⸯ/c/⼮./d",
+      // scheme in name
+      @"file:a/../../../usr/bin": @"usr/bin",
+      };
+    for (NSString *str in tests) {
+        //NSLog(@"%@", str);
+        XCTAssertTrue([tests[str] isEqualToString:[str _sanitizedPath]], @"Path should be sanitized for traversal");
+    }
 }
-
-- (BOOL)zipArchiveShouldUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo
-{
-    NSLog(@"*** zipArchiveShouldUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
-    return YES;
-}
-
-- (void)zipArchiveWillUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-    NSLog(@"*** zipArchiveWillUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
-}
-
-
-- (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo {
-    NSLog(@"*** zipArchiveDidUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
-}
-
-- (void)zipArchiveProgressEvent:(unsigned long long)loaded total:(unsigned long long)total {
-    NSLog(@"*** zipArchiveProgressEvent: loaded: `%llu` total: `%llu`", loaded, total);
-    [progressEvents addObject:@(loaded)];
-}
-
 
 #pragma mark - Private
 
 - (NSString *)_cachesPath:(NSString *)directory {
-    NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject
                       stringByAppendingPathComponent:@"com.samsoffes.ssziparchive.tests"];
     if (directory) {
         path = [path stringByAppendingPathComponent:directory];
     }
 
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![fileManager fileExistsAtPath:path]) {
-        [fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-    }
+    [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
 
     return path;
 }

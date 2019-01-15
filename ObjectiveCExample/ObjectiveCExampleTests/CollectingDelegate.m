@@ -7,11 +7,9 @@
 
 #import "CollectingDelegate.h"
 
-@implementation CollectingDelegate {
-    
-}
-@synthesize files = _files;
+@implementation CollectingDelegate
 
+@synthesize files = _files;
 
 - (instancetype)init {
     self = [super init];
@@ -21,11 +19,8 @@
     return self;
 }
 
-- (void)zipArchiveDidUnzipArchiveFile:(NSString *)zipFile entryPath:(NSString *)entryPath destPath:(NSString *)destPath {
-    [self.files addObject:entryPath];
+- (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath unzippedFilePath:(NSString *)unzippedFilePath {
+    [self.files addObject:unzippedFilePath];
 }
-
-
-
 
 @end

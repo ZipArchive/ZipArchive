@@ -3,24 +3,30 @@
 
 # SSZipArchive
 
-ZipArchive is a simple utility class for zipping and unzipping files on iOS and Mac.
+ZipArchive is a simple utility class for zipping and unzipping files on iOS, macOS and tvOS.
 
 - Unzip zip files;
 - Unzip password protected zip files;
-- Create new zip files;
+- Unzip AES encrypted zip files;
+- Create zip files;
+- Create password protected zip files;
+- Create AES encrypted zip files;
+- Choose compression level;
 - Append to existing zip files;
-- Zip files;
 - Zip-up NSData instances. (with a filename)
 
 ## Installation and Setup
 
-*The main release branch is configured to support Objective C and Swift 3. There is a 'swift23' branch which is the latest branch but marked to compile for Swift 2.3.* 
+*The main release branch is configured to support Objective C and Swift 3+.*
+
+SSZipArchive works on Xcode 7-9 and above, iOS 8-11 and above.
 
 ### CocoaPods
-
-`pod install SSZipArchive`
+In your Podfile:  
+`pod 'SSZipArchive'`
 
 ### Carthage
+In your Cartfile:  
 `github "ZipArchive/ZipArchive"`
 
 ### Manual
@@ -36,10 +42,10 @@ SSZipArchive requires ARC.
 
 ```objective-c
 // Create
-[SSZipArchive createZipFileAtPath: zipPath withContentsOfDirectory: sampleDataPath];
+[SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:sampleDataPath];
 
 // Unzip
-[SSZipArchive unzipFileAtPath:zipPath toDestination: unzipPath];
+[SSZipArchive unzipFileAtPath:zipPath toDestination:unzipPath];
 ```
 
 ### Swift
@@ -54,8 +60,11 @@ SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
 
 ## License
 
-SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [Minizip](http://www.winimage.com/zLibDll/minizip.html) 1.1 is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
+SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [Minizip](https://github.com/nmoinvaz/minizip) 1.2 is licensed under the [Zlib license](http://www.zlib.net/zlib_license.html).
 
 ## Acknowledgments
 
-Big thanks to [aish](http://code.google.com/p/ziparchive) for creating [ZipArchive](http://code.google.com/p/ziparchive). The project that inspired SSZipArchive. Thank you [@randomsequence](https://github.com/randomsequence) for implementing the creation support tech and to [@johnezang](https://github.com/johnezang) for all his amazing help along the way.
+* Big thanks to [aish](http://code.google.com/p/ziparchive) for creating [ZipArchive](http://code.google.com/p/ziparchive). The project that inspired SSZipArchive.
+* Thank you [@soffes](https://github.com/soffes) for the actual name of SSZipArchive.
+* Thank you [@randomsequence](https://github.com/randomsequence) for implementing the creation support tech.
+* Thank you [@johnezang](https://github.com/johnezang) for all his amazing help along the way.
