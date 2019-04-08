@@ -14,10 +14,12 @@
 @property (weak, nonatomic) IBOutlet UITextField *passwordField;
 @property (weak, nonatomic) IBOutlet UIButton *zipButton;
 @property (weak, nonatomic) IBOutlet UIButton *unzipButton;
+@property (weak, nonatomic) IBOutlet UIButton *hasPasswordButton;
 @property (weak, nonatomic) IBOutlet UIButton *resetButton;
 @property (weak, nonatomic) IBOutlet UILabel *file1;
 @property (weak, nonatomic) IBOutlet UILabel *file2;
 @property (weak, nonatomic) IBOutlet UILabel *file3;
+@property (weak, nonatomic) IBOutlet UILabel *info;
 @property (copy, nonatomic) NSString *zipPath;
 
 @end
@@ -28,9 +30,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _file1.text = @"";
-    _file2.text = @"";
-    _file3.text = @"";
+    [self resetPressed:_resetButton];
 }
 
 #pragma mark - IBAction
@@ -49,10 +49,12 @@
                                      progressHandler:nil];
     if (success) {
         NSLog(@"Success zip");
+        self.info.text = @"Success zip";
         _unzipButton.enabled = YES;
-        _zipButton.enabled = NO;
+        _hasPasswordButton.enabled = YES;
     } else {
         NSLog(@"No success zip");
+        self.info.text = @"No success zip";
     }
     _resetButton.enabled = YES;
 }
@@ -78,8 +80,10 @@
                                completionHandler:nil];
     if (success) {
         NSLog(@"Success unzip");
+        self.info.text = @"Success unzip";
     } else {
         NSLog(@"No success unzip");
+        self.info.text = @"No success unzip";
         return;
     }
     NSError *error = nil;
@@ -112,12 +116,28 @@
     _unzipButton.enabled = NO;
 }
 
+- (IBAction)hasPassword:(id)sender {
+    if (!_zipPath) {
+        return;
+    }
+    BOOL success = [SSZipArchive isFilePasswordProtectedAtPath:_zipPath];
+    if (success) {
+        NSLog(@"Yes, it's password protected.");
+        self.info.text = @"Yes, it's password protected.";
+    } else {
+        NSLog(@"No, it's not password protected.");
+        self.info.text = @"No, it's not password protected.";
+    }
+}
+
 - (IBAction)resetPressed:(id)sender {
     _file1.text = @"";
     _file2.text = @"";
     _file3.text = @"";
+    _info.text = @"";
     _zipButton.enabled = YES;
     _unzipButton.enabled = NO;
+    _hasPasswordButton.enabled = NO;
     _resetButton.enabled = NO;
 }
 

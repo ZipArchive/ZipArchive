@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina3_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -42,13 +41,6 @@
                                     <action selector="unzipPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gGR-nU-aS3"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lbq-oS-Rlj">
-                                <rect key="frame" x="140.5" y="245" width="39" height="30"/>
-                                <state key="normal" title="Reset"/>
-                                <connections>
-                                    <action selector="resetPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n8G-qy-egF"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="09F-6Q-slx" userLabel="File1">
                                 <rect key="frame" x="16" y="160" width="288" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -56,7 +48,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="File2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PSK-Jd-Mwc" userLabel="File2">
-                                <rect key="frame" x="16" y="188" width="288" height="20.5"/>
+                                <rect key="frame" x="16" y="188.5" width="288" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -67,32 +59,59 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eBZ-O6-RzO">
+                                <rect key="frame" x="108" y="245.5" width="104" height="30"/>
+                                <state key="normal" title="Has Password?"/>
+                                <connections>
+                                    <action selector="hasPasswordPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="yxj-cG-KPd"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lbq-oS-Rlj">
+                                <rect key="frame" x="140.5" y="275.5" width="39" height="30"/>
+                                <state key="normal" title="Reset"/>
+                                <connections>
+                                    <action selector="resetPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Mwx-zG-ymV"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Info" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qIR-CS-5vG">
+                                <rect key="frame" x="16" y="313.5" width="288" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="pW5-rw-iqM" secondAttribute="trailing" id="1FW-MX-1mZ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="09F-6Q-slx" secondAttribute="trailing" id="3S4-8t-aQA"/>
+                            <constraint firstItem="eBZ-O6-RzO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ASg-E8-fXf"/>
                             <constraint firstItem="XUJ-IR-RIS" firstAttribute="centerX" secondItem="Lbq-oS-Rlj" secondAttribute="centerX" id="AYF-iB-SJU"/>
+                            <constraint firstItem="pW5-rw-iqM" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="BDV-7F-PQ4"/>
                             <constraint firstItem="Uwd-kM-cdh" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="CTF-Hv-dt4"/>
                             <constraint firstItem="Tal-c0-sro" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Czk-W6-E7s"/>
+                            <constraint firstItem="eBZ-O6-RzO" firstAttribute="top" secondItem="pW5-rw-iqM" secondAttribute="bottom" constant="8" symbolic="YES" id="KMk-Uy-Zo1"/>
+                            <constraint firstItem="PSK-Jd-Mwc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="LKO-kA-dyY"/>
                             <constraint firstItem="XUJ-IR-RIS" firstAttribute="top" secondItem="Uwd-kM-cdh" secondAttribute="bottom" constant="8" symbolic="YES" id="OIr-Yf-tdY"/>
-                            <constraint firstItem="09F-6Q-slx" firstAttribute="trailing" secondItem="PSK-Jd-Mwc" secondAttribute="trailing" id="TGC-ob-dm0"/>
                             <constraint firstItem="Uwd-kM-cdh" firstAttribute="top" secondItem="Tal-c0-sro" secondAttribute="bottom" constant="8" symbolic="YES" id="Udb-33-mrs"/>
                             <constraint firstItem="pW5-rw-iqM" firstAttribute="top" secondItem="PSK-Jd-Mwc" secondAttribute="bottom" constant="8" symbolic="YES" id="VfM-Vg-Yai"/>
                             <constraint firstItem="09F-6Q-slx" firstAttribute="top" secondItem="XUJ-IR-RIS" secondAttribute="bottom" constant="8" symbolic="YES" id="Wpv-VU-gb1"/>
+                            <constraint firstItem="Lbq-oS-Rlj" firstAttribute="top" secondItem="eBZ-O6-RzO" secondAttribute="bottom" id="Y76-ur-x01"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="PSK-Jd-Mwc" secondAttribute="trailing" id="cTF-Jz-Gkz"/>
                             <constraint firstItem="Uwd-kM-cdh" firstAttribute="centerX" secondItem="XUJ-IR-RIS" secondAttribute="centerX" id="dW9-nF-tLe"/>
-                            <constraint firstItem="PSK-Jd-Mwc" firstAttribute="leading" secondItem="pW5-rw-iqM" secondAttribute="leading" id="eJr-2x-5k4"/>
+                            <constraint firstItem="qIR-CS-5vG" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="hqx-Xl-4bB"/>
                             <constraint firstItem="Tal-c0-sro" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="26" id="nXL-ng-YDN"/>
-                            <constraint firstItem="09F-6Q-slx" firstAttribute="leading" secondItem="PSK-Jd-Mwc" secondAttribute="leading" id="ndV-Ni-q25"/>
-                            <constraint firstItem="Lbq-oS-Rlj" firstAttribute="top" secondItem="pW5-rw-iqM" secondAttribute="bottom" constant="8" symbolic="YES" id="qRj-kV-fEA"/>
                             <constraint firstItem="09F-6Q-slx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="rLi-aF-EpY"/>
+                            <constraint firstItem="qIR-CS-5vG" firstAttribute="top" secondItem="Lbq-oS-Rlj" secondAttribute="bottom" constant="8" symbolic="YES" id="vz1-CN-8KX"/>
                             <constraint firstItem="PSK-Jd-Mwc" firstAttribute="top" secondItem="09F-6Q-slx" secondAttribute="bottom" constant="8" symbolic="YES" id="waq-c1-rAn"/>
-                            <constraint firstItem="PSK-Jd-Mwc" firstAttribute="trailing" secondItem="pW5-rw-iqM" secondAttribute="trailing" id="wix-Cp-XH9"/>
+                            <constraint firstItem="qIR-CS-5vG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="zfz-Re-GJf"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="file1" destination="09F-6Q-slx" id="Rmp-Xl-xfc"/>
                         <outlet property="file2" destination="PSK-Jd-Mwc" id="Fek-5n-1P2"/>
                         <outlet property="file3" destination="pW5-rw-iqM" id="8cy-pX-Oa9"/>
+                        <outlet property="hasPasswordButton" destination="eBZ-O6-RzO" id="4UD-Ja-jPo"/>
+                        <outlet property="info" destination="qIR-CS-5vG" id="szy-EZ-yBU"/>
                         <outlet property="passwordField" destination="Tal-c0-sro" id="E18-xQ-8Zd"/>
                         <outlet property="resetButton" destination="Lbq-oS-Rlj" id="NMW-xE-8bl"/>
                         <outlet property="unzipButton" destination="XUJ-IR-RIS" id="mVz-FE-G7d"/>

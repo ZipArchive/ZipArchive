@@ -19,11 +19,13 @@ class ViewController: UIViewController {
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var zipButton: UIButton!
     @IBOutlet weak var unzipButton: UIButton!
+    @IBOutlet weak var hasPasswordButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
 
     @IBOutlet weak var file1: UILabel!
     @IBOutlet weak var file2: UILabel!
     @IBOutlet weak var file3: UILabel!
+    @IBOutlet weak var info: UILabel!
 
     var zipPath: String?
 
@@ -31,9 +33,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        file1.text = ""
-        file2.text = ""
-        file3.text = ""
+        resetPressed(resetButton)
     }
 
     // MARK: IBAction
@@ -52,10 +52,12 @@ class ViewController: UIViewController {
                                                  progressHandler: nil)
         if success {
             print("Success zip")
+            info.text = "Success zip"
             unzipButton.isEnabled = true
-            zipButton.isEnabled = false
+            hasPasswordButton.isEnabled = true
         } else {
             print("No success zip")
+            info.text = "No success zip"
         }
         resetButton.isEnabled = true
     }
@@ -82,8 +84,10 @@ class ViewController: UIViewController {
                                                    completionHandler: nil)
         if success != false {
             print("Success unzip")
+            info.text = "Success unzip"
         } else {
             print("No success unzip")
+            info.text = "No success unzip"
             return
         }
 
@@ -110,12 +114,28 @@ class ViewController: UIViewController {
         unzipButton.isEnabled = false
     }
 
+    @IBAction func hasPasswordPressed(_: UIButton) {
+        guard let zipPath = zipPath else {
+            return
+        }
+        let success = SSZipArchive.isFilePasswordProtected(atPath: zipPath)
+        if success {
+            print("Yes, it's password protected.")
+            info.text = "Yes, it's password protected."
+        } else {
+            print("No, it's not password protected.")
+            info.text = "No, it's not password protected."
+        }
+    }
+
     @IBAction func resetPressed(_: UIButton) {
         file1.text = ""
         file2.text = ""
         file3.text = ""
+        info.text = ""
         zipButton.isEnabled = true
         unzipButton.isEnabled = false
+        hasPasswordButton.isEnabled = false
         resetButton.isEnabled = false
     }
 
