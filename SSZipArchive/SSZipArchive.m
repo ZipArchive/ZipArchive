@@ -7,9 +7,9 @@
 //
 
 #import "SSZipArchive.h"
-#include "unzip.h"
-#include "zip.h"
-#include "minishared.h"
+#include "minizip/unzip.h"
+#include "minizip/zip.h"
+#include "minizip/minishared.h"
 
 #include <sys/stat.h>
 
@@ -954,7 +954,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             [self zipInfo:zipInfo setDate:fileDate];
         }
         
-        // Write permissions into the external attributes, for details on this see here: http://unix.stackexchange.com/a/14727
+        // Write permissions into the external attributes, for details on this see here: https://unix.stackexchange.com/a/14727
         // Get the permissions value from the files attributes
         NSNumber *permissionsValue = (NSNumber *)[attr objectForKey:NSFilePosixPermissions];
         if (permissionsValue != nil) {
@@ -1050,13 +1050,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
     //
     // Determine whether this is a symbolic link:
     // - File is stored with 'version made by' value of UNIX (3),
-    //   as per http://www.pkware.com/documents/casestudies/APPNOTE.TXT
+    //   as per https://www.pkware.com/documents/casestudies/APPNOTE.TXT
     //   in the upper byte of the version field.
     // - BSD4.4 st_mode constants are stored in the high 16 bits of the
     //   external file attributes (defacto standard, verified against libarchive)
     //
     // The original constants can be found here:
-    //    http://minnie.tuhs.org/cgi-bin/utree.pl?file=4.4BSD/usr/include/sys/stat.h
+    //    https://minnie.tuhs.org/cgi-bin/utree.pl?file=4.4BSD/usr/include/sys/stat.h
     //
     const uLong ZipUNIXVersion = 3;
     const uLong BSD_SFMT = 0170000;
