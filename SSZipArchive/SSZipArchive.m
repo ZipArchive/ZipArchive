@@ -54,6 +54,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         return NO;
     }
     
+    BOOL passwordProtected = NO;
     int ret = unzGoToFirstFile(zip);
     if (ret == UNZ_OK) {
         do {
@@ -63,24 +64,26 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 ret = unzOpenCurrentFilePassword(zip, "");
                 unzCloseCurrentFile(zip);
                 if (ret == UNZ_OK || ret == UNZ_BADPASSWORD) {
-                    return YES;
+                    passwordProtected = YES;
                 }
-                return NO;
+                break;
             }
             unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
             unzCloseCurrentFile(zip);
             if (ret != UNZ_OK) {
-                return NO;
+                break;
             } else if ((fileInfo.flag & 1) == 1) {
-                return YES;
+                passwordProtected = YES;
+                break;
             }
             
             ret = unzGoToNextFile(zip);
         } while (ret == UNZ_OK);
     }
     
-    return NO;
+    unzClose(zip);
+    return passwordProtected;
 }
 
 + (BOOL)isPasswordValidForArchiveAtPath:(NSString *)path password:(NSString *)pw error:(NSError **)error {
@@ -98,6 +101,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         return NO;
     }
 
+    // Initialize passwordValid to YES (No password required)
+    BOOL passwordValid = YES;
     int ret = unzGoToFirstFile(zip);
     if (ret == UNZ_OK) {
         do {
@@ -114,7 +119,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                                  userInfo:@{NSLocalizedDescriptionKey: @"failed to open first file in zip file"}];
                     }
                 }
-                return NO;
+                passwordValid = NO;
+                break;
             }
             unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
@@ -124,7 +130,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                                  code:SSZipArchiveErrorCodeFileInfoNotLoadable
                                              userInfo:@{NSLocalizedDescriptionKey: @"failed to retrieve info for file"}];
                 }
-                return NO;
+                passwordValid = NO;
+                break;
             } else if ((fileInfo.flag & 1) == 1) {
                 unsigned char buffer[10] = {0};
                 int readBytes = unzReadCurrentFile(zip, buffer, (unsigned)MIN(10UL,fileInfo.uncompressed_size));
@@ -138,9 +145,11 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                                      userInfo:@{NSLocalizedDescriptionKey: @"failed to read contents of file entry"}];
                         }
                     }
-                    return NO;
+                    passwordValid = NO;
+                    break;
                 }
-                return YES;
+                passwordValid = YES;
+                break;
             }
             
             unzCloseCurrentFile(zip);
@@ -148,8 +157,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         } while (ret == UNZ_OK);
     }
     
-    // No password required
-    return YES;
+    unzClose(zip);
+    return passwordValid;
 }
 
 #pragma mark - Unzipping
@@ -287,6 +296,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         {
             completionHandler(nil, NO, err);
         }
+        unzClose(zip);
         return NO;
     }
     
