@@ -54,7 +54,7 @@ matrix:
            DEVICE="iPhone Xʀ (12.2)" # newest for iOS 12.x
            
     - osx_image: xcode9.4
-      env: OSX_IMAGE="xcode9"
+      env: OSX_IMAGE="xcode9.4"
            SDK="iphonesimulator"
            DEVICE="iPhone X (11.4)" # latest for iOS 11.x
            
@@ -96,7 +96,11 @@ matrix:
 before_install:
   - if [ ${OSX_IMAGE} = "xcode7.3" ]; then
         `Workaround for https://github.com/CocoaPods/CocoaPods/issues/7765`
-        gem install cocoapods -v '1.5.3';
+        gem install cocoapods -v '1.6.1';
+    fi
+  - if [[ ${OSX_IMAGE} = "xcode1"* ]]; then
+        echo "Disabling modern build system as a workaround for target issue in Xcode 10+";
+        USEMODERNBUILDSYSTEM="-UseModernBuildSystem=NO";
     fi
   - if [ ${SDK} = "macosx" ]; then
         SCHEME="ObjectiveCExample_macOS";
@@ -122,4 +126,5 @@ script:
     `` -sdk $SDK
     `` -destination "$DESTINATION"
     `` -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES
+    `` $USEMODERNBUILDSYSTEM
     `` test
