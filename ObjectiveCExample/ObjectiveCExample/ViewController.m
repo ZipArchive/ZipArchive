@@ -143,14 +143,14 @@
 
 #pragma mark - Private
 - (NSString *)tempZipPath {
-    NSString *path = [NSString stringWithFormat:@"%@/\%@.zip",
+    NSString *path = [NSString stringWithFormat:@"%@/%@.zip",
                       NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0],
                       [NSUUID UUID].UUIDString];
     return path;
 }
 
 - (NSString *)tempUnzipPath {
-    NSString *path = [NSString stringWithFormat:@"%@/\%@",
+    NSString *path = [NSString stringWithFormat:@"%@/%@",
                       NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0],
                       [NSUUID UUID].UUIDString];
     NSURL *url = [NSURL fileURLWithPath:path];

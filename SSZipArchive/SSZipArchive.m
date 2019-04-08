@@ -1138,6 +1138,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
     // Percent-encode file path (where path is defined by https://tools.ietf.org/html/rfc8089)
     // The key part is to allow characters "." and "/" and disallow "%".
     // CharacterSet.urlPathAllowed seems to do the job
+#if (__MAC_OS_X_VERSION_MIN_REQUIRED >= 1090 || __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000 || __WATCH_OS_VERSION_MIN_REQUIRED >= 20000 || __TV_OS_VERSION_MIN_REQUIRED >= 90000)
+    strPath = [strPath stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLPathAllowedCharacterSet];
+#else
     // Testing availability of @available (https://stackoverflow.com/a/46927445/1033581)
 #if __clang_major__ < 9
     // Xcode 8-
@@ -1150,6 +1153,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
     } else {
         strPath = [strPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
+#endif
     
     // `NSString.stringByAddingPercentEncodingWithAllowedCharacters:` may theorically fail: https://stackoverflow.com/questions/33558933/
     // But because we auto-detect encoding using `NSString.stringEncodingForData:encodingOptions:convertedString:usedLossyConversion:`,
@@ -1171,6 +1175,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
     strPath = [strPath substringFromIndex:8];
     
     // Remove the percent-encoding
+#if (__MAC_OS_X_VERSION_MIN_REQUIRED >= 1090 || __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000 || __WATCH_OS_VERSION_MIN_REQUIRED >= 20000 || __TV_OS_VERSION_MIN_REQUIRED >= 90000)
+    strPath = strPath.stringByRemovingPercentEncoding;
+#else
     // Testing availability of @available (https://stackoverflow.com/a/46927445/1033581)
 #if __clang_major__ < 9
     // Xcode 8-
@@ -1183,6 +1190,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
     } else {
         strPath = [strPath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     }
+#endif
     
     return strPath;
 }
