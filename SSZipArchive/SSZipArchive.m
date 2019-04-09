@@ -521,12 +521,44 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                     else
                     {
                         // if we couldn't open file descriptor we can validate global errno to see the reason
-                        if (errno == ENOSPC) {
-                            NSError *enospcError = [NSError errorWithDomain:NSPOSIXErrorDomain
-                                                                       code:ENOSPC
-                                                                   userInfo:nil];
-                            unzippingError = enospcError;
+                        int errnoSave = errno;
+                        BOOL isSeriousError = NO;
+                        switch (errnoSave) {
+                            case EISDIR:
+                                // Is a directory
+                                // assumed case
+                                break;
+                                
+                            case ENOSPC:
+                            case EMFILE:
+                                // No space left on device
+                                //  or
+                                // Too many open files
+                                isSeriousError = YES;
+                                break;
+                                
+                            default:
+                                // ignore case
+                                // Just log the error
+                            {
+                                NSError *errorObject = [NSError errorWithDomain:NSPOSIXErrorDomain
+                                                                           code:errnoSave
+                                                                       userInfo:nil];
+                                NSLog(@"[SSZipArchive] Failed to open file on unzipping.(%@)", errorObject);
+                            }
+                                break;
+                        }
+                        
+                        if (isSeriousError) {
+                            // serious case
+                            unzippingError = [NSError errorWithDomain:NSPOSIXErrorDomain
+                                                                 code:errnoSave
+                                                             userInfo:nil];
                             unzCloseCurrentFile(zip);
+                            // Log the error
+                            NSLog(@"[SSZipArchive] Failed to open file on unzipping.(%@)", unzippingError);
+
+                            // Break unzipping
                             success = NO;
                             break;
                         }
