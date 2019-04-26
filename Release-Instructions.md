@@ -13,10 +13,11 @@ The following steps should be taking by project maintainers if they create a new
 3. Push the pod to the trunk
 
     - *pod trunk push SSZipArchive.podspec*
-    
+
 4. Create a Carthage framework archive
 
+    - *echo 'github "ZipArchive/ZipArchive"' > Cartfile*
     - *carthage build --no-skip-current*
     - *carthage archive ZipArchive*
-    
+
 5. Attach archive to the release created in step 1.

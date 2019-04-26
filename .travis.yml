@@ -1,6 +1,6 @@
 language: objective-c
-podfile: ObjectiveCExample/Podfile
-xcode_workspace: ObjectiveCExample/ObjectiveCExample.xcworkspace
+podfile: Example/Podfile
+xcode_workspace: Example/ZipArchiveExample.xcworkspace
 matrix:
   include:
     - osx_image: xcode10.2 # OS X 10.14
@@ -121,7 +121,7 @@ before_install:
 script:
   # Testing
   - xcodebuild
-    `` -workspace ObjectiveCExample/ObjectiveCExample.xcworkspace
+    `` -workspace Example/ZipArchiveExample.xcworkspace
     `` -scheme $SCHEME
     `` -sdk $SDK
     `` -destination "$DESTINATION"
