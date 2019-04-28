@@ -94,8 +94,8 @@ matrix:
            DEVICE="iPhone 4s (8.1)" # oldest for iOS 8.x
 
 before_install:
-  - if [ ${OSX_IMAGE} = "xcode7.3" ]; then
-        `Workaround for https://github.com/CocoaPods/CocoaPods/issues/7765`
+  - if [[ ${OSX_IMAGE} != "xcode1"* ]]; then
+        echo "Workaround for https://github.com/CocoaPods/CocoaPods/issues/7765";
         gem install cocoapods -v '1.6.1';
     fi
   - if [[ ${OSX_IMAGE} = "xcode1"* ]]; then
