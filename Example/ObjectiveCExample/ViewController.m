@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *file2;
 @property (weak, nonatomic) IBOutlet UILabel *file3;
 @property (weak, nonatomic) IBOutlet UILabel *info;
+@property (copy, nonatomic) NSString *samplePath;
 @property (copy, nonatomic) NSString *zipPath;
 
 @end
@@ -30,18 +31,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _samplePath = [[NSBundle mainBundle].bundleURL
+                   URLByAppendingPathComponent:@"Sample Data"
+                   isDirectory:YES].path;
+    NSLog(@"Sample path: %@", _samplePath);
+    
     [self resetPressed:_resetButton];
 }
 
 #pragma mark - IBAction
 - (IBAction)zipPressed:(id)sender {
-    NSString *sampleDataPath = [[NSBundle mainBundle].bundleURL
-                                URLByAppendingPathComponent:@"Sample Data"
-                                isDirectory:YES].path;
     _zipPath = [self tempZipPath];
+    NSLog(@"Zip path: %@", _zipPath);
     NSString *password = _passwordField.text;
     BOOL success = [SSZipArchive createZipFileAtPath:_zipPath
-                             withContentsOfDirectory:sampleDataPath
+                             withContentsOfDirectory:_samplePath
                                  keepParentDirectory:NO
                                     compressionLevel:-1
                                             password:password.length > 0 ? password : nil
@@ -64,6 +68,7 @@
         return;
     }
     NSString *unzipPath = [self tempUnzipPath];
+    NSLog(@"Unzip path: %@", unzipPath);
     if (!unzipPath) {
         return;
     }

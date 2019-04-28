@@ -26,11 +26,15 @@ class ViewController: NSViewController {
     @IBOutlet weak var file3: NSTextField!
     @IBOutlet weak var info: NSTextField!
     
+    var samplePath: String!
     var zipPath: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        samplePath = Bundle.main.bundleURL.appendingPathComponent("Contents/Resources/Sample Data").path
+        print("Sample path:", samplePath!)
         
         resetPressed(resetButton)
     }
@@ -40,15 +44,16 @@ class ViewController: NSViewController {
             // Update the view, if already loaded.
         }
     }
+    
     // MARK: IBAction
     
     @IBAction func zipPressed(_: NSButton) {
-        let sampleDataPath = Bundle.main.bundleURL.appendingPathComponent("Contents/Resources/Sample Data").path
         zipPath = tempZipPath()
+        print("Zip path:", zipPath!)
         let password = passwordField.stringValue
         
         let success = SSZipArchive.createZipFile(atPath: zipPath!,
-                                                 withContentsOfDirectory: sampleDataPath,
+                                                 withContentsOfDirectory: samplePath,
                                                  keepParentDirectory: false,
                                                  compressionLevel: -1,
                                                  password: !password.isEmpty ? password : nil,
@@ -74,6 +79,7 @@ class ViewController: NSViewController {
         guard let unzipPath = tempUnzipPath() else {
             return
         }
+        print("Unzip path:", unzipPath)
         
         let password = passwordField.stringValue
         let success: Bool = SSZipArchive.unzipFile(atPath: zipPath,

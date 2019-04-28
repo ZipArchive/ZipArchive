@@ -27,11 +27,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var file3: UILabel!
     @IBOutlet weak var info: UILabel!
 
+    var samplePath: String!
     var zipPath: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        samplePath = Bundle.main.bundleURL.appendingPathComponent("Sample Data").path
+        print("Sample path:", samplePath!)
         
         resetPressed(resetButton)
     }
@@ -39,12 +43,12 @@ class ViewController: UIViewController {
     // MARK: IBAction
 
     @IBAction func zipPressed(_: UIButton) {
-        let sampleDataPath = Bundle.main.bundleURL.appendingPathComponent("Sample Data").path
         zipPath = tempZipPath()
+        print("Zip path:", zipPath!)
         let password = passwordField.text ?? ""
 
         let success = SSZipArchive.createZipFile(atPath: zipPath!,
-                                                 withContentsOfDirectory: sampleDataPath,
+                                                 withContentsOfDirectory: samplePath,
                                                  keepParentDirectory: false,
                                                  compressionLevel: -1,
                                                  password: !password.isEmpty ? password : nil,
@@ -70,7 +74,8 @@ class ViewController: UIViewController {
         guard let unzipPath = tempUnzipPath() else {
             return
         }
-
+        print("Unzip path:", unzipPath)
+        
         let password = passwordField.text ?? ""
         let success: Bool = SSZipArchive.unzipFile(atPath: zipPath,
                                                    toDestination: unzipPath,
