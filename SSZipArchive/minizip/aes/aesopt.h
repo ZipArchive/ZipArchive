@@ -188,7 +188,7 @@ Issue Date: 20/12/2007
 	built
 */
 
-#if 1 && defined( INTEL_AES_POSSIBLE ) && !defined( USE_INTEL_AES_IF_PRESENT )
+#if 0 && defined( INTEL_AES_POSSIBLE ) && !defined( USE_INTEL_AES_IF_PRESENT )
 #  define USE_INTEL_AES_IF_PRESENT
 #endif
 

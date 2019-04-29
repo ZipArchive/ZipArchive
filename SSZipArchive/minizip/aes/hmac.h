@@ -32,6 +32,7 @@ extern "C"
 #endif
 
 #include "sha1.h"
+#include "sha2.h"
 
 #if defined(SHA_224) || defined(SHA_256) || defined(SHA_384) || defined(SHA_512)
 #define HMAC_MAX_OUTPUT_SIZE SHA2_MAX_DIGEST_SIZE

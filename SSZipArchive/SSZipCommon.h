@@ -1,19 +1,21 @@
 #ifndef SSZipCommon
 #define SSZipCommon
 
+// typedefs moved from mz_compat.h to here for public access
+
 /* unz_global_info structure contain global data about the ZIPfile
  These data comes from the end of central dir */
 typedef struct unz_global_info64_s
 {
     uint64_t number_entry;          /* total number of entries in the central dir on this disk */
-    uint32_t number_disk_with_CD;   /* number the the disk with central dir, used for spanning ZIP*/
+    uint32_t number_disk_with_CD;   /* number the the disk with central dir, used for spanning ZIP */
     uint16_t size_comment;          /* size of the global comment of the zipfile */
 } unz_global_info64;
 
 typedef struct unz_global_info_s
 {
     uint32_t number_entry;          /* total number of entries in the central dir on this disk */
-    uint32_t number_disk_with_CD;   /* number the the disk with central dir, used for spanning ZIP*/
+    uint32_t number_disk_with_CD;   /* number the the disk with central dir, used for spanning ZIP */
     uint16_t size_comment;          /* size of the global comment of the zipfile */
 } unz_global_info;
 
@@ -25,7 +27,8 @@ typedef struct unz_file_info64_s
     uint16_t version_needed;        /* version needed to extract       2 bytes */
     uint16_t flag;                  /* general purpose bit flag        2 bytes */
     uint16_t compression_method;    /* compression method              2 bytes */
-    uint32_t dos_date;              /* last mod file date in Dos fmt   4 bytes */
+    uint32_t dosDate;               /* last mod file date in Dos fmt   4 bytes */
+    struct tm tmu_date;
     uint32_t crc;                   /* crc-32                          4 bytes */
     uint64_t compressed_size;       /* compressed size                 8 bytes */
     uint64_t uncompressed_size;     /* uncompressed size               8 bytes */
@@ -48,7 +51,8 @@ typedef struct unz_file_info_s
     uint16_t version_needed;        /* version needed to extract       2 bytes */
     uint16_t flag;                  /* general purpose bit flag        2 bytes */
     uint16_t compression_method;    /* compression method              2 bytes */
-    uint32_t dos_date;              /* last mod file date in Dos fmt   4 bytes */
+    uint32_t dosDate;               /* last mod file date in Dos fmt   4 bytes */
+    struct tm tmu_date;
     uint32_t crc;                   /* crc-32                          4 bytes */
     uint32_t compressed_size;       /* compressed size                 4 bytes */
     uint32_t uncompressed_size;     /* uncompressed size               4 bytes */

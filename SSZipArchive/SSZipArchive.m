@@ -7,10 +7,9 @@
 //
 
 #import "SSZipArchive.h"
-#include "minizip/unzip.h"
-#include "minizip/zip.h"
-#include "minizip/minishared.h"
-
+#include "minizip/mz_compat.h"
+#include "minizip/mz_zip.h"
+#include <zlib.h>
 #include <sys/stat.h>
 
 NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
@@ -73,7 +72,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             unzCloseCurrentFile(zip);
             if (ret != UNZ_OK) {
                 break;
-            } else if ((fileInfo.flag & 1) == 1) {
+            } else if ((fileInfo.flag & ZIP_FLAG_ENCRYPTED) == 1) {
                 passwordProtected = YES;
                 break;
             }
@@ -410,7 +409,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             NSError *err = nil;
             NSDictionary *directoryAttr;
             if (preserveAttributes) {
-                NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dos_date];
+                NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
                 directoryAttr = @{NSFileCreationDate: modDate, NSFileModificationDate: modDate};
                 [directoriesModificationDates addObject: @{@"path": fullPath, @"modDate": modDate}];
             }
@@ -486,8 +485,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                         } else if (preserveAttributes) {
                             
                             // Set the original datetime property
-                            if (fileInfo.dos_date != 0) {
-                                NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dos_date];
+                            if (fileInfo.dosDate != 0) {
+                                NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
                                 NSDictionary *attr = @{NSFileModificationDate: orgDate};
                                 
                                 if (attr) {
@@ -1031,7 +1030,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     tmz_date.tm_mon = (unsigned int)components.month - 1;
     // ISO/IEC 9899 struct tm is 0-indexed for AD 1900 but NSDateComponents for gregorianCalendar is 1-indexed for AD 1
     tmz_date.tm_year = (unsigned int)components.year - 1900;
-    zipInfo->dos_date = tm_to_dosdate(&tmz_date);
+    zipInfo->dosDate = mz_zip_tm_to_dosdate(&tmz_date);
 }
 
 + (NSCalendar *)_gregorian
@@ -1082,7 +1081,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes)
 {
-    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, 0, 0, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, 0);
+    
+    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, 0, 0, 0);
 }
 
 #pragma mark - Private tools for file info

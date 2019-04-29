@@ -101,7 +101,7 @@ int hmac_sha_begin(enum hmac_hash hash, hmac_ctx cx[1])
     case HMAC_SHA512_128:
         cx->f_begin = (hf_begin *)sha512_128_begin;
         cx->f_hash  = (hf_hash *)sha512_128_hash;
-        cx->f_end   = (hf_begin *)sha512_128_end;
+        cx->f_end   = (hf_end *)sha512_128_end;
         cx->input_len = SHA512_128_BLOCK_SIZE;
         cx->output_len = SHA512_128_DIGEST_SIZE;
         break;

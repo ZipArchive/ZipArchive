@@ -14,6 +14,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define ZIP_FLAG_ENCRYPTED           (1 << 0)
+
 extern NSString *const SSZipArchiveErrorDomain;
 typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
     SSZipArchiveErrorCodeFailedOpenZipFile      = -1,
