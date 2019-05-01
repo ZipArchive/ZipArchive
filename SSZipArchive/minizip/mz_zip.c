@@ -45,8 +45,11 @@
 #include <ctype.h> /* tolower */
 #include <stdio.h> /* snprintf */
 
-#if defined(_MSC_VER) && (_MSC_VER < 1900)
-#  define snprintf _snprintf
+#if defined(_MSC_VER)
+#  define localtime_r(t1,t2) (localtime_s(t2,t1) == 0 ? t1 : NULL)
+#  if (_MSC_VER < 1900)
+#    define snprintf _snprintf
+#  endif 
 #endif
 
 /***************************************************************************/
@@ -1769,8 +1772,6 @@ int32_t mz_zip_entry_read_open(void *handle, uint8_t raw, const char *password)
         return MZ_PARAM_ERROR;
     if (zip->entry_scanned == 0)
         return MZ_PARAM_ERROR;
-    if ((zip->file_info.flag & MZ_ZIP_FLAG_ENCRYPTED) && (password == NULL) && (!raw))
-        return MZ_PARAM_ERROR;
 
     mz_zip_print("Zip - Entry - Read open (raw %"PRId32")\n", raw);
 
@@ -2564,17 +2565,16 @@ time_t mz_zip_dosdate_to_time_t(uint64_t dos_date)
 
 int32_t mz_zip_time_t_to_tm(time_t unix_time, struct tm *ptm)
 {
-    struct tm *ltm = NULL;
+    struct tm ltm;
     if (ptm == NULL)
         return MZ_PARAM_ERROR;
-    ltm = localtime(&unix_time);  /* Returns a 1900-based year */
-    if (ltm == NULL)
+    if (localtime_r(&unix_time, &ltm) == NULL)  /* Returns a 1900-based year */
     {
         /* Invalid date stored, so don't return it */
         memset(ptm, 0, sizeof(struct tm));
         return MZ_INTERNAL_ERROR;
     }
-    memcpy(ptm, ltm, sizeof(struct tm));
+    memcpy(ptm, &ltm, sizeof(struct tm));
     return MZ_OK;
 }
 

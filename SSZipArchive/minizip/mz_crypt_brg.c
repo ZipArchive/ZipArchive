@@ -24,10 +24,10 @@
 #  include <bsd/stdlib.h> /* arc4random_buf */
 #endif
 
-#include "aes.h"
-#include "sha1.h"
-#include "sha2.h"
-#include "hmac.h"
+#include "aes/aes.h"
+#include "aes/sha1.h"
+#include "aes/sha2.h"
+#include "aes/hmac.h"
 
 /***************************************************************************/
 

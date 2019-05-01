@@ -65,6 +65,9 @@ int32_t mz_path_resolve(const char *path, char *target, int32_t max_target);
 int32_t mz_path_remove_filename(char *path);
 /* Remove the filename from a path */
 
+int32_t mz_path_remove_extension(char *path);
+/* Remove the extension from a path */
+
 int32_t mz_path_get_filename(const char *path, const char **filename);
 /* Get the filename from a path */
 

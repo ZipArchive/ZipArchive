@@ -62,7 +62,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 // attempting with an arbitrary password to workaround `unzOpenCurrentFile` limitation on AES encrypted files
                 ret = unzOpenCurrentFilePassword(zip, "");
                 unzCloseCurrentFile(zip);
-                if (ret == UNZ_OK || ret == UNZ_BADPASSWORD) {
+                if (ret == UNZ_OK || ret == MZ_PASSWORD_ERROR) {
                     passwordProtected = YES;
                 }
                 break;
@@ -72,7 +72,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             unzCloseCurrentFile(zip);
             if (ret != UNZ_OK) {
                 break;
-            } else if ((fileInfo.flag & ZIP_FLAG_ENCRYPTED) == 1) {
+            } else if ((fileInfo.flag & MZ_ZIP_FLAG_ENCRYPTED) == 1) {
                 passwordProtected = YES;
                 break;
             }
@@ -111,7 +111,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 ret = unzOpenCurrentFilePassword(zip, [pw cStringUsingEncoding:NSUTF8StringEncoding]);
             }
             if (ret != UNZ_OK) {
-                if (ret != UNZ_BADPASSWORD) {
+                if (ret != MZ_PASSWORD_ERROR) {
                     if (error) {
                         *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
                                                      code:SSZipArchiveErrorCodeFailedOpenFileInZip
@@ -283,7 +283,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     // Begin unzipping
     int ret = 0;
     ret = unzGoToFirstFile(zip);
-    if (ret != UNZ_OK && ret != UNZ_END_OF_LIST_OF_FILE)
+    if (ret != UNZ_OK && ret != MZ_END_OF_LIST)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"failed to open first file in zip file"};
         NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFailedOpenFileInZip userInfo:userInfo];
@@ -318,7 +318,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     NSError *unzippingError;
     do {
         currentFileNumber++;
-        if (ret == UNZ_END_OF_LIST_OF_FILE) {
+        if (ret == MZ_END_OF_LIST) {
             break;
         }
         @autoreleasepool {
@@ -618,7 +618,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
             
             crc_ret = unzCloseCurrentFile(zip);
-            if (crc_ret == UNZ_CRCERROR) {
+            if (crc_ret == MZ_CRC_ERROR) {
                 // CRC ERROR
                 success = NO;
                 break;
@@ -669,7 +669,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     }
     
     NSError *retErr = nil;
-    if (crc_ret == UNZ_CRCERROR)
+    if (crc_ret == MZ_CRC_ERROR)
     {
         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"crc check failed for file"};
         retErr = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeFileInfoNotLoadable userInfo:userInfo];

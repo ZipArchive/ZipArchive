@@ -220,6 +220,34 @@ int32_t mz_path_remove_filename(char *path)
     return MZ_OK;
 }
 
+int32_t mz_path_remove_extension(char *path)
+{
+    char *path_ptr = NULL;
+
+    if (path == NULL)
+        return MZ_PARAM_ERROR;
+
+    path_ptr = path + strlen(path) - 1;
+
+    while (path_ptr > path)
+    {
+        if ((*path_ptr == '/') || (*path_ptr == '\\'))
+            break;
+        if (*path_ptr == '.')
+        {
+            *path_ptr = 0;
+            break;
+        }
+
+        path_ptr -= 1;
+    }
+
+    if (path_ptr == path)
+        *path_ptr = 0;
+
+    return MZ_OK;
+}
+
 int32_t mz_path_get_filename(const char *path, const char **filename)
 {
     const char *match = NULL;

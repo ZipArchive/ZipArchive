@@ -15,5 +15,5 @@ Pod::Spec.new do |s|
   s.public_header_files = 'SSZipArchive/*.h'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
   s.libraries = 'z', 'iconv'
-  s.xcconfig = { "GCC_PREPROCESSOR_DEFINITIONS" => 'HAVE_AES HAVE_CRYPT HAVE_ZLIB' }
+  s.xcconfig = { "GCC_PREPROCESSOR_DEFINITIONS" => 'HAVE_ARC4RANDOM_BUF HAVE_INTTYPES_H HAVE_PKCRYPT HAVE_STDINT_H HAVE_WZAES HAVE_ZLIB' }
 end

@@ -33,10 +33,10 @@ extern "C" {
 #endif
 #endif
 #ifndef MAX_WBITS
-#define MAX_WBITS     (15)
+#define MAX_WBITS     15
 #endif
 #ifndef DEF_MEM_LEVEL
-#define DEF_MEM_LEVEL (8)
+#define DEF_MEM_LEVEL 8
 #endif
 
 #ifndef ZEXPORT

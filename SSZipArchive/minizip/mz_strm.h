@@ -28,6 +28,7 @@ extern "C" {
 #define MZ_STREAM_PROP_DISK_NUMBER          (8)
 #define MZ_STREAM_PROP_COMPRESS_LEVEL       (9)
 #define MZ_STREAM_PROP_COMPRESS_ALGORITHM   (10)
+#define MZ_STREAM_PROP_COMPRESS_WINDOW      (11)
 
 /***************************************************************************/
 
@@ -89,7 +90,9 @@ int32_t mz_stream_write_uint32(void *stream, uint32_t value);
 int32_t mz_stream_write_int64(void *stream, int64_t value);
 int32_t mz_stream_write_uint64(void *stream, uint64_t value);
 int32_t mz_stream_copy(void *target, void *source, int32_t len);
+int32_t mz_stream_copy_to_end(void *target, void *source);
 int32_t mz_stream_copy_stream(void *target, mz_stream_write_cb write_cb, void *source, mz_stream_read_cb read_cb, int32_t len);
+int32_t mz_stream_copy_stream_to_end(void *target, mz_stream_write_cb write_cb, void *source, mz_stream_read_cb read_cb);
 int64_t mz_stream_tell(void *stream);
 int32_t mz_stream_seek(void *stream, int64_t offset, int32_t origin);
 int32_t mz_stream_find(void *stream, const void *find, int32_t find_size, int64_t max_seek, int64_t *position);
