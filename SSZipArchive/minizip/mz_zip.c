@@ -1077,6 +1077,12 @@ static int32_t mz_zip_write_cd(void *handle)
     mz_zip_print("Zip - Write cd (disk %"PRId32" entries %"PRId64" offset %"PRId64" size %"PRId64")\n",
         zip->disk_number_with_cd, zip->number_entry, zip->cd_offset, zip->cd_size);
 
+    if (zip->cd_size == 0 && zip->number_entry > 0)
+    {
+        // Zip does not contain central directory, open with recovery option
+        return MZ_FORMAT_ERROR;
+    }
+
     /* Write the ZIP64 central directory header */
     if (zip->cd_offset >= UINT32_MAX || zip->number_entry > UINT16_MAX)
     {
