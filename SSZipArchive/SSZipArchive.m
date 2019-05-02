@@ -821,7 +821,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     
     [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
     
-    int error = _zipOpenEntry(_zip, [folderName stringByAppendingString:@"/"], &zipInfo, Z_NO_COMPRESSION, password, 0);
+    int error = _zipOpenEntry(_zip, [folderName stringByAppendingString:@"/"], &zipInfo, Z_NO_COMPRESSION, password, NO);
     const void *buffer = NULL;
     zipWriteInFileInZip(_zip, buffer, 0);
     zipCloseFileInZip(_zip);
@@ -1081,7 +1081,6 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes)
 {
-    
     return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, 0, 0, 0);
 }
 

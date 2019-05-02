@@ -47,7 +47,6 @@ With the addition of:
  "MZ_ZIP_NO_SIGNING"
 
 5. Set those flags in SSZipArchive.podspec (for CocoaPods) and in ZipArchive.xcodeproj (for Carthage)
-6. Replace the .h and .c files with the latest ones, and apply two modifications:
-- some `mz_compat.h` content is made public by moving part of it to "SSZipCommon.h"
+6. Replace the .h and .c files with the latest ones, except for `mz_compat.h`, which is customized to expose some struct in SSZipCommon.h and to provide support for optional aes.
 
 Note: we can also use `cmake -G Xcode . -DMZ_BZIP2=OFF -DMZ_LZMA=OFF` to get the list of files to include in an xcodeproj of its own, from where we can remove unneeded `zip.h` and `unzip.h`.

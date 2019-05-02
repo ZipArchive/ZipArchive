@@ -144,19 +144,17 @@ int zipOpenNewFileInZip5(zipFile file, const char *filename, const zip_fileinfo 
     const void *extrafield_local, uint16_t size_extrafield_local, const void *extrafield_global,
     uint16_t size_extrafield_global, const char *comment, uint16_t compression_method, int level,
     int raw, int windowBits, int memLevel, int strategy, const char *password,
-    uint32_t crc_for_crypting,  uint16_t version_madeby, uint16_t flag_base, int zip64)
+    signed char aes, uint16_t version_madeby, uint16_t flag_base, int zip64)
 {
     mz_compat *compat = (mz_compat *)file;
     mz_zip_file file_info;
     uint64_t dos_date = 0;
-
 
     MZ_UNUSED(strategy);
     MZ_UNUSED(memLevel);
     MZ_UNUSED(windowBits);
     MZ_UNUSED(size_extrafield_local);
     MZ_UNUSED(extrafield_local);
-    MZ_UNUSED(crc_for_crypting);
 
     if (compat == NULL)
         return ZIP_PARAMERROR;
@@ -192,55 +190,11 @@ int zipOpenNewFileInZip5(zipFile file, const char *filename, const zip_fileinfo 
     else
         file_info.zip64 = MZ_ZIP64_DISABLE;
 #ifdef HAVE_WZAES
-    if ((password != NULL) || (raw && (file_info.flag & MZ_ZIP_FLAG_ENCRYPTED)))
+    if ((aes && password != NULL) || (raw && (file_info.flag & MZ_ZIP_FLAG_ENCRYPTED)))
         file_info.aes_version = MZ_AES_VERSION;
 #endif
 
     return mz_zip_entry_write_open(compat->handle, &file_info, (int16_t)level, (uint8_t)raw, password);
-}
-
-int zipOpenNewFileInZip4_64(zipFile file, const char *filename, const zip_fileinfo *zipfi,
-    const void *extrafield_local, uint16_t size_extrafield_local, const void *extrafield_global,
-    uint16_t size_extrafield_global, const char *comment, uint16_t compression_method, int level,
-    int raw, int windowBits, int memLevel,   int strategy, const char *password,
-    uint32_t crc_for_crypting, uint16_t version_madeby, uint16_t flag_base, int zip64)
-{
-    return zipOpenNewFileInZip5(file, filename, zipfi, extrafield_local, size_extrafield_local,
-        extrafield_global, size_extrafield_global, comment, compression_method, level, raw, windowBits,
-        memLevel, strategy, password, crc_for_crypting, version_madeby, flag_base, zip64);
-}
-
-int zipOpenNewFileInZip4(zipFile file, const char *filename, const zip_fileinfo *zipfi,
-    const void *extrafield_local, uint16_t size_extrafield_local, const void *extrafield_global,
-    uint16_t size_extrafield_global, const char *comment, uint16_t compression_method, int level,
-    int raw, int windowBits, int memLevel, int strategy, const char *password,
-    uint32_t crc_for_crypting, uint16_t version_madeby, uint16_t flag_base)
-{
-    return zipOpenNewFileInZip4_64(file, filename, zipfi, extrafield_local, size_extrafield_local,
-        extrafield_global, size_extrafield_global, comment, compression_method, level, raw, windowBits,
-        memLevel, strategy, password, crc_for_crypting, version_madeby, flag_base, 0);
-}
-
-int zipOpenNewFileInZip3(zipFile file, const char *filename, const zip_fileinfo *zipfi,
-    const void *extrafield_local, uint16_t size_extrafield_local, const void *extrafield_global,
-    uint16_t size_extrafield_global, const char *comment, uint16_t compression_method, int level,
-    int raw, int windowBits, int memLevel, int strategy, const char *password,
-    uint32_t crc_for_crypting)
-{
-    return zipOpenNewFileInZip4_64(file, filename, zipfi, extrafield_local, size_extrafield_local,
-        extrafield_global, size_extrafield_global, comment, compression_method, level, raw, windowBits,
-        memLevel, strategy, password, crc_for_crypting, MZ_VERSION_MADEBY, 0, 0);
-}
-
-int zipOpenNewFileInZip3_64(zipFile file, const char *filename, const zip_fileinfo *zipfi,
-    const void *extrafield_local, uint16_t size_extrafield_local, const void *extrafield_global,
-    uint16_t size_extrafield_global, const char *comment, uint16_t compression_method, int level,
-    int raw, int windowBits, int memLevel, int strategy, const char *password,
-    uint32_t crc_for_crypting, int zip64)
-{
-    return zipOpenNewFileInZip4_64(file, filename, zipfi, extrafield_local, size_extrafield_local,
-        extrafield_global, size_extrafield_global, comment, compression_method, level, raw, windowBits,
-        memLevel, strategy, password, crc_for_crypting, MZ_VERSION_MADEBY, 0, zip64);
 }
 
 int zipWriteInFileInZip(zipFile file, const void *buf, uint32_t len)
