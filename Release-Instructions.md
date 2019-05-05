@@ -1,6 +1,6 @@
 # New ZipArchive release
 
-The following steps should be taken by project maintainers if they create a new release.
+The following steps should be taken by project maintainers when they create a new release.
 
 1. Create a new release and tag for the release.
 
