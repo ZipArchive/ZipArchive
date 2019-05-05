@@ -364,6 +364,25 @@
     XCTAssertTrue(unicodeFolderWasExtracted, @"Folders with names in unicode should be extracted propertly.");
 }
 
+/// Issue #507
+- (void)testZippingWithUnicodeFilenameInside {
+    
+    NSString *workPath = [self _cachesPath:@"UnicodeZipping"];
+    NSString *filePath = [workPath stringByAppendingPathComponent:@"17 What I’ve Been Looking For.pdf"];
+    NSString *zipPath = [workPath stringByAppendingPathComponent:@"UnicodeZipping.zip"];
+    [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
+    
+    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:@[filePath]];
+    XCTAssertTrue(success, @"zip failure");
+    
+    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+    success = [SSZipArchive unzipFileAtPath:zipPath toDestination:workPath delegate:nil];
+    XCTAssertTrue(success, @"unzip failure");
+    
+    bool unicodeFilenameWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
+    XCTAssertTrue(unicodeFilenameWasExtracted, @"Files with filenames in unicode should be extracted properly.");
+}
+
 - (void)testZippingEmptyArchive {
     
     NSString *inputPath = [self _cachesPath:@"Empty"];
