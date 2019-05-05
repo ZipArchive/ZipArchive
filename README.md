@@ -12,7 +12,6 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS, mac
 - Create password protected zip files;
 - Create AES encrypted zip files;
 - Choose compression level;
-- Append to existing zip files;
 - Zip-up NSData instances. (with a filename)
 
 ## Installation and Setup
@@ -73,3 +72,5 @@ SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/s
 * Thank you [@soffes](https://github.com/soffes) for the actual name of SSZipArchive.
 * Thank you [@randomsequence](https://github.com/randomsequence) for implementing the creation support tech.
 * Thank you [@johnezang](https://github.com/johnezang) for all his amazing help along the way.
+* Thank you [@nmoinvaz](https://github.com/nmoinvaz) for minizip, the core of ZipArchive.
+* Thank you to [all the contributors](https://github.com/ZipArchive/ZipArchive/graphs/contributors).

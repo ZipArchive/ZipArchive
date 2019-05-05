@@ -2,10 +2,9 @@
 #
 xcuserdata/
 *.xccheckout
-*.moved-aside
 
 # AppCode
-.idea
+.idea/
 
 # macOS
 .DS_Store
