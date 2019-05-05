@@ -27,8 +27,7 @@ typedef struct unz_file_info64_s
     uint16_t version_needed;        /* version needed to extract       2 bytes */
     uint16_t flag;                  /* general purpose bit flag        2 bytes */
     uint16_t compression_method;    /* compression method              2 bytes */
-    uint32_t dosDate;               /* last mod file date in Dos fmt   4 bytes */
-    struct tm tmu_date;
+    uint32_t dos_date;              /* last mod file date in Dos fmt   4 bytes */
     uint32_t crc;                   /* crc-32                          4 bytes */
     uint64_t compressed_size;       /* compressed size                 8 bytes */
     uint64_t uncompressed_size;     /* uncompressed size               8 bytes */
@@ -51,8 +50,7 @@ typedef struct unz_file_info_s
     uint16_t version_needed;        /* version needed to extract       2 bytes */
     uint16_t flag;                  /* general purpose bit flag        2 bytes */
     uint16_t compression_method;    /* compression method              2 bytes */
-    uint32_t dosDate;               /* last mod file date in Dos fmt   4 bytes */
-    struct tm tmu_date;
+    uint32_t dos_date;              /* last mod file date in Dos fmt   4 bytes */
     uint32_t crc;                   /* crc-32                          4 bytes */
     uint32_t compressed_size;       /* compressed size                 4 bytes */
     uint32_t uncompressed_size;     /* uncompressed size               4 bytes */

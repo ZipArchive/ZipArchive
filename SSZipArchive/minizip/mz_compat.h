@@ -67,9 +67,18 @@ typedef uint64_t ZPOS64_T;
 
 /***************************************************************************/
 
+// ZipArchive 2.x uses dos_date
+#define MZ_COMPAT_VERSION 120
+
+#if MZ_COMPAT_VERSION <= 110
+#define mz_dos_date dosDate
+#else
+#define mz_dos_date dos_date
+#endif
+
 typedef struct
 {
-    uint32_t    dosDate;
+    uint32_t    mz_dos_date;
     struct tm   tmz_date;
     uint16_t    internal_fa;        /* internal file attributes        2 bytes */
     uint32_t    external_fa;        /* external file attributes        4 bytes */

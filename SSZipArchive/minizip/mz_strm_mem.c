@@ -108,8 +108,10 @@ int32_t mz_stream_mem_read(void *stream, void *buf, int32_t size)
 
     if (size > mem->size - mem->position)
         size = mem->size - mem->position;
+    if (mem->position + size > mem->limit)
+        size = mem->limit - mem->position;
 
-    if ((size <= 0) || (mem->position + size > mem->limit))
+    if (size <= 0)
         return 0;
 
     memcpy(buf, mem->buffer + mem->position, size);

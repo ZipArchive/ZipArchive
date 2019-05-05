@@ -163,8 +163,8 @@ int zipOpenNewFileInZip5(zipFile file, const char *filename, const zip_fileinfo 
 
     if (zipfi != NULL)
     {
-        if (zipfi->dosDate != 0)
-            dos_date = zipfi->dosDate;
+        if (zipfi->mz_dos_date != 0)
+            dos_date = zipfi->mz_dos_date;
         else
             dos_date = mz_zip_tm_to_dosdate(&zipfi->tmz_date);
 
@@ -577,9 +577,9 @@ int unzGetCurrentFileInfo(unzFile file, unz_file_info *pfile_info, char *filenam
         pfile_info->version_needed = file_info->version_needed;
         pfile_info->flag = file_info->flag;
         pfile_info->compression_method = file_info->compression_method;
-        pfile_info->dosDate = mz_zip_time_t_to_dos_date(file_info->modified_date);
-        mz_zip_time_t_to_tm(file_info->modified_date, &pfile_info->tmu_date);
-        pfile_info->tmu_date.tm_year += 1900;
+        pfile_info->mz_dos_date = mz_zip_time_t_to_dos_date(file_info->modified_date);
+        //mz_zip_time_t_to_tm(file_info->modified_date, &pfile_info->tmu_date);
+        //pfile_info->tmu_date.tm_year += 1900;
         pfile_info->crc = file_info->crc;
 
         pfile_info->size_filename = file_info->filename_size;
@@ -641,9 +641,9 @@ int unzGetCurrentFileInfo64(unzFile file, unz_file_info64 * pfile_info, char *fi
         pfile_info->version_needed = file_info->version_needed;
         pfile_info->flag = file_info->flag;
         pfile_info->compression_method = file_info->compression_method;
-        pfile_info->dosDate = mz_zip_time_t_to_dos_date(file_info->modified_date);
-        mz_zip_time_t_to_tm(file_info->modified_date, &pfile_info->tmu_date);
-        pfile_info->tmu_date.tm_year += 1900;
+        pfile_info->mz_dos_date = mz_zip_time_t_to_dos_date(file_info->modified_date);
+        //mz_zip_time_t_to_tm(file_info->modified_date, &pfile_info->tmu_date);
+        //pfile_info->tmu_date.tm_year += 1900;
         pfile_info->crc = file_info->crc;
 
         pfile_info->size_filename = file_info->filename_size;

@@ -409,7 +409,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             NSError *err = nil;
             NSDictionary *directoryAttr;
             if (preserveAttributes) {
-                NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+                NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.mz_dos_date];
                 directoryAttr = @{NSFileCreationDate: modDate, NSFileModificationDate: modDate};
                 [directoriesModificationDates addObject: @{@"path": fullPath, @"modDate": modDate}];
             }
@@ -485,8 +485,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                         } else if (preserveAttributes) {
                             
                             // Set the original datetime property
-                            if (fileInfo.dosDate != 0) {
-                                NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.dosDate];
+                            if (fileInfo.mz_dos_date != 0) {
+                                NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.mz_dos_date];
                                 NSDictionary *attr = @{NSFileModificationDate: orgDate};
                                 
                                 if (attr) {
@@ -1030,7 +1030,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     tmz_date.tm_mon = (unsigned int)components.month - 1;
     // ISO/IEC 9899 struct tm is 0-indexed for AD 1900 but NSDateComponents for gregorianCalendar is 1-indexed for AD 1
     tmz_date.tm_year = (unsigned int)components.year - 1900;
-    zipInfo->dosDate = mz_zip_tm_to_dosdate(&tmz_date);
+    zipInfo->mz_dos_date = mz_zip_tm_to_dosdate(&tmz_date);
 }
 
 + (NSCalendar *)_gregorian
