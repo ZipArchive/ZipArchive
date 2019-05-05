@@ -1,19 +1,21 @@
 #ifndef SSZipCommon
 #define SSZipCommon
 
+// typedefs moved from mz_compat.h to here for public access
+
 /* unz_global_info structure contain global data about the ZIPfile
  These data comes from the end of central dir */
 typedef struct unz_global_info64_s
 {
     uint64_t number_entry;          /* total number of entries in the central dir on this disk */
-    uint32_t number_disk_with_CD;   /* number the the disk with central dir, used for spanning ZIP*/
+    uint32_t number_disk_with_CD;   /* number the the disk with central dir, used for spanning ZIP */
     uint16_t size_comment;          /* size of the global comment of the zipfile */
 } unz_global_info64;
 
 typedef struct unz_global_info_s
 {
     uint32_t number_entry;          /* total number of entries in the central dir on this disk */
-    uint32_t number_disk_with_CD;   /* number the the disk with central dir, used for spanning ZIP*/
+    uint32_t number_disk_with_CD;   /* number the the disk with central dir, used for spanning ZIP */
     uint16_t size_comment;          /* size of the global comment of the zipfile */
 } unz_global_info;
 

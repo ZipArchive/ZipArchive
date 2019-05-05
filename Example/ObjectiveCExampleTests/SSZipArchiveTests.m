@@ -101,6 +101,7 @@
 
 - (void)testDirectoryZipping {
     // use Unicode as folder (has a file in root and a file in subfolder)
+    [self testUnzippingWithUnicodeFilenameInside];
     NSString *inputPath = [self _cachesPath:@"Unicode"];
 
     NSString *outputPath = [self _cachesPath:@"FolderZipped"];
