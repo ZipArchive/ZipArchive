@@ -24,7 +24,7 @@ SSZipArchive works on Xcode 7-10 and above, iOS 8-12 and above, tvOS 9 and above
 In your Podfile:  
 `pod 'SSZipArchive'`
 
-You should define your minimum deployment target explicitely, like:
+You should define your minimum deployment target explicitly, like:
 `platform :ios, '8.0'`
 
 CocoaPods version should be at least CocoaPods 1.6.0.
