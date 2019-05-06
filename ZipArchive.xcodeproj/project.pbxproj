@@ -141,7 +141,7 @@
 		37952C881F63BBD500DD6677 /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE481C0DF7950004A2F1 /* SSZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		37952C891F63BBDA00DD6677 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = B423AE491C0DF7950004A2F1 /* SSZipArchive.m */; };
 		37952C8B1F63BBE400DD6677 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		93CE5D5E227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; };
+		93CE5D5E227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		93CE5D5F227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; };
 		93CE5D60227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; };
 		93CE5D61227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; };
@@ -419,6 +419,7 @@
 			files = (
 				3775F3C92276B14400A1840B /* mz_strm_zlib.h in Headers */,
 				3775F3A12276B14400A1840B /* mz_strm.h in Headers */,
+				93CE5D5E227FE5C50003464F /* SSZipCommon.h in Headers */,
 				3775F3A92276B14400A1840B /* mz_strm_buf.h in Headers */,
 				3775F3712276B14400A1840B /* mz_os.h in Headers */,
 				3775F3652276B14400A1840B /* mz.h in Headers */,
@@ -431,7 +432,6 @@
 				3775F3892276B14400A1840B /* mz_strm_pkcrypt.h in Headers */,
 				3775F35D2276B14400A1840B /* mz_strm_os.h in Headers */,
 				3775F3952276B14400A1840B /* mz_zip_rw.h in Headers */,
-				93CE5D5E227FE5C50003464F /* SSZipCommon.h in Headers */,
 				3775F3912276B14400A1840B /* mz_compat.h in Headers */,
 				3775F37D2276B14400A1840B /* mz_strm_wzaes.h in Headers */,
 			);
