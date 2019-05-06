@@ -142,9 +142,9 @@
 		37952C891F63BBDA00DD6677 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = B423AE491C0DF7950004A2F1 /* SSZipArchive.m */; };
 		37952C8B1F63BBE400DD6677 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		93CE5D5E227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		93CE5D5F227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; };
-		93CE5D60227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; };
-		93CE5D61227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; };
+		93CE5D5F227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		93CE5D60227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		93CE5D61227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AFF75A2D1C3727F000F450AC /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AFF75A2E1C37280200F450AC /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE481C0DF7950004A2F1 /* SSZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AFF75A2F1C37280200F450AC /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = B423AE491C0DF7950004A2F1 /* SSZipArchive.m */; };
