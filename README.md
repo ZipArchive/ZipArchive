@@ -36,7 +36,8 @@ In your Cartfile:
 ### Manual
 
 1. Add the `SSZipArchive` and `minizip` folders to your project.
-2. Add the `libz` library to your target
+2. Add the `libz` and `libiconv` libraries to your target.
+3. Add the `Security` framework to your target.
 
 SSZipArchive requires ARC.
 
