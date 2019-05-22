@@ -206,6 +206,23 @@
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
 
+- (void)testUnzippingWithAESPassword {
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestAESPasswordArchive" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"Password"];
+    
+    NSError *error = nil;
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:@"passw0rd" error:&error delegate:delegate];
+    XCTAssertTrue(success, @"unzip failure");
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *testPath = [outputPath stringByAppendingPathComponent:@"README.md"];
+    XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"Readme unzipped");
+    
+    testPath = [outputPath stringByAppendingPathComponent:@"LICENSE.txt"];
+    XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
+}
+
 - (void)testUnzippingWithInvalidPassword {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestPasswordArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Password"];

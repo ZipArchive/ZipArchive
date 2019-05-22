@@ -1,5 +1,5 @@
 /* mz_os.h -- System functions
-   Version 2.8.6, April 8, 2019
+   Version 2.8.7, May 9, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -19,25 +19,32 @@ extern "C" {
 /***************************************************************************/
 
 #if defined(__APPLE__)
-#define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_OSX_DARWIN)
+#  define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_OSX_DARWIN)
 #elif defined(__unix__)
-#define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_UNIX)
+#  define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_UNIX)
 #elif defined(_WIN32)
-#define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_WINDOWS_NTFS)
+#  define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_WINDOWS_NTFS)
 #endif
 
 #ifdef HAVE_LZMA
-#define MZ_VERSION_MADEBY_ZIP_VERSION (63)
+#  define MZ_VERSION_MADEBY_ZIP_VERSION (63)
 #elif HAVE_WZAES
-#define MZ_VERSION_MADEBY_ZIP_VERSION (51)
+#  define MZ_VERSION_MADEBY_ZIP_VERSION (51)
 #elif HAVE_BZIP2
-#define MZ_VERSION_MADEBY_ZIP_VERSION (46)
+#  define MZ_VERSION_MADEBY_ZIP_VERSION (46)
 #else
-#define MZ_VERSION_MADEBY_ZIP_VERSION (45)
+#  define MZ_VERSION_MADEBY_ZIP_VERSION (45)
 #endif
 
-#define MZ_VERSION_MADEBY             ((MZ_VERSION_MADEBY_HOST_SYSTEM << 8) | \
-                                       (MZ_VERSION_MADEBY_ZIP_VERSION))
+#define MZ_VERSION_MADEBY               ((MZ_VERSION_MADEBY_HOST_SYSTEM << 8) | \
+                                         (MZ_VERSION_MADEBY_ZIP_VERSION))
+
+#define MZ_PATH_SLASH_UNIX              ('/')
+#if defined(_WIN32)
+#  define MZ_PATH_SLASH_PLATFORM        ('\\')
+#else
+#  define MZ_PATH_SLASH_PLATFORM        (MZ_PATH_SLASH_UNIX)
+#endif
 
 /***************************************************************************/
 
@@ -55,6 +62,18 @@ typedef void* DIR;
 
 int32_t mz_path_combine(char *path, const char *join, int32_t max_path);
 /* Combines two paths */
+
+int32_t mz_path_append_slash(char *path, int32_t max_path, char slash);
+/* Appends a path slash on to the end of the path */
+
+int32_t mz_path_remove_slash(char *path);
+/* Removes a path slash from the end of the path */
+
+int32_t mz_path_has_slash(const char *path);
+/* Returns whether or not the path ends with slash */
+
+int32_t mz_path_convert_slashes(char *path, char slash);
+/* Converts the slashes in a path */
 
 int32_t mz_path_compare_wc(const char *path, const char *wildcard, uint8_t ignore_case);
 /* Compare two paths with wildcard */
@@ -98,7 +117,7 @@ int32_t  mz_os_rand(uint8_t *buf, int32_t size);
 int32_t  mz_os_rename(const char *source_path, const char *target_path);
 /* Rename a file */
 
-int32_t  mz_os_delete(const char *path);
+int32_t  mz_os_unlink(const char *path);
 /* Delete an existing file  */
 
 int32_t  mz_os_file_exists(const char *path);
@@ -133,6 +152,15 @@ int32_t  mz_os_close_dir(DIR *dir);
 
 int32_t  mz_os_is_dir(const char *path);
 /* Checks to see if path is a directory */
+
+int32_t  mz_os_is_symlink(const char *path);
+/* Checks to see if path is a symbolic link */
+
+int32_t  mz_os_make_symlink(const char *path, const char *target_path);
+/* Creates a symbolic link pointing to a target */
+
+int32_t  mz_os_read_symlink(const char *path, char *target_path, int32_t max_target_path);
+/* Gets the target path for a symbolic link */
 
 uint64_t mz_os_ms_time(void);
 /* Gets the time in milliseconds */

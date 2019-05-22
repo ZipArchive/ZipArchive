@@ -1,5 +1,5 @@
 /* mz_crypt_apple.c -- Crypto/hash functions for Apple
-   Version 2.8.6, April 8, 2019
+   Version 2.8.7, May 9, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -63,7 +63,7 @@ int32_t mz_crypt_sha_begin(void *handle)
         sha->error = CC_SHA256_Init(&sha->ctx256);
     else
         return MZ_PARAM_ERROR;
-    
+
     if (!sha->error)
         return MZ_HASH_ERROR;
 
@@ -164,7 +164,7 @@ typedef struct mz_crypt_aes_s {
 void mz_crypt_aes_reset(void *handle)
 {
     mz_crypt_aes *aes = (mz_crypt_aes *)handle;
-    
+
     if (aes->crypt != NULL)
         CCCryptorRelease(aes->crypt);
     aes->crypt = NULL;
@@ -174,12 +174,12 @@ int32_t mz_crypt_aes_encrypt(void *handle, uint8_t *buf, int32_t size)
 {
     mz_crypt_aes *aes = (mz_crypt_aes *)handle;
     size_t data_moved = 0;
-    
+
     if (aes == NULL || buf == NULL)
         return MZ_PARAM_ERROR;
     if (size != MZ_AES_BLOCK_SIZE)
         return MZ_PARAM_ERROR;
-    
+
     aes->error = CCCryptorUpdate(aes->crypt, buf, size, buf, size, &data_moved);
 
     if (aes->error != kCCSuccess)
@@ -192,7 +192,7 @@ int32_t mz_crypt_aes_decrypt(void *handle, uint8_t *buf, int32_t size)
 {
     mz_crypt_aes *aes = (mz_crypt_aes *)handle;
     size_t data_moved = 0;
-    
+
     if (aes == NULL || buf == NULL)
         return MZ_PARAM_ERROR;
     if (size != MZ_AES_BLOCK_SIZE)
@@ -213,11 +213,12 @@ int32_t mz_crypt_aes_set_encrypt_key(void *handle, const void *key, int32_t key_
 
     if (aes == NULL || key == NULL || key_length == 0)
         return MZ_PARAM_ERROR;
-    
+
     mz_crypt_aes_reset(handle);
-    
-    aes->error = CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES, 0, key, key_length, NULL, &aes->crypt);
-        
+
+    aes->error = CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES, kCCOptionECBMode,
+        key, key_length, NULL, &aes->crypt);
+
     if (aes->error != kCCSuccess)
         return MZ_HASH_ERROR;
 
@@ -227,15 +228,16 @@ int32_t mz_crypt_aes_set_encrypt_key(void *handle, const void *key, int32_t key_
 int32_t mz_crypt_aes_set_decrypt_key(void *handle, const void *key, int32_t key_length)
 {
     mz_crypt_aes *aes = (mz_crypt_aes *)handle;
-    
-    
+
+
     if (aes == NULL || key == NULL || key_length == 0)
         return MZ_PARAM_ERROR;
-    
+
     mz_crypt_aes_reset(handle);
-    
-    aes->error = CCCryptorCreate(kCCDecrypt, kCCAlgorithmAES, 0, key, key_length, NULL, &aes->crypt);
-        
+
+    aes->error = CCCryptorCreate(kCCDecrypt, kCCAlgorithmAES, kCCOptionECBMode,
+        key, key_length, NULL, &aes->crypt);
+
     if (aes->error != kCCSuccess)
         return MZ_HASH_ERROR;
 
@@ -420,17 +422,17 @@ int32_t mz_crypt_sign(uint8_t *message, int32_t message_size, uint8_t *cert_data
     const void *options_key[2] = { kSecImportExportPassphrase, kSecReturnRef };
     const void *options_values[2] = { 0, kCFBooleanTrue };
     int32_t err = MZ_SIGN_ERROR;
-    
-    
+
+
     if (message == NULL || cert_data == NULL || signature == NULL || signature_size == NULL)
         return MZ_PARAM_ERROR;
-    
+
     *signature = NULL;
     *signature_size = 0;
 
     password_ref = CFStringCreateWithCString(0, cert_pwd, kCFStringEncodingUTF8);
     options_values[0] = password_ref;
-        
+
     options_dict = CFDictionaryCreate(0, options_key, options_values, 2, 0, 0);
     if (options_dict)
         pkcs12_data = CFDataCreate(0, cert_data, cert_data_size);
@@ -445,14 +447,14 @@ int32_t mz_crypt_sign(uint8_t *message, int32_t message_size, uint8_t *cert_data
     if (trust)
     {
         status = CMSEncodeContent(identity, NULL, NULL, FALSE, 0, message, message_size, &signature_out);
-            
+
         if (status == errSecSuccess)
         {
             *signature_size = CFDataGetLength(signature_out);
             *signature = (uint8_t *)MZ_ALLOC(*signature_size);
-                
+
             memcpy(*signature, CFDataGetBytePtr(signature_out), *signature_size);
-                
+
             err = MZ_OK;
         }
     }
@@ -485,7 +487,7 @@ int32_t mz_crypt_sign_verify(uint8_t *message, int32_t message_size, uint8_t *si
 
     if (message == NULL || signature == NULL)
         return MZ_PARAM_ERROR;
-    
+
     status = CMSDecoderCreate(&decoder);
     if (status == errSecSuccess)
         status = CMSDecoderUpdateMessage(decoder, signature, signature_size);
@@ -509,7 +511,7 @@ int32_t mz_crypt_sign_verify(uint8_t *message, int32_t message_size, uint8_t *si
             }
         }
     }
-    
+
     if (err == MZ_OK)
     {
         status = CMSDecoderCopyContent(decoder, &message_out);
@@ -518,7 +520,7 @@ int32_t mz_crypt_sign_verify(uint8_t *message, int32_t message_size, uint8_t *si
             (memcmp(message, CFDataGetBytePtr(message_out), message_size) != 0))
             err = MZ_SIGN_ERROR;
     }
-    
+
     if (trust_policy)
         CFRelease(trust_policy);
     if (decoder)

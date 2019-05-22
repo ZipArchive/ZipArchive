@@ -1,5 +1,5 @@
 /* zip.c -- Zip manipulation
-   Version 2.8.6, April 8, 2019
+   Version 2.8.7, May 9, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -45,11 +45,11 @@
 #include <ctype.h> /* tolower */
 #include <stdio.h> /* snprintf */
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 #  define localtime_r(t1,t2) (localtime_s(t2,t1) == 0 ? t1 : NULL)
-#  if (_MSC_VER < 1900)
-#    define snprintf _snprintf
-#  endif 
+#endif
+#if defined(_MSC_VER) && (_MSC_VER < 1900)
+#  define snprintf _snprintf
 #endif
 
 /***************************************************************************/
@@ -196,11 +196,15 @@ static int32_t mz_zip_entry_read_header(void *stream, uint8_t local, mz_zip_file
     uint32_t field_length_read = 0;
     uint16_t ntfs_attrib_id = 0;
     uint16_t ntfs_attrib_size = 0;
+    uint16_t linkname_size;
     uint16_t value16 = 0;
     uint32_t value32 = 0;
     int64_t extrafield_pos = 0;
     int64_t comment_pos = 0;
+    int64_t linkname_pos = 0;
+    int64_t saved_pos = 0;
     int32_t err = MZ_OK;
+    char *linkname = NULL;
 
 
     memset(file_info, 0, sizeof(mz_zip_file));
@@ -286,7 +290,11 @@ static int32_t mz_zip_entry_read_header(void *stream, uint8_t local, mz_zip_file
     if ((err == MZ_OK) && (file_info->comment_size > 0))
         err = mz_stream_copy(file_extra_stream, stream, file_info->comment_size);
     mz_stream_write_uint8(file_extra_stream, 0);
-
+    
+    linkname_pos = mz_stream_tell(file_extra_stream);
+    /* Overwrite if we encounter UNIX1 extra block */
+    mz_stream_write_uint8(file_extra_stream, 0);
+    
     if ((err == MZ_OK) && (file_info->extrafield_size > 0))
     {
         /* Seek to and parse the extra field */
@@ -368,16 +376,16 @@ static int32_t mz_zip_entry_read_header(void *stream, uint8_t local, mz_zip_file
             /* Read UNIX1 extra field */
             else if ((field_type == MZ_ZIP_EXTENSION_UNIX1) && (field_length >= 12))
             {
-                if (err == MZ_OK && file_info->accessed_date == 0)
+                if (err == MZ_OK)
                 {
                     err = mz_stream_read_uint32(file_extra_stream, &value32);
-                    if (err == MZ_OK)
+                    if (err == MZ_OK && file_info->accessed_date == 0)
                         file_info->accessed_date = value32;
                 }
-                if (err == MZ_OK && file_info->modified_date == 0)
+                if (err == MZ_OK)
                 {
                     err = mz_stream_read_uint32(file_extra_stream, &value32);
-                    if (err == MZ_OK)
+                    if (err == MZ_OK && file_info->modified_date == 0)
                         file_info->modified_date = value32;
                 }
                 if (err == MZ_OK)
@@ -385,8 +393,29 @@ static int32_t mz_zip_entry_read_header(void *stream, uint8_t local, mz_zip_file
                 if (err == MZ_OK)
                     err = mz_stream_read_uint16(file_extra_stream, &value16); /* Group id */
 
-                /* Skip variable data */
-                mz_stream_seek(file_extra_stream, field_length - 12, MZ_SEEK_CUR);
+                /* Copy linkname to end of file extra stream so we can return null
+                   terminated string */
+                linkname_size = field_length - 12;
+                if ((err == MZ_OK) && (linkname_size > 0))
+                {
+                    linkname = (char *)MZ_ALLOC(linkname_size);
+                    if (linkname != NULL)
+                    {
+                        if (mz_stream_read(file_extra_stream, linkname, linkname_size) != linkname_size)
+                            err = MZ_READ_ERROR;
+                        if (err == MZ_OK)
+                        {
+                            saved_pos = mz_stream_tell(file_extra_stream);
+
+                            mz_stream_seek(file_extra_stream, linkname_pos, MZ_SEEK_SET);
+                            mz_stream_write(file_extra_stream, linkname, linkname_size);
+                            mz_stream_write_uint8(file_extra_stream, 0);
+
+                            mz_stream_seek(file_extra_stream, saved_pos, MZ_SEEK_SET);
+                        }
+                        MZ_FREE(linkname);
+                    }
+                }
             }
 #ifdef HAVE_WZAES
             /* Read AES extra field */
@@ -433,6 +462,7 @@ static int32_t mz_zip_entry_read_header(void *stream, uint8_t local, mz_zip_file
     mz_stream_mem_get_buffer(file_extra_stream, (const void **)&file_info->filename);
     mz_stream_mem_get_buffer_at(file_extra_stream, extrafield_pos, (const void **)&file_info->extrafield);
     mz_stream_mem_get_buffer_at(file_extra_stream, comment_pos, (const void **)&file_info->comment);
+    mz_stream_mem_get_buffer_at(file_extra_stream, linkname_pos, (const void **)&file_info->linkname);
 
     /* Set to empty string just in-case */
     if (file_info->filename == NULL)
@@ -441,6 +471,8 @@ static int32_t mz_zip_entry_read_header(void *stream, uint8_t local, mz_zip_file
         file_info->extrafield_size = 0;
     if (file_info->comment == NULL)
         file_info->comment = "";
+    if (file_info->linkname == NULL)
+        file_info->linkname = "";
 
     if (err == MZ_OK)
     {
@@ -522,8 +554,10 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
     uint16_t field_length_zip64 = 0;
     uint16_t field_length_ntfs = 0;
     uint16_t field_length_aes = 0;
+    uint16_t field_length_unix1 = 0;
     uint16_t filename_size = 0;
     uint16_t filename_length = 0;
+    uint16_t linkname_size = 0;
     uint16_t version_needed = 0;
     int32_t comment_size = 0;
     int32_t err = MZ_OK;
@@ -591,8 +625,9 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
             if (field_type == MZ_ZIP_EXTENSION_AES)
                 skip_aes = 1;
 
-            /* Prefer our zip64, ntfs extension over incoming */
-            if (field_type != MZ_ZIP_EXTENSION_ZIP64 && field_type != MZ_ZIP_EXTENSION_NTFS)
+            /* Prefer our zip64, ntfs, unix1 extension over incoming */
+            if (field_type != MZ_ZIP_EXTENSION_ZIP64 && field_type != MZ_ZIP_EXTENSION_NTFS &&
+                field_type != MZ_ZIP_EXTENSION_UNIX1)
                 extrafield_size += 4 + field_length;
 
             if (err_mem == MZ_OK)
@@ -600,7 +635,7 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
         }
         while (err_mem == MZ_OK);
     }
-
+    
 #ifdef HAVE_WZAES
     if (!skip_aes)
     {
@@ -622,7 +657,15 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
         field_length_ntfs = 8 + 8 + 8 + 4 + 2 + 2;
         extrafield_size += 4 + field_length_ntfs;
     }
-
+    
+    /* Unix1 symbolic links */
+    if (file_info->linkname != NULL && *file_info->linkname != 0)
+    {
+        linkname_size = (uint16_t)strlen(file_info->linkname);
+        field_length_unix1 = 12 + linkname_size;
+        extrafield_size += 4 + field_length_unix1;
+    }
+    
     if (local)
         err = mz_stream_write_uint32(stream, MZ_ZIP_MAGIC_LOCALHEADER);
     else
@@ -766,8 +809,9 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
             if (err_mem != MZ_OK)
                 break;
 
-            /* Prefer our zip 64, ntfs extensions over incoming */
-            if (field_type == MZ_ZIP_EXTENSION_ZIP64 || field_type == MZ_ZIP_EXTENSION_NTFS)
+            /* Prefer our zip 64, ntfs, unix1 extensions over incoming */
+            if (field_type == MZ_ZIP_EXTENSION_ZIP64 || field_type == MZ_ZIP_EXTENSION_NTFS ||
+                field_type == MZ_ZIP_EXTENSION_UNIX1)
             {
                 err_mem = mz_stream_seek(file_extra_stream, field_length, MZ_SEEK_CUR);
                 continue;
@@ -823,6 +867,24 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
         {
             mz_zip_unix_to_ntfs_time(file_info->creation_date, &ntfs_time);
             err = mz_stream_write_uint64(stream, ntfs_time);
+        }
+    }
+    /* Write UNIX extra block extra field */
+    if ((err == MZ_OK) && (field_length_unix1 > 0))
+    {
+        err = mz_zip_extrafield_write(stream, MZ_ZIP_EXTENSION_UNIX1, field_length_unix1);
+        if (err == MZ_OK)
+            err = mz_stream_write_uint32(stream, (uint32_t)file_info->accessed_date);
+        if (err == MZ_OK)
+            err = mz_stream_write_uint32(stream, (uint32_t)file_info->modified_date);
+        if (err == MZ_OK) /* User id */
+            err = mz_stream_write_uint16(stream, 0);
+        if (err == MZ_OK) /* Group id */
+            err = mz_stream_write_uint16(stream, 0);
+        if (err == MZ_OK && linkname_size > 0)
+        {
+            if (mz_stream_write(stream, file_info->linkname, linkname_size) != linkname_size)
+                err = MZ_WRITE_ERROR;
         }
     }
 #ifdef HAVE_WZAES
@@ -1814,6 +1876,7 @@ int32_t mz_zip_entry_write_open(void *handle, const mz_zip_file *file_info, int1
     int64_t filename_pos = -1;
     int64_t extrafield_pos = 0;
     int64_t comment_pos = 0;
+    int64_t linkname_pos = 0;
     int64_t disk_number = 0;
     uint8_t is_dir = 0;
     int32_t err = MZ_OK;
@@ -1855,11 +1918,17 @@ int32_t mz_zip_entry_write_open(void *handle, const mz_zip_file *file_info, int1
     if (file_info->comment != NULL)
         mz_stream_write(zip->file_info_stream, file_info->comment, file_info->comment_size);
     mz_stream_write_uint8(zip->file_info_stream, 0);
+    
+    linkname_pos = mz_stream_tell(zip->file_info_stream);
+    if (file_info->linkname != NULL)
+        mz_stream_write(zip->file_info_stream, file_info->linkname, (int32_t)strlen(file_info->linkname));
+    mz_stream_write_uint8(zip->file_info_stream, 0);
 
     mz_stream_mem_get_buffer_at(zip->file_info_stream, filename_pos, (const void **)&zip->file_info.filename);
     mz_stream_mem_get_buffer_at(zip->file_info_stream, extrafield_pos, (const void **)&zip->file_info.extrafield);
     mz_stream_mem_get_buffer_at(zip->file_info_stream, comment_pos, (const void **)&zip->file_info.comment);
-
+    mz_stream_mem_get_buffer_at(zip->file_info_stream, linkname_pos, (const void **)&zip->file_info.linkname);
+    
     if (zip->file_info.compression_method == MZ_COMPRESS_METHOD_DEFLATE)
     {
         if ((compress_level == 8) || (compress_level == 9))
@@ -2125,6 +2194,22 @@ int32_t mz_zip_entry_is_dir(void *handle)
     return MZ_EXIST_ERROR;
 }
 
+int32_t mz_zip_entry_is_symlink(void *handle)
+{
+    mz_zip *zip = (mz_zip *)handle;
+
+    if (zip == NULL)
+        return MZ_PARAM_ERROR;
+    if (zip->entry_scanned == 0)
+        return MZ_PARAM_ERROR;
+    if (mz_zip_attrib_is_symlink(zip->file_info.external_fa, zip->file_info.version_madeby) != MZ_OK)
+        return MZ_EXIST_ERROR;
+    if (zip->file_info.linkname == NULL || *zip->file_info.linkname == 0)
+        return MZ_EXIST_ERROR;
+    
+    return MZ_OK;
+}
+
 int32_t mz_zip_entry_get_info(void *handle, mz_zip_file **file_info)
 {
     mz_zip *zip = (mz_zip *)handle;
@@ -2377,6 +2462,22 @@ int32_t mz_zip_attrib_is_dir(uint32_t attrib, int32_t version_madeby)
     return MZ_EXIST_ERROR;
 }
 
+int32_t mz_zip_attrib_is_symlink(uint32_t attrib, int32_t version_madeby)
+{
+    uint32_t posix_attrib = 0;
+    uint8_t system = MZ_HOST_SYSTEM(version_madeby);
+    int32_t err = MZ_OK;
+
+    err = mz_zip_attrib_convert(system, attrib, MZ_HOST_SYSTEM_UNIX, &posix_attrib);
+    if (err == MZ_OK)
+    {
+        if ((posix_attrib & 0170000) == 0120000) /* S_ISLNK */
+            return MZ_OK;
+    }
+
+    return MZ_EXIST_ERROR;
+}
+
 int32_t mz_zip_attrib_convert(uint8_t src_sys, uint32_t src_attrib, uint8_t target_sys, uint32_t *target_attrib)
 {
     if (target_attrib == NULL)
@@ -2422,8 +2523,11 @@ int32_t mz_zip_attrib_posix_to_win32(uint32_t posix_attrib, uint32_t *win32_attr
     /* S_IWUSR | S_IWGRP | S_IWOTH | S_IXUSR | S_IXGRP | S_IXOTH */
     if ((posix_attrib & 0000333) == 0 && (posix_attrib & 0000444) != 0)
         *win32_attrib |= 0x01;      /* FILE_ATTRIBUTE_READONLY */
+    /* S_IFLNK */
+    if ((posix_attrib & 0170000) == 0120000)
+        *win32_attrib |= 0x400;     /* FILE_ATTRIBUTE_REPARSE_POINT */
     /* S_IFDIR */
-    if ((posix_attrib & 0170000) == 0040000)
+    else if ((posix_attrib & 0170000) == 0040000)
         *win32_attrib |= 0x10;      /* FILE_ATTRIBUTE_DIRECTORY */
     /* S_IFREG */
     else
@@ -2441,8 +2545,11 @@ int32_t mz_zip_attrib_win32_to_posix(uint32_t win32_attrib, uint32_t *posix_attr
     /* FILE_ATTRIBUTE_READONLY */
     if ((win32_attrib & 0x01) == 0)
         *posix_attrib |= 0000222;   /* S_IWUSR | S_IWGRP | S_IWOTH */
+    /* FILE_ATTRIBUTE_REPARSE_POINT */
+    if ((win32_attrib & 0x400) == 0x400)
+        *posix_attrib |= 0120000;   /* S_IFLNK */
     /* FILE_ATTRIBUTE_DIRECTORY */
-    if ((win32_attrib & 0x10) == 0x10)
+    else if ((win32_attrib & 0x10) == 0x10)
         *posix_attrib |= 0040111;   /* S_IFDIR | S_IXUSR | S_IXGRP | S_IXOTH */
     else
         *posix_attrib |= 0100000;   /* S_IFREG */

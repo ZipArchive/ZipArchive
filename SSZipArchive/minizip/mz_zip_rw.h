@@ -1,5 +1,5 @@
 /* mz_zip_rw.h -- Zip reader/writer
-   Version 2.8.6, April 8, 2019
+   Version 2.8.7, May 9, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -246,6 +246,12 @@ void    mz_zip_writer_set_compress_method(void *handle, uint16_t compress_method
 
 void    mz_zip_writer_set_compress_level(void *handle, int16_t compress_level);
 /* Sets the compression level when adding files in zip */
+
+void    mz_zip_writer_set_follow_links(void *handle, uint8_t follow_links);
+/* Follow symbolic links when traversing directories and files to add */
+
+void    mz_zip_writer_set_store_links(void *handle, uint8_t store_links);
+/* Store symbolic links in zip file */
 
 void    mz_zip_writer_set_zip_cd(void *handle, uint8_t zip_cd);
 /* Sets additional flags to be set when adding files in zip */

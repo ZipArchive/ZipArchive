@@ -60,6 +60,9 @@
 		3793E6EE1F7F6059000B1A19 /* TestPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1C1BDAA10100709011 /* TestPasswordArchive.zip */; };
 		3793E6EF1F7F6059000B1A19 /* Unicode.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1D1BDAA10100709011 /* Unicode.zip */; };
 		3793E6F01F7F605C000B1A19 /* PermissionsTestApp.app in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A181BDAA10100709011 /* PermissionsTestApp.app */; };
+		37CC960C2294F96100E71C3C /* TestAESPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37CC960B2294F95600E71C3C /* TestAESPasswordArchive.zip */; };
+		37CC960D2294F96200E71C3C /* TestAESPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37CC960B2294F95600E71C3C /* TestAESPasswordArchive.zip */; };
+		37CC960E2294F96200E71C3C /* TestAESPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37CC960B2294F95600E71C3C /* TestAESPasswordArchive.zip */; };
 		37FF0CB31F8533E0006E4361 /* CancelDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB21F8533E0006E4361 /* CancelDelegate.m */; };
 		37FF0CB41F8533E0006E4361 /* CancelDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB21F8533E0006E4361 /* CancelDelegate.m */; };
 		37FF0CB51F8533E0006E4361 /* CancelDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB21F8533E0006E4361 /* CancelDelegate.m */; };
@@ -123,6 +126,7 @@
 		3754B1311F88961800A58AA0 /* Empty.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Empty.zip; sourceTree = "<group>"; };
 		3773ADAE1F7F44D8009A4B2D /* ObjectiveCExampleTests_macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_macOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3793E6D71F7F5F93000B1A19 /* ObjectiveCExampleTests_tvOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_tvOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		37CC960B2294F95600E71C3C /* TestAESPasswordArchive.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = TestAESPasswordArchive.zip; sourceTree = "<group>"; };
 		37FF0CB11F8533E0006E4361 /* CancelDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CancelDelegate.h; sourceTree = "<group>"; };
 		37FF0CB21F8533E0006E4361 /* CancelDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CancelDelegate.m; sourceTree = "<group>"; };
 		37FF0CB61F853459006E4361 /* ProgressDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProgressDelegate.h; sourceTree = "<group>"; };
@@ -361,13 +365,14 @@
 		8DFE1A151BDAA10100709011 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
-				5FBB318120AF99BC003BA18F /* PathTraversal.zip */,
 				3754B1311F88961800A58AA0 /* Empty.zip */,
 				8DFE1A161BDAA10100709011 /* hello.zip */,
 				8DFE1A171BDAA10100709011 /* IncorrectHeaders.zip */,
+				5FBB318120AF99BC003BA18F /* PathTraversal.zip */,
 				8DFE1A181BDAA10100709011 /* PermissionsTestApp.app */,
 				8DFE1A191BDAA10100709011 /* RelativeSymbolicLink.zip */,
 				8DFE1A1A1BDAA10100709011 /* SymbolicLink.zip */,
+				37CC960B2294F95600E71C3C /* TestAESPasswordArchive.zip */,
 				8DFE1A1B1BDAA10100709011 /* TestArchive.zip */,
 				8DFE1A1C1BDAA10100709011 /* TestPasswordArchive.zip */,
 				8DFE1A1D1BDAA10100709011 /* Unicode.zip */,
@@ -640,6 +645,7 @@
 				3773ADC61F7F4D1C009A4B2D /* 6.m4a in Resources */,
 				3773ADBC1F7F4D13009A4B2D /* TestArchive.zip in Resources */,
 				3773ADBD1F7F4D13009A4B2D /* TestPasswordArchive.zip in Resources */,
+				37CC960D2294F96200E71C3C /* TestAESPasswordArchive.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -665,6 +671,7 @@
 				3793E6EC1F7F6059000B1A19 /* SymbolicLink.zip in Resources */,
 				3793E6E21F7F6052000B1A19 /* 1.m4a in Resources */,
 				3793E6E11F7F6052000B1A19 /* 0.m4a in Resources */,
+				37CC960E2294F96200E71C3C /* TestAESPasswordArchive.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -713,6 +720,7 @@
 				8DFE1A351BDAA10100709011 /* 6.m4a in Resources */,
 				8DFE1A2B1BDAA10100709011 /* SymbolicLink.zip in Resources */,
 				8DFE1A291BDAA10100709011 /* PermissionsTestApp.app in Resources */,
+				37CC960C2294F96100E71C3C /* TestAESPasswordArchive.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

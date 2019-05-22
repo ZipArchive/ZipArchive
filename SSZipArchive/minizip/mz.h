@@ -1,5 +1,5 @@
 /* mz.h -- Errors codes, zip flags and magic
-   Version 2.8.6, April 8, 2019
+   Version 2.8.7, May 9, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -15,7 +15,7 @@
 /***************************************************************************/
 
 /* MZ_VERSION */
-#define MZ_VERSION                      ("2.8.6")
+#define MZ_VERSION                      ("2.8.7")
 
 /* MZ_ERROR */
 #define MZ_OK                           (0)  /* zlib */
@@ -44,6 +44,7 @@
 #define MZ_READ_ERROR                   (-115)
 #define MZ_WRITE_ERROR                  (-116)
 #define MZ_SIGN_ERROR                   (-117)
+#define MZ_SYMLINK_ERROR                (-118)
 
 /* MZ_OPEN */
 #define MZ_OPEN_MODE_READ               (0x01)

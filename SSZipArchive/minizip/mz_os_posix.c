@@ -1,5 +1,5 @@
 /* mz_os_posix.c -- System functions for posix
-   Version 2.8.6, April 8, 2019
+   Version 2.8.7, May 9, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -122,7 +122,7 @@ int32_t mz_os_rename(const char *source_path, const char *target_path)
     return MZ_OK;
 }
 
-int32_t mz_os_delete(const char *path)
+int32_t mz_os_unlink(const char *path)
 {
     if (unlink(path) == -1)
         return MZ_EXIST_ERROR;
@@ -172,9 +172,7 @@ int32_t mz_os_get_file_date(const char *path, time_t *modified_date, time_t *acc
         len = strlen(path);
         name = (char *)malloc(len + 1);
         strncpy(name, path, len + 1);
-
-        if (name[len - 1] == '/' || name[len - 1] == '\\')
-            name[len - 1] = 0;
+        mz_path_remove_slash(name);
 
         if (stat(name, &path_stat) == 0)
         {
@@ -217,7 +215,7 @@ int32_t mz_os_get_file_attribs(const char *path, uint32_t *attributes)
     int32_t err = MZ_OK;
 
     memset(&path_stat, 0, sizeof(path_stat));
-    if (stat(path, &path_stat) == -1)
+    if (lstat(path, &path_stat) == -1)
         err = MZ_INTERNAL_ERROR;
     *attributes = path_stat.st_mode;
     return err;
@@ -276,6 +274,37 @@ int32_t mz_os_is_dir(const char *path)
         return MZ_OK;
 
     return MZ_EXIST_ERROR;
+}
+
+int32_t mz_os_is_symlink(const char *path)
+{
+    struct stat path_stat;
+
+    memset(&path_stat, 0, sizeof(path_stat));
+    lstat(path, &path_stat);
+    if (S_ISLNK(path_stat.st_mode))
+        return MZ_OK;
+
+    return MZ_EXIST_ERROR;
+}
+
+int32_t mz_os_make_symlink(const char *path, const char *target_path)
+{
+    if (symlink(target_path, path) != 0)
+        return MZ_INTERNAL_ERROR;
+    return MZ_OK;
+}
+
+int32_t mz_os_read_symlink(const char *path, char *target_path, int32_t max_target_path)
+{
+    size_t length = 0;
+
+    length = (size_t)readlink(path, target_path, max_target_path - 1);
+    if (length == (size_t)-1)
+        return MZ_EXIST_ERROR;
+
+    target_path[length] = 0;
+    return MZ_OK;
 }
 
 uint64_t mz_os_ms_time(void)
