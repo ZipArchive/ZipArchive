@@ -574,6 +574,7 @@
 					};
 					8DFE1A021BDA9FF300709011 = {
 						CreatedOnToolsVersion = 7.1;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
