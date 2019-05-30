@@ -759,6 +759,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         NSFileManager *fileManager = [[NSFileManager alloc] init];
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
         NSArray<NSString *> *allObjects = dirEnumerator.allObjects;
+        allObjects = [allObjects sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            return [obj1 compare:obj2];
+        }];
         NSUInteger total = allObjects.count, complete = 0;
         if (keepParentDirectory && !total) {
             allObjects = @[@""];
