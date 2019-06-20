@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "37952C5D1F63BB7100DD6677"
-               BuildableName = "ZipArchive.framework"
-               BlueprintName = "ZipArchive-watchos"
-               ReferencedContainer = "container:ZipArchive.xcodeproj">
+               BlueprintIdentifier = "AFF75A231C37279600F450AC"
+               BuildableName = "SSZipArchive.framework"
+               BlueprintName = "SSZipArchive-Mac"
+               ReferencedContainer = "container:SSZipArchive.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,10 +45,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "37952C5D1F63BB7100DD6677"
-            BuildableName = "ZipArchive.framework"
-            BlueprintName = "ZipArchive-watchos"
-            ReferencedContainer = "container:ZipArchive.xcodeproj">
+            BlueprintIdentifier = "AFF75A231C37279600F450AC"
+            BuildableName = "SSZipArchive.framework"
+            BlueprintName = "SSZipArchive-Mac"
+            ReferencedContainer = "container:SSZipArchive.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -63,10 +63,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "37952C5D1F63BB7100DD6677"
-            BuildableName = "ZipArchive.framework"
-            BlueprintName = "ZipArchive-watchos"
-            ReferencedContainer = "container:ZipArchive.xcodeproj">
+            BlueprintIdentifier = "AFF75A231C37279600F450AC"
+            BuildableName = "SSZipArchive.framework"
+            BlueprintName = "SSZipArchive-Mac"
+            ReferencedContainer = "container:SSZipArchive.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

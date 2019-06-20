@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AFF75A231C37279600F450AC"
-               BuildableName = "ZipArchive.framework"
-               BlueprintName = "ZipArchive-Mac"
-               ReferencedContainer = "container:ZipArchive.xcodeproj">
+               BlueprintIdentifier = "37952C251F63B50D00DD6677"
+               BuildableName = "SSZipArchive.framework"
+               BlueprintName = "SSZipArchive-tvos"
+               ReferencedContainer = "container:SSZipArchive.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,10 +45,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "AFF75A231C37279600F450AC"
-            BuildableName = "ZipArchive.framework"
-            BlueprintName = "ZipArchive-Mac"
-            ReferencedContainer = "container:ZipArchive.xcodeproj">
+            BlueprintIdentifier = "37952C251F63B50D00DD6677"
+            BuildableName = "SSZipArchive.framework"
+            BlueprintName = "SSZipArchive-tvos"
+            ReferencedContainer = "container:SSZipArchive.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -63,10 +63,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "AFF75A231C37279600F450AC"
-            BuildableName = "ZipArchive.framework"
-            BlueprintName = "ZipArchive-Mac"
-            ReferencedContainer = "container:ZipArchive.xcodeproj">
+            BlueprintIdentifier = "37952C251F63B50D00DD6677"
+            BuildableName = "SSZipArchive.framework"
+            BlueprintName = "SSZipArchive-tvos"
+            ReferencedContainer = "container:SSZipArchive.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

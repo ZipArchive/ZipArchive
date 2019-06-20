@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B423AE191C0DF76A0004A2F1"
-               BuildableName = "ZipArchive.framework"
-               BlueprintName = "ZipArchive-iOS"
-               ReferencedContainer = "container:ZipArchive.xcodeproj">
+               BuildableName = "SSZipArchive.framework"
+               BlueprintName = "SSZipArchive-iOS"
+               ReferencedContainer = "container:SSZipArchive.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,9 +46,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B423AE191C0DF76A0004A2F1"
-            BuildableName = "ZipArchive.framework"
-            BlueprintName = "ZipArchive-iOS"
-            ReferencedContainer = "container:ZipArchive.xcodeproj">
+            BuildableName = "SSZipArchive.framework"
+            BlueprintName = "SSZipArchive-iOS"
+            ReferencedContainer = "container:SSZipArchive.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -64,9 +64,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B423AE191C0DF76A0004A2F1"
-            BuildableName = "ZipArchive.framework"
-            BlueprintName = "ZipArchive-iOS"
-            ReferencedContainer = "container:ZipArchive.xcodeproj">
+            BuildableName = "SSZipArchive.framework"
+            BlueprintName = "SSZipArchive-iOS"
+            ReferencedContainer = "container:SSZipArchive.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

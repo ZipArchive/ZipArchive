@@ -6,10 +6,17 @@
 //  Copyright (c) Sam Soffes 2010-2015. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
+//! Project version number for SSZipArchive.
+FOUNDATION_EXPORT double SSZipArchiveVersionNumber;
+
+//! Project version string for SSZipArchive.
+FOUNDATION_EXPORT const unsigned char SSZipArchiveVersionString[];
+
 #ifndef _SSZIPARCHIVE_H
 #define _SSZIPARCHIVE_H
 
-#import <Foundation/Foundation.h>
 #include "SSZipCommon.h"
 
 NS_ASSUME_NONNULL_BEGIN
