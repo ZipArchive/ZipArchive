@@ -1,3 +1,7 @@
+.build/
+.vscode/
+
+
 # Xcode
 #
 xcuserdata/
