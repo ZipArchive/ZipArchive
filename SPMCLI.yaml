@@ -1,0 +1,10 @@
+mac:
+  build:
+    -Xcc:
+      - -DHAVE_ARC4RANDOM_BUF
+      - -DHAVE_INTTYPES_H
+      - -DHAVE_PKCRYPT
+      - -DHAVE_STDINT_H
+      - -DHAVE_WZAES
+      - -DHAVE_ZLIB
+      - -DMZ_ZIP_NO_SIGNING
