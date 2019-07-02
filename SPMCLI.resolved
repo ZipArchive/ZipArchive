@@ -1,10 +1,126 @@
-mac:
+ios:
   build:
     -Xcc:
-    - -DHAVE_ARC4RANDOM_BUF
     - -DHAVE_INTTYPES_H
     - -DHAVE_PKCRYPT
     - -DHAVE_STDINT_H
     - -DHAVE_WZAES
     - -DHAVE_ZLIB
     - -DMZ_ZIP_NO_SIGNING
+    - -Wnon-modular-include-in-framework-module
+    - -Werror=non-modular-include-in-framework-module
+    - -fapplication-extension
+    - -Wno-trigraphs
+    - -fpascal-strings
+    - -O0
+    - -fno-common
+    - -Wno-missing-field-initializers
+    - -Wno-missing-prototypes
+    - -Werror=return-type
+    - -Wunreachable-code-aggressive
+    - -Werror=deprecated-objc-isa-usage
+    - -Werror=objc-root-class
+    - -Wno-missing-braces
+    - -Wparentheses
+    - -Wswitch
+    - -Wunused-function
+    - -Wno-unused-label
+    - -Wno-unused-parameter
+    - -Wunused-variable
+    - -Wunused-value
+    - -Wempty-body
+    - -Wuninitialized
+    - -Wconditional-uninitialized
+    - -Wno-unknown-pragmas
+    - -Wno-shadow
+    - -Wno-four-char-constants
+    - -Wno-conversion
+    - -Wconstant-conversion
+    - -Wint-conversion
+    - -Wbool-conversion
+    - -Wenum-conversion
+    - -Wno-float-conversion
+    - -Wnon-literal-null-conversion
+    - -Wobjc-literal-conversion
+    - -Wshorten-64-to-32
+    - -Wpointer-sign
+    - -Wno-newline-eof
+    - -fstrict-aliasing
+    - -Wdeprecated-declarations
+    - -g
+    - -Wno-sign-conversion
+    - -Winfinite-recursion
+    - -Wcomma
+    - -Wblock-capture-autoreleasing
+    - -Wstrict-prototypes
+    - -Wno-semicolon-before-method-body
+    - -arc=armv7
+    - -I/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include
+    - -isysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk
+    - -miphoneos-version-min=8.0
+    -Xlinker:
+    - /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libz.tbd
+    - /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libiconv.tbd
+    -Xswiftc:
+    - -target=armv7-apple-ios8.0
+    - -miphoneos-version-min=8.0
+    - -sdk=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk
+mac:
+  build:
+    -Xcc:
+    - -DHAVE_INTTYPES_H
+    - -DHAVE_PKCRYPT
+    - -DHAVE_STDINT_H
+    - -DHAVE_WZAES
+    - -DHAVE_ZLIB
+    - -DMZ_ZIP_NO_SIGNING
+    - -Wnon-modular-include-in-framework-module
+    - -Werror=non-modular-include-in-framework-module
+    - -fapplication-extension
+    - -Wno-trigraphs
+    - -fpascal-strings
+    - -O0
+    - -fno-common
+    - -Wno-missing-field-initializers
+    - -Wno-missing-prototypes
+    - -Werror=return-type
+    - -Wunreachable-code-aggressive
+    - -Werror=deprecated-objc-isa-usage
+    - -Werror=objc-root-class
+    - -Wno-missing-braces
+    - -Wparentheses
+    - -Wswitch
+    - -Wunused-function
+    - -Wno-unused-label
+    - -Wno-unused-parameter
+    - -Wunused-variable
+    - -Wunused-value
+    - -Wempty-body
+    - -Wuninitialized
+    - -Wconditional-uninitialized
+    - -Wno-unknown-pragmas
+    - -Wno-shadow
+    - -Wno-four-char-constants
+    - -Wno-conversion
+    - -Wconstant-conversion
+    - -Wint-conversion
+    - -Wbool-conversion
+    - -Wenum-conversion
+    - -Wno-float-conversion
+    - -Wnon-literal-null-conversion
+    - -Wobjc-literal-conversion
+    - -Wshorten-64-to-32
+    - -Wpointer-sign
+    - -Wno-newline-eof
+    - -fstrict-aliasing
+    - -Wdeprecated-declarations
+    - -g
+    - -Wno-sign-conversion
+    - -Winfinite-recursion
+    - -Wcomma
+    - -Wblock-capture-autoreleasing
+    - -Wstrict-prototypes
+    - -Wno-semicolon-before-method-body
+    -Xlinker:
+    - /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libz.tbd
+    - /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libiconv.tbd

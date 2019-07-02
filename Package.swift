@@ -6,7 +6,8 @@ import PackageDescription
 let package = Package(
     name: "ZipArchive",
     platforms: [
-      .macOS(.v10_10)
+      .macOS(.v10_10),
+      .iOS(.v8)
     ],
     products: [
         .executable(

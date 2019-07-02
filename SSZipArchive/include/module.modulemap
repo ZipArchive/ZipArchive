@@ -1,10 +1,6 @@
 module ZipArchive {
     header "../ZipArchive.h"
-    requires objc
-
-    // Link against libz.dylib and libiconv.dylib
-    link "z"
-    link "iconv"
+    requires objc_arc
 
     export *
 }
