@@ -1,4 +1,4 @@
-ios:
+mac:
   build:
     -Xcc:
     - -DHAVE_INTTYPES_H
@@ -54,19 +54,10 @@ ios:
     - -Wblock-capture-autoreleasing
     - -Wstrict-prototypes
     - -Wno-semicolon-before-method-body
-    - -arc=armv7
-    - -I/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include
-    - -isysroot=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk
-    - -miphoneos-version-min=8.0
     -Xlinker:
-    - /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libz.tbd
-    - /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libiconv.tbd
-    -Xswiftc:
-    - -target=armv7-apple-ios8.0
-    - -miphoneos-version-min=8.0
-    - -sdk=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk
-mac:
-  build:
+    - /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libz.tbd
+    - /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libiconv.tbd
+  test:
     -Xcc:
     - -DHAVE_INTTYPES_H
     - -DHAVE_PKCRYPT

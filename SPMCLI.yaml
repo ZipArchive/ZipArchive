@@ -70,11 +70,13 @@ Clang:
     -Wno-semicolon-before-method-body:
 
 mac:
-  build:
+  build: &build
     -Xcc: 
       <<: *c_compiler_flag
       <<: *clang_flags
     -Xlinker: *macos_tbd
+  test:
+    <<: *build
 # ios:
 #   build:
 #     -Xcc: 
