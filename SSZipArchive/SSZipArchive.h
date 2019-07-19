@@ -108,6 +108,8 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
                         AES:(BOOL)aes
             progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler;
 
++ (void)setZipDelegate:(NSObject<SSZipArchiveDelegate>*)delegate;
+
 - (instancetype)init NS_UNAVAILABLE;
 - (instancetype)initWithPath:(NSString *)path NS_DESIGNATED_INITIALIZER;
 - (BOOL)open;
@@ -139,6 +141,7 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
 - (void)zipArchiveDidUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath unzippedFilePath:(NSString *)unzippedFilePath;
 
 - (void)zipArchiveProgressEvent:(unsigned long long)loaded total:(unsigned long long)total;
+- (BOOL)zipArchiveShouldStopZipProcess;
 
 @end
 
