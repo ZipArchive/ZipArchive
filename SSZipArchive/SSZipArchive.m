@@ -591,14 +591,14 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 {
                     if ([fileManager fileExistsAtPath:fullPath])
                     {
-                        NSError *error = nil;
-                        BOOL removeSuccess = [fileManager removeItemAtPath:fullPath error:&error];
+                        NSError *localError = nil;
+                        BOOL removeSuccess = [fileManager removeItemAtPath:fullPath error:&localError];
                         if (!removeSuccess)
                         {
-                            NSString *message = [NSString stringWithFormat:@"Failed to delete existing symbolic link at \"%@\"", error.localizedDescription];
+                            NSString *message = [NSString stringWithFormat:@"Failed to delete existing symbolic link at \"%@\"", localError.localizedDescription];
                             NSLog(@"[SSZipArchive] %@", message);
                             success = NO;
-                            unzippingError = [NSError errorWithDomain:SSZipArchiveErrorDomain code:error.code userInfo:@{NSLocalizedDescriptionKey: message}];
+                            unzippingError = [NSError errorWithDomain:SSZipArchiveErrorDomain code:localError.code userInfo:@{NSLocalizedDescriptionKey: message}];
                         }
                     }
                 }
