@@ -1,5 +1,5 @@
 /* mz_strm_zlib.c -- Stream for zlib inflate/deflate
-   Version 2.8.7, May 9, 2019
+   Version 2.8.9, July 4, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -27,7 +27,7 @@
 #else
 #  define ZLIB_PREFIX(x) x
    typedef z_stream zlib_stream;
-#endif 
+#endif
 
 #if !defined(DEF_MEM_LEVEL)
 #  if MAX_MEM_LEVEL >= 8
@@ -97,7 +97,7 @@ int32_t mz_stream_zlib_open(void *stream, const char *path, int32_t mode)
         zlib->zstream.next_out = zlib->buffer;
         zlib->zstream.avail_out = sizeof(zlib->buffer);
 
-        zlib->error = ZLIB_PREFIX(deflateInit2)(&zlib->zstream, (int8_t)zlib->level, Z_DEFLATED, 
+        zlib->error = ZLIB_PREFIX(deflateInit2)(&zlib->zstream, (int8_t)zlib->level, Z_DEFLATED,
             zlib->window_bits, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY);
 #endif
     }
@@ -365,6 +365,7 @@ int32_t mz_stream_zlib_get_prop_int64(void *stream, int32_t prop, int64_t *value
         break;
     case MZ_STREAM_PROP_COMPRESS_WINDOW:
         *value = zlib->window_bits;
+         break;
     default:
         return MZ_EXIST_ERROR;
     }

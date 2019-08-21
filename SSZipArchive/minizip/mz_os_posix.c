@@ -1,5 +1,5 @@
 /* mz_os_posix.c -- System functions for posix
-   Version 2.8.7, May 9, 2019
+   Version 2.8.9, July 4, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -20,7 +20,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#if defined(__APPLE__) || defined(__unix__)
+#if defined(__APPLE__) || defined(__unix__) || defined(__riscos__)
 #  include <utime.h>
 #  include <unistd.h>
 #endif

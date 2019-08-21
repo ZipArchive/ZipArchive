@@ -1,5 +1,5 @@
 /* mz_strm_split.c -- Stream for split files
-   Version 2.8.7, May 9, 2019
+   Version 2.8.9, July 4, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -98,7 +98,7 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
         {
             if (split->path_disk[i] != '.')
                 continue;
-            snprintf(&split->path_disk[i], split->path_disk_size - (uint32_t)i, 
+            snprintf(&split->path_disk[i], split->path_disk_size - (uint32_t)i,
                 ".z%02"PRId32, number_disk + 1);
             break;
         }
@@ -326,7 +326,7 @@ int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size)
         written = mz_stream_write(split->stream.base, buf_ptr, bytes_to_write);
         if (written != bytes_to_write)
             return MZ_WRITE_ERROR;
-        
+
         mz_stream_split_print("Split - Write disk - %"PRId32"\n", written);
 
         bytes_left -= written;

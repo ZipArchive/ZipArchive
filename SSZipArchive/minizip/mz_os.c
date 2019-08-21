@@ -1,5 +1,5 @@
 /* mz_os.c -- System functions
-   Version 2.8.7, May 9, 2019
+   Version 2.8.9, July 4, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -58,7 +58,7 @@ int32_t mz_path_append_slash(char *path, int32_t max_path, char slash)
 }
 
 int32_t mz_path_remove_slash(char *path)
-{   
+{
     int32_t path_len = (int32_t)strlen(path);
     while (path_len > 0)
     {

@@ -1,5 +1,5 @@
 /* mz_zip.h -- Zip manipulation
-   Version 2.8.7, May 9, 2019
+   Version 2.8.9, July 4, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -107,7 +107,7 @@ int32_t mz_zip_entry_read_open(void *handle, uint8_t raw, const char *password);
 int32_t mz_zip_entry_read(void *handle, void *buf, int32_t len);
 /* Read bytes from the current file in the zip file */
 
-int32_t mz_zip_entry_read_close(void *handle, uint32_t *crc32, int64_t *compressed_size, 
+int32_t mz_zip_entry_read_close(void *handle, uint32_t *crc32, int64_t *compressed_size,
     int64_t *uncompressed_size);
 /* Close the current file for reading and get data descriptor values */
 
@@ -118,7 +118,7 @@ int32_t mz_zip_entry_write_open(void *handle, const mz_zip_file *file_info,
 int32_t mz_zip_entry_write(void *handle, const void *buf, int32_t len);
 /* Write bytes from the current file in the zip file */
 
-int32_t mz_zip_entry_write_close(void *handle, uint32_t crc32, int64_t compressed_size, 
+int32_t mz_zip_entry_write_close(void *handle, uint32_t crc32, int64_t compressed_size,
     int64_t uncompressed_size);
 /* Close the current file for writing and set data descriptor values */
 
@@ -186,7 +186,7 @@ int32_t mz_zip_attrib_is_dir(uint32_t attrib, int32_t version_madeby);
 int32_t mz_zip_attrib_is_symlink(uint32_t attrib, int32_t version_madeby);
 /* Checks to see if the attribute is a symbolic link based on platform */
 
-int32_t mz_zip_attrib_convert(uint8_t src_sys, uint32_t src_attrib, uint8_t target_sys, 
+int32_t mz_zip_attrib_convert(uint8_t src_sys, uint32_t src_attrib, uint8_t target_sys,
     uint32_t *target_attrib);
 /* Converts file attributes from one host system to another */
 
