@@ -160,6 +160,57 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return passwordValid;
 }
 
++ (NSNumber *)payloadSizeForArchiveAtPath:(NSString *)path error:(NSError **)error {
+    if (error) {
+        *error = nil;
+    }
+
+    zipFile zip = unzOpen(path.fileSystemRepresentation);
+    if (zip == NULL) {
+        if (error) {
+            *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                         code:SSZipArchiveErrorCodeFailedOpenZipFile
+                                     userInfo:@{NSLocalizedDescriptionKey: @"failed to open zip file"}];
+        }
+        return @0;
+    }
+
+    unsigned long long totalSize = 0;
+    int ret = unzGoToFirstFile(zip);
+    if (ret == UNZ_OK) {
+        do {
+            ret = unzOpenCurrentFile(zip);
+            if (ret != UNZ_OK) {
+                if (error) {
+                    *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                                 code:SSZipArchiveErrorCodeFailedOpenFileInZip
+                                             userInfo:@{NSLocalizedDescriptionKey: @"failed to open first file in zip file"}];
+                }
+                break;
+            }
+            unz_file_info fileInfo = {};
+            ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
+            if (ret != UNZ_OK) {
+                if (error) {
+                    *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                                 code:SSZipArchiveErrorCodeFileInfoNotLoadable
+                                             userInfo:@{NSLocalizedDescriptionKey: @"failed to retrieve info for file"}];
+                }
+                break;
+            }
+
+            totalSize += fileInfo.uncompressed_size;
+
+            unzCloseCurrentFile(zip);
+            ret = unzGoToNextFile(zip);
+        } while (ret == UNZ_OK);
+    }
+
+    unzClose(zip);
+
+    return [NSNumber numberWithUnsignedLongLong:totalSize];
+}
+
 #pragma mark - Unzipping
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination
