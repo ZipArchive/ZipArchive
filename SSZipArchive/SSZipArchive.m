@@ -115,7 +115,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                     if (error) {
                         *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
                                                      code:SSZipArchiveErrorCodeFailedOpenFileInZip
-                                                 userInfo:@{NSLocalizedDescriptionKey: @"failed to open first file in zip file"}];
+                                                 userInfo:@{NSLocalizedDescriptionKey: @"failed to open file in zip archive"}];
                     }
                 }
                 passwordValid = NO;
@@ -184,7 +184,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 if (error) {
                     *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
                                                  code:SSZipArchiveErrorCodeFailedOpenFileInZip
-                                             userInfo:@{NSLocalizedDescriptionKey: @"failed to open first file in zip file"}];
+                                             userInfo:@{NSLocalizedDescriptionKey: @"failed to open file in zip archive"}];
                 }
                 break;
             }
