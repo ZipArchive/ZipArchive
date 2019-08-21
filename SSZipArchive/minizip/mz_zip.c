@@ -1,5 +1,5 @@
 /* zip.c -- Zip manipulation
-   Version 2.8.7, May 9, 2019
+   Version 2.8.9, July 4, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -290,11 +290,11 @@ static int32_t mz_zip_entry_read_header(void *stream, uint8_t local, mz_zip_file
     if ((err == MZ_OK) && (file_info->comment_size > 0))
         err = mz_stream_copy(file_extra_stream, stream, file_info->comment_size);
     mz_stream_write_uint8(file_extra_stream, 0);
-    
+
     linkname_pos = mz_stream_tell(file_extra_stream);
     /* Overwrite if we encounter UNIX1 extra block */
     mz_stream_write_uint8(file_extra_stream, 0);
-    
+
     if ((err == MZ_OK) && (file_info->extrafield_size > 0))
     {
         /* Seek to and parse the extra field */
@@ -457,7 +457,7 @@ static int32_t mz_zip_entry_read_header(void *stream, uint8_t local, mz_zip_file
             field_pos += field_length;
         }
     }
-    
+
     /* Get pointers to variable length data */
     mz_stream_mem_get_buffer(file_extra_stream, (const void **)&file_info->filename);
     mz_stream_mem_get_buffer_at(file_extra_stream, extrafield_pos, (const void **)&file_info->extrafield);
@@ -610,7 +610,7 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
     if (file_info->extrafield_size > 0)
     {
         mz_stream_mem_create(&file_extra_stream);
-        mz_stream_mem_set_buffer(file_extra_stream, (void *)file_info->extrafield, 
+        mz_stream_mem_set_buffer(file_extra_stream, (void *)file_info->extrafield,
             file_info->extrafield_size);
 
         do
@@ -635,7 +635,7 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
         }
         while (err_mem == MZ_OK);
     }
-    
+
 #ifdef HAVE_WZAES
     if (!skip_aes)
     {
@@ -657,7 +657,7 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
         field_length_ntfs = 8 + 8 + 8 + 4 + 2 + 2;
         extrafield_size += 4 + field_length_ntfs;
     }
-    
+
     /* Unix1 symbolic links */
     if (file_info->linkname != NULL && *file_info->linkname != 0)
     {
@@ -665,7 +665,7 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
         field_length_unix1 = 12 + linkname_size;
         extrafield_size += 4 + field_length_unix1;
     }
-    
+
     if (local)
         err = mz_stream_write_uint32(stream, MZ_ZIP_MAGIC_LOCALHEADER);
     else
@@ -739,7 +739,7 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
 
     if (mask)
     {
-        snprintf(masked_name, sizeof(masked_name), "%"PRIx32"_%"PRIx64, 
+        snprintf(masked_name, sizeof(masked_name), "%"PRIx32"_%"PRIx64,
             file_info->disk_number, file_info->disk_offset);
         filename = masked_name;
     }
@@ -1092,7 +1092,7 @@ static int32_t mz_zip_read_cd(void *handle)
             }
         }
     }
-    
+
     if (err == MZ_OK)
     {
         if (eocd_pos < zip->cd_offset)
@@ -1284,7 +1284,7 @@ static int32_t mz_zip_recover_cd(void *handle)
 
     if (mz_stream_is_open(cd_mem_stream) != MZ_OK)
         err = mz_stream_mem_open(cd_mem_stream, NULL, MZ_OPEN_MODE_CREATE);
-    
+
     mz_stream_mem_create(&local_file_info_stream);
     mz_stream_mem_open(local_file_info_stream, NULL, MZ_OPEN_MODE_CREATE);
 
@@ -1324,7 +1324,7 @@ static int32_t mz_zip_recover_cd(void *handle)
                 local_file_info.extrafield_size, MZ_ZIP_EXTENSION_ZIP64, NULL) == MZ_OK)
                 zip64 = 1;
 
-            err = mz_zip_entry_read_descriptor(zip->stream, zip64, &crc32, 
+            err = mz_zip_entry_read_descriptor(zip->stream, zip64, &crc32,
                 &compressed_size, &uncompressed_size);
 
             if (local_file_info.crc == 0)
@@ -1334,7 +1334,7 @@ static int32_t mz_zip_recover_cd(void *handle)
             if (local_file_info.uncompressed_size == 0)
                 local_file_info.uncompressed_size = uncompressed_size;
         }
-        
+
         /* Rewrite central dir with local headers and offsets */
         if (err == MZ_OK)
             err = mz_zip_entry_write_header(cd_mem_stream, 0, &local_file_info);
@@ -1345,7 +1345,7 @@ static int32_t mz_zip_recover_cd(void *handle)
 
     mz_stream_mem_delete(&local_file_info_stream);
 
-    mz_zip_print("Zip - Recover cd complete (cddisk %"PRId32" entries %"PRId64")\n", 
+    mz_zip_print("Zip - Recover cd complete (cddisk %"PRId32" entries %"PRId64")\n",
         disk_number_with_cd, number_entry);
 
     if (number_entry == 0)
@@ -1403,7 +1403,7 @@ int32_t mz_zip_open(void *handle, void *stream, int32_t mode)
     zip->stream = stream;
 
     mz_stream_mem_create(&zip->cd_mem_stream);
-    
+
     if (mode & MZ_OPEN_MODE_WRITE)
     {
         mz_stream_mem_open(zip->cd_mem_stream, NULL, MZ_OPEN_MODE_CREATE);
@@ -1481,7 +1481,7 @@ int32_t mz_zip_close(void *handle)
 
     if (zip == NULL)
         return MZ_PARAM_ERROR;
-        
+
     mz_zip_print("Zip - Close\n");
 
     if (mz_zip_entry_is_open(handle) == MZ_OK)
@@ -1812,8 +1812,8 @@ static int32_t mz_zip_seek_to_local_header(void *handle)
         mz_stream_set_prop_int64(zip->stream, MZ_STREAM_PROP_DISK_NUMBER, -1);
     else
         mz_stream_set_prop_int64(zip->stream, MZ_STREAM_PROP_DISK_NUMBER, zip->file_info.disk_number);
-    
-    mz_zip_print("Zip - Entry - Seek local (disk %"PRId32" offset %"PRId64")\n", 
+
+    mz_zip_print("Zip - Entry - Seek local (disk %"PRId32" offset %"PRId64")\n",
         zip->file_info.disk_number, zip->file_info.disk_offset);
 
     /* Guard against seek overflows */
@@ -1896,8 +1896,8 @@ int32_t mz_zip_entry_write_open(void *handle, const mz_zip_file *file_info, int1
     }
 
     memcpy(&zip->file_info, file_info, sizeof(mz_zip_file));
-    
-    mz_zip_print("Zip - Entry - Write open - %s (level %"PRId16" raw %"PRId8")\n", 
+
+    mz_zip_print("Zip - Entry - Write open - %s (level %"PRId16" raw %"PRId8")\n",
         zip->file_info.filename, compress_level, raw);
 
     mz_stream_seek(zip->file_info_stream, 0, MZ_SEEK_SET);
@@ -1918,7 +1918,7 @@ int32_t mz_zip_entry_write_open(void *handle, const mz_zip_file *file_info, int1
     if (file_info->comment != NULL)
         mz_stream_write(zip->file_info_stream, file_info->comment, file_info->comment_size);
     mz_stream_write_uint8(zip->file_info_stream, 0);
-    
+
     linkname_pos = mz_stream_tell(zip->file_info_stream);
     if (file_info->linkname != NULL)
         mz_stream_write(zip->file_info_stream, file_info->linkname, (int32_t)strlen(file_info->linkname));
@@ -1928,7 +1928,7 @@ int32_t mz_zip_entry_write_open(void *handle, const mz_zip_file *file_info, int1
     mz_stream_mem_get_buffer_at(zip->file_info_stream, extrafield_pos, (const void **)&zip->file_info.extrafield);
     mz_stream_mem_get_buffer_at(zip->file_info_stream, comment_pos, (const void **)&zip->file_info.comment);
     mz_stream_mem_get_buffer_at(zip->file_info_stream, linkname_pos, (const void **)&zip->file_info.linkname);
-    
+
     if (zip->file_info.compression_method == MZ_COMPRESS_METHOD_DEFLATE)
     {
         if ((compress_level == 8) || (compress_level == 9))
@@ -2022,7 +2022,7 @@ int32_t mz_zip_entry_write(void *handle, const void *buf, int32_t len)
     return written;
 }
 
-int32_t mz_zip_entry_read_close(void *handle, uint32_t *crc32, int64_t *compressed_size, 
+int32_t mz_zip_entry_read_close(void *handle, uint32_t *crc32, int64_t *compressed_size,
     int64_t *uncompressed_size)
 {
     mz_zip *zip = (mz_zip *)handle;
@@ -2043,11 +2043,11 @@ int32_t mz_zip_entry_read_close(void *handle, uint32_t *crc32, int64_t *compress
         *compressed_size = zip->file_info.compressed_size;
     if (uncompressed_size != NULL)
         *uncompressed_size = zip->file_info.uncompressed_size;
-    
+
     mz_stream_get_prop_int64(zip->compress_stream, MZ_STREAM_PROP_TOTAL_IN, &total_in);
 
     if ((zip->file_info.flag & MZ_ZIP_FLAG_DATA_DESCRIPTOR) &&
-        ((zip->file_info.flag & MZ_ZIP_FLAG_MASK_LOCAL_INFO) == 0) && 
+        ((zip->file_info.flag & MZ_ZIP_FLAG_MASK_LOCAL_INFO) == 0) &&
         (crc32 != NULL || compressed_size != NULL || uncompressed_size != NULL))
     {
         /* Check to see if data descriptor is zip64 bit format or not */
@@ -2059,14 +2059,14 @@ int32_t mz_zip_entry_read_close(void *handle, uint32_t *crc32, int64_t *compress
 
         /* Seek to end of compressed stream since we might have over-read during compression */
         if (err == MZ_OK)
-            err = mz_stream_seek(zip->stream, MZ_ZIP_SIZE_LD_ITEM + 
-                (int64_t)zip->local_file_info.filename_size + 
-                (int64_t)zip->local_file_info.extrafield_size + 
+            err = mz_stream_seek(zip->stream, MZ_ZIP_SIZE_LD_ITEM +
+                (int64_t)zip->local_file_info.filename_size +
+                (int64_t)zip->local_file_info.extrafield_size +
                 total_in, MZ_SEEK_CUR);
 
         /* Read data descriptor */
         if (err == MZ_OK)
-            err = mz_zip_entry_read_descriptor(zip->stream, zip64, 
+            err = mz_zip_entry_read_descriptor(zip->stream, zip64,
                 crc32, compressed_size, uncompressed_size);
     }
 
@@ -2093,7 +2093,7 @@ int32_t mz_zip_entry_read_close(void *handle, uint32_t *crc32, int64_t *compress
     return err;
 }
 
-int32_t mz_zip_entry_write_close(void *handle, uint32_t crc32, int64_t compressed_size, 
+int32_t mz_zip_entry_write_close(void *handle, uint32_t crc32, int64_t compressed_size,
     int64_t uncompressed_size)
 {
     mz_zip *zip = (mz_zip *)handle;
@@ -2102,7 +2102,7 @@ int32_t mz_zip_entry_write_close(void *handle, uint32_t crc32, int64_t compresse
 
     if (zip == NULL || mz_zip_entry_is_open(handle) != MZ_OK)
         return MZ_PARAM_ERROR;
-    
+
     mz_stream_close(zip->compress_stream);
 
     if (!zip->entry_raw)
@@ -2146,16 +2146,16 @@ int32_t mz_zip_entry_write_close(void *handle, uint32_t crc32, int64_t compresse
         }
 
         if (zip->file_info.flag & MZ_ZIP_FLAG_MASK_LOCAL_INFO)
-            err = mz_zip_entry_write_descriptor(zip->stream, 
+            err = mz_zip_entry_write_descriptor(zip->stream,
                 zip64, 0, compressed_size, 0);
         else
-            err = mz_zip_entry_write_descriptor(zip->stream, 
+            err = mz_zip_entry_write_descriptor(zip->stream,
                 zip64, crc32, compressed_size, uncompressed_size);
     }
 
     /* Write file info to central directory */
 
-    mz_zip_print("Zip - Entry - Write cd (ucs %"PRId64" cs %"PRId64" crc 0x%08"PRIx32")\n", 
+    mz_zip_print("Zip - Entry - Write cd (ucs %"PRId64" cs %"PRId64" crc 0x%08"PRIx32")\n",
         uncompressed_size, compressed_size, crc32);
 
     zip->file_info.crc = crc32;
@@ -2206,7 +2206,7 @@ int32_t mz_zip_entry_is_symlink(void *handle)
         return MZ_EXIST_ERROR;
     if (zip->file_info.linkname == NULL || *zip->file_info.linkname == 0)
         return MZ_EXIST_ERROR;
-    
+
     return MZ_OK;
 }
 
@@ -2492,17 +2492,17 @@ int32_t mz_zip_attrib_convert(uint8_t src_sys, uint32_t src_attrib, uint8_t targ
             *target_attrib = src_attrib;
             return MZ_OK;
         }
-        if ((target_sys == MZ_HOST_SYSTEM_UNIX) || (target_sys == MZ_HOST_SYSTEM_OSX_DARWIN))
+        if ((target_sys == MZ_HOST_SYSTEM_UNIX) || (target_sys == MZ_HOST_SYSTEM_OSX_DARWIN) || (target_sys == MZ_HOST_SYSTEM_RISCOS))
             return mz_zip_attrib_win32_to_posix(src_attrib, target_attrib);
     }
-    else if ((src_sys == MZ_HOST_SYSTEM_UNIX) || (src_sys == MZ_HOST_SYSTEM_OSX_DARWIN))
+    else if ((src_sys == MZ_HOST_SYSTEM_UNIX) || (src_sys == MZ_HOST_SYSTEM_OSX_DARWIN) || (src_sys == MZ_HOST_SYSTEM_RISCOS))
     {
-        if ((target_sys == MZ_HOST_SYSTEM_UNIX) || (target_sys == MZ_HOST_SYSTEM_OSX_DARWIN))
+        if ((target_sys == MZ_HOST_SYSTEM_UNIX) || (target_sys == MZ_HOST_SYSTEM_OSX_DARWIN) || (target_sys == MZ_HOST_SYSTEM_RISCOS))
         {
             /* If high bytes are set, it contains unix specific attributes */
             if ((src_attrib >> 16) != 0)
                 src_attrib >>= 16;
-            
+
             *target_attrib = src_attrib;
             return MZ_OK;
         }
@@ -2517,9 +2517,9 @@ int32_t mz_zip_attrib_posix_to_win32(uint32_t posix_attrib, uint32_t *win32_attr
 {
     if (win32_attrib == NULL)
         return MZ_PARAM_ERROR;
-    
+
     *win32_attrib = 0;
-    
+
     /* S_IWUSR | S_IWGRP | S_IWOTH | S_IXUSR | S_IXGRP | S_IXOTH */
     if ((posix_attrib & 0000333) == 0 && (posix_attrib & 0000444) != 0)
         *win32_attrib |= 0x01;      /* FILE_ATTRIBUTE_READONLY */

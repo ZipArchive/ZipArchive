@@ -1,5 +1,5 @@
 /* mz_zip_rw.h -- Zip reader/writer
-   Version 2.8.7, May 9, 2019
+   Version 2.8.9, July 4, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -196,7 +196,7 @@ int32_t mz_zip_writer_entry_close(void *handle);
 int32_t mz_zip_writer_entry_write(void *handle, const void *buf, int32_t len);
 /* Writes data into entry for zip */
 
-int32_t mz_zip_writer_entry_sign(void *handle, uint8_t *message, int32_t message_size, 
+int32_t mz_zip_writer_entry_sign(void *handle, uint8_t *message, int32_t message_size,
     uint8_t *cert_data, int32_t cert_data_size, const char *cert_pwd);
 /* Signs uncompressed content of entry, call before closing */
 
@@ -217,7 +217,7 @@ int32_t mz_zip_writer_add_buffer(void *handle, void *buf, int32_t len, mz_zip_fi
 int32_t mz_zip_writer_add_file(void *handle, const char *path, const char *filename_in_zip);
 /* Adds an entry to the zip from a file */
 
-int32_t mz_zip_writer_add_path(void *handle, const char *path, const char *root_path, uint8_t include_path, 
+int32_t mz_zip_writer_add_path(void *handle, const char *path, const char *root_path, uint8_t include_path,
     uint8_t recursive);
 /* Enumerates a directory or pattern and adds entries to the zip */
 

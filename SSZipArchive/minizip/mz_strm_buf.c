@@ -1,5 +1,5 @@
 /* mz_strm_buf.c -- Stream for buffering reads/writes
-   Version 2.8.7, May 9, 2019
+   Version 2.8.9, July 4, 2019
    part of the MiniZip project
 
    This version of ioapi is designed to buffer IO.
@@ -236,7 +236,7 @@ int32_t mz_stream_buffered_write(void *stream, const void *buf, int32_t size)
             continue;
         }
 
-        memcpy(buffered->writebuf + buffered->writebuf_pos, 
+        memcpy(buffered->writebuf + buffered->writebuf_pos,
             (const char *)buf + (bytes_to_write - bytes_left_to_write), bytes_to_copy);
 
         mz_stream_buffered_print("Buffered - Write copy (remaining %"PRId32" write %"PRId32":%"PRId32" len %"PRId32")\n",
@@ -276,7 +276,7 @@ int32_t mz_stream_buffered_seek(void *stream, int64_t offset, int32_t origin)
     int32_t bytes_flushed = 0;
     int32_t err = MZ_OK;
 
-    mz_stream_buffered_print("Buffered - Seek (origin %"PRId32" offset %"PRId64" pos %"PRId64")\n", 
+    mz_stream_buffered_print("Buffered - Seek (origin %"PRId32" offset %"PRId64" pos %"PRId64")\n",
         origin, offset, buffered->position);
 
     switch (origin)
