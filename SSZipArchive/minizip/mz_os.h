@@ -1,5 +1,5 @@
 /* mz_os.h -- System functions
-   Version 2.8.9, July 4, 2019
+   Version 2.9.0, September 18, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -28,11 +28,11 @@ extern "C" {
 #  define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_WINDOWS_NTFS)
 #endif
 
-#ifdef HAVE_LZMA
+#if defined(HAVE_LZMA)
 #  define MZ_VERSION_MADEBY_ZIP_VERSION (63)
-#elif HAVE_WZAES
+#elif defined(HAVE_WZAES)
 #  define MZ_VERSION_MADEBY_ZIP_VERSION (51)
-#elif HAVE_BZIP2
+#elif defined(HAVE_BZIP2)
 #  define MZ_VERSION_MADEBY_ZIP_VERSION (46)
 #else
 #  define MZ_VERSION_MADEBY_ZIP_VERSION (45)
