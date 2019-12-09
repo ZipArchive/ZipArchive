@@ -269,10 +269,38 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3DAC25DC239E8A6F0069BBE4 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				3DAC25DE239E8A900069BBE4 /* ZipArchiveTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		3DAC25DD239E8A7C0069BBE4 /* ZipArchive */ = {
+			isa = PBXGroup;
+			children = (
+				B423AE3E1C0DF7950004A2F1 /* minizip */,
+				B423AE481C0DF7950004A2F1 /* SSZipArchive.h */,
+				B423AE491C0DF7950004A2F1 /* SSZipArchive.m */,
+				93CE5D5D227FE5C50003464F /* SSZipCommon.h */,
+				B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */,
+			);
+			path = ZipArchive;
+			sourceTree = "<group>";
+		};
+		3DAC25DE239E8A900069BBE4 /* ZipArchiveTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ZipArchiveTests;
+			sourceTree = "<group>";
+		};
 		B423AE101C0DF76A0004A2F1 = {
 			isa = PBXGroup;
 			children = (
-				B423AE251C0DF7950004A2F1 /* SSZipArchive */,
+				B423AE251C0DF7950004A2F1 /* Sources */,
+				3DAC25DC239E8A6F0069BBE4 /* Tests */,
 				3775F4242276C5C000A1840B /* Frameworks */,
 				B423AE1B1C0DF76A0004A2F1 /* Products */,
 			);
@@ -289,17 +317,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B423AE251C0DF7950004A2F1 /* SSZipArchive */ = {
+		B423AE251C0DF7950004A2F1 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
 				B423AE3D1C0DF7950004A2F1 /* Info.plist */,
-				B423AE3E1C0DF7950004A2F1 /* minizip */,
-				B423AE481C0DF7950004A2F1 /* SSZipArchive.h */,
-				B423AE491C0DF7950004A2F1 /* SSZipArchive.m */,
-				93CE5D5D227FE5C50003464F /* SSZipCommon.h */,
-				B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */,
+				3DAC25DD239E8A7C0069BBE4 /* ZipArchive */,
 			);
-			path = SSZipArchive;
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		B423AE3E1C0DF7950004A2F1 /* minizip */ = {
@@ -524,16 +548,19 @@
 				TargetAttributes = {
 					37952C251F63B50D00DD6677 = {
 						CreatedOnToolsVersion = 8.3.3;
+						LastSwiftMigration = 1120;
 					};
 					37952C5D1F63BB7100DD6677 = {
 						CreatedOnToolsVersion = 8.3.3;
+						LastSwiftMigration = 1120;
 					};
 					AFF75A231C37279600F450AC = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 1120;
 					};
 					B423AE191C0DF76A0004A2F1 = {
 						CreatedOnToolsVersion = 7.1.1;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 1120;
 					};
 				};
 			};
@@ -689,6 +716,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
@@ -704,6 +732,8 @@
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
@@ -713,6 +743,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
@@ -729,6 +760,7 @@
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
@@ -739,6 +771,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
@@ -757,6 +790,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
@@ -767,6 +801,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
@@ -784,6 +819,7 @@
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
@@ -792,6 +828,7 @@
 		AFF75A2A1C37279600F450AC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -807,12 +844,15 @@
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
 		AFF75A2B1C37279600F450AC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -829,6 +869,7 @@
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -977,6 +1018,7 @@
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1000,6 +1042,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ziparchive.ZipArchive;
 				PRODUCT_NAME = "$(PROJECT_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
