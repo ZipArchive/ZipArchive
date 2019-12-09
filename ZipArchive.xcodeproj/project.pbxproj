@@ -141,6 +141,10 @@
 		37952C881F63BBD500DD6677 /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE481C0DF7950004A2F1 /* SSZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		37952C891F63BBDA00DD6677 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = B423AE491C0DF7950004A2F1 /* SSZipArchive.m */; };
 		37952C8B1F63BBE400DD6677 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3DAC25E5239E8E4C0069BBE4 /* ZipArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAC25E4239E8E4C0069BBE4 /* ZipArchiveTests.swift */; };
+		3DAC25E6239E8E4C0069BBE4 /* ZipArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAC25E4239E8E4C0069BBE4 /* ZipArchiveTests.swift */; };
+		3DAC25E7239E8E4C0069BBE4 /* ZipArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAC25E4239E8E4C0069BBE4 /* ZipArchiveTests.swift */; };
+		3DAC25E8239E8E4C0069BBE4 /* ZipArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAC25E4239E8E4C0069BBE4 /* ZipArchiveTests.swift */; };
 		93CE5D5E227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		93CE5D5F227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		93CE5D60227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -197,6 +201,7 @@
 		378439CB227AC031000BC165 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		37952C261F63B50D00DD6677 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		37952C5E1F63BB7100DD6677 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DAC25E4239E8E4C0069BBE4 /* ZipArchiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZipArchiveTests.swift; sourceTree = "<group>"; };
 		93CE5D5D227FE5C50003464F /* SSZipCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipCommon.h; sourceTree = "<group>"; };
 		AFF75A241C37279600F450AC /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B423AE1A1C0DF76A0004A2F1 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -292,6 +297,7 @@
 		3DAC25DE239E8A900069BBE4 /* ZipArchiveTests */ = {
 			isa = PBXGroup;
 			children = (
+				3DAC25E4239E8E4C0069BBE4 /* ZipArchiveTests.swift */,
 			);
 			path = ZipArchiveTests;
 			sourceTree = "<group>";
@@ -623,6 +629,7 @@
 			files = (
 				3775F3AF2276B14400A1840B /* mz_os_posix.c in Sources */,
 				3775F3872276B14400A1840B /* mz_strm_mem.c in Sources */,
+				3DAC25E7239E8E4C0069BBE4 /* ZipArchiveTests.swift in Sources */,
 				3775F3D72276B14400A1840B /* mz_strm_wzaes.c in Sources */,
 				3775F3A72276B14400A1840B /* mz_zip.c in Sources */,
 				3775F36F2276B14400A1840B /* mz_crypt.c in Sources */,
@@ -646,6 +653,7 @@
 			files = (
 				3775F3B02276B14400A1840B /* mz_os_posix.c in Sources */,
 				3775F3882276B14400A1840B /* mz_strm_mem.c in Sources */,
+				3DAC25E8239E8E4C0069BBE4 /* ZipArchiveTests.swift in Sources */,
 				3775F3D82276B14400A1840B /* mz_strm_wzaes.c in Sources */,
 				37952C891F63BBDA00DD6677 /* SSZipArchive.m in Sources */,
 				3775F3A82276B14400A1840B /* mz_zip.c in Sources */,
@@ -669,6 +677,7 @@
 			files = (
 				3775F3AE2276B14400A1840B /* mz_os_posix.c in Sources */,
 				3775F3862276B14400A1840B /* mz_strm_mem.c in Sources */,
+				3DAC25E6239E8E4C0069BBE4 /* ZipArchiveTests.swift in Sources */,
 				3775F3D62276B14400A1840B /* mz_strm_wzaes.c in Sources */,
 				3775F3A62276B14400A1840B /* mz_zip.c in Sources */,
 				3775F36E2276B14400A1840B /* mz_crypt.c in Sources */,
@@ -692,6 +701,7 @@
 			files = (
 				3775F3AD2276B14400A1840B /* mz_os_posix.c in Sources */,
 				3775F3852276B14400A1840B /* mz_strm_mem.c in Sources */,
+				3DAC25E5239E8E4C0069BBE4 /* ZipArchiveTests.swift in Sources */,
 				3775F3D52276B14400A1840B /* mz_strm_wzaes.c in Sources */,
 				3775F3A52276B14400A1840B /* mz_zip.c in Sources */,
 				3775F36D2276B14400A1840B /* mz_crypt.c in Sources */,
