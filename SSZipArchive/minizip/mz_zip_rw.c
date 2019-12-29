@@ -1,5 +1,5 @@
 /* mz_zip_rw.c -- Zip reader/writer
-   Version 2.9.0, September 18, 2019
+   Version 2.9.1, November 15, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -1457,6 +1457,9 @@ int32_t mz_zip_writer_entry_close(void *handle)
         else
             err = mz_zip_entry_close(writer->zip_handle);
     }
+
+    if (writer->file_extra_stream != NULL)
+        mz_stream_mem_delete(&writer->file_extra_stream);
 
     return err;
 }

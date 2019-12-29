@@ -1,5 +1,5 @@
 /* zip.c -- Zip manipulation
-   Version 2.9.0, September 18, 2019
+   Version 2.9.1, November 15, 2019
    part of the MiniZip project
 
    Copyright (C) 2010-2019 Nathan Moinvaziri
@@ -68,6 +68,7 @@
 #define MZ_ZIP_SIZE_LD_ITEM             (30)
 #define MZ_ZIP_SIZE_CD_ITEM             (46)
 #define MZ_ZIP_SIZE_CD_LOCATOR64        (20)
+#define MZ_ZIP_SIZE_MAX_DATA_DESCRIPTOR (24)
 
 #ifndef MZ_ZIP_EOCD_MAX_BACK
 #define MZ_ZIP_EOCD_MAX_BACK            (1 << 20)
@@ -1136,6 +1137,11 @@ static int32_t mz_zip_write_cd(void *handle)
     if (mz_stream_get_prop_int64(zip->stream, MZ_STREAM_PROP_DISK_SIZE, &disk_size) == MZ_OK && disk_size > 0)
         zip->disk_number_with_cd += 1;
     mz_stream_set_prop_int64(zip->stream, MZ_STREAM_PROP_DISK_NUMBER, -1);
+    if ((zip->disk_number_with_cd > 0) && (zip->open_mode & MZ_OPEN_MODE_APPEND))
+    {
+        // Overwrite existing central directory if using split disks
+        mz_stream_seek(zip->stream, 0, MZ_SEEK_SET);
+    }
 
     zip->cd_offset = mz_stream_tell(zip->stream);
     mz_stream_seek(zip->cd_mem_stream, 0, MZ_SEEK_END);
@@ -1324,63 +1330,78 @@ static int32_t mz_zip_recover_cd(void *handle)
         if (disk_number < 0)
             disk_number = 0;
         local_file_info.disk_number = (uint32_t)disk_number;
-        
+
         compressed_pos = mz_stream_tell(zip->stream);
-        
+
         if ((err == MZ_OK) && (local_file_info.compressed_size > 0))
         {
             mz_stream_seek(zip->stream, local_file_info.compressed_size, MZ_SEEK_CUR);
         }
 
-        /* Search for the next local header */
-        err = mz_stream_find(zip->stream, (const void *)local_header_magic, sizeof(local_header_magic),
-                INT64_MAX, &next_header_pos);
-        
-        if (err == MZ_EXIST_ERROR)
+        while (1)
         {
-            mz_stream_seek(zip->stream, compressed_pos, MZ_SEEK_SET);
-
-            /* Search for central dir if no local header found */
-            err = mz_stream_find(zip->stream, (const void *)central_header_magic, sizeof(central_header_magic),
-                INT64_MAX, &next_header_pos);
+            /* Search for the next local header */
+            err = mz_stream_find(zip->stream, (const void *)local_header_magic, sizeof(local_header_magic),
+                    INT64_MAX, &next_header_pos);
 
             if (err == MZ_EXIST_ERROR)
             {
-                /* Get end of stream if no central header found */
-                mz_stream_seek(zip->stream, 0, MZ_SEEK_END);
-                next_header_pos = mz_stream_tell(zip->stream);
+                mz_stream_seek(zip->stream, compressed_pos, MZ_SEEK_SET);
+
+                /* Search for central dir if no local header found */
+                err = mz_stream_find(zip->stream, (const void *)central_header_magic, sizeof(central_header_magic),
+                    INT64_MAX, &next_header_pos);
+
+                if (err == MZ_EXIST_ERROR)
+                {
+                    /* Get end of stream if no central header found */
+                    mz_stream_seek(zip->stream, 0, MZ_SEEK_END);
+                    next_header_pos = mz_stream_tell(zip->stream);
+                }
+
+                eof = 1;
             }
 
-            eof = 1;
-        }
-
-        /* Search backwards for the descriptor */
-        err = mz_stream_find_reverse(zip->stream, (const void *)descriptor_magic, sizeof(descriptor_magic),
-                    INT8_MAX, &descriptor_pos);
-        if (err == MZ_OK)
-        {
-            if (mz_zip_extrafield_contains(local_file_info.extrafield,
-                local_file_info.extrafield_size, MZ_ZIP_EXTENSION_ZIP64, NULL) == MZ_OK)
-                zip64 = 1;
-
-            err = mz_zip_entry_read_descriptor(zip->stream, zip64, &crc32,
-                &compressed_size, &uncompressed_size);
-
-            if (err == MZ_OK)
+            if (local_file_info.flag & MZ_ZIP_FLAG_DATA_DESCRIPTOR || local_file_info.compressed_size == 0)
             {
-                if (local_file_info.crc == 0)
-                    local_file_info.crc = crc32;
-                if (local_file_info.compressed_size == 0)
-                    local_file_info.compressed_size = compressed_size;
-                if (local_file_info.uncompressed_size == 0)
-                    local_file_info.uncompressed_size = uncompressed_size;
+                /* Search backwards for the descriptor, seeking too far back will be incorrect if compressed size is small */
+                err = mz_stream_find_reverse(zip->stream, (const void *)descriptor_magic, sizeof(descriptor_magic),
+                            MZ_ZIP_SIZE_MAX_DATA_DESCRIPTOR, &descriptor_pos);
+                if (err == MZ_OK)
+                {
+                    if (mz_zip_extrafield_contains(local_file_info.extrafield,
+                        local_file_info.extrafield_size, MZ_ZIP_EXTENSION_ZIP64, NULL) == MZ_OK)
+                        zip64 = 1;
+
+                    err = mz_zip_entry_read_descriptor(zip->stream, zip64, &crc32,
+                        &compressed_size, &uncompressed_size);
+
+                    if (err == MZ_OK)
+                    {
+                        if (local_file_info.crc == 0)
+                            local_file_info.crc = crc32;
+                        if (local_file_info.compressed_size == 0)
+                            local_file_info.compressed_size = compressed_size;
+                        if (local_file_info.uncompressed_size == 0)
+                            local_file_info.uncompressed_size = uncompressed_size;
+                    }
+
+                    compressed_end_pos = descriptor_pos;
+                }
+                else if (local_file_info.flag & MZ_ZIP_FLAG_DATA_DESCRIPTOR)
+                {
+                    /* Wrong local file entry found, keep searching */
+                    next_header_pos += 1;
+                    mz_stream_seek(zip->stream, next_header_pos, MZ_SEEK_SET);
+                    continue;
+                }
+            }
+            else
+            {
+                compressed_end_pos = next_header_pos;
             }
 
-            compressed_end_pos = descriptor_pos;
-        }
-        else
-        {
-            compressed_end_pos = next_header_pos;
+            break;
         }
 
         compressed_size = compressed_end_pos - compressed_pos;
@@ -1402,7 +1423,7 @@ static int32_t mz_zip_recover_cd(void *handle)
         /* Rewrite central dir with local headers and offsets */
         err = mz_zip_entry_write_header(cd_mem_stream, 0, &local_file_info);
         if (err == MZ_OK)
-            number_entry += 1; 
+            number_entry += 1;
 
         err = mz_stream_seek(zip->stream, next_header_pos, MZ_SEEK_SET);
     }
@@ -1414,7 +1435,7 @@ static int32_t mz_zip_recover_cd(void *handle)
 
     if (number_entry == 0)
         return err;
-    
+
     /* Set new upper seek boundary for central dir mem stream */
     disk_offset = mz_stream_tell(cd_mem_stream);
     mz_stream_mem_set_buffer_limit(cd_mem_stream, (int32_t)disk_offset);
