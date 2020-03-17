@@ -366,7 +366,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     }
     
     NSInteger currentFileNumber = -1;
-    NSError *unzippingError;
+    NSError *unzippingError = nil;
     do {
         currentFileNumber++;
         if (ret == MZ_END_OF_LIST) {
