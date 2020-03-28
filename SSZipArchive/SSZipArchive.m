@@ -1263,7 +1263,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 #endif
     {
         // supported encodings are in [NSString availableStringEncodings]
-        [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
+        BOOL isloss = NO;
+        NSStringEncoding encGB_18030_2000 = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+        NSStringEncoding encShiftJIS = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingShiftJIS);
+        NSStringEncoding encDOSLatinUS = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingDOSLatinUS);
+        NSArray * encList = @[@(encGB_18030_2000), @(encShiftJIS), @(encDOSLatinUS)];
+        [NSString stringEncodingForData:data encodingOptions:@{NSStringEncodingDetectionSuggestedEncodingsKey:encList} convertedString:&strPath usedLossyConversion:&isloss];
     } else {
         // fallback to a simple manual detect for macOS 10.9 or older
         NSArray<NSNumber *> *encodings = @[@(kCFStringEncodingGB_18030_2000), @(kCFStringEncodingShiftJIS)];
