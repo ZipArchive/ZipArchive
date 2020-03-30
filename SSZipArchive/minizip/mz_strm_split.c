@@ -1,8 +1,8 @@
 /* mz_strm_split.c -- Stream for split files
-   Version 2.9.1, November 15, 2019
+   Version 2.9.2, February 12, 2020
    part of the MiniZip project
 
-   Copyright (C) 2010-2019 Nathan Moinvaziri
+   Copyright (C) 2010-2020 Nathan Moinvaziri
      https://github.com/nmoinvaz/minizip
 
    This program is distributed under the terms of the same license as zlib.
@@ -77,6 +77,7 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
 {
     mz_stream_split *split = (mz_stream_split *)stream;
     uint32_t magic = 0;
+    int64_t position = 0;
     int32_t i = 0;
     int32_t err = MZ_OK;
     int16_t disk_part = 0;
@@ -129,6 +130,7 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
             if ((split->current_disk == 0) && (split->disk_size > 0))
             {
                 err = mz_stream_write_uint32(split->stream.base, MZ_ZIP_MAGIC_DISKHEADER);
+
                 split->total_out_disk += 4;
                 split->total_out += split->total_out_disk;
             }
@@ -137,11 +139,6 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
         {
             if (split->current_disk == 0)
             {
-                /* Get the size of the current disk we are on for seeking */
-                mz_stream_seek(split->stream.base, 0, MZ_SEEK_END);
-                split->current_disk_size = mz_stream_tell(split->stream.base);
-                mz_stream_seek(split->stream.base, 0, MZ_SEEK_SET);
-
                 err = mz_stream_read_uint32(split->stream.base, &magic);
                 if (magic != MZ_ZIP_MAGIC_DISKHEADER)
                     err = MZ_FORMAT_ERROR;
@@ -150,7 +147,15 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
     }
 
     if (err == MZ_OK)
+    {
+        /* Get the size of the current disk we are on */
+        position = mz_stream_tell(split->stream.base);
+        mz_stream_seek(split->stream.base, 0, MZ_SEEK_END);
+        split->current_disk_size = mz_stream_tell(split->stream.base);
+        mz_stream_seek(split->stream.base, position, MZ_SEEK_SET);
+
         split->is_open = 1;
+    }
 
     return err;
 }
@@ -290,6 +295,7 @@ int32_t mz_stream_split_read(void *stream, void *buf, int32_t size)
 int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size)
 {
     mz_stream_split *split = (mz_stream_split *)stream;
+    int64_t position = 0;
     int32_t written = 0;
     int32_t bytes_left = size;
     int32_t bytes_to_write = 0;
@@ -297,6 +303,8 @@ int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size)
     int32_t number_disk = -1;
     int32_t err = MZ_OK;
     const uint8_t *buf_ptr = (const uint8_t *)buf;
+
+    position = mz_stream_tell(split->stream.base);
 
     while (bytes_left > 0)
     {
@@ -331,8 +339,15 @@ int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size)
 
         bytes_left -= written;
         buf_ptr += written;
+
         split->total_out += written;
         split->total_out_disk += written;
+
+        if (position == split->current_disk_size)
+        {
+            split->current_disk_size += written;
+            position = split->current_disk_size;
+        }
     }
 
     return size - bytes_left;

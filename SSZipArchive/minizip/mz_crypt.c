@@ -1,8 +1,8 @@
 /* mz_crypt.c -- Crypto/hash functions
-   Version 2.9.1, November 15, 2019
+   Version 2.9.2, February 12, 2020
    part of the MiniZip project
 
-   Copyright (C) 2010-2019 Nathan Moinvaziri
+   Copyright (C) 2010-2020 Nathan Moinvaziri
      https://github.com/nmoinvaz/minizip
 
    This program is distributed under the terms of the same license as zlib.
@@ -15,7 +15,7 @@
 
 #if defined(HAVE_ZLIB)
 #  include "zlib.h"
-#  if defined(ZLIBNG_VERNUM)
+#  if defined(ZLIBNG_VERNUM) && !defined(ZLIB_COMPAT)
 #    include "zlib-ng.h"
 #  endif
 #elif defined(HAVE_LZMA)
