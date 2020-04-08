@@ -111,7 +111,7 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
                         AES:(BOOL)aes
             progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler;
 //suport symlink compress --file
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password keepSymlinks:(BOOL)keeplinks;
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(nullable NSString *)password keepSymlinks:(BOOL)keeplinks;
 //suport symlink compress --directory
 + (BOOL)createZipFileAtPath:(NSString *)path
     withContentsOfDirectory:(NSString *)directoryPath
