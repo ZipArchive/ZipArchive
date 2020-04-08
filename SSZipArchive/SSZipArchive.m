@@ -845,7 +845,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return success;
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password keepSymlinks:(BOOL)keeplinks {
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(nullable NSString *)password keepSymlinks:(BOOL)keeplinks {
     if (!keeplinks) {
         return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:password];
     } else {
