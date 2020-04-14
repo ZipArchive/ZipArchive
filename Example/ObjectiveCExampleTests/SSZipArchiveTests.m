@@ -606,6 +606,103 @@
     }
 }
 
+//PR #560
+- (void)testSymlinkZippingWithFilesAtPaths {
+	NSString *outputDir = [self _cachesPath:@"ZippingSymlinkWithFilesAtPaths"];
+
+	//directory
+	NSString *directory = [outputDir stringByAppendingPathComponent:@"directory"];
+	BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
+	XCTAssertTrue(success);	   
+
+	//write real file
+	NSString *realFilePath = [directory stringByAppendingPathComponent:@"originfile"];
+	success = [@"Hello World!" writeToFile:realFilePath atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+	XCTAssertTrue(success);	   
+
+	//create symlink to real file
+	NSString *symlinkPath = [directory stringByAppendingPathComponent:@"linkfile"];
+	success = [[NSFileManager defaultManager] createSymbolicLinkAtPath:symlinkPath withDestinationPath:realFilePath error:NULL];
+	XCTAssertTrue(success);	   
+
+	NSArray *files = @[realFilePath,symlinkPath];
+
+	//zipping
+	NSString *archivePath = [outputDir stringByAppendingPathComponent:@"SymlinkZippingWithFilesAtPaths.zip"];
+	success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:files withPassword:nil keepSymlinks:YES];
+	XCTAssertTrue(success);	   
+		
+	//remove files in directory dir, to make sure what we check is unzipped
+	success = [[NSFileManager defaultManager] removeItemAtPath:directory error:NULL];
+	XCTAssertTrue(success);	   
+	success = [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
+	XCTAssertTrue(success);	   
+
+	//unzip
+	success = [SSZipArchive unzipFileAtPath:archivePath toDestination:directory];
+	XCTAssertTrue(success);	   
+	
+	//check if it's still a symlink
+	NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:symlinkPath error:NULL];
+	NSString *fileType = attr[NSFileType];
+	XCTAssertTrue([fileType isEqualToString:NSFileTypeSymbolicLink]);
+
+	//check symlink points correctly
+	NSString *realFilePathUnzip = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:symlinkPath error:NULL];
+	XCTAssertEqualObjects(realFilePath, realFilePathUnzip);
+}
+
+//PR #560
+- (void)testSymlinkZippingWithContentsOfDirectory {
+	NSString *outputDir = [self _cachesPath:@"ZippingSymlinkWithContentsOfDirectory"];
+
+	//directory
+	NSString *directory = [outputDir stringByAppendingPathComponent:@"directory"];
+	BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
+	XCTAssertTrue(success);	   
+
+	//write real file
+	NSString *realFilePath = [directory stringByAppendingPathComponent:@"origin"];
+	success = [@"Hello World!" writeToFile:realFilePath atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+	XCTAssertTrue(success);	   
+
+	//create symlink to real file
+	NSString *symlinkPath = [directory stringByAppendingPathComponent:@"link"];
+	success = [[NSFileManager defaultManager] createSymbolicLinkAtPath:symlinkPath withDestinationPath:realFilePath error:NULL];
+	XCTAssertTrue(success);	   
+
+	//zipping
+	NSString *archivePath = [outputDir stringByAppendingPathComponent:@"SymlinkZippingWithContentsOfDirectory.zip"];
+	success = [SSZipArchive createZipFileAtPath:archivePath
+                       withContentsOfDirectory:directory
+                           keepParentDirectory:NO
+                              compressionLevel:-1
+					                  password:nil
+                                           AES:YES
+                               progressHandler:nil
+                                  keepSymlinks:YES];
+	XCTAssertTrue(success);	   
+		
+	//remove files in directory dir, to make sure what we check is unzipped
+	success = [[NSFileManager defaultManager] removeItemAtPath:directory error:NULL];
+	XCTAssertTrue(success);	   
+	success = [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
+	XCTAssertTrue(success);	   
+
+	//unzip
+	success = [SSZipArchive unzipFileAtPath:archivePath toDestination:directory];
+	XCTAssertTrue(success);	   
+	
+	//check if it's still a symlink
+	NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:symlinkPath error:NULL];
+	NSString *fileType = attr[NSFileType];
+	XCTAssertTrue([fileType isEqualToString:NSFileTypeSymbolicLink]);
+
+	//check symlink points correctly
+	NSString *realFilePathUnzip = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:symlinkPath error:NULL];
+	XCTAssertEqualObjects(realFilePath, realFilePathUnzip);
+}
+
 #pragma mark - Private
 
 - (NSString *)_cachesPath:(NSString *)directory {
