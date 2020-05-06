@@ -817,7 +817,11 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         }
         for (__strong NSString *fileName in allObjects) {
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
-            
+            if ([fullFilePath isEqualToString:path]) {
+                NSLog(@"[SSZipArchive] the archive path and the file path: %@ are the same, which is forbidden.", fullFilePath);
+                continue;
+            }
+			
             if (keepParentDirectory) {
                 fileName = [directoryPath.lastPathComponent stringByAppendingPathComponent:fileName];
             }
