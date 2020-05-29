@@ -225,7 +225,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination delegate:(nullable id<SSZipArchiveDelegate>)delegate
 {
-    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:nil delegate:delegate progressHandler:nil completionHandler:nil];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:NULL delegate:delegate progressHandler:nil completionHandler:nil];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -245,7 +245,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         progressHandler:(void (^)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
 {
-    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:overwrite password:password error:NULL delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -253,7 +253,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         progressHandler:(void (^_Nullable)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^_Nullable)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
 {
-    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:nil delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
+    return [self unzipFileAtPath:path toDestination:destination preserveAttributes:YES overwrite:YES password:nil error:NULL delegate:nil progressHandler:progressHandler completionHandler:completionHandler];
 }
 
 + (BOOL)unzipFileAtPath:(NSString *)path
@@ -324,7 +324,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         return NO;
     }
     
-    NSDictionary * fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    NSDictionary * fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL];
     unsigned long long fileSize = [[fileAttributes objectForKey:NSFileSize] unsignedLongLongValue];
     unsigned long long currentPosition = 0;
     
@@ -527,12 +527,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                            overwrite:overwrite
                                       nestedZipLevel:nestedZipLevel - 1
                                             password:password
-                                               error:nil
+                                               error:NULL
                                             delegate:nil
                                      progressHandler:nil
                                    completionHandler:nil]) {
                             [directoriesModificationDates removeLastObject];
-                            [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
+                            [[NSFileManager defaultManager] removeItemAtPath:fullPath error:NULL];
                         } else if (preserveAttributes) {
                             
                             // Set the original datetime property
@@ -541,7 +541,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                 NSDictionary *attr = @{NSFileModificationDate: orgDate};
                                 
                                 if (attr) {
-                                    if (![fileManager setAttributes:attr ofItemAtPath:fullPath error:nil]) {
+                                    if (![fileManager setAttributes:attr ofItemAtPath:fullPath error:NULL]) {
                                         // Can't set attributes
                                         NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting modification date");
                                     }
@@ -555,13 +555,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                 NSNumber *permissionsValue = @(permissions);
                                 
                                 // Retrieve any existing attributes
-                                NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:[fileManager attributesOfItemAtPath:fullPath error:nil]];
+                                NSMutableDictionary *attrs = [[NSMutableDictionary alloc] initWithDictionary:[fileManager attributesOfItemAtPath:fullPath error:NULL]];
                                 
                                 // Set the value in the attributes dict
                                 [attrs setObject:permissionsValue forKey:NSFilePosixPermissions];
                                 
                                 // Update attributes
-                                if (![fileManager setAttributes:attrs ofItemAtPath:fullPath error:nil]) {
+                                if (![fileManager setAttributes:attrs ofItemAtPath:fullPath error:NULL]) {
                                     // Unable to set the permissions attribute
                                     NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting permissions");
                                 }
@@ -1018,7 +1018,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     if (@available(macOS 10.10, iOS 8.0, watchOS 2.0, tvOS 9.0, *)) {
 #endif
         // supported encodings are in [NSString availableStringEncodings]
-        [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
+        [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:NULL];
     } else {
         // fallback to a simple manual detect for macOS 10.9 or older
         NSArray<NSNumber *> *encodings = @[@(kCFStringEncodingGB_18030_2000), @(kCFStringEncodingShiftJIS)];
@@ -1041,7 +1041,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 + (void)zipInfo:(zip_fileinfo *)zipInfo setAttributesOfItemAtPath:(NSString *)path
 {
-    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
+    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:NULL];
     if (attr)
     {
         NSDate *fileDate = (NSDate *)[attr objectForKey:NSFileModificationDate];
@@ -1193,7 +1193,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
     char *chars = malloc(length * 2);
     if (chars == NULL) {
         // we directly raise an exception instead of using NSAssert to make sure assertion is not disabled as this is irrecoverable
-        [NSException raise:@"NSInternalInconsistencyException" format:@"failed malloc" arguments:nil];
+        [NSException raise:@"NSInternalInconsistencyException" format:@"failed malloc"];
         return nil;
     }
     char *s = chars;
