@@ -760,13 +760,22 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory withPassword:nil];
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password {
+    return [self createZipFileAtPath:path withFilesAtPaths:paths withPassword:password progressHandler:nil];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
 {
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
     BOOL success = [zipArchive open];
     if (success) {
+        NSUInteger total = paths.count, complete = 0;
         for (NSString *filePath in paths) {
             success &= [zipArchive writeFile:filePath withPassword:password];
+            if (progressHandler) {
+                complete++;
+                progressHandler(complete, total);
+            }
         }
         success &= [zipArchive close];
     }
