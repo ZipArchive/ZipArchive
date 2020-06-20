@@ -1,5 +1,7 @@
 
 [![Build Status](https://travis-ci.org/ZipArchive/ZipArchive.svg?branch=master)](https://travis-ci.org/ZipArchive/ZipArchive)
+[![CI](https://github.com/ZipArchive/ZipArchive/workflows/CI/badge.svg)](https://github.com/ZipArchive/ZipArchive/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/ZipArchive/ZipArchive/branch/master/graph/badge.svg)](https://codecov.io/gh/ZipArchive/ZipArchive)
 
 # SSZipArchive
 
