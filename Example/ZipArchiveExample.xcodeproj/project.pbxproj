@@ -104,6 +104,9 @@
 		8DFE1A361BDAA10100709011 /* 7.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A261BDAA10100709011 /* 7.m4a */; };
 		93AD257E1043D63A286B4C7A /* Pods_core_SwiftExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCDAA5D1755F391647E7F8A8 /* Pods_core_SwiftExample.framework */; };
 		C77CFC8C1852DCA7782A7CCB /* Pods_core_ObjectiveCExampleTests_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5FBFA6A604DC4631E2B97F9 /* Pods_core_ObjectiveCExampleTests_iOS.framework */; };
+		C88AD282243B0DFC00392379 /* SpecialCharactersZipByWinRAR.zip in Resources */ = {isa = PBXBuildFile; fileRef = C88AD281243B0DFB00392379 /* SpecialCharactersZipByWinRAR.zip */; };
+		C88AD283243B0DFC00392379 /* SpecialCharactersZipByWinRAR.zip in Resources */ = {isa = PBXBuildFile; fileRef = C88AD281243B0DFB00392379 /* SpecialCharactersZipByWinRAR.zip */; };
+		C88AD284243B0DFC00392379 /* SpecialCharactersZipByWinRAR.zip in Resources */ = {isa = PBXBuildFile; fileRef = C88AD281243B0DFB00392379 /* SpecialCharactersZipByWinRAR.zip */; };
 		CAA5A6FAA6012BFDFDE6B30D /* Pods_core_SwiftExample_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06AB1208C4C022E0321FC41F /* Pods_core_SwiftExample_macOS.framework */; };
 		E31E9B694ECEB2E3932D8597 /* Pods_core_ObjectiveCExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49974600DB985CD98FC3AD39 /* Pods_core_ObjectiveCExample.framework */; };
 		F70E9D3A6F1E9FF335385D4A /* Pods_core_ObjectiveCExampleTests_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D314711A618CA3AC838E95C1 /* Pods_core_ObjectiveCExampleTests_tvOS.framework */; };
@@ -180,6 +183,7 @@
 		A5FBFA6A604DC4631E2B97F9 /* Pods_core_ObjectiveCExampleTests_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExampleTests_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B079CA35CA8601389B2193CD /* Pods-core-SwiftExample_macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-SwiftExample_macOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-core-SwiftExample_macOS/Pods-core-SwiftExample_macOS.release.xcconfig"; sourceTree = "<group>"; };
 		B55C60580DEC0CBAA4AF5918 /* Pods-core-SwiftExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-SwiftExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-core-SwiftExample/Pods-core-SwiftExample.debug.xcconfig"; sourceTree = "<group>"; };
+		C88AD281243B0DFB00392379 /* SpecialCharactersZipByWinRAR.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = SpecialCharactersZipByWinRAR.zip; sourceTree = "<group>"; };
 		CD7C1D2CFA646F90A02312F4 /* Pods-core-ObjectiveCExampleTests_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-core-ObjectiveCExampleTests_iOS/Pods-core-ObjectiveCExampleTests_iOS.release.xcconfig"; sourceTree = "<group>"; };
 		D314711A618CA3AC838E95C1 /* Pods_core_ObjectiveCExampleTests_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExampleTests_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC1DEADE9E9CE0AF5B487DCF /* Pods-core-ObjectiveCExampleTests_tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-core-ObjectiveCExampleTests_tvOS/Pods-core-ObjectiveCExampleTests_tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -365,6 +369,7 @@
 		8DFE1A151BDAA10100709011 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				C88AD281243B0DFB00392379 /* SpecialCharactersZipByWinRAR.zip */,
 				3754B1311F88961800A58AA0 /* Empty.zip */,
 				8DFE1A161BDAA10100709011 /* hello.zip */,
 				8DFE1A171BDAA10100709011 /* IncorrectHeaders.zip */,
@@ -634,6 +639,7 @@
 				3773ADC41F7F4D1C009A4B2D /* 4.m4a in Resources */,
 				3754B1341F88961D00A58AA0 /* Empty.zip in Resources */,
 				3773ADC01F7F4D1C009A4B2D /* 0.m4a in Resources */,
+				C88AD283243B0DFC00392379 /* SpecialCharactersZipByWinRAR.zip in Resources */,
 				3773ADC51F7F4D1C009A4B2D /* 5.m4a in Resources */,
 				3773ADB91F7F4D13009A4B2D /* IncorrectHeaders.zip in Resources */,
 				3773ADC11F7F4D1C009A4B2D /* 1.m4a in Resources */,
@@ -660,6 +666,7 @@
 				3793E6F01F7F605C000B1A19 /* PermissionsTestApp.app in Resources */,
 				3754B1351F88961E00A58AA0 /* Empty.zip in Resources */,
 				3793E6ED1F7F6059000B1A19 /* TestArchive.zip in Resources */,
+				C88AD284243B0DFC00392379 /* SpecialCharactersZipByWinRAR.zip in Resources*/,
 				3793E6E61F7F6052000B1A19 /* 5.m4a in Resources */,
 				3793E6E41F7F6052000B1A19 /* 3.m4a in Resources */,
 				3793E6EB1F7F6059000B1A19 /* RelativeSymbolicLink.zip in Resources */,
@@ -709,6 +716,7 @@
 				8DFE1A331BDAA10100709011 /* 4.m4a in Resources */,
 				3754B1331F88961C00A58AA0 /* Empty.zip in Resources */,
 				8DFE1A2F1BDAA10100709011 /* 0.m4a in Resources */,
+				C88AD282243B0DFC00392379 /* SpecialCharactersZipByWinRAR.zip in Resources*/,
 				8DFE1A341BDAA10100709011 /* 5.m4a in Resources */,
 				8DFE1A2D1BDAA10100709011 /* TestPasswordArchive.zip in Resources */,
 				8DFE1A301BDAA10100709011 /* 1.m4a in Resources */,

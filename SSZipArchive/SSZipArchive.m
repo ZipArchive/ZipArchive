@@ -431,8 +431,6 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             BOOL fileIsSymbolicLink = _fileIsSymbolicLink(&fileInfo);
             
             NSString * strPath = [SSZipArchive _filenameStringWithCString:filename
-                                                          version_made_by:fileInfo.version
-                                                     general_purpose_flag:fileInfo.flag
                                                                      size:fileInfo.size_filename];
             if ([strPath hasPrefix:@"__MACOSX/"]) {
                 // ignoring resource forks: https://superuser.com/questions/104500/what-is-macosx-folder
@@ -969,37 +967,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 #pragma mark - Private
 
 + (NSString *)_filenameStringWithCString:(const char *)filename
-                         version_made_by:(uint16_t)version_made_by
-                    general_purpose_flag:(uint16_t)flag
                                     size:(uint16_t)size_filename {
-    
-    // Respect Language encoding flag only reading filename as UTF-8 when this is set
-    // when file entry created on dos system.
-    //
-    // https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
-    //   Bit 11: Language encoding flag (EFS).  If this bit is set,
-    //           the filename and comment fields for this file
-    //           MUST be encoded using UTF-8. (see APPENDIX D)
-    uint16_t made_by = version_made_by >> 8;
-    BOOL made_on_dos = made_by == 0;
-    BOOL languageEncoding = (flag & (1 << 11)) != 0;
-    if (!languageEncoding && made_on_dos) {
-        // APPNOTE.TXT D.1:
-        //   D.2 If general purpose bit 11 is unset, the file name and comment should conform
-        //   to the original ZIP character encoding.  If general purpose bit 11 is set, the
-        //   filename and comment must support The Unicode Standard, Version 4.1.0 or
-        //   greater using the character encoding form defined by the UTF-8 storage
-        //   specification.  The Unicode Standard is published by the The Unicode
-        //   Consortium (www.unicode.org).  UTF-8 encoded data stored within ZIP files
-        //   is expected to not include a byte order mark (BOM).
-        
-        //  Code Page 437 corresponds to kCFStringEncodingDOSLatinUS
-        NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingDOSLatinUS);
-        NSString* strPath = [NSString stringWithCString:filename encoding:encoding];
-        if (strPath) {
-            return strPath;
-        }
-    }
     
     // attempting unicode encoding
     NSString * strPath = @(filename);
@@ -1018,7 +986,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     if (@available(macOS 10.10, iOS 8.0, watchOS 2.0, tvOS 9.0, *)) {
 #endif
         // supported encodings are in [NSString availableStringEncodings]
-        [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
+        BOOL isloss = NO;
+        NSStringEncoding encGB_18030_2000 = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+        NSStringEncoding encShiftJIS = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingShiftJIS);
+        NSStringEncoding encDOSLatinUS = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingDOSLatinUS);
+        NSArray * encList = @[@(encGB_18030_2000), @(encShiftJIS), @(encDOSLatinUS)];
+        [NSString stringEncodingForData:data encodingOptions:@{NSStringEncodingDetectionSuggestedEncodingsKey:encList} convertedString:&strPath usedLossyConversion:&isloss];
     } else {
         // fallback to a simple manual detect for macOS 10.9 or older
         NSArray<NSNumber *> *encodings = @[@(kCFStringEncodingGB_18030_2000), @(kCFStringEncodingShiftJIS)];

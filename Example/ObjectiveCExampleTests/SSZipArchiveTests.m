@@ -606,6 +606,26 @@
     }
 }
 
+- (void)testUnzippingSpecialCharactersZipByWinRAR {
+
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"SpecialCharactersZipByWinRAR" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"SpecialCharactersZipByWinRAR"];
+
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success, @"unzip failure");
+    
+    bool chineseCharactersFilenameWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:[outputPath stringByAppendingPathComponent:@"你好吗.txt"]];
+
+    bool japaneseCharactersFilenameWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:[outputPath stringByAppendingPathComponent:@"お元気ですか.txt"]];
+
+    bool unicodeFilenameWasExtracted = [[NSFileManager defaultManager] fileExistsAtPath:[outputPath stringByAppendingPathComponent:@"Rápida dissolução no trato gastrointestinal (TGI).png"]];
+
+    XCTAssertTrue(chineseCharactersFilenameWasExtracted, @"Chinese characters filename should be extracted properly.");
+    XCTAssertTrue(japaneseCharactersFilenameWasExtracted, @"Japanese characters filename should be extracted propertly.");
+    XCTAssertTrue(unicodeFilenameWasExtracted, @"Files with filenames in unicode should be extracted propertly.");
+}
+
 #pragma mark - Private
 
 - (NSString *)_cachesPath:(NSString *)directory {
