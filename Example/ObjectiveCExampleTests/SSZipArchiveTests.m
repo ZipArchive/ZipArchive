@@ -630,9 +630,9 @@ int twentyMB = 20 * 1024 * 1024;
     
     NSNumber *fileSize = [SSZipArchive payloadSizeForArchiveAtPath:filePath error:nil];
     
+    XCTAssertTrue(close, "Should be able to close the archive.");
     XCTAssertTrue(fileSize.longLongValue == goldenSize.longLongValue,
                   "Payload size should be equal to the sum of the size of all files included.");
-    XCTAssertTrue(close, "Should be able to close the archive.");
 }
 
 // This creates a zip file containing 300 20Mb sized files with multiple compression levels. It then unpacks the file and checks whether
