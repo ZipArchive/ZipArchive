@@ -23,6 +23,8 @@
 
 @implementation SSZipArchiveTests
 
+int twentyMB = 20 * 1024 * 1024;
+
 - (void)setUp {
     [super setUp];
 }
@@ -604,6 +606,80 @@
         //NSLog(@"%@", str);
         XCTAssertTrue([tests[str] isEqualToString:[str _sanitizedPath]], @"Path should be sanitized for traversal");
     }
+}
+
+// This tests whether the payload size of the zip file containing 6Gb of files with compression 0 is correct.
+- (void)testPayloadSizeCorrect {
+    long long int iterations = 300;
+    
+    NSNumber *goldenSize = [NSNumber numberWithLongLong:iterations * twentyMB];
+    NSData *data = [self get20MbNSData];
+    NSString *filenName = @"TestFile.zip";
+    NSString *filePath = [NSString stringWithFormat:@"%@%@", [self _cachesPath:@""], filenName];
+    
+    
+    SSZipArchive *archive = [[SSZipArchive alloc] initWithPath:filePath];
+    [archive open];
+    
+    for (int i = 0; i < iterations; i++) {
+        NSString *fileName = [NSString stringWithFormat:@"File_%i", i];
+        [archive writeData:data filename:fileName compressionLevel:0 password:@"TestPW" AES:true];
+    }
+    
+    bool close = [archive close];
+    
+    NSNumber *fileSize = [SSZipArchive payloadSizeForArchiveAtPath:filePath error:nil];
+    
+    XCTAssertTrue(fileSize.longLongValue == goldenSize.longLongValue,
+                  "Payload size should be equal to the sum of the size of all files included.");
+    XCTAssertTrue(close, "Should be able to close the archive.");
+}
+
+// This creates a zip file containing 300 20Mb sized files with multiple compression levels. It then unpacks the file and checks whether
+// the same number of files is present in the unpacked folder.
+- (void)testAllFilesPresent {
+    int iterations = 300;
+    NSString *unpackPath = [self _cachesPath:@"Unpacked/testFile"];
+    NSString *filenName = @"TestFile.zip";
+    NSString *filePath = [NSString stringWithFormat:@"%@%@", [self _cachesPath:@""], filenName];
+    NSString *password = @"TestPw";
+
+    NSArray *compressionLevels = [NSArray arrayWithObjects:
+                                  [NSNumber numberWithFloat:0],
+                                  [NSNumber numberWithFloat:0.5],
+                                  [NSNumber numberWithFloat:1],
+                                  nil];
+
+    for (NSNumber *compressionLevel in compressionLevels) {
+        NSData *data = [self get20MbNSData];
+
+        SSZipArchive *archive = [[SSZipArchive alloc] initWithPath:filePath];
+        [archive open];
+
+        for (int i = 0; i < iterations; i++) {
+            NSString *fileName = [NSString stringWithFormat:@"File_%i", i];
+            [archive writeData:data filename:fileName compressionLevel:compressionLevel.floatValue password:password AES:true];
+        }
+
+        bool close = [archive close];
+
+        [SSZipArchive unzipFileAtPath:filePath toDestination:unpackPath overwrite:true password:password error:nil];
+
+        long int noFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:unpackPath error:nil].count;
+
+        XCTAssertTrue(close, "Should be able to close the archive.");
+        XCTAssertTrue(iterations == noFiles, "All files should be present in the exported directory");
+    }
+}
+
+// Returns 20Mb of data
+-(NSData*)get20MbNSData {
+    NSMutableData* theData = [NSMutableData dataWithCapacity:twentyMB];
+    for (long long int i = 0; i < twentyMB/4; i++) {
+        u_int32_t randomBits = arc4random();
+        [theData appendBytes:(void *)&randomBits length:4];
+    }
+    return theData;
 }
 
 #pragma mark - Private
