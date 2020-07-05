@@ -15,7 +15,7 @@
 
 @implementation SSZipArchiveTests
 
-int twentyMb = 20971520;
+int twentyMb = 20 * 1024 * 1024;
 NSString *filenName = @"testFile.zip";
 
 - (void)setUp {
