@@ -644,32 +644,24 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *filePath = [NSString stringWithFormat:@"%@%@", [self _cachesPath:@""], filenName];
     NSString *password = @"TestPw";
 
-    NSArray *compressionLevels = [NSArray arrayWithObjects:
-                                  [NSNumber numberWithFloat:0],
-                                  [NSNumber numberWithFloat:0.5],
-                                  [NSNumber numberWithFloat:1],
-                                  nil];
+    NSData *data = [self get20MbNSData];
 
-    for (NSNumber *compressionLevel in compressionLevels) {
-        NSData *data = [self get20MbNSData];
+    SSZipArchive *archive = [[SSZipArchive alloc] initWithPath:filePath];
+    [archive open];
 
-        SSZipArchive *archive = [[SSZipArchive alloc] initWithPath:filePath];
-        [archive open];
-
-        for (int i = 0; i < iterations; i++) {
-            NSString *fileName = [NSString stringWithFormat:@"File_%i", i];
-            [archive writeData:data filename:fileName compressionLevel:compressionLevel.floatValue password:password AES:true];
-        }
-
-        bool close = [archive close];
-
-        [SSZipArchive unzipFileAtPath:filePath toDestination:unpackPath overwrite:true password:password error:nil];
-
-        long int noFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:unpackPath error:nil].count;
-
-        XCTAssertTrue(close, "Should be able to close the archive.");
-        XCTAssertTrue(iterations == noFiles, "All files should be present in the exported directory");
+    for (int i = 0; i < iterations; i++) {
+        NSString *fileName = [NSString stringWithFormat:@"File_%i", i];
+        [archive writeData:data filename:fileName compressionLevel:0.0 password:password AES:true];
     }
+
+    bool close = [archive close];
+
+    [SSZipArchive unzipFileAtPath:filePath toDestination:unpackPath overwrite:true password:password error:nil];
+
+    long int noFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:unpackPath error:nil].count;
+
+    XCTAssertTrue(close, "Should be able to close the archive.");
+    XCTAssertTrue(iterations == noFiles, "All files should be present in the exported directory");
 }
 
 // Returns 20Mb of data
