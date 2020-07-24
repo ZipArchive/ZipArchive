@@ -608,22 +608,24 @@ int twentyMB = 20 * 1024 * 1024;
     }
 }
 
-// This tests whether the payload size of the zip file containing 6Gb of files with compression 0 is correct.
-- (void)testPayloadSizeCorrect {
-    long long int iterations = 300;
-    
+// This tests whether the payload size of the zip file containing 4.8Gb of files with compression 0 is correct,
+// and creates a zip file containing 240 20Mb sized files with multiple compression levels. It then unpacks the file and checks whether
+// the same number of files is present in the unpacked folder.
+- (void)testPayloadSizeCorrectAndUnpackFileNo {
+    long long int iterations = 240;
+    NSString *unpackPath = [self _cachesPath:@"Unpacked/testFile"];
     NSNumber *goldenSize = [NSNumber numberWithLongLong:iterations * twentyMB];
     NSData *data = [self get20MbNSData];
     NSString *filenName = @"TestFile.zip";
     NSString *filePath = [NSString stringWithFormat:@"%@%@", [self _cachesPath:@""], filenName];
-    
+    NSString *password = @"TestPW";
     
     SSZipArchive *archive = [[SSZipArchive alloc] initWithPath:filePath];
     [archive open];
     
     for (int i = 0; i < iterations; i++) {
         NSString *fileName = [NSString stringWithFormat:@"File_%i", i];
-        [archive writeData:data filename:fileName compressionLevel:0 password:@"TestPW" AES:true];
+        [archive writeData:data filename:fileName compressionLevel:0 password:password AES:true];
     }
     
     bool close = [archive close];
@@ -633,34 +635,9 @@ int twentyMB = 20 * 1024 * 1024;
     XCTAssertTrue(close, "Should be able to close the archive.");
     XCTAssertTrue(fileSize.longLongValue == goldenSize.longLongValue,
                   "Payload size should be equal to the sum of the size of all files included.");
-}
-
-// This creates a zip file containing 300 20Mb sized files with multiple compression levels. It then unpacks the file and checks whether
-// the same number of files is present in the unpacked folder.
-- (void)testAllFilesPresent {
-    int iterations = 300;
-    NSString *unpackPath = [self _cachesPath:@"Unpacked/testFile"];
-    NSString *filenName = @"TestFile.zip";
-    NSString *filePath = [NSString stringWithFormat:@"%@%@", [self _cachesPath:@""], filenName];
-    NSString *password = @"TestPw";
-
-    NSData *data = [self get20MbNSData];
-
-    SSZipArchive *archive = [[SSZipArchive alloc] initWithPath:filePath];
-    [archive open];
-
-    for (int i = 0; i < iterations; i++) {
-        NSString *fileName = [NSString stringWithFormat:@"File_%i", i];
-        [archive writeData:data filename:fileName compressionLevel:0.0 password:password AES:true];
-    }
-
-    bool close = [archive close];
-
+    
     [SSZipArchive unzipFileAtPath:filePath toDestination:unpackPath overwrite:true password:password error:nil];
-
     long int noFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:unpackPath error:nil].count;
-
-    XCTAssertTrue(close, "Should be able to close the archive.");
     XCTAssertTrue(iterations == noFiles, "All files should be present in the exported directory");
 }
 
