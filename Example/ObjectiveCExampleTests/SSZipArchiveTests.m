@@ -638,6 +638,7 @@ int twentyMB = 20 * 1024 * 1024;
     
     [SSZipArchive unzipFileAtPath:filePath toDestination:unpackPath overwrite:true password:password error:nil];
     long int noFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:unpackPath error:nil].count;
+    
     XCTAssertTrue(iterations == noFiles, "All files should be present in the exported directory");
 }
 
