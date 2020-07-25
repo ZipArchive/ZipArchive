@@ -122,7 +122,7 @@ before_install:
 
 script:
   # Testing
-  - travis_wait 15 xcodebuild
+  - xcodebuild
     `` -workspace Example/ZipArchiveExample.xcworkspace
     `` -scheme $SCHEME
     `` -sdk $SDK
