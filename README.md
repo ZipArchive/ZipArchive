@@ -9,6 +9,7 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS, mac
 - Unzip password protected zip files;
 - Unzip AES encrypted zip files;
 - Create zip files;
+- Create large (> 4.3Gb) files;
 - Create password protected zip files;
 - Create AES encrypted zip files;
 - Choose compression level;
