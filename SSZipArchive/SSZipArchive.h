@@ -10,7 +10,12 @@
 #define _SSZIPARCHIVE_H
 
 #import <Foundation/Foundation.h>
-#include "SSZipCommon.h"
+
+#if COCOAPODS
+#import <SSZipArchive/SSZipCommon.h>
+#else
+#import <ZipArchive/SSZipCommon.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
