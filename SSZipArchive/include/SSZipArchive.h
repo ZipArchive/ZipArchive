@@ -14,7 +14,7 @@
 #if COCOAPODS
 #import <SSZipArchive/SSZipCommon.h>
 #else
-#import <ZipArchive/SSZipCommon.h>
+#import <SSZipCommon.h>
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
