@@ -871,7 +871,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 - (BOOL)openForAppending
 {
     NSAssert((_zip == NULL), @"Attempting to open an archive which is already open");
-    _zip = zipOpen(_path.fileSystemRepresentation, APPEND_STATUS_CREATE);
+    _zip = zipOpen(_path.fileSystemRepresentation, APPEND_STATUS_ADDINZIP);
     return (NULL != _zip);
 }
 
