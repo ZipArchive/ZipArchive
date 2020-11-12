@@ -178,6 +178,33 @@ int twentyMB = 20 * 1024 * 1024;
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
 
+-(void)testAppendingToZip {
+    // zip files and create "CreatedArchive.zip"
+    [self testZipping];
+    
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+    long long initialFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:archivePath error:NULL][NSFileSize] longLongValue];
+    
+    SSZipArchive* zip = [[SSZipArchive alloc] initWithPath:archivePath];
+    
+    BOOL didOpenForAppending = [zip openForAppending];
+    XCTAssertTrue(didOpenForAppending, @"Opened for appending");
+    
+    NSData* testData = [@"test contents" dataUsingEncoding:NSUTF8StringEncoding];
+    BOOL didAppendFile = [zip writeData:testData filename:@"testData.txt" withPassword:NULL];
+    XCTAssertTrue(didAppendFile, @"Did add file");
+    
+    BOOL didClose = [zip close];
+    XCTAssertTrue(didClose, @"Can close zip");
+    
+    // TODO: Make sure the files are actually zipped. They are, but the test should be better.
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+    
+    long long fileSizeAfterAppend = [[[NSFileManager defaultManager] attributesOfItemAtPath:archivePath error:NULL][NSFileSize] longLongValue];
+    XCTAssertGreaterThan(fileSizeAfterAppend, initialFileSize);    
+}
+
 - (void)testUnzippingProgress {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Progress"];

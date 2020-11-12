@@ -868,6 +868,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return (NULL != _zip);
 }
 
+- (BOOL)openForAppending
+{
+    NSAssert((_zip == NULL), @"Attempting to open an archive which is already open");
+    _zip = zipOpen(_path.fileSystemRepresentation, APPEND_STATUS_CREATE);
+    return (NULL != _zip);
+}
+
 - (BOOL)writeFolderAtPath:(NSString *)path withFolderName:(NSString *)folderName withPassword:(nullable NSString *)password
 {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
