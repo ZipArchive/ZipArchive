@@ -2,6 +2,7 @@
 #
 xcuserdata/
 *.xccheckout
+.build/
 
 # AppCode
 .idea/

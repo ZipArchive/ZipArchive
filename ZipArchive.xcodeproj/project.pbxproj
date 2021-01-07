@@ -250,6 +250,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		372EC96F25A7374900EE7987 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				372EC97025A739B200EE7987 /* ZipArchive */,
+				B423AE3D1C0DF7950004A2F1 /* Info.plist */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		372EC97025A739B200EE7987 /* ZipArchive */ = {
+			isa = PBXGroup;
+			children = (
+				B423AE3E1C0DF7950004A2F1 /* minizip */,
+				B423AE481C0DF7950004A2F1 /* SSZipArchive.h */,
+				B423AE491C0DF7950004A2F1 /* SSZipArchive.m */,
+				93CE5D5D227FE5C50003464F /* SSZipCommon.h */,
+				B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */,
+			);
+			path = ZipArchive;
+			sourceTree = "<group>";
+		};
 		3775F4242276C5C000A1840B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -272,7 +293,7 @@
 		B423AE101C0DF76A0004A2F1 = {
 			isa = PBXGroup;
 			children = (
-				B423AE251C0DF7950004A2F1 /* SSZipArchive */,
+				372EC96F25A7374900EE7987 /* Sources */,
 				3775F4242276C5C000A1840B /* Frameworks */,
 				B423AE1B1C0DF76A0004A2F1 /* Products */,
 			);
@@ -287,19 +308,6 @@
 				37952C5E1F63BB7100DD6677 /* ZipArchive.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		B423AE251C0DF7950004A2F1 /* SSZipArchive */ = {
-			isa = PBXGroup;
-			children = (
-				B423AE3D1C0DF7950004A2F1 /* Info.plist */,
-				B423AE3E1C0DF7950004A2F1 /* minizip */,
-				B423AE481C0DF7950004A2F1 /* SSZipArchive.h */,
-				B423AE491C0DF7950004A2F1 /* SSZipArchive.m */,
-				93CE5D5D227FE5C50003464F /* SSZipCommon.h */,
-				B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */,
-			);
-			path = SSZipArchive;
 			sourceTree = "<group>";
 		};
 		B423AE3E1C0DF7950004A2F1 /* minizip */ = {
@@ -697,7 +705,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = SSZipArchive/Info.plist;
+				INFOPLIST_FILE = Source/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ziparchive.ZipArchive;
@@ -722,7 +730,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = SSZipArchive/Info.plist;
+				INFOPLIST_FILE = Source/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ziparchive.ZipArchive;
@@ -748,7 +756,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = SSZipArchive/Info.plist;
+				INFOPLIST_FILE = Source/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ziparchive.ZipArchive;
@@ -777,7 +785,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = SSZipArchive/Info.plist;
+				INFOPLIST_FILE = Source/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.ziparchive.ZipArchive;
@@ -799,7 +807,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = "$(SRCROOT)/SSZipArchive/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
@@ -821,7 +829,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = "$(SRCROOT)/SSZipArchive/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
@@ -969,7 +977,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = SSZipArchive/Info.plist;
+				INFOPLIST_FILE = Sources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -993,7 +1001,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = SSZipArchive/Info.plist;
+				INFOPLIST_FILE = Sources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
