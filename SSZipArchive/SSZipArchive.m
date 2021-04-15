@@ -792,7 +792,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         keepParentDirectory:(BOOL)keepParentDirectory
                withPassword:(nullable NSString *)password
          andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
-    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory compressionLevel:Z_DEFAULT_COMPRESSION password:password AES:YES progressHandler:progressHandler];
+    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory compressionLevel:Z_DEFAULT_COMPRESSION password:password AES:YES diskSize:0 progressHandler:progressHandler];
 }
 
 + (BOOL)createZipFileAtPath:(NSString *)path
@@ -802,9 +802,20 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                    password:(nullable NSString *)password
                         AES:(BOOL)aes
             progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
+    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory compressionLevel:compressionLevel password:password AES:aes diskSize:0 progressHandler:progressHandler];   
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path
+    withContentsOfDirectory:(NSString *)directoryPath
+        keepParentDirectory:(BOOL)keepParentDirectory
+           compressionLevel:(int)compressionLevel
+                   password:(nullable NSString *)password
+                        AES:(BOOL)aes
+                   diskSize:(int)diskSize
+            progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
     
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
-    BOOL success = [zipArchive open];
+    BOOL success = [zipArchive openWithSplitSize:diskSize];
     if (success) {
         // use a local fileManager (queue/thread compatibility)
         NSFileManager *fileManager = [[NSFileManager alloc] init];
@@ -860,11 +871,18 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return self;
 }
 
-
 - (BOOL)open
 {
+    return [self openWithSplitSize:0];
+}
+
+- (BOOL)openWithSplitSize:(int)disk_size
+{
     NSAssert((_zip == NULL), @"Attempting to open an archive which is already open");
-    _zip = zipOpen(_path.fileSystemRepresentation, APPEND_STATUS_CREATE);
+    if (disk_size < 1024) //avoid creating split of size < 1 KB
+        _zip = zipOpen(_path.fileSystemRepresentation, APPEND_STATUS_CREATE);
+    else
+       _zip = zipOpen3(_path.fileSystemRepresentation, APPEND_STATUS_CREATE, disk_size, NULL, NULL);
     return (NULL != _zip);
 }
 
