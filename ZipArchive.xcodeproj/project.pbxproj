@@ -269,6 +269,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		579FC27523292ABA007FEA3C /* include */ = {
+			isa = PBXGroup;
+			children = (
+				B423AE481C0DF7950004A2F1 /* SSZipArchive.h */,
+				93CE5D5D227FE5C50003464F /* SSZipCommon.h */,
+				B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
 		B423AE101C0DF76A0004A2F1 = {
 			isa = PBXGroup;
 			children = (
@@ -293,11 +303,9 @@
 			isa = PBXGroup;
 			children = (
 				B423AE3D1C0DF7950004A2F1 /* Info.plist */,
+				579FC27523292ABA007FEA3C /* include */,
 				B423AE3E1C0DF7950004A2F1 /* minizip */,
-				B423AE481C0DF7950004A2F1 /* SSZipArchive.h */,
 				B423AE491C0DF7950004A2F1 /* SSZipArchive.m */,
-				93CE5D5D227FE5C50003464F /* SSZipCommon.h */,
-				B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */,
 			);
 			path = SSZipArchive;
 			sourceTree = "<group>";
