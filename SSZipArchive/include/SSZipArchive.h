@@ -11,11 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if COCOAPODS
-#import <SSZipArchive/SSZipCommon.h>
-#else
 #import <SSZipCommon.h>
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
