@@ -7,7 +7,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if COCOAPODS
+#import <SSZipArchive.h>
+#else
 #import <ZipArchive.h>
+#endif
 
 
 @interface ProgressDelegate : NSObject <SSZipArchiveDelegate>

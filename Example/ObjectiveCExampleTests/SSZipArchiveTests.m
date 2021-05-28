@@ -7,7 +7,11 @@
 //
 
 
+#if COCOAPODS
+#import <SSZipArchive.h>
+#else
 #import <ZipArchive.h>
+#endif
 
 #import <XCTest/XCTest.h>
 #import <CommonCrypto/CommonDigest.h>

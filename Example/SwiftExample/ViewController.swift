@@ -8,7 +8,11 @@
 
 import UIKit
 
-import ZipArchive
+#if UseCarthage
+    import ZipArchive
+#else
+    import SSZipArchive
+#endif
 
 class ViewController: UIViewController {
 

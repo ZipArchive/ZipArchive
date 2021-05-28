@@ -7,7 +7,11 @@
 
 import Cocoa
 
-import ZipArchive
+#if UseCarthage
+    import ZipArchive
+#else
+    import SSZipArchive
+#endif
 
 class ViewController: NSViewController {
 

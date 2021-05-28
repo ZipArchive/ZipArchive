@@ -52,8 +52,7 @@ SSZipArchive requires ARC.
 
 ```objective-c
 
-//Import 
-#import <ZipArchive.h>  //#import <SSZipArchive.h> still works for previous code
+//Import "#import <ZipArchive.h>" for SPM/Carthage, and "#import <SSZipArchive.h>" for CocoaPods.
 
 // Create
 [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:sampleDataPath];
@@ -65,8 +64,7 @@ SSZipArchive requires ARC.
 ### Swift
 
 ```swift
-//Import
-import ZipArchive //import SSZipArchive still works for previous code
+//Import "import ZipArchive" for SPM/Carthage, and "import SSZipArchive" for CocoaPods.
 
 // Create
 SSZipArchive.createZipFileAtPath(zipPath, withContentsOfDirectory: sampleDataPath)
