@@ -75,7 +75,7 @@ SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
 
 ## License
 
-SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [minizip-ng (formally minizip)](https://github.com/zlib-ng/minizip-ng) 1.2 is licensed under the [Zlib license](https://www.zlib.net/zlib_license.html).
+SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [minizip-ng (formally minizip)](https://github.com/zlib-ng/minizip-ng) 3.0.2 is licensed under the [Zlib license](https://www.zlib.net/zlib_license.html).
 
 ## Acknowledgments
 
