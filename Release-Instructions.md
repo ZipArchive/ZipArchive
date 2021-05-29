@@ -46,7 +46,6 @@ With the exception of the last two: "MZ_ZIP_SIGNING" "_POSIX_C_SOURCE=200112L"
 
 With later version of minizip it will want to switch to libcomp it will suggest we include libcomp and that only works on macos 10.11 and up.
 
-
 6. Set those flags in SSZipArchive.podspec (for CocoaPods) and in ZipArchive.xcodeproj (for Carthage)
 7. Replace the .h and .c files with the latest ones, except for `mz_compat.h`, which is customized to expose some struct in SSZipCommon.h and to provide support for optional aes.
 
