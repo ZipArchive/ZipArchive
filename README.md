@@ -42,7 +42,7 @@ In your Cartfile:
 1. Add the `SSZipArchive` and `minizip` folders to your project.
 2. Add the `libz` and `libiconv` libraries to your target.
 3. Add the `Security` framework to your target.
-4. Add the following GCC_PREPROCESSOR_DEFINITIONS: `HAVE_ICONV HAVE_INTTYPES_H HAVE_LIBCOMP HAVE_PKCRYPT HAVE_STDINT_H HAVE_WZAES $(inherited)`.
+4. Add the following GCC_PREPROCESSOR_DEFINITIONS: `HAVE_INTTYPES_H HAVE_PKCRYPT HAVE_STDINT_H HAVE_WZAES HAVE_ZLIB $(inherited)`.
 
 SSZipArchive requires ARC.
 
