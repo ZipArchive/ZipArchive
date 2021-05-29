@@ -1,9 +1,8 @@
 /* mz_zip_rw.h -- Zip reader/writer
-   Version 2.9.2, February 12, 2020
-   part of the MiniZip project
+   part of the minizip-ng project
 
-   Copyright (C) 2010-2020 Nathan Moinvaziri
-     https://github.com/nmoinvaz/minizip
+   Copyright (C) 2010-2021 Nathan Moinvaziri
+     https://github.com/zlib-ng/minizip-ng
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
@@ -126,6 +125,9 @@ int32_t mz_zip_reader_get_zip_cd(void *handle, uint8_t *zip_cd);
 int32_t mz_zip_reader_get_comment(void *handle, const char **comment);
 /* Gets the comment for the central directory */
 
+int32_t mz_zip_reader_set_recover(void *handle, uint8_t recover);
+/* Sets the ability to recover the central dir by reading local file headers */
+
 void    mz_zip_reader_set_encoding(void *handle, int32_t encoding);
 /* Sets whether or not it should support a special character encoding in zip file names. */
 
@@ -168,7 +170,7 @@ typedef int32_t (*mz_zip_writer_entry_cb)(void *handle, void *userdata, mz_zip_f
 int32_t mz_zip_writer_is_open(void *handle);
 /* Checks to see if the zip file is open */
 
-int32_t mz_zip_writer_open(void *handle, void *stream);
+int32_t mz_zip_writer_open(void *handle, void *stream, uint8_t append);
 /* Opens zip file from stream */
 
 int32_t mz_zip_writer_open_file(void *handle, const char *path, int64_t disk_size, uint8_t append);

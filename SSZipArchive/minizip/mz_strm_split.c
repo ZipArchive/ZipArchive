@@ -1,9 +1,8 @@
 /* mz_strm_split.c -- Stream for split files
-   Version 2.9.2, February 12, 2020
-   part of the MiniZip project
+   part of the minizip-ng project
 
-   Copyright (C) 2010-2020 Nathan Moinvaziri
-     https://github.com/nmoinvaz/minizip
+   Copyright (C) 2010-2021 Nathan Moinvaziri
+     https://github.com/zlib-ng/minizip-ng
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
@@ -73,8 +72,7 @@ typedef struct mz_stream_split_s {
 
 /***************************************************************************/
 
-static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
-{
+static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk) {
     mz_stream_split *split = (mz_stream_split *)stream;
     uint32_t magic = 0;
     int64_t position = 0;
@@ -84,8 +82,7 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
 
 
     /* Check if we are reading or writing a disk part or the cd disk */
-    if (number_disk >= 0)
-    {
+    if (number_disk >= 0) {
         if ((split->mode & MZ_OPEN_MODE_WRITE) == 0)
             disk_part = MZ_OPEN_MODE_READ;
         else if (split->disk_size > 0)
@@ -93,19 +90,15 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
     }
 
     /* Construct disk path */
-    if (disk_part > 0)
-    {
-        for (i = (int32_t)strlen(split->path_disk) - 1; i >= 0; i -= 1)
-        {
+    if (disk_part > 0) {
+        for (i = (int32_t)strlen(split->path_disk) - 1; i >= 0; i -= 1) {
             if (split->path_disk[i] != '.')
                 continue;
             snprintf(&split->path_disk[i], split->path_disk_size - (uint32_t)i,
                 ".z%02" PRId32, number_disk + 1);
             break;
         }
-    }
-    else
-    {
+    } else {
         strncpy(split->path_disk, split->path_cd, split->path_disk_size - 1);
         split->path_disk[split->path_disk_size - 1] = 0;
     }
@@ -119,26 +112,20 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
     if (err == MZ_OK)
         err = mz_stream_open(split->stream.base, split->path_disk, split->mode);
 
-    if (err == MZ_OK)
-    {
+    if (err == MZ_OK) {
         split->total_in_disk = 0;
         split->total_out_disk = 0;
         split->current_disk = number_disk;
 
-        if (split->mode & MZ_OPEN_MODE_WRITE)
-        {
-            if ((split->current_disk == 0) && (split->disk_size > 0))
-            {
+        if (split->mode & MZ_OPEN_MODE_WRITE) {
+            if ((split->current_disk == 0) && (split->disk_size > 0)) {
                 err = mz_stream_write_uint32(split->stream.base, MZ_ZIP_MAGIC_DISKHEADER);
 
                 split->total_out_disk += 4;
                 split->total_out += split->total_out_disk;
             }
-        }
-        else if (split->mode & MZ_OPEN_MODE_READ)
-        {
-            if (split->current_disk == 0)
-            {
+        } else if (split->mode & MZ_OPEN_MODE_READ) {
+            if (split->current_disk == 0) {
                 err = mz_stream_read_uint32(split->stream.base, &magic);
                 if (magic != MZ_ZIP_MAGIC_DISKHEADER)
                     err = MZ_FORMAT_ERROR;
@@ -146,8 +133,7 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
         }
     }
 
-    if (err == MZ_OK)
-    {
+    if (err == MZ_OK) {
         /* Get the size of the current disk we are on */
         position = mz_stream_tell(split->stream.base);
         mz_stream_seek(split->stream.base, 0, MZ_SEEK_END);
@@ -160,8 +146,7 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk)
     return err;
 }
 
-static int32_t mz_stream_split_close_disk(void *stream)
-{
+static int32_t mz_stream_split_close_disk(void *stream) {
     mz_stream_split *split = (mz_stream_split *)stream;
 
     if (mz_stream_is_open(split->stream.base) != MZ_OK)
@@ -171,24 +156,19 @@ static int32_t mz_stream_split_close_disk(void *stream)
     return mz_stream_close(split->stream.base);
 }
 
-static int32_t mz_stream_split_goto_disk(void *stream, int32_t number_disk)
-{
+static int32_t mz_stream_split_goto_disk(void *stream, int32_t number_disk) {
     mz_stream_split *split = (mz_stream_split *)stream;
     int32_t err = MZ_OK;
     int32_t err_is_open = MZ_OK;
 
     err_is_open = mz_stream_is_open(split->stream.base);
 
-    if ((split->disk_size == 0) && (split->mode & MZ_OPEN_MODE_WRITE))
-    {
+    if ((split->disk_size == 0) && (split->mode & MZ_OPEN_MODE_WRITE)) {
         if (err_is_open != MZ_OK)
             err = mz_stream_split_open_disk(stream, number_disk);
-    }
-    else if ((number_disk != split->current_disk) || (err_is_open != MZ_OK))
-    {
+    } else if ((number_disk != split->current_disk) || (err_is_open != MZ_OK)) {
         err = mz_stream_split_close_disk(stream);
-        if (err == MZ_OK)
-        {
+        if (err == MZ_OK) {
             err = mz_stream_split_open_disk(stream, number_disk);
             if (err == MZ_OK)
                 split->number_disk = number_disk;
@@ -198,8 +178,7 @@ static int32_t mz_stream_split_goto_disk(void *stream, int32_t number_disk)
     return err;
 }
 
-int32_t mz_stream_split_open(void *stream, const char *path, int32_t mode)
-{
+int32_t mz_stream_split_open(void *stream, const char *path, int32_t mode) {
     mz_stream_split *split = (mz_stream_split *)stream;
     int32_t number_disk = 0;
 
@@ -219,8 +198,7 @@ int32_t mz_stream_split_open(void *stream, const char *path, int32_t mode)
     split->path_disk_size = (uint32_t)strlen(path) + 10;
     split->path_disk = (char *)MZ_ALLOC(split->path_disk_size);
 
-    if (split->path_disk == NULL)
-    {
+    if (split->path_disk == NULL) {
         MZ_FREE(split->path_cd);
         return MZ_MEM_ERROR;
     }
@@ -228,13 +206,10 @@ int32_t mz_stream_split_open(void *stream, const char *path, int32_t mode)
     strncpy(split->path_disk, path, split->path_disk_size - 1);
     split->path_disk[split->path_disk_size - 1] = 0;
 
-    if ((mode & MZ_OPEN_MODE_WRITE) && ((mode & MZ_OPEN_MODE_APPEND) == 0))
-    {
+    if ((mode & MZ_OPEN_MODE_WRITE) && ((mode & MZ_OPEN_MODE_APPEND) == 0)) {
         number_disk = 0;
         split->current_disk = -1;
-    }
-    else
-    {
+    } else {
         number_disk = -1;
         split->current_disk = 0;
     }
@@ -242,16 +217,14 @@ int32_t mz_stream_split_open(void *stream, const char *path, int32_t mode)
     return mz_stream_split_goto_disk(stream, number_disk);
 }
 
-int32_t mz_stream_split_is_open(void *stream)
-{
+int32_t mz_stream_split_is_open(void *stream) {
     mz_stream_split *split = (mz_stream_split *)stream;
     if (split->is_open != 1)
         return MZ_OPEN_ERROR;
     return MZ_OK;
 }
 
-int32_t mz_stream_split_read(void *stream, void *buf, int32_t size)
-{
+int32_t mz_stream_split_read(void *stream, void *buf, int32_t size) {
     mz_stream_split *split = (mz_stream_split *)stream;
     int32_t bytes_left = size;
     int32_t read = 0;
@@ -262,21 +235,18 @@ int32_t mz_stream_split_read(void *stream, void *buf, int32_t size)
     if (err != MZ_OK)
         return err;
 
-    while (bytes_left > 0)
-    {
+    while (bytes_left > 0) {
         read = mz_stream_read(split->stream.base, buf_ptr, bytes_left);
 
         mz_stream_split_print("Split - Read disk - %" PRId32 "\n", read);
 
         if (read < 0)
             return read;
-        if (read == 0)
-        {
+        if (read == 0) {
             if (split->current_disk < 0) /* No more disks to goto */
                 break;
             err = mz_stream_split_goto_disk(stream, split->current_disk + 1);
-            if (err == MZ_EXIST_ERROR)
-            {
+            if (err == MZ_EXIST_ERROR) {
                 split->current_disk = -1;
                 break;
             }
@@ -292,8 +262,7 @@ int32_t mz_stream_split_read(void *stream, void *buf, int32_t size)
     return size - bytes_left;
 }
 
-int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size)
-{
+int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size) {
     mz_stream_split *split = (mz_stream_split *)stream;
     int64_t position = 0;
     int32_t written = 0;
@@ -306,15 +275,12 @@ int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size)
 
     position = mz_stream_tell(split->stream.base);
 
-    while (bytes_left > 0)
-    {
+    while (bytes_left > 0) {
         bytes_to_write = bytes_left;
 
-        if (split->disk_size > 0)
-        {
+        if (split->disk_size > 0) {
             if ((split->total_out_disk == split->disk_size && split->total_out > 0) ||
-                (split->number_disk == -1 && split->number_disk != split->current_disk))
-            {
+                (split->number_disk == -1 && split->number_disk != split->current_disk)) {
                 if (split->number_disk != -1)
                     number_disk = split->current_disk + 1;
 
@@ -323,8 +289,7 @@ int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size)
                     return err;
             }
 
-            if (split->number_disk != -1)
-            {
+            if (split->number_disk != -1) {
                 bytes_avail = (int32_t)(split->disk_size - split->total_out_disk);
                 if (bytes_to_write > bytes_avail)
                     bytes_to_write = bytes_avail;
@@ -343,8 +308,7 @@ int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size)
         split->total_out += written;
         split->total_out_disk += written;
 
-        if (position == split->current_disk_size)
-        {
+        if (position == split->current_disk_size) {
             split->current_disk_size += written;
             position = split->current_disk_size;
         }
@@ -353,8 +317,7 @@ int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size)
     return size - bytes_left;
 }
 
-int64_t mz_stream_split_tell(void *stream)
-{
+int64_t mz_stream_split_tell(void *stream) {
     mz_stream_split *split = (mz_stream_split *)stream;
     int32_t err = MZ_OK;
     err = mz_stream_split_goto_disk(stream, split->number_disk);
@@ -363,8 +326,7 @@ int64_t mz_stream_split_tell(void *stream)
     return mz_stream_tell(split->stream.base);
 }
 
-int32_t mz_stream_split_seek(void *stream, int64_t offset, int32_t origin)
-{
+int32_t mz_stream_split_seek(void *stream, int64_t offset, int32_t origin) {
     mz_stream_split *split = (mz_stream_split *)stream;
     int64_t disk_left = 0;
     int64_t position = 0;
@@ -377,13 +339,11 @@ int32_t mz_stream_split_seek(void *stream, int64_t offset, int32_t origin)
 
     mz_stream_split_print("Split - Seek disk - %" PRId64 " (origin %" PRId32 ")\n", offset, origin);
 
-    if ((origin == MZ_SEEK_CUR) && (split->number_disk != -1))
-    {
+    if ((origin == MZ_SEEK_CUR) && (split->number_disk != -1)) {
         position = mz_stream_tell(split->stream.base);
         disk_left = split->current_disk_size - position;
 
-        while (offset > disk_left)
-        {
+        while (offset > disk_left) {
             err = mz_stream_split_goto_disk(stream, split->current_disk + 1);
             if (err != MZ_OK)
                 return err;
@@ -396,8 +356,7 @@ int32_t mz_stream_split_seek(void *stream, int64_t offset, int32_t origin)
     return mz_stream_seek(split->stream.base, offset, origin);
 }
 
-int32_t mz_stream_split_close(void *stream)
-{
+int32_t mz_stream_split_close(void *stream) {
     mz_stream_split *split = (mz_stream_split *)stream;
     int32_t err = MZ_OK;
 
@@ -406,17 +365,14 @@ int32_t mz_stream_split_close(void *stream)
     return err;
 }
 
-int32_t mz_stream_split_error(void *stream)
-{
+int32_t mz_stream_split_error(void *stream) {
     mz_stream_split *split = (mz_stream_split *)stream;
     return mz_stream_error(split->stream.base);
 }
 
-int32_t mz_stream_split_get_prop_int64(void *stream, int32_t prop, int64_t *value)
-{
+int32_t mz_stream_split_get_prop_int64(void *stream, int32_t prop, int64_t *value) {
     mz_stream_split *split = (mz_stream_split *)stream;
-    switch (prop)
-    {
+    switch (prop) {
     case MZ_STREAM_PROP_TOTAL_OUT:
         *value = split->total_out;
         break;
@@ -432,11 +388,9 @@ int32_t mz_stream_split_get_prop_int64(void *stream, int32_t prop, int64_t *valu
     return MZ_OK;
 }
 
-int32_t mz_stream_split_set_prop_int64(void *stream, int32_t prop, int64_t value)
-{
+int32_t mz_stream_split_set_prop_int64(void *stream, int32_t prop, int64_t value) {
     mz_stream_split *split = (mz_stream_split *)stream;
-    switch (prop)
-    {
+    switch (prop) {
     case MZ_STREAM_PROP_DISK_NUMBER:
         split->number_disk = (int32_t)value;
         break;
@@ -449,13 +403,11 @@ int32_t mz_stream_split_set_prop_int64(void *stream, int32_t prop, int64_t value
     return MZ_OK;
 }
 
-void *mz_stream_split_create(void **stream)
-{
+void *mz_stream_split_create(void **stream) {
     mz_stream_split *split = NULL;
 
     split = (mz_stream_split *)MZ_ALLOC(sizeof(mz_stream_split));
-    if (split != NULL)
-    {
+    if (split != NULL) {
         memset(split, 0, sizeof(mz_stream_split));
         split->stream.vtbl = &mz_stream_split_vtbl;
     }
@@ -465,14 +417,12 @@ void *mz_stream_split_create(void **stream)
     return split;
 }
 
-void mz_stream_split_delete(void **stream)
-{
+void mz_stream_split_delete(void **stream) {
     mz_stream_split *split = NULL;
     if (stream == NULL)
         return;
     split = (mz_stream_split *)*stream;
-    if (split != NULL)
-    {
+    if (split != NULL) {
         if (split->path_cd)
             MZ_FREE(split->path_cd);
         if (split->path_disk)
@@ -483,7 +433,6 @@ void mz_stream_split_delete(void **stream)
     *stream = NULL;
 }
 
-void *mz_stream_split_get_interface(void)
-{
+void *mz_stream_split_get_interface(void) {
     return (void *)&mz_stream_split_vtbl;
 }

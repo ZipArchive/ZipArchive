@@ -1,9 +1,8 @@
 /* mz_strm_split.h -- Stream for split files
-   Version 2.9.2, February 12, 2020
-   part of MiniZip project
+   part of the minizip-ng project
 
-   Copyright (C) 2010-2020 Nathan Moinvaziri
-      https://github.com/nmoinvaz/minizip
+   Copyright (C) 2010-2021 Nathan Moinvaziri
+      https://github.com/zlib-ng/minizip-ng
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
