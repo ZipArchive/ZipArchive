@@ -17,13 +17,7 @@ The following steps should be taken by project maintainers when they create a ne
     - *pod trunk push SSZipArchive.podspec*
 
 
-Note: We are no longer releasing a Carthage release as of 2.2.3. Developers are encouraged to build one themselves. Instructions are listed here: 
-
-1. Create a Carthage framework archive
-
-    - *echo 'github "ZipArchive/ZipArchive"' > Cartfile*
-    - *carthage build --no-skip-current*
-    - *carthage archive ZipArchive*
+Note: We are no longer releasing a Carthage release as of 2.2.3. Developers are encouraged to build one themselves.
 
 
 # Minizip update
