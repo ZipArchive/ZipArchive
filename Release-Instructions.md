@@ -24,7 +24,7 @@ Note: We are no longer releasing a Carthage release as of 2.2.3. Developers are 
 
 The following steps should be taken by project maintainers when they update minizip files.
 
-1. Source is at hhttps://github.com/zlib-ng/minizip-ng.
+1. Source is at https://github.com/zlib-ng/minizip-ng.
 2. Have cmake:
 `brew install cmake`
 3. Run cmake on minizip repo with our desired configuration:
