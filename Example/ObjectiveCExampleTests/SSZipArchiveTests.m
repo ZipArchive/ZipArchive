@@ -6,11 +6,13 @@
 //  Copyright (c) 2011-2014 Sam Soffes. All rights reserved.
 //
 
+
 #if COCOAPODS
-#import <SSZipArchive/SSZipArchive.h>
+#import <SSZipArchive.h>
 #else
-#import <ZipArchive/SSZipArchive.h>
+#import <ZipArchive.h>
 #endif
+
 #import <XCTest/XCTest.h>
 #import <CommonCrypto/CommonDigest.h>
 

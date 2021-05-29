@@ -30,6 +30,9 @@ You should define your minimum deployment target explicitly, like:
 
 Recommended CocoaPods version should be at least CocoaPods 1.7.5.
 
+### SPM
+Add a Swift Package reference to https://github.com/ZipArchive/ZipArchive.git (SSZipArchive 2.2.4 and higher or master)
+
 ### Carthage
 In your Cartfile:  
 `github "ZipArchive/ZipArchive"`
@@ -48,6 +51,9 @@ SSZipArchive requires ARC.
 ### Objective-C
 
 ```objective-c
+
+//Import "#import <ZipArchive.h>" for SPM/Carthage, and "#import <SSZipArchive.h>" for CocoaPods.
+
 // Create
 [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:sampleDataPath];
 
@@ -58,6 +64,8 @@ SSZipArchive requires ARC.
 ### Swift
 
 ```swift
+//Import "import ZipArchive" for SPM/Carthage, and "import SSZipArchive" for CocoaPods.
+
 // Create
 SSZipArchive.createZipFileAtPath(zipPath, withContentsOfDirectory: sampleDataPath)
 
