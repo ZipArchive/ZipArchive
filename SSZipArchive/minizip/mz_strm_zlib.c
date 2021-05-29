@@ -1,9 +1,8 @@
 /* mz_strm_zlib.c -- Stream for zlib inflate/deflate
-   Version 2.9.2, February 12, 2020
-   part of the MiniZip project
+   part of the minizip-ng project
 
-   Copyright (C) 2010-2020 Nathan Moinvaziri
-      https://github.com/nmoinvaz/minizip
+   Copyright (C) 2010-2021 Nathan Moinvaziri
+      https://github.com/zlib-ng/minizip-ng
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
@@ -73,8 +72,7 @@ typedef struct mz_stream_zlib_s {
 
 /***************************************************************************/
 
-int32_t mz_stream_zlib_open(void *stream, const char *path, int32_t mode)
-{
+int32_t mz_stream_zlib_open(void *stream, const char *path, int32_t mode) {
     mz_stream_zlib *zlib = (mz_stream_zlib *)stream;
 
     MZ_UNUSED(path);
@@ -89,8 +87,7 @@ int32_t mz_stream_zlib_open(void *stream, const char *path, int32_t mode)
     zlib->total_in = 0;
     zlib->total_out = 0;
 
-    if (mode & MZ_OPEN_MODE_WRITE)
-    {
+    if (mode & MZ_OPEN_MODE_WRITE) {
 #ifdef MZ_ZIP_NO_COMPRESSION
         return MZ_SUPPORT_ERROR;
 #else
@@ -100,9 +97,7 @@ int32_t mz_stream_zlib_open(void *stream, const char *path, int32_t mode)
         zlib->error = ZLIB_PREFIX(deflateInit2)(&zlib->zstream, (int8_t)zlib->level, Z_DEFLATED,
             zlib->window_bits, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY);
 #endif
-    }
-    else if (mode & MZ_OPEN_MODE_READ)
-    {
+    } else if (mode & MZ_OPEN_MODE_READ) {
 #ifdef MZ_ZIP_NO_DECOMPRESSION
         return MZ_SUPPORT_ERROR;
 #else
@@ -121,16 +116,14 @@ int32_t mz_stream_zlib_open(void *stream, const char *path, int32_t mode)
     return MZ_OK;
 }
 
-int32_t mz_stream_zlib_is_open(void *stream)
-{
+int32_t mz_stream_zlib_is_open(void *stream) {
     mz_stream_zlib *zlib = (mz_stream_zlib *)stream;
     if (zlib->initialized != 1)
         return MZ_OPEN_ERROR;
     return MZ_OK;
 }
 
-int32_t mz_stream_zlib_read(void *stream, void *buf, int32_t size)
-{
+int32_t mz_stream_zlib_read(void *stream, void *buf, int32_t size) {
 #ifdef MZ_ZIP_NO_DECOMPRESSION
     MZ_UNUSED(stream);
     MZ_UNUSED(buf);
@@ -154,12 +147,9 @@ int32_t mz_stream_zlib_read(void *stream, void *buf, int32_t size)
     zlib->zstream.next_out = (Bytef*)buf;
     zlib->zstream.avail_out = (uInt)size;
 
-    do
-    {
-        if (zlib->zstream.avail_in == 0)
-        {
-            if (zlib->max_total_in > 0)
-            {
+    do {
+        if (zlib->zstream.avail_in == 0) {
+            if (zlib->max_total_in > 0) {
                 if ((int64_t)bytes_to_read > (zlib->max_total_in - zlib->total_in))
                     bytes_to_read = (int32_t)(zlib->max_total_in - zlib->total_in);
             }
@@ -177,8 +167,7 @@ int32_t mz_stream_zlib_read(void *stream, void *buf, int32_t size)
         total_out_before = zlib->zstream.total_out;
 
         err = ZLIB_PREFIX(inflate)(&zlib->zstream, Z_SYNC_FLUSH);
-        if ((err >= Z_OK) && (zlib->zstream.msg != NULL))
-        {
+        if ((err >= Z_OK) && (zlib->zstream.msg != NULL)) {
             zlib->error = Z_DATA_ERROR;
             break;
         }
@@ -197,16 +186,13 @@ int32_t mz_stream_zlib_read(void *stream, void *buf, int32_t size)
 
         if (err == Z_STREAM_END)
             break;
-        if (err != Z_OK)
-        {
+        if (err != Z_OK) {
             zlib->error = err;
             break;
         }
-    }
-    while (zlib->zstream.avail_out > 0);
+    } while (zlib->zstream.avail_out > 0);
 
-    if (zlib->error != 0)
-    {
+    if (zlib->error != 0) {
         /* Zlib errors are compatible with MZ */
         return zlib->error;
     }
@@ -216,16 +202,14 @@ int32_t mz_stream_zlib_read(void *stream, void *buf, int32_t size)
 }
 
 #ifndef MZ_ZIP_NO_COMPRESSION
-static int32_t mz_stream_zlib_flush(void *stream)
-{
+static int32_t mz_stream_zlib_flush(void *stream) {
     mz_stream_zlib *zlib = (mz_stream_zlib *)stream;
     if (mz_stream_write(zlib->stream.base, zlib->buffer, zlib->buffer_len) != zlib->buffer_len)
         return MZ_WRITE_ERROR;
     return MZ_OK;
 }
 
-static int32_t mz_stream_zlib_deflate(void *stream, int flush)
-{
+static int32_t mz_stream_zlib_deflate(void *stream, int flush) {
     mz_stream_zlib *zlib = (mz_stream_zlib *)stream;
     uint64_t total_out_before = 0;
     uint64_t total_out_after = 0;
@@ -233,10 +217,8 @@ static int32_t mz_stream_zlib_deflate(void *stream, int flush)
     int32_t err = Z_OK;
 
 
-    do
-    {
-        if (zlib->zstream.avail_out == 0)
-        {
+    do {
+        if (zlib->zstream.avail_out == 0) {
             err = mz_stream_zlib_flush(zlib);
             if (err != MZ_OK)
                 return err;
@@ -258,47 +240,46 @@ static int32_t mz_stream_zlib_deflate(void *stream, int flush)
 
         if (err == Z_STREAM_END)
             break;
-        if (err != Z_OK)
-        {
+        if (err != Z_OK) {
             zlib->error = err;
             return MZ_DATA_ERROR;
         }
-    }
-    while ((zlib->zstream.avail_in > 0) || (flush == Z_FINISH && err == Z_OK));
+    } while ((zlib->zstream.avail_in > 0) || (flush == Z_FINISH && err == Z_OK));
 
     return MZ_OK;
 }
 #endif
 
-int32_t mz_stream_zlib_write(void *stream, const void *buf, int32_t size)
-{
-    mz_stream_zlib *zlib = (mz_stream_zlib *)stream;
-    int32_t err = size;
-
+int32_t mz_stream_zlib_write(void *stream, const void *buf, int32_t size) {
 #ifdef MZ_ZIP_NO_COMPRESSION
-    MZ_UNUSED(zlib);
+    MZ_UNUSED(stream);
     MZ_UNUSED(buf);
-    err = MZ_SUPPORT_ERROR;
+    MZ_UNUSED(size);
+    return MZ_SUPPORT_ERROR;
 #else
+    mz_stream_zlib *zlib = (mz_stream_zlib *)stream;
+    int32_t err = MZ_OK;
+
     zlib->zstream.next_in = (Bytef*)(intptr_t)buf;
     zlib->zstream.avail_in = (uInt)size;
 
-    mz_stream_zlib_deflate(stream, Z_NO_FLUSH);
+    err = mz_stream_zlib_deflate(stream, Z_NO_FLUSH);
+    if (err != MZ_OK) {
+        return err;
+    }
 
     zlib->total_in += size;
+    return size;
 #endif
-    return err;
 }
 
-int64_t mz_stream_zlib_tell(void *stream)
-{
+int64_t mz_stream_zlib_tell(void *stream) {
     MZ_UNUSED(stream);
 
     return MZ_TELL_ERROR;
 }
 
-int32_t mz_stream_zlib_seek(void *stream, int64_t offset, int32_t origin)
-{
+int32_t mz_stream_zlib_seek(void *stream, int64_t offset, int32_t origin) {
     MZ_UNUSED(stream);
     MZ_UNUSED(offset);
     MZ_UNUSED(origin);
@@ -306,13 +287,11 @@ int32_t mz_stream_zlib_seek(void *stream, int64_t offset, int32_t origin)
     return MZ_SEEK_ERROR;
 }
 
-int32_t mz_stream_zlib_close(void *stream)
-{
+int32_t mz_stream_zlib_close(void *stream) {
     mz_stream_zlib *zlib = (mz_stream_zlib *)stream;
 
 
-    if (zlib->mode & MZ_OPEN_MODE_WRITE)
-    {
+    if (zlib->mode & MZ_OPEN_MODE_WRITE) {
 #ifdef MZ_ZIP_NO_COMPRESSION
         return MZ_SUPPORT_ERROR;
 #else
@@ -321,9 +300,7 @@ int32_t mz_stream_zlib_close(void *stream)
 
         ZLIB_PREFIX(deflateEnd)(&zlib->zstream);
 #endif
-    }
-    else if (zlib->mode & MZ_OPEN_MODE_READ)
-    {
+    } else if (zlib->mode & MZ_OPEN_MODE_READ) {
 #ifdef MZ_ZIP_NO_DECOMPRESSION
         return MZ_SUPPORT_ERROR;
 #else
@@ -338,17 +315,14 @@ int32_t mz_stream_zlib_close(void *stream)
     return MZ_OK;
 }
 
-int32_t mz_stream_zlib_error(void *stream)
-{
+int32_t mz_stream_zlib_error(void *stream) {
     mz_stream_zlib *zlib = (mz_stream_zlib *)stream;
     return zlib->error;
 }
 
-int32_t mz_stream_zlib_get_prop_int64(void *stream, int32_t prop, int64_t *value)
-{
+int32_t mz_stream_zlib_get_prop_int64(void *stream, int32_t prop, int64_t *value) {
     mz_stream_zlib *zlib = (mz_stream_zlib *)stream;
-    switch (prop)
-    {
+    switch (prop) {
     case MZ_STREAM_PROP_TOTAL_IN:
         *value = zlib->total_in;
         break;
@@ -363,18 +337,16 @@ int32_t mz_stream_zlib_get_prop_int64(void *stream, int32_t prop, int64_t *value
         break;
     case MZ_STREAM_PROP_COMPRESS_WINDOW:
         *value = zlib->window_bits;
-         break;
+        break;
     default:
         return MZ_EXIST_ERROR;
     }
     return MZ_OK;
 }
 
-int32_t mz_stream_zlib_set_prop_int64(void *stream, int32_t prop, int64_t value)
-{
+int32_t mz_stream_zlib_set_prop_int64(void *stream, int32_t prop, int64_t value) {
     mz_stream_zlib *zlib = (mz_stream_zlib *)stream;
-    switch (prop)
-    {
+    switch (prop) {
     case MZ_STREAM_PROP_COMPRESS_LEVEL:
         zlib->level = (int16_t)value;
         break;
@@ -390,13 +362,11 @@ int32_t mz_stream_zlib_set_prop_int64(void *stream, int32_t prop, int64_t value)
     return MZ_OK;
 }
 
-void *mz_stream_zlib_create(void **stream)
-{
+void *mz_stream_zlib_create(void **stream) {
     mz_stream_zlib *zlib = NULL;
 
     zlib = (mz_stream_zlib *)MZ_ALLOC(sizeof(mz_stream_zlib));
-    if (zlib != NULL)
-    {
+    if (zlib != NULL) {
         memset(zlib, 0, sizeof(mz_stream_zlib));
         zlib->stream.vtbl = &mz_stream_zlib_vtbl;
         zlib->level = Z_DEFAULT_COMPRESSION;
@@ -408,8 +378,7 @@ void *mz_stream_zlib_create(void **stream)
     return zlib;
 }
 
-void mz_stream_zlib_delete(void **stream)
-{
+void mz_stream_zlib_delete(void **stream) {
     mz_stream_zlib *zlib = NULL;
     if (stream == NULL)
         return;
@@ -419,7 +388,6 @@ void mz_stream_zlib_delete(void **stream)
     *stream = NULL;
 }
 
-void *mz_stream_zlib_get_interface(void)
-{
+void *mz_stream_zlib_get_interface(void) {
     return (void *)&mz_stream_zlib_vtbl;
 }

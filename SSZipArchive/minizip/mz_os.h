@@ -1,9 +1,8 @@
 /* mz_os.h -- System functions
-   Version 2.9.2, February 12, 2020
-   part of the MiniZip project
+   part of the minizip-ng project
 
-   Copyright (C) 2010-2020 Nathan Moinvaziri
-     https://github.com/nmoinvaz/minizip
+   Copyright (C) 2010-2021 Nathan Moinvaziri
+     https://github.com/zlib-ng/minizip-ng
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
@@ -22,13 +21,13 @@ extern "C" {
 #  define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_OSX_DARWIN)
 #elif defined(__riscos__)
 #  define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_RISCOS)
-#elif defined(__unix__)
-#  define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_UNIX)
 #elif defined(_WIN32)
 #  define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_WINDOWS_NTFS)
+#else
+#  define MZ_VERSION_MADEBY_HOST_SYSTEM (MZ_HOST_SYSTEM_UNIX)
 #endif
 
-#if defined(HAVE_LZMA)
+#if defined(HAVE_LZMA) || defined(HAVE_LIBCOMP)
 #  define MZ_VERSION_MADEBY_ZIP_VERSION (63)
 #elif defined(HAVE_WZAES)
 #  define MZ_VERSION_MADEBY_ZIP_VERSION (51)

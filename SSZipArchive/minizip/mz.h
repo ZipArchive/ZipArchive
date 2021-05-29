@@ -1,9 +1,8 @@
 /* mz.h -- Errors codes, zip flags and magic
-   Version 2.9.2, February 12, 2020
-   part of the MiniZip project
+   part of the minizip-ng project
 
-   Copyright (C) 2010-2020 Nathan Moinvaziri
-     https://github.com/nmoinvaz/minizip
+   Copyright (C) 2010-2021 Nathan Moinvaziri
+     https://github.com/zlib-ng/minizip-ng
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
@@ -15,7 +14,8 @@
 /***************************************************************************/
 
 /* MZ_VERSION */
-#define MZ_VERSION                      ("2.9.2")
+#define MZ_VERSION                      ("3.0.2")
+#define MZ_VERSION_BUILD                (030002)
 
 /* MZ_ERROR */
 #define MZ_OK                           (0)  /* zlib */
@@ -64,6 +64,8 @@
 #define MZ_COMPRESS_METHOD_DEFLATE      (8)
 #define MZ_COMPRESS_METHOD_BZIP2        (12)
 #define MZ_COMPRESS_METHOD_LZMA         (14)
+#define MZ_COMPRESS_METHOD_ZSTD         (93)
+#define MZ_COMPRESS_METHOD_XZ           (95)
 #define MZ_COMPRESS_METHOD_AES          (99)
 
 #define MZ_COMPRESS_LEVEL_DEFAULT       (-1)
@@ -139,13 +141,13 @@
 #define MZ_UNUSED(SYMBOL)               ((void)SYMBOL)
 
 #ifndef MZ_CUSTOM_ALLOC
-#define MZ_ALLOC(SIZE)                  (malloc(SIZE))
+#define MZ_ALLOC(SIZE)                  (malloc((SIZE)))
 #endif
 #ifndef MZ_CUSTOM_FREE
 #define MZ_FREE(PTR)                    (free(PTR))
 #endif
 
-#if defined(_WINDOWS) && defined(MZ_EXPORTS)
+#if defined(_WIN32) && defined(MZ_EXPORTS)
 #define MZ_EXPORT __declspec(dllexport)
 #else
 #define MZ_EXPORT
@@ -158,8 +160,12 @@
 #include <string.h> /* memset, strncpy, strlen */
 #include <limits.h>
 
-#ifdef HAVE_STDINT_H
+#if defined(HAVE_STDINT_H)
 #  include <stdint.h>
+#elif defined(__has_include)
+#  if __has_include(<stdint.h>)
+#    include <stdint.h>
+#  endif
 #endif
 
 #ifndef __INT8_TYPE__
@@ -187,15 +193,31 @@ typedef unsigned int       uint32_t;
 typedef unsigned long long uint64_t;
 #endif
 
-#ifdef HAVE_INTTYPES_H
+#if defined(HAVE_INTTYPES_H)
 #  include <inttypes.h>
+#elif defined(__has_include)
+#  if __has_include(<inttypes.h>)
+#    include <inttypes.h>
+#  endif
 #endif
 
 #ifndef PRId8
 #  define PRId8  "hhd"
 #endif
+#ifndef PRIu8
+#  define PRIu8  "hhu"
+#endif
+#ifndef PRIx8
+#  define PRIx8  "hhx"
+#endif
 #ifndef PRId16
 #  define PRId16 "hd"
+#endif
+#ifndef PRIu16
+#  define PRIu16 "hu"
+#endif
+#ifndef PRIx16
+#  define PRIx16 "hx"
 #endif
 #ifndef PRId32
 #  define PRId32 "d"
@@ -206,17 +228,7 @@ typedef unsigned long long uint64_t;
 #ifndef PRIx32
 #  define PRIx32 "x"
 #endif
-#if ULONG_MAX == 4294967295UL
-#  ifndef PRId64
-#    define PRId64 "lld"
-#  endif
-#  ifndef PRIu64
-#    define PRIu64 "llu"
-#  endif
-#  ifndef PRIx64
-#    define PRIx64 "llx"
-#  endif
-#else
+#if ULONG_MAX == 0xfffffffful
 #  ifndef PRId64
 #    define PRId64 "ld"
 #  endif
@@ -225,6 +237,16 @@ typedef unsigned long long uint64_t;
 #  endif
 #  ifndef PRIx64
 #    define PRIx64 "lx"
+#  endif
+#else
+#  ifndef PRId64
+#    define PRId64 "lld"
+#  endif
+#  ifndef PRIu64
+#    define PRIu64 "llu"
+#  endif
+#  ifndef PRIx64
+#    define PRIx64 "llx"
 #  endif
 #endif
 

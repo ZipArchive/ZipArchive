@@ -141,6 +141,14 @@
 		37952C881F63BBD500DD6677 /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE481C0DF7950004A2F1 /* SSZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		37952C891F63BBDA00DD6677 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = B423AE491C0DF7950004A2F1 /* SSZipArchive.m */; };
 		37952C8B1F63BBE400DD6677 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4275584A2661CE84001E2805 /* mz_strm_libcomp.h in Headers */ = {isa = PBXBuildFile; fileRef = 427558482661CE84001E2805 /* mz_strm_libcomp.h */; };
+		4275584B2661CE84001E2805 /* mz_strm_libcomp.h in Headers */ = {isa = PBXBuildFile; fileRef = 427558482661CE84001E2805 /* mz_strm_libcomp.h */; };
+		4275584C2661CE84001E2805 /* mz_strm_libcomp.h in Headers */ = {isa = PBXBuildFile; fileRef = 427558482661CE84001E2805 /* mz_strm_libcomp.h */; };
+		4275584D2661CE84001E2805 /* mz_strm_libcomp.h in Headers */ = {isa = PBXBuildFile; fileRef = 427558482661CE84001E2805 /* mz_strm_libcomp.h */; };
+		4275584E2661CE84001E2805 /* mz_strm_libcomp.c in Sources */ = {isa = PBXBuildFile; fileRef = 427558492661CE84001E2805 /* mz_strm_libcomp.c */; };
+		4275584F2661CE84001E2805 /* mz_strm_libcomp.c in Sources */ = {isa = PBXBuildFile; fileRef = 427558492661CE84001E2805 /* mz_strm_libcomp.c */; };
+		427558502661CE84001E2805 /* mz_strm_libcomp.c in Sources */ = {isa = PBXBuildFile; fileRef = 427558492661CE84001E2805 /* mz_strm_libcomp.c */; };
+		427558512661CE84001E2805 /* mz_strm_libcomp.c in Sources */ = {isa = PBXBuildFile; fileRef = 427558492661CE84001E2805 /* mz_strm_libcomp.c */; };
 		93CE5D5E227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		93CE5D5F227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		93CE5D60227FE5C50003464F /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -197,6 +205,8 @@
 		378439CB227AC031000BC165 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.2.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		37952C261F63B50D00DD6677 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		37952C5E1F63BB7100DD6677 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		427558482661CE84001E2805 /* mz_strm_libcomp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_strm_libcomp.h; sourceTree = "<group>"; };
+		427558492661CE84001E2805 /* mz_strm_libcomp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_libcomp.c; sourceTree = "<group>"; };
 		93CE5D5D227FE5C50003464F /* SSZipCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipCommon.h; sourceTree = "<group>"; };
 		AFF75A241C37279600F450AC /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B423AE1A1C0DF76A0004A2F1 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -323,6 +333,8 @@
 				3775F32F2276B14200A1840B /* mz_os.h */,
 				3775F3392276B14200A1840B /* mz_strm_buf.c */,
 				3775F33D2276B14300A1840B /* mz_strm_buf.h */,
+				427558492661CE84001E2805 /* mz_strm_libcomp.c */,
+				427558482661CE84001E2805 /* mz_strm_libcomp.h */,
 				3775F3342276B14200A1840B /* mz_strm_mem.c */,
 				3775F3422276B14300A1840B /* mz_strm_mem.h */,
 				3775F3432276B14300A1840B /* mz_strm_os_posix.c */,
@@ -367,6 +379,7 @@
 				3775F35F2276B14400A1840B /* mz_strm_os.h in Headers */,
 				3775F3972276B14400A1840B /* mz_zip_rw.h in Headers */,
 				3775F3932276B14400A1840B /* mz_compat.h in Headers */,
+				4275584C2661CE84001E2805 /* mz_strm_libcomp.h in Headers */,
 				93CE5D60227FE5C50003464F /* SSZipCommon.h in Headers */,
 				3775F37F2276B14400A1840B /* mz_strm_wzaes.h in Headers */,
 				37952C341F63B71400DD6677 /* ZipArchive.h in Headers */,
@@ -391,6 +404,7 @@
 				37952C8B1F63BBE400DD6677 /* ZipArchive.h in Headers */,
 				3775F3602276B14400A1840B /* mz_strm_os.h in Headers */,
 				3775F3982276B14400A1840B /* mz_zip_rw.h in Headers */,
+				4275584D2661CE84001E2805 /* mz_strm_libcomp.h in Headers */,
 				93CE5D61227FE5C50003464F /* SSZipCommon.h in Headers */,
 				3775F3942276B14400A1840B /* mz_compat.h in Headers */,
 				3775F3802276B14400A1840B /* mz_strm_wzaes.h in Headers */,
@@ -415,6 +429,7 @@
 				AFF75A2E1C37280200F450AC /* SSZipArchive.h in Headers */,
 				3775F35E2276B14400A1840B /* mz_strm_os.h in Headers */,
 				3775F3962276B14400A1840B /* mz_zip_rw.h in Headers */,
+				4275584B2661CE84001E2805 /* mz_strm_libcomp.h in Headers */,
 				93CE5D5F227FE5C50003464F /* SSZipCommon.h in Headers */,
 				3775F3922276B14400A1840B /* mz_compat.h in Headers */,
 				3775F37E2276B14400A1840B /* mz_strm_wzaes.h in Headers */,
@@ -439,6 +454,7 @@
 				B423AE6B1C0DF7950004A2F1 /* SSZipArchive.h in Headers */,
 				3775F3892276B14400A1840B /* mz_strm_pkcrypt.h in Headers */,
 				3775F35D2276B14400A1840B /* mz_strm_os.h in Headers */,
+				4275584A2661CE84001E2805 /* mz_strm_libcomp.h in Headers */,
 				3775F3952276B14400A1840B /* mz_zip_rw.h in Headers */,
 				3775F3912276B14400A1840B /* mz_compat.h in Headers */,
 				3775F37D2276B14400A1840B /* mz_strm_wzaes.h in Headers */,
@@ -602,6 +618,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				427558502661CE84001E2805 /* mz_strm_libcomp.c in Sources */,
 				3775F3AF2276B14400A1840B /* mz_os_posix.c in Sources */,
 				3775F3872276B14400A1840B /* mz_strm_mem.c in Sources */,
 				3775F3D72276B14400A1840B /* mz_strm_wzaes.c in Sources */,
@@ -625,6 +642,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				427558512661CE84001E2805 /* mz_strm_libcomp.c in Sources */,
 				3775F3B02276B14400A1840B /* mz_os_posix.c in Sources */,
 				3775F3882276B14400A1840B /* mz_strm_mem.c in Sources */,
 				3775F3D82276B14400A1840B /* mz_strm_wzaes.c in Sources */,
@@ -648,6 +666,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4275584F2661CE84001E2805 /* mz_strm_libcomp.c in Sources */,
 				3775F3AE2276B14400A1840B /* mz_os_posix.c in Sources */,
 				3775F3862276B14400A1840B /* mz_strm_mem.c in Sources */,
 				3775F3D62276B14400A1840B /* mz_strm_wzaes.c in Sources */,
@@ -671,6 +690,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4275584E2661CE84001E2805 /* mz_strm_libcomp.c in Sources */,
 				3775F3AD2276B14400A1840B /* mz_os_posix.c in Sources */,
 				3775F3852276B14400A1840B /* mz_strm_mem.c in Sources */,
 				3775F3D52276B14400A1840B /* mz_strm_wzaes.c in Sources */,
@@ -881,11 +901,12 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
+					HAVE_ICONV,
 					HAVE_INTTYPES_H,
+					HAVE_LIBCOMP,
 					HAVE_PKCRYPT,
 					HAVE_STDINT_H,
 					HAVE_WZAES,
-					HAVE_ZLIB,
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -942,11 +963,12 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_ICONV,
 					HAVE_INTTYPES_H,
+					HAVE_LIBCOMP,
 					HAVE_PKCRYPT,
 					HAVE_STDINT_H,
 					HAVE_WZAES,
-					HAVE_ZLIB,
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
