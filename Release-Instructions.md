@@ -35,7 +35,7 @@ The following steps should be taken by project maintainers when they update mini
 Note: It will suggest we include libcomp and that only works on macos 10.11 and up, so the .c and .h file should not be included until we bump the min os versions.
 
 5. Look at the file `./CMakeFiles/minizip.dir/flags.make` it will give you the following information:
-6. 
+
 - The list of compiler flags that we need to include 
 
 Note: These should not be changed unless you have issues compiling or we bump the min os versions. 
