@@ -19,12 +19,11 @@ let package = Package(
             name: "ZipArchive",
             path: "SSZipArchive",
             cSettings: [
-                .define("HAVE_ICONV"),
                 .define("HAVE_INTTYPES_H"),
-                .define("HAVE_LIBCOMP"),
                 .define("HAVE_PKCRYPT"),
                 .define("HAVE_STDINT_H"),
                 .define("HAVE_WZAES"),
+                .define("HAVE_ZLIB"),
             ],
             linkerSettings: [
                 .linkedLibrary("z"),
