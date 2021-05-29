@@ -9,6 +9,7 @@
 #import "SSZipArchive.h"
 #include "minizip/mz_compat.h"
 #include "minizip/mz_zip.h"
+#include "minizip/mz_os.h"
 #include <zlib.h>
 #include <sys/stat.h>
 
@@ -848,6 +849,135 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return success;
 }
 
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(nullable NSString *)password keepSymlinks:(BOOL)keeplinks {
+    if (!keeplinks) {
+        return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:password];
+    } else {
+        SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
+        BOOL success = [zipArchive open];
+        if (success) {
+            for (NSString *filePath in paths) {
+                //is symlink
+                if (mz_os_is_symlink(filePath.fileSystemRepresentation) == MZ_OK) {
+                    success &= [zipArchive writeSymlinkFileAtPath:filePath withFileName:nil compressionLevel:Z_DEFAULT_COMPRESSION password:password AES:YES];
+                } else {
+                    success &= [zipArchive writeFile:filePath withPassword:password];
+                }                  
+            }
+            success &= [zipArchive close];
+        }
+        return success;
+    }    
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path
+    withContentsOfDirectory:(NSString *)directoryPath
+        keepParentDirectory:(BOOL)keepParentDirectory
+           compressionLevel:(int)compressionLevel
+                   password:(nullable NSString *)password
+                        AES:(BOOL)aes
+            progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
+               keepSymlinks:(BOOL)keeplinks {
+    if (!keeplinks) {
+        return [SSZipArchive createZipFileAtPath:path
+                         withContentsOfDirectory:directoryPath
+                             keepParentDirectory:keepParentDirectory
+                                compressionLevel:compressionLevel
+                                        password:password
+                                             AES:aes
+                                 progressHandler:progressHandler];
+    } else {
+        SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
+        BOOL success = [zipArchive open];
+        if (success) {
+            // use a local fileManager (queue/thread compatibility)
+            NSFileManager *fileManager = [[NSFileManager alloc] init];
+            NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
+            NSArray<NSString *> *allObjects = dirEnumerator.allObjects;
+            NSUInteger total = allObjects.count, complete = 0;
+            if (keepParentDirectory && !total) {
+                allObjects = @[@""];
+                total = 1;
+            }
+            for (__strong NSString *fileName in allObjects) {
+                NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
+                
+                if (keepParentDirectory) {
+                    fileName = [directoryPath.lastPathComponent stringByAppendingPathComponent:fileName];
+                }
+                //is symlink
+                BOOL isSymlink = NO;
+                if (mz_os_is_symlink(fullFilePath.fileSystemRepresentation) == MZ_OK)
+                    isSymlink = YES;
+                BOOL isDir;
+                [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
+                if (!isDir || isSymlink) {
+                    // file or symlink
+                    if (!isSymlink) {
+                        success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
+                    } else {
+                        success &= [zipArchive writeSymlinkFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
+                    }                  
+                } else {
+                    // directory
+                    if (![fileManager enumeratorAtPath:fullFilePath].nextObject) {
+                        // empty directory
+                        success &= [zipArchive writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
+                    }
+                }
+                if (progressHandler) {
+                    complete++;
+                    progressHandler(complete, total);
+                }
+            }
+            success &= [zipArchive close];
+        }
+        return success;
+    }    
+}
+
+- (BOOL)writeSymlinkFileAtPath:(NSString *)path withFileName:(nullable NSString *)fileName compressionLevel:(int)compressionLevel password:(nullable NSString *)password AES:(BOOL)aes
+{
+    NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
+    //read symlink
+    char link_path[1024];
+    int32_t err = MZ_OK;
+    err = mz_os_read_symlink(path.fileSystemRepresentation, link_path, sizeof(link_path));
+    if (err != MZ_OK) {
+        NSLog(@"[SSZipArchive] Failed to read sylink");
+        return NO;
+    }
+
+    if (!fileName) {
+        fileName = path.lastPathComponent;
+    }
+    
+    zip_fileinfo zipInfo = {};    
+    [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
+    
+    //unpdate zipInfo.external_fa
+    uint32_t target_attrib = 0;
+    uint32_t src_attrib = 0;
+    uint32_t src_sys = 0;
+    mz_os_get_file_attribs(path.fileSystemRepresentation, &src_attrib);
+    src_sys = MZ_HOST_SYSTEM(MZ_VERSION_MADEBY);
+
+    if ((src_sys != MZ_HOST_SYSTEM_MSDOS) && (src_sys != MZ_HOST_SYSTEM_WINDOWS_NTFS)) {
+        /* High bytes are OS specific attributes, low byte is always DOS attributes */
+        if (mz_zip_attrib_convert(src_sys, src_attrib, MZ_HOST_SYSTEM_MSDOS, &target_attrib) == MZ_OK)
+            zipInfo.external_fa = target_attrib;
+        zipInfo.external_fa |= (src_attrib << 16);
+    } else {
+        zipInfo.external_fa = src_attrib;
+    }
+
+    uint16_t version_madeby = 3 << 8;//UNIX
+    int error = zipOpenNewFileInZip5(_zip, fileName.fileSystemRepresentation, &zipInfo, NULL, 0, NULL, 0, NULL, Z_DEFLATED, compressionLevel, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, version_madeby, 0, 0);
+    zipWriteInFileInZip(_zip, link_path, (uint32_t)strlen(link_path));
+    zipCloseFileInZip(_zip);
+    return error == ZIP_OK;
+}
+
 // disabling `init` because designated initializer is `initWithPath:`
 - (instancetype)init { @throw nil; }
 
@@ -865,6 +995,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 {
     NSAssert((_zip == NULL), @"Attempting to open an archive which is already open");
     _zip = zipOpen(_path.fileSystemRepresentation, APPEND_STATUS_CREATE);
+    return (NULL != _zip);
+}
+
+- (BOOL)openForAppending
+{
+    NSAssert((_zip == NULL), @"Attempting to open an archive which is already open");
+    _zip = zipOpen(_path.fileSystemRepresentation, APPEND_STATUS_ADDINZIP);
     return (NULL != _zip);
 }
 
