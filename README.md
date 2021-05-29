@@ -37,6 +37,8 @@ Add a Swift Package reference to https://github.com/ZipArchive/ZipArchive.git (S
 In your Cartfile:  
 `github "ZipArchive/ZipArchive"`
 
+Note: We are no longer releasing a Carthage pre-built package as of 2.2.3. Developers are encouraged to build one themselves.
+
 ### Manual
 
 1. Add the `SSZipArchive` and `minizip` folders to your project.
