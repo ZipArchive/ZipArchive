@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/ZipArchive/ZipArchive.svg?branch=master)](https://travis-ci.org/ZipArchive/ZipArchive)
+[![Build Status](https://api.travis-ci.com/ZipArchive/ZipArchive.svg?branch=master)](https://travis-ci.com/ZipArchive/ZipArchive)
 
 # SSZipArchive
 
