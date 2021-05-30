@@ -7,7 +7,13 @@
 //
 
 #import "ViewController.h"
-#import "SSZipArchive.h"
+
+#if COCOAPODS
+#import <SSZipArchive.h>
+#else
+#import <ZipArchive.h>
+#endif
+
 
 @interface ViewController ()
 

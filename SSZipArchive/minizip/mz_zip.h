@@ -1,9 +1,8 @@
 /* mz_zip.h -- Zip manipulation
-   Version 2.9.2, February 12, 2020
-   part of the MiniZip project
+   part of the minizip-ng project
 
-   Copyright (C) 2010-2020 Nathan Moinvaziri
-     https://github.com/nmoinvaz/minizip
+   Copyright (C) 2010-2021 Nathan Moinvaziri
+     https://github.com/zlib-ng/minizip-ng
    Copyright (C) 2009-2010 Mathias Svensson
      Modifications for Zip64 support
      http://result42.com
@@ -23,8 +22,7 @@ extern "C" {
 
 /***************************************************************************/
 
-typedef struct mz_zip_file_s
-{
+typedef struct mz_zip_file_s {
     uint16_t version_madeby;            /* version made by */
     uint16_t version_needed;            /* version needed to extract */
     uint16_t flag;                      /* general purpose bit flag */
@@ -51,6 +49,7 @@ typedef struct mz_zip_file_s
     uint16_t zip64;                     /* zip64 extension mode */
     uint16_t aes_version;               /* winzip aes extension if not 0 */
     uint8_t  aes_encryption_mode;       /* winzip aes encryption mode */
+    uint16_t pk_verify;                 /* pkware encryption verifier */
 
 } mz_zip_file, mz_zip_entry;
 
@@ -76,19 +75,19 @@ int32_t mz_zip_get_comment(void *handle, const char **comment);
 /* Get a pointer to the global comment */
 
 int32_t mz_zip_set_comment(void *handle, const char *comment);
-/* Set the global comment used for writing zip file */
+/* Sets the global comment used for writing zip file */
 
 int32_t mz_zip_get_version_madeby(void *handle, uint16_t *version_madeby);
 /* Get the version made by */
 
 int32_t mz_zip_set_version_madeby(void *handle, uint16_t version_madeby);
-/* Set the version made by used for writing zip file */
+/* Sets the version made by used for writing zip file */
 
 int32_t mz_zip_set_recover(void *handle, uint8_t recover);
-/* Set the ability to recover the central dir by reading local file headers */
+/* Sets the ability to recover the central dir by reading local file headers */
 
 int32_t mz_zip_set_data_descriptor(void *handle, uint8_t data_descriptor);
-/* Set the use of data descriptor flag when writing zip entries */
+/* Sets the use of data descriptor flag when writing zip entries */
 
 int32_t mz_zip_get_stream(void *handle, void **stream);
 /* Get a pointer to the stream used to open */
@@ -136,6 +135,9 @@ int32_t mz_zip_entry_write(void *handle, const void *buf, int32_t len);
 int32_t mz_zip_entry_write_close(void *handle, uint32_t crc32, int64_t compressed_size,
     int64_t uncompressed_size);
 /* Close the current file for writing and set data descriptor values */
+
+int32_t mz_zip_entry_seek_local_header(void *handle);
+/* Seeks to the local header for the entry */
 
 int32_t mz_zip_entry_close_raw(void *handle, int64_t uncompressed_size, uint32_t crc32);
 /* Close the current file in the zip file where raw is compressed data */
@@ -201,7 +203,7 @@ int32_t mz_zip_attrib_win32_to_posix(uint32_t win32_attrib, uint32_t *posix_attr
 
 /***************************************************************************/
 
-int32_t mz_zip_extrafield_find(void *stream, uint16_t type, uint16_t *length);
+int32_t mz_zip_extrafield_find(void *stream, uint16_t type, int32_t max_seek, uint16_t *length);
 /* Seeks to extra field by its type and returns its length */
 
 int32_t mz_zip_extrafield_contains(const uint8_t *extrafield, int32_t extrafield_size,
@@ -241,6 +243,12 @@ int32_t  mz_zip_unix_to_ntfs_time(time_t unix_time, uint64_t *ntfs_time);
 
 int32_t  mz_zip_path_compare(const char *path1, const char *path2, uint8_t ignore_case);
 /* Compare two paths without regard to slashes */
+
+/***************************************************************************/
+
+const
+char*    mz_zip_get_compression_method_string(int32_t compression_method);
+/* Gets a string representing the compression method */
 
 /***************************************************************************/
 

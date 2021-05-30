@@ -1,5 +1,11 @@
 #import <Foundation/Foundation.h>
-#import "SSZipArchive.h"
+ 
+#if COCOAPODS
+#import <SSZipArchive.h>
+#else
+#import <ZipArchive.h>
+#endif
+
 
 /**
  * Test delegate by collecting its calls

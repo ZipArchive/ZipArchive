@@ -6,7 +6,13 @@
 //  Copyright (c) 2011-2014 Sam Soffes. All rights reserved.
 //
 
-#import <SSZipArchive/SSZipArchive.h>
+
+#if COCOAPODS
+#import <SSZipArchive.h>
+#else
+#import <ZipArchive.h>
+#endif
+
 #import <XCTest/XCTest.h>
 #import <CommonCrypto/CommonDigest.h>
 
@@ -22,6 +28,8 @@
 @end
 
 @implementation SSZipArchiveTests
+
+int twentyMB = 20 * 1024 * 1024;
 
 - (void)setUp {
     [super setUp];
@@ -170,6 +178,33 @@
 
     testPath = [outputPath stringByAppendingPathComponent:@"LICENSE"];
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
+}
+
+-(void)testAppendingToZip {
+    // zip files and create "CreatedArchive.zip"
+    [self testZipping];
+    
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+    long long initialFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:archivePath error:NULL][NSFileSize] longLongValue];
+    
+    SSZipArchive* zip = [[SSZipArchive alloc] initWithPath:archivePath];
+    
+    BOOL didOpenForAppending = [zip openForAppending];
+    XCTAssertTrue(didOpenForAppending, @"Opened for appending");
+    
+    NSData* testData = [@"test contents" dataUsingEncoding:NSUTF8StringEncoding];
+    BOOL didAppendFile = [zip writeData:testData filename:@"testData.txt" withPassword:NULL];
+    XCTAssertTrue(didAppendFile, @"Did add file");
+    
+    BOOL didClose = [zip close];
+    XCTAssertTrue(didClose, @"Can close zip");
+    
+    // TODO: Make sure the files are actually zipped. They are, but the test should be better.
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+    
+    long long fileSizeAfterAppend = [[[NSFileManager defaultManager] attributesOfItemAtPath:archivePath error:NULL][NSFileSize] longLongValue];
+    XCTAssertGreaterThan(fileSizeAfterAppend, initialFileSize);    
 }
 
 - (void)testUnzippingProgress {
@@ -606,7 +641,151 @@
     }
 }
 
+// This tests whether the payload size of the zip file containing 4.8Gb of files with compression 0 is correct,
+// and creates a zip file containing 240 20Mb sized files with multiple compression levels. It then unpacks the file and checks whether
+// the same number of files is present in the unpacked folder.
+- (void)testPayloadSizeCorrectAndUnpackFileNo {
+    long long int iterations = 240;
+    NSString *unpackPath = [self _cachesPath:@"Unpacked/testFile"];
+    NSNumber *goldenSize = [NSNumber numberWithLongLong:iterations * twentyMB];
+    NSData *data = [self get20MbNSData];
+    NSString *filenName = @"TestFile.zip";
+    NSString *filePath = [NSString stringWithFormat:@"%@%@", [self _cachesPath:@""], filenName];
+    NSString *password = @"TestPW";
+    
+    SSZipArchive *archive = [[SSZipArchive alloc] initWithPath:filePath];
+    [archive open];
+    
+    for (int i = 0; i < iterations; i++) {
+        NSString *fileName = [NSString stringWithFormat:@"File_%i", i];
+        [archive writeData:data filename:fileName compressionLevel:0 password:password AES:true];
+    }
+    
+    bool close = [archive close];
+    
+    NSNumber *fileSize = [SSZipArchive payloadSizeForArchiveAtPath:filePath error:nil];
+    
+    XCTAssertTrue(close, "Should be able to close the archive.");
+    XCTAssertTrue(fileSize.longLongValue == goldenSize.longLongValue,
+                  "Payload size should be equal to the sum of the size of all files included.");
+    
+    [SSZipArchive unzipFileAtPath:filePath toDestination:unpackPath overwrite:true password:password error:nil];
+    long int noFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:unpackPath error:nil].count;
+    
+    XCTAssertTrue(iterations == noFiles, "All files should be present in the exported directory");
+}
+
+//PR #560
+- (void)testSymlinkZippingWithFilesAtPaths {
+    NSString *outputDir = [self _cachesPath:@"ZippingSymlinkWithFilesAtPaths"];
+
+    //directory
+    NSString *directory = [outputDir stringByAppendingPathComponent:@"directory"];
+    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
+    XCTAssertTrue(success);
+
+    //write real file
+    NSString *realFilePath = [directory stringByAppendingPathComponent:@"originfile"];
+    success = [@"Hello World!" writeToFile:realFilePath atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+    XCTAssertTrue(success);
+
+    //create symlink to real file
+    NSString *symlinkPath = [directory stringByAppendingPathComponent:@"linkfile"];
+    success = [[NSFileManager defaultManager] createSymbolicLinkAtPath:symlinkPath withDestinationPath:realFilePath error:NULL];
+    XCTAssertTrue(success);
+
+    NSArray *files = @[realFilePath,symlinkPath];
+
+    //zipping
+    NSString *archivePath = [outputDir stringByAppendingPathComponent:@"SymlinkZippingWithFilesAtPaths.zip"];
+    success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:files withPassword:nil keepSymlinks:YES];
+    XCTAssertTrue(success);
+        
+    //remove files in directory dir, to make sure what we check is unzipped
+    success = [[NSFileManager defaultManager] removeItemAtPath:directory error:NULL];
+    XCTAssertTrue(success);
+    success = [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
+    XCTAssertTrue(success);
+
+    //unzip
+    success = [SSZipArchive unzipFileAtPath:archivePath toDestination:directory];
+    XCTAssertTrue(success);
+    
+    //check if it's still a symlink
+    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:symlinkPath error:NULL];
+    NSString *fileType = attr[NSFileType];
+    XCTAssertTrue([fileType isEqualToString:NSFileTypeSymbolicLink]);
+
+    //check symlink points correctly
+    NSString *realFilePathUnzip = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:symlinkPath error:NULL];
+    XCTAssertEqualObjects(realFilePath, realFilePathUnzip);
+}
+
+//PR #560
+- (void)testSymlinkZippingWithContentsOfDirectory {
+    NSString *outputDir = [self _cachesPath:@"ZippingSymlinkWithContentsOfDirectory"];
+
+    //directory
+    NSString *directory = [outputDir stringByAppendingPathComponent:@"directory"];
+    BOOL success = [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
+    XCTAssertTrue(success);
+
+    //write real file
+    NSString *realFilePath = [directory stringByAppendingPathComponent:@"origin"];
+    success = [@"Hello World!" writeToFile:realFilePath atomically:NO encoding:NSUTF8StringEncoding error:NULL];
+    XCTAssertTrue(success);
+
+    //create symlink to real file
+    NSString *symlinkPath = [directory stringByAppendingPathComponent:@"link"];
+    success = [[NSFileManager defaultManager] createSymbolicLinkAtPath:symlinkPath withDestinationPath:realFilePath error:NULL];
+    XCTAssertTrue(success);
+
+    //zipping
+    NSString *archivePath = [outputDir stringByAppendingPathComponent:@"SymlinkZippingWithContentsOfDirectory.zip"];
+    success = [SSZipArchive createZipFileAtPath:archivePath
+                       withContentsOfDirectory:directory
+                           keepParentDirectory:NO
+                              compressionLevel:-1
+                                      password:nil
+                                           AES:YES
+                               progressHandler:nil
+                                  keepSymlinks:YES];
+    XCTAssertTrue(success);
+        
+    //remove files in directory dir, to make sure what we check is unzipped
+    success = [[NSFileManager defaultManager] removeItemAtPath:directory error:NULL];
+    XCTAssertTrue(success);
+    success = [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:NULL];
+    XCTAssertTrue(success);
+
+    //unzip
+    success = [SSZipArchive unzipFileAtPath:archivePath toDestination:directory];
+    XCTAssertTrue(success);
+    
+    //check if it's still a symlink
+    NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:symlinkPath error:NULL];
+    NSString *fileType = attr[NSFileType];
+    XCTAssertTrue([fileType isEqualToString:NSFileTypeSymbolicLink]);
+
+    //check symlink points correctly
+    NSString *realFilePathUnzip = [[NSFileManager defaultManager] destinationOfSymbolicLinkAtPath:symlinkPath error:NULL];
+    XCTAssertEqualObjects(realFilePath, realFilePathUnzip);
+}
+
+
+
 #pragma mark - Private
+
+// Returns 20Mb of data
+-(NSData*)get20MbNSData {
+    NSMutableData* theData = [NSMutableData dataWithCapacity:twentyMB];
+    for (long long int i = 0; i < twentyMB/4; i++) {
+        u_int32_t randomBits = arc4random();
+        [theData appendBytes:(void *)&randomBits length:4];
+    }
+    return theData;
+}
+
 
 - (NSString *)_cachesPath:(NSString *)directory {
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).lastObject

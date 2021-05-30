@@ -6,7 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SSZipArchive.h"
+
+
+#if COCOAPODS
+#import <SSZipArchive.h>
+#else
+#import <ZipArchive.h>
+#endif
 
 @interface CancelDelegate : NSObject <SSZipArchiveDelegate>
 @property (nonatomic, assign) int numFilesUnzipped;

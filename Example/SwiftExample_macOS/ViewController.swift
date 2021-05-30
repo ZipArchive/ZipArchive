@@ -8,9 +8,9 @@
 import Cocoa
 
 #if UseCarthage
-import ZipArchive
+    import ZipArchive
 #else
-import SSZipArchive
+    import SSZipArchive
 #endif
 
 class ViewController: NSViewController {
