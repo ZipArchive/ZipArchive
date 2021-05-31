@@ -1,4 +1,3 @@
-[![Build Status](https://api.travis-ci.com/ZipArchive/ZipArchive.svg?branch=master)](https://travis-ci.com/ZipArchive/ZipArchive)
 [![CI](https://github.com/ZipArchive/ZipArchive/workflows/CI/badge.svg)](https://github.com/ZipArchive/ZipArchive/actions?query=workflow%3ACI)
 
 # SSZipArchive
