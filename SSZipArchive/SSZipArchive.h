@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <SSZipCommon.h>
+#import "SSZipCommon.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
