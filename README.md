@@ -1,5 +1,4 @@
-
-[![Build Status](https://travis-ci.org/ZipArchive/ZipArchive.svg?branch=master)](https://travis-ci.org/ZipArchive/ZipArchive)
+[![Build Status](https://api.travis-ci.com/ZipArchive/ZipArchive.svg?branch=master)](https://travis-ci.com/ZipArchive/ZipArchive)
 [![CI](https://github.com/ZipArchive/ZipArchive/workflows/CI/badge.svg)](https://github.com/ZipArchive/ZipArchive/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/ZipArchive/ZipArchive/branch/master/graph/badge.svg)](https://codecov.io/gh/ZipArchive/ZipArchive)
 
@@ -11,6 +10,7 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS, mac
 - Unzip password protected zip files;
 - Unzip AES encrypted zip files;
 - Create zip files;
+- Create large (> 4.3Gb) files;
 - Create password protected zip files;
 - Create AES encrypted zip files;
 - Choose compression level;
@@ -20,7 +20,7 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS, mac
 
 *The main release branch is configured to support Objective-C and Swift 3+.*
 
-SSZipArchive works on Xcode 7-11 and above, iOS 9-13 and above, tvOS 9 and above, macOS 10.8-10.15 and above, watchOS 2 and above.
+SSZipArchive works on Xcode 7-11 and above, iOS 9-13 and above, tvOS 9 and above, macOS 10.9-10.15 and above, watchOS 2 and above.
 
 ### CocoaPods
 In your Podfile:  
@@ -31,9 +31,14 @@ You should define your minimum deployment target explicitly, like:
 
 Recommended CocoaPods version should be at least CocoaPods 1.7.5.
 
+### SPM
+Add a Swift Package reference to https://github.com/ZipArchive/ZipArchive.git (SSZipArchive 2.3.0 and higher or master)
+
 ### Carthage
 In your Cartfile:  
 `github "ZipArchive/ZipArchive"`
+
+Note: We are no longer releasing a Carthage pre-built package as of 2.2.3. Developers are encouraged to build one themselves.
 
 ### Manual
 
@@ -49,6 +54,9 @@ SSZipArchive requires ARC.
 ### Objective-C
 
 ```objective-c
+
+//Import "#import <ZipArchive.h>" for SPM/Carthage, and "#import <SSZipArchive.h>" for CocoaPods.
+
 // Create
 [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:sampleDataPath];
 
@@ -59,6 +67,8 @@ SSZipArchive requires ARC.
 ### Swift
 
 ```swift
+//Import "import ZipArchive" for SPM/Carthage, and "import SSZipArchive" for CocoaPods.
+
 // Create
 SSZipArchive.createZipFileAtPath(zipPath, withContentsOfDirectory: sampleDataPath)
 
@@ -68,7 +78,7 @@ SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
 
 ## License
 
-SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [Minizip](https://github.com/nmoinvaz/minizip) 1.2 is licensed under the [Zlib license](https://www.zlib.net/zlib_license.html).
+SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [minizip-ng (formally minizip)](https://github.com/zlib-ng/minizip-ng) 3.0.2 is licensed under the [Zlib license](https://www.zlib.net/zlib_license.html).
 
 ## Acknowledgments
 
@@ -76,5 +86,5 @@ SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/s
 * Thank you [@soffes](https://github.com/soffes) for the actual name of SSZipArchive.
 * Thank you [@randomsequence](https://github.com/randomsequence) for implementing the creation support tech.
 * Thank you [@johnezang](https://github.com/johnezang) for all his amazing help along the way.
-* Thank you [@nmoinvaz](https://github.com/nmoinvaz) for minizip, the core of ZipArchive.
+* Thank you [@nmoinvaz](https://github.com/nmoinvaz) for minizip-ng (formally minizip), the core of ZipArchive.
 * Thank you to [all the contributors](https://github.com/ZipArchive/ZipArchive/graphs/contributors).

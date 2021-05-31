@@ -16,7 +16,7 @@ abstract_target 'core' do
   end
 
   target 'ObjectiveCExampleTests_macOS' do
-    platform :osx, '10.8'
+    platform :osx, '10.9'
   end
 
   target 'ObjectiveCExampleTests_tvOS' do
@@ -28,7 +28,7 @@ abstract_target 'core' do
   end
   
   target 'SwiftExample_macOS' do
-    platform :osx, '10.8'
+    platform :osx, '10.9'
   end
   
 end
