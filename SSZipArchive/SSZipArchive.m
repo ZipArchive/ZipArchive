@@ -3,7 +3,6 @@
 //  SSZipArchive
 //
 //  Created by Sam Soffes on 7/21/10.
-//  Copyright (c) Sam Soffes 2010-2015. All rights reserved.
 //
 
 #import "SSZipArchive.h"
