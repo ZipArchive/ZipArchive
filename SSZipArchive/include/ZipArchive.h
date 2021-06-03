@@ -16,4 +16,10 @@ FOUNDATION_EXPORT const unsigned char ZipArchiveVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <SSZipArchive.h>
 
+#if __has_include(<SSZipArchive/SSZipArchive.h>)
+#import <SSZipArchive/SSZipArchive.h>
+#elif __has_include("../SSZipArchive.h")
 #import "../SSZipArchive.h"
+#else
+#import "SSZipArchive.h"
+#endif
