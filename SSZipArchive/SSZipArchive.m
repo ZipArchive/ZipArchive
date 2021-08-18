@@ -766,6 +766,11 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
 {
+    return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:password progressHandler:progressHandler shouldStop:nil];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler shouldStop:(BOOL(^ _Nullable)(void))shouldStop;
+{
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
     BOOL success = [zipArchive open];
     if (success) {
@@ -775,6 +780,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             if (progressHandler) {
                 complete++;
                 progressHandler(complete, total);
+            }
+            if (shouldStop && shouldStop()) {
+                success = false;
+                break;
             }
         }
         success &= [zipArchive close];
@@ -807,11 +816,30 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 + (BOOL)createZipFileAtPath:(NSString *)path
     withContentsOfDirectory:(NSString *)directoryPath
         keepParentDirectory:(BOOL)keepParentDirectory
+               withPassword:(nullable NSString *)password
+         andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
+                 shouldStop:(BOOL(^ _Nullable)(void))shouldStop {
+    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory compressionLevel:Z_DEFAULT_COMPRESSION password:password AES:YES progressHandler:progressHandler shouldStop:shouldStop];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path
+    withContentsOfDirectory:(NSString *)directoryPath
+        keepParentDirectory:(BOOL)keepParentDirectory
            compressionLevel:(int)compressionLevel
                    password:(nullable NSString *)password
                         AES:(BOOL)aes
             progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
-    
+    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory compressionLevel:compressionLevel password:password AES:aes progressHandler:progressHandler shouldStop:nil];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path
+    withContentsOfDirectory:(NSString *)directoryPath
+        keepParentDirectory:(BOOL)keepParentDirectory
+           compressionLevel:(int)compressionLevel
+                   password:(nullable NSString *)password
+                        AES:(BOOL)aes
+            progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
+                 shouldStop:(BOOL(^ _Nullable)(void))shouldStop {
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
     BOOL success = [zipArchive open];
     if (success) {
@@ -850,6 +878,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             if (progressHandler) {
                 complete++;
                 progressHandler(complete, total);
+            }
+            if (shouldStop && shouldStop()) {
+                success = false;
+                break;
             }
         }
         success &= [zipArchive close];
