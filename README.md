@@ -68,10 +68,10 @@ SSZipArchive requires ARC.
 //Import "import ZipArchive" for SPM/Carthage, and "import SSZipArchive" for CocoaPods.
 
 // Create
-SSZipArchive.createZipFileAtPath(zipPath, withContentsOfDirectory: sampleDataPath)
+SSZipArchive.createZipFile(atPath: zipPath, withContentsOfDirectory: sampleDataPath)
 
 // Unzip
-SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
+SSZipArchive.unzipFile(atPath: zipPath, toDestination: unzipPath)
 ```
 
 ## License
