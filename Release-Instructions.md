@@ -5,7 +5,7 @@ The following steps should be taken by project maintainers when they create a ne
 1. Create a new release and tag for the release.
 
     - Tags should be in the form of Major.Minor.Revision 
-     *(XCode SPM tools do not pick up vMajor.Minor.Revision used in older releases. After 2.4.2 please do not include the v in the tag name)*
+     *(Xcode SPM tools do not pick up vMajor.Minor.Revision used in older releases. After 2.4.2 please do not include the v in the tag name)*
 
     - Release names should be  more human readable: Version Major.Minor.Revision
 
