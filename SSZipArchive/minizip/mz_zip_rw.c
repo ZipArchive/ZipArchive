@@ -1690,11 +1690,11 @@ int32_t mz_zip_writer_add_path(void *handle, const char *path, const char *root_
 
         err = mz_zip_writer_add_path(handle, full_path, root_path, include_path, recursive);
         if (err != MZ_OK)
-            return err;
+            break;
     }
 
     mz_os_close_dir(dir);
-    return MZ_OK;
+    return err;
 }
 
 int32_t mz_zip_writer_copy_from_reader(void *handle, void *reader) {

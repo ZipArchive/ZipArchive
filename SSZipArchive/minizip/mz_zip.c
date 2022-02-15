@@ -1119,7 +1119,7 @@ static int32_t mz_zip_write_cd(void *handle) {
     }
 
     /* Write the ZIP64 central directory header */
-    if (zip->cd_offset >= UINT32_MAX || zip->number_entry > UINT16_MAX) {
+    if (zip->cd_offset >= UINT32_MAX || zip->number_entry >= UINT16_MAX) {
         zip64_eocd_pos_inzip = mz_stream_tell(zip->stream);
 
         err = mz_stream_write_uint32(zip->stream, MZ_ZIP_MAGIC_ENDHEADER64);
