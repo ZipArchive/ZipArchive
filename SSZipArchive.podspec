@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.homepage     = 'https://github.com/ZipArchive/ZipArchive'
   s.license      = { :type => 'MIT', :file => 'LICENSE.txt' }
   s.authors      = { 'Sam Soffes' => 'sam@soff.es', 'Joshua Hudson' => nil, 'Antoine Cœur' => nil }
-  s.source       = { :git => 'https://github.com/ZipArchive/ZipArchive.git', :tag => "v#{s.version}" }
+  s.source       = { :git => 'https://github.com/ZipArchive/ZipArchive.git', :tag => "#{s.version}" }
   s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '9.0'
   s.osx.deployment_target = '10.9'
