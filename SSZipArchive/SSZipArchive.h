@@ -83,6 +83,14 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
         progressHandler:(void (^_Nullable)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^_Nullable)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler;
 
+/// Locates the "entity" with `name` in the zip file at `path` and unzips it, returning it as data.
+/// Returns nil if there isn't an entity with that `name` or if any errors are encountered.
+/// The entity must be a file – directories and symlinks are ignored. Password-encrypted entities
+/// are not supported.
++ (NSData *)unzipEntityName:(NSString *)name
+               fromFilePath:(NSString *)path
+                      error:(out NSError *__autoreleasing *)outError;
+
 // Zip
 // default compression level is Z_DEFAULT_COMPRESSION (from "zlib.h")
 // keepParentDirectory: if YES, then unzipping will give `directoryName/fileName`. If NO, then unzipping will just give `fileName`. Default is NO.
