@@ -750,6 +750,155 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return success;
 }
 
+// Modified (heavily) from unzipEntityName:fromFilePath:toDestination in vexdex's fork of ZipArchive:
+// https://github.com/vexdev/ssziparchive
++ (NSData *)unzipEntityName:(NSString *)name
+               fromFilePath:(NSString *)path
+                      error:(out NSError *__autoreleasing *)outError
+{
+    // Guard against empty strings
+    if (name.length == 0 || path.length == 0) {
+        if (outError) {
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Both `name` and `path` must be valid"};
+            *outError = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                            code:SSZipArchiveErrorCodeInvalidArguments
+                                        userInfo:userInfo];
+        }
+        return nil;
+    }
+
+    // Begin opening
+    zipFile zip = unzOpen(path.fileSystemRepresentation);
+    if (zip == NULL) {
+        if (outError) {
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Failed to open zip file"};
+            *outError = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                            code:SSZipArchiveErrorCodeFailedOpenZipFile
+                                        userInfo:userInfo];
+        }
+        return nil;
+    }
+    
+    ZPOS64_T currentPosition = 0;
+    
+    unz_global_info  globalInfo = {};
+    unzGetGlobalInfo(zip, &globalInfo);
+    
+    // Begin unzipping
+    int ret = 0;
+    ret = unzGoToFirstFile(zip);
+    if (ret != UNZ_OK && ret != MZ_END_OF_LIST) {
+        if (outError) {
+            NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Failed to find first file in zip file"};
+            NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                               code:SSZipArchiveErrorCodeFailedOpenFileInZip
+                                           userInfo:userInfo];
+        }
+        unzClose(zip);
+        return nil;
+    }
+
+    BOOL foundEntity = NO;
+    NSMutableData *data;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    NSError *unzippingError;
+    do {
+        if (ret == MZ_END_OF_LIST) {
+            break;
+        }
+        @autoreleasepool {
+            ret = unzOpenCurrentFile(zip);
+            
+            if (ret != UNZ_OK) {
+                NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Failed to open file in zip file"};
+                unzippingError = [NSError errorWithDomain:@"SSZipArchiveErrorDomain"
+                                                     code:SSZipArchiveErrorCodeFailedOpenFileInZip
+                                                 userInfo:userInfo];
+                break;
+            }
+            
+            // Reading data
+            unz_file_info fileInfo;
+            memset(&fileInfo, 0, sizeof(unz_file_info));
+            
+            ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
+            if (ret != UNZ_OK) {
+                NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Failed to retrieve info for file"};
+                unzippingError = [NSError errorWithDomain:@"SSZipArchiveErrorDomain"
+                                                     code:SSZipArchiveErrorCodeFileInfoNotLoadable
+                                                 userInfo:userInfo];
+                unzCloseCurrentFile(zip);
+                break;
+            }
+            
+            currentPosition += fileInfo.compressed_size;
+            
+            char *filename = (char *)malloc(fileInfo.size_filename + 1);
+            if (filename == NULL) {
+                break;
+            }
+            
+            unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
+            filename[fileInfo.size_filename] = '\0';
+            
+            BOOL fileIsSymbolicLink = _fileIsSymbolicLink(&fileInfo);
+            BOOL fileIsDirectory = (filename[fileInfo.size_filename-1] == '/' || filename[fileInfo.size_filename-1] == '\\');
+            
+            NSString *strPath = [SSZipArchive _filenameStringWithCString:filename
+                                                         version_made_by:fileInfo.version
+                                                    general_purpose_flag:fileInfo.flag
+                                                                    size:fileInfo.size_filename];
+            free(filename);
+            
+            // Ignore:
+            //   - directories (which includes resource forks)
+            //   - symbolic links
+            if (fileIsDirectory || fileIsSymbolicLink) {
+                unzCloseCurrentFile(zip);
+                ret = unzGoToNextFile(zip);
+                continue;
+            }
+
+            // Sanitize the path
+            strPath = [strPath _sanitizedPath];
+            
+            // Is this the file we are looking for?
+            if ([strPath isEqualToString:name]) {
+                data = [[NSMutableData alloc] initWithLength:fileInfo.uncompressed_size];
+                int readBytes = unzReadCurrentFile(zip, data.mutableBytes, fileInfo.uncompressed_size);
+                if (readBytes != fileInfo.uncompressed_size) {
+                    if (outError) {
+                        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Failed to read contents of file entity"};
+                        *outError = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                                        code:SSZipArchiveErrorCodeFileContentNotReadable
+                                                    userInfo:userInfo];
+                    }
+                    // This is an error condition: set the data to nil
+                    data = nil;
+                }
+                
+                // This is the file we are looking for
+                foundEntity = YES;
+            }
+
+            // Close the current file
+            unzCloseCurrentFile( zip );
+            
+            // If we haven't found the entity yet, go to the next file
+            if (!foundEntity) {
+                ret = unzGoToNextFile( zip );
+            }
+        }
+    } while (!foundEntity && ret == UNZ_OK && ret != UNZ_END_OF_LIST_OF_FILE);
+    
+    // Close the zip file
+    unzClose(zip);
+        
+    return [data copy];
+}
+
+
 #pragma mark - Zipping
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths
 {
