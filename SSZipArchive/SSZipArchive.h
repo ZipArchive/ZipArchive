@@ -87,9 +87,9 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
 /// Returns nil if there isn't an entity with that `name` or if any errors are encountered.
 /// The entity must be a file – directories and symlinks are ignored. Password-encrypted entities
 /// are not supported.
-+ (NSData *)unzipEntityName:(NSString *)name
-               fromFilePath:(NSString *)path
-                      error:(out NSError *__autoreleasing *)outError;
++ (nullable NSData *)unzipEntityName:(NSString *)name
+                        fromFilePath:(NSString *)path
+                               error:(out NSError *__autoreleasing *)outError;
 
 // Zip
 // default compression level is Z_DEFAULT_COMPRESSION (from "zlib.h")
