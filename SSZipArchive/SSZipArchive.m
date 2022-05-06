@@ -787,9 +787,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     if (ret != UNZ_OK && ret != MZ_END_OF_LIST) {
         if (outError) {
             NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Failed to find first file in zip file"};
-            NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain
-                                               code:SSZipArchiveErrorCodeFailedOpenFileInZip
-                                           userInfo:userInfo];
+            *outError = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                            code:SSZipArchiveErrorCodeFailedOpenFileInZip
+                                        userInfo:userInfo];
         }
         unzClose(zip);
         return nil;
@@ -797,7 +797,6 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
     BOOL foundEntity = NO;
     NSMutableData *data;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
     
     NSError *unzippingError;
     do {
@@ -865,12 +864,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 data = [[NSMutableData alloc] initWithLength:fileInfo.uncompressed_size];
                 int readBytes = unzReadCurrentFile(zip, data.mutableBytes, fileInfo.uncompressed_size);
                 if (readBytes != fileInfo.uncompressed_size) {
-                    if (outError) {
-                        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Failed to read contents of file entity"};
-                        *outError = [NSError errorWithDomain:SSZipArchiveErrorDomain
-                                                        code:SSZipArchiveErrorCodeFileContentNotReadable
-                                                    userInfo:userInfo];
-                    }
+                    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Failed to read contents of file entity"};
+                    unzippingError = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                                         code:SSZipArchiveErrorCodeFileContentNotReadable
+                                                     userInfo:userInfo];
                     // This is an error condition: set the data to nil
                     data = nil;
                 }
@@ -888,6 +885,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
         }
     } while (!foundEntity && ret == UNZ_OK && ret != UNZ_END_OF_LIST_OF_FILE);
+    
+    if (unzippingError && outError) {
+        *outError = unzippingError;
+    }
     
     // Close the zip file
     unzClose(zip);
