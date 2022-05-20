@@ -86,7 +86,7 @@ int32_t mz_zip_reader_entry_is_dir(void *handle);
 /* Gets the current entry is a directory */
 
 int32_t mz_zip_reader_entry_save(void *handle, void *stream, mz_stream_write_cb write_cb);
-/* Save the current entry to a steam */
+/* Save the current entry to a stream */
 
 int32_t mz_zip_reader_entry_save_process(void *handle, void *stream, mz_stream_write_cb write_cb);
 /* Saves a portion of the current entry to a stream callback */
