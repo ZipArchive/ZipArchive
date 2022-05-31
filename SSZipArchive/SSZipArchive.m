@@ -1282,10 +1282,11 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes)
 {
     // https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
-    uint16_t made_on_darwin = 19 << 8;
+	// For more compatibility on extraction set as made on UNIX (3) instead of DARWIN (19)
+	uint16_t made_on_unix = 3 << 8;
     //MZ_ZIP_FLAG_UTF8
     uint16_t flag_base = 1 << 11;
-    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, made_on_darwin, flag_base, 1);
+    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, made_on_unix, flag_base, 1);
 }
 
 #pragma mark - Private tools for file info
