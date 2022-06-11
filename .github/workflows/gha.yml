@@ -39,14 +39,14 @@ jobs:
           SCHEME="ObjectiveCExample_tvOS"
           SDK="appletvsimulator"
           PLATFORM="tvOS Simulator"
-          DEVICE="APPLE TV 4K (at 1080p)"
+          DEVICE="Apple TV 4K (at 1080p) (2nd generation)"
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
         if [ ${{ matrix.SDK }} == "iphonesimulator" ]; then
           SCHEME="ObjectiveCExample_iOS"
           SDK="iphonesimulator"
           PLATFORM="iOS Simulator"
-          DEVICE="iPhone 14 Pro Max"
+          DEVICE="iPhone 13 Pro Max"
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
 
