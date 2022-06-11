@@ -5,30 +5,34 @@ use_frameworks!
 
 abstract_target 'core' do
 
-  pod 'SSZipArchive', :path => '..'
-
   target 'ObjectiveCExample' do
     platform :ios, '15.5'
+    pod 'SSZipArchive', :path => '..'
   end
 
   target 'ObjectiveCExampleTests_iOS' do
     platform :ios, '15.5'
+    pod 'SSZipArchive', :path => '..'
   end
 
   target 'ObjectiveCExampleTests_macOS' do
     platform :osx, '10.15'
+    pod 'SSZipArchive', :path => '..'
   end
 
   target 'ObjectiveCExampleTests_tvOS' do
     platform :tvos, '15.4'
+    pod 'SSZipArchive', :path => '..'
   end
 
   target 'SwiftExample' do
     platform :ios, '15.5'
+    pod 'SSZipArchive', :path => '..'
   end
   
   target 'SwiftExample_macOS' do
     platform :osx, '10.15'
+     pod 'SSZipArchive', :path => '..'
   end
   
 end
