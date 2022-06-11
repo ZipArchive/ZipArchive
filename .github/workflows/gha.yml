@@ -50,6 +50,8 @@ jobs:
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
 
+xcodebuild -showsdks
+
         # build and test
         CONFIGURATION="Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES"
         xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -sdk $SDK -destination "$DESTINATION" -configuration $CONFIGURATION $USEMODERNBUILDSYSTEM test
