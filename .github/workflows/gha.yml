@@ -17,6 +17,9 @@ jobs:
         OS: [macOS-12]
         SDK: ["macosx", "appletvsimulator", "iphonesimulator"]
     steps:
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '13.4.1'
     - uses: actions/checkout@v1
     - name: Install dependencies
       run: |
