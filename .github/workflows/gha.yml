@@ -9,7 +9,7 @@ on:
     tags:
       - '*'
 jobs:
-  macos:
+  macos-11:
     runs-on: ${{matrix.OS}}
     strategy:
       fail-fast: false
@@ -37,7 +37,7 @@ jobs:
         CONFIGURATION="Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES"
         xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -sdk $SDK -destination "$DESTINATION" -configuration $CONFIGURATION $USEMODERNBUILDSYSTEM test
 
-  macos-old:
+  macos-12:
     runs-on: ${{matrix.OS}}
     strategy:
       fail-fast: false
