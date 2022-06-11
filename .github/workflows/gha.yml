@@ -43,7 +43,7 @@ jobs:
           SCHEME="ObjectiveCExample_iOS"
           SDK="iphonesimulator"
           PLATFORM="iOS Simulator"
-          DEVICE="iPhone 11 Pro Max"
+          DEVICE="iPhone 14 Pro Max"
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
 
