@@ -14,12 +14,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        OS: [macOS-12]
-        SDK: ["macosx", "appletvsimulator", "iphonesimulator"]
+        OS: [macOS-11]
+        SDK: ["macosx"]
     steps:
-    - uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '13.4.1'
     - uses: actions/checkout@v1
     - name: Install dependencies
       run: |
@@ -35,6 +32,30 @@ jobs:
           SDK="macosx"
           DESTINATION="platform=macosx"
         fi
+        
+        # build and test
+        CONFIGURATION="Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES"
+        xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -sdk $SDK -destination "$DESTINATION" -configuration $CONFIGURATION $USEMODERNBUILDSYSTEM test
+
+  macos-old:
+    runs-on: ${{matrix.OS}}
+    strategy:
+      fail-fast: false
+      matrix:
+        OS: [macOS-12]
+        SDK: ["appletvsimulator", "iphonesimulator"]
+    steps:
+    - uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '13.4.1'
+    - uses: actions/checkout@v1
+    - name: Install dependencies
+      run: |
+        pushd Example
+        pod install
+        popd  
+    - name: Build and test
+      run: |
         if [ ${{ matrix.SDK }} == "appletvsimulator" ]; then
           SCHEME="ObjectiveCExample_tvOS"
           SDK="appletvsimulator"
@@ -49,8 +70,6 @@ jobs:
           DEVICE="iPhone 13 Pro Max"
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
-
-        xcodebuild -showsdks
 
         # build and test
         CONFIGURATION="Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES"
