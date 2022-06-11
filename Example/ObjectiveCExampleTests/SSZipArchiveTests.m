@@ -347,13 +347,13 @@ int twentyMB = 20 * 1024 * 1024;
     BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
     XCTAssertTrue(success, @"unzip failure");
 
-    NSString *intendedReadmeTxtMD5 = @"31ac96301302eb388070c827447290b5";
+    NSString *intendedReadmeTxtSHA256 = @"b389c1b182306c9fa68a38f667a6ac35863b6d670ae98954403c265ffe67e9bc";
 
     NSString *filePath = [outputPath stringByAppendingPathComponent:@"IncorrectHeaders/Readme.txt"];
     NSData *data = [NSData dataWithContentsOfFile:filePath];
 
-    NSString *actualReadmeTxtMD5 = [self _calculateMD5Digest:data];
-    XCTAssertTrue([actualReadmeTxtMD5 isEqualToString:intendedReadmeTxtMD5], @"Readme.txt MD5 digest should match original.");
+    NSString *actualReadmeTxtSHA256 = [self _calculateSHA256Hash:data];
+    XCTAssertTrue([actualReadmeTxtSHA256 isEqualToString:intendedReadmeTxtSHA256], @"Readme.txt SHA256 digest should match original.");
 }
 
 
@@ -800,15 +800,21 @@ int twentyMB = 20 * 1024 * 1024;
 }
 
 
-// Taken from https://github.com/samsoffes/sstoolkit/blob/master/SSToolkit/NSData+SSToolkitAdditions.m
-- (NSString *)_calculateMD5Digest:(NSData *)data {
-    unsigned char digest[CC_MD5_DIGEST_LENGTH], i;
-    CC_MD5(data.bytes, (unsigned int)data.length, digest);
-    NSMutableString *ms = [NSMutableString string];
-    for (i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
-        [ms appendFormat: @"%02x", (int)(digest[i])];
-    }
-    return [ms copy];
-}
+- (NSString *)_calculateSHA256Hash:(NSData *)data {
+    
+    uint8_t digest[CC_SHA256_DIGEST_LENGTH];
 
+    CC_SHA256(data.bytes, (CC_LONG) data.length, digest);
+
+    //convert the SHA hash to a string
+    
+    NSMutableString* ms = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH];
+    
+    for(int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++) {
+        [ms appendFormat:@"%02x", digest[i]];
+    }
+
+    return [ms copy];
+
+}
 @end

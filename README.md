@@ -14,11 +14,22 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS, mac
 - Choose compression level;
 - Zip-up NSData instances. (with a filename)
 
+## Version 2.5.0+ Updates Minimum OS Versions
+
+A key dependancy of this project is the zlib library. zlib before version 1.2.12 allows memory corruption when deflating (i.e., when compressing) if the input has many distant matches according to [CVE-2018-25032](https://nvd.nist.gov/vuln/detail/cve-2018-25032).  
+
+zlib 1.2.12 is included in macOS 10.15+ (with latest security patches), iOS 15.5+, tvOS 15.4+, watchOS 8.4+.  **As such these will be the new minimum versions of this software as of version 2.5.0 of ZipArchive.** 
+
+If you need support for previous versions of ZipArchive for earlier OS support you can target an earlier version but know you will be using an unmaintained version of this library. 
+
+We will not support versions of ZipArchive that use dependencies with known vulnerabilities. 
+
 ## Installation and Setup
+
 
 *The main release branch is configured to support Objective-C and Swift 3+.*
 
-SSZipArchive works on Xcode 7 and above, iOS 9 and above, tvOS 9 and above, macOS 10.9 and above, watchOS 2 and above.
+SSZipArchive works on Xcode 12 and above, iOS 15.5 and above, tvOS 15.4 and above, macOS 10.15 and above, watchOS 8.4 and above.
 
 ### CocoaPods
 In your Podfile:  
@@ -36,7 +47,7 @@ Add a Swift Package reference to https://github.com/ZipArchive/ZipArchive.git (S
 In your Cartfile:  
 `github "ZipArchive/ZipArchive"`
 
-Note: We are no longer releasing a Carthage pre-built package as of 2.2.3. Developers are encouraged to build one themselves.
+We do not release a Carthage pre-built package. Developers are encouraged to build one themselves.
 
 ### Manual
 
@@ -76,7 +87,7 @@ SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
 
 ## License
 
-SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [minizip-ng (formally minizip)](https://github.com/zlib-ng/minizip-ng) 3.0.2 is licensed under the [Zlib license](https://www.zlib.net/zlib_license.html).
+SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [minizip-ng (formally minizip)](https://github.com/zlib-ng/minizip-ng) 3.0.4 is licensed under the [Zlib license](https://www.zlib.net/zlib_license.html).
 
 ## Acknowledgments
 
