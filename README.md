@@ -16,7 +16,7 @@ ZipArchive is a simple utility class for zipping and unzipping files on iOS, mac
 
 ## Version 2.5.0+ Updates Minimum OS Versions
 
-A key dependancy of this project is the zlib library. zlib before version 1.2.12 allows memory corruption when deflating (i.e., when compressing) if the input has many distant matches according to [CVE-2018-25032](https://nvd.nist.gov/vuln/detail/cve-2018-25032).  
+A key dependency of this project is the zlib library. zlib before version 1.2.12 allows memory corruption when deflating (i.e., when compressing) if the input has many distant matches according to [CVE-2018-25032](https://nvd.nist.gov/vuln/detail/cve-2018-25032).  
 
 zlib 1.2.12 is included in macOS 10.15+ (with latest security patches), iOS 15.5+, tvOS 15.4+, watchOS 8.4+.  **As such, these OS versions will be the new minimums as of version 2.5.0 of ZipArchive.** 
 
