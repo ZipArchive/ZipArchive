@@ -16,7 +16,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 #define CHUNK 16384
 
-int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes);
+int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes, BOOL zip64);
 BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 #ifndef API_AVAILABLE
@@ -34,7 +34,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 @end
 
 @interface SSZipArchive ()
-- (instancetype)init NS_DESIGNATED_INITIALIZER;
+
+/// When writing a file to the archive, should zip64 be used?
+@property (readonly) BOOL useZip64;
+
 @end
 
 @implementation SSZipArchive
@@ -810,10 +813,25 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
            compressionLevel:(int)compressionLevel
                    password:(nullable NSString *)password
                         AES:(BOOL)aes
-            progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
-    
+            progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
+{
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
-    BOOL success = [zipArchive open];
+    return [zipArchive addContentsOfDirectory:directoryPath
+                          keepParentDirectory:keepParentDirectory
+                             compressionLevel:compressionLevel
+                                     password:password
+                                          AES:aes
+                              progressHandler:progressHandler];
+}
+
+- (BOOL)addContentsOfDirectory:(NSString *)directoryPath
+           keepParentDirectory:(BOOL)keepParentDirectory
+              compressionLevel:(int)compressionLevel
+                      password:(nullable NSString *)password
+                           AES:(BOOL)aes
+               progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
+{
+    BOOL success = [self open];
     if (success) {
         // use a local fileManager (queue/thread compatibility)
         NSFileManager *fileManager = [[NSFileManager alloc] init];
@@ -826,7 +844,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         }
         for (__strong NSString *fileName in allObjects) {
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
-            if ([fullFilePath isEqualToString:path]) {
+            if ([fullFilePath isEqualToString:_path]) {
                 NSLog(@"[SSZipArchive] the archive path and the file path: %@ are the same, which is forbidden.", fullFilePath);
                 continue;
             }
@@ -839,12 +857,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             [fileManager fileExistsAtPath:fullFilePath isDirectory:&isDir];
             if (!isDir) {
                 // file
-                success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
+                success &= [self writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
             } else {
                 // directory
                 if (![fileManager enumeratorAtPath:fullFilePath].nextObject) {
                     // empty directory
-                    success &= [zipArchive writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
+                    success &= [self writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
                 }
             }
             if (progressHandler) {
@@ -852,7 +870,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 progressHandler(complete, total);
             }
         }
-        success &= [zipArchive close];
+        success &= [self close];
     }
     return success;
 }
@@ -885,18 +903,55 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                    password:(nullable NSString *)password
                         AES:(BOOL)aes
             progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
-               keepSymlinks:(BOOL)keeplinks {
+               keepSymlinks:(BOOL)keeplinks
+{
+    SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
+    return [zipArchive addContentsOfDirectory:directoryPath
+                          keepParentDirectory:keepParentDirectory
+                             compressionLevel:compressionLevel
+                                     password:password
+                                          AES:aes
+                                 keepSymlinks:keeplinks
+                              progressHandler:progressHandler];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path
+    withContentsOfDirectory:(NSString *)directoryPath
+        keepParentDirectory:(BOOL)keepParentDirectory
+           compressionLevel:(int)compressionLevel
+                   password:(nullable NSString *)password
+                        AES:(BOOL)aes
+               keepSymlinks:(BOOL)keeplinks
+                   useZip64:(BOOL)useZip64
+            progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
+{
+    SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path useZip64:useZip64];
+    return [zipArchive addContentsOfDirectory:directoryPath
+                          keepParentDirectory:keepParentDirectory
+                             compressionLevel:compressionLevel
+                                     password:password
+                                          AES:aes
+                                 keepSymlinks:keeplinks
+                              progressHandler:progressHandler];
+}
+
+- (BOOL)addContentsOfDirectory:(NSString *)directoryPath
+           keepParentDirectory:(BOOL)keepParentDirectory
+              compressionLevel:(int)compressionLevel
+                      password:(nullable NSString *)password
+                           AES:(BOOL)aes
+                  keepSymlinks:(BOOL)keeplinks
+               progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
+{
     if (!keeplinks) {
-        return [SSZipArchive createZipFileAtPath:path
-                         withContentsOfDirectory:directoryPath
-                             keepParentDirectory:keepParentDirectory
-                                compressionLevel:compressionLevel
-                                        password:password
-                                             AES:aes
-                                 progressHandler:progressHandler];
+        return [self addContentsOfDirectory:directoryPath
+                        keepParentDirectory:keepParentDirectory
+                           compressionLevel:compressionLevel
+                                   password:password
+                                        AES:aes
+                            progressHandler:progressHandler];
     } else {
-        SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
-        BOOL success = [zipArchive open];
+        BOOL success = [self open];
         if (success) {
             // use a local fileManager (queue/thread compatibility)
             NSFileManager *fileManager = [[NSFileManager alloc] init];
@@ -922,15 +977,15 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 if (!isDir || isSymlink) {
                     // file or symlink
                     if (!isSymlink) {
-                        success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
+                        success &= [self writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
                     } else {
-                        success &= [zipArchive writeSymlinkFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
+                        success &= [self writeSymlinkFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
                     }                  
                 } else {
                     // directory
                     if (![fileManager enumeratorAtPath:fullFilePath].nextObject) {
                         // empty directory
-                        success &= [zipArchive writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
+                        success &= [self writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
                     }
                 }
                 if (progressHandler) {
@@ -938,7 +993,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                     progressHandler(complete, total);
                 }
             }
-            success &= [zipArchive close];
+            success &= [self close];
         }
         return success;
     }    
@@ -986,14 +1041,20 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return error == ZIP_OK;
 }
 
-// disabling `init` because designated initializer is `initWithPath:`
-- (instancetype)init { @throw nil; }
+// convenience initializer
+- (instancetype)initWithPath:(NSString *)path
+{
+    return [self initWithPath:path useZip64:YES];
+}
 
 // designated initializer
 - (instancetype)initWithPath:(NSString *)path
+                    useZip64:(BOOL)useZip64
 {
-    if ((self = [super init])) {
+    self = [super init];
+    if (self) {
         _path = [path copy];
+        _useZip64 = useZip64;
     }
     return self;
 }
@@ -1020,8 +1081,9 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     zip_fileinfo zipInfo = {};
     
     [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
-    
-    int error = _zipOpenEntry(_zip, [folderName stringByAppendingString:@"/"], &zipInfo, Z_NO_COMPRESSION, password, NO);
+
+    BOOL aes = NO;
+    int error = _zipOpenEntry(_zip, [folderName stringByAppendingString:@"/"], &zipInfo, Z_NO_COMPRESSION, password, aes, self.useZip64);
     const void *buffer = NULL;
     zipWriteInFileInZip(_zip, buffer, 0);
     zipCloseFileInZip(_zip);
@@ -1065,7 +1127,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         return NO;
     }
     
-    int error = _zipOpenEntry(_zip, fileName, &zipInfo, compressionLevel, password, aes);
+    int error = _zipOpenEntry(_zip, fileName, &zipInfo, compressionLevel, password, aes, self.useZip64);
     
     while (!feof(input) && !ferror(input))
     {
@@ -1094,8 +1156,8 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     }
     zip_fileinfo zipInfo = {};
     [SSZipArchive zipInfo:&zipInfo setDate:[NSDate date]];
-    
-    int error = _zipOpenEntry(_zip, filename, &zipInfo, compressionLevel, password, aes);
+
+    int error = _zipOpenEntry(_zip, filename, &zipInfo, compressionLevel, password, aes, self.useZip64);
     
     zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
     
@@ -1279,13 +1341,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 @end
 
-int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes)
+int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes, BOOL zip64)
 {
     // https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
     uint16_t made_on_darwin = 19 << 8;
     //MZ_ZIP_FLAG_UTF8
     uint16_t flag_base = 1 << 11;
-    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, made_on_darwin, flag_base, 1);
+    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, aes, made_on_darwin, flag_base, zip64);
 }
 
 #pragma mark - Private tools for file info
