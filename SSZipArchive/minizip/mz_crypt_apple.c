@@ -29,12 +29,22 @@ int32_t mz_crypt_rand(uint8_t *buf, int32_t size) {
 /***************************************************************************/
 
 typedef struct mz_crypt_sha_s {
-    CC_SHA1_CTX     ctx1;
-    CC_SHA256_CTX   ctx256;
-    int32_t         error;
-    int32_t         initialized;
-    uint16_t        algorithm;
+    union {
+        CC_SHA1_CTX   ctx1;
+        CC_SHA256_CTX ctx256;
+        CC_SHA512_CTX ctx512;
+    };
+    int32_t           error;
+    int32_t           initialized;
+    uint16_t          algorithm;
 } mz_crypt_sha;
+
+/***************************************************************************/
+
+static const uint8_t mz_crypt_sha_digest_size[] = {
+    MZ_HASH_SHA1_SIZE,                     0, MZ_HASH_SHA224_SIZE,
+    MZ_HASH_SHA256_SIZE, MZ_HASH_SHA384_SIZE, MZ_HASH_SHA512_SIZE
+};
 
 /***************************************************************************/
 
@@ -53,12 +63,25 @@ int32_t mz_crypt_sha_begin(void *handle) {
 
     mz_crypt_sha_reset(handle);
 
-    if (sha->algorithm == MZ_HASH_SHA1)
+    switch (sha->algorithm) {
+    case MZ_HASH_SHA1:
         sha->error = CC_SHA1_Init(&sha->ctx1);
-    else if (sha->algorithm == MZ_HASH_SHA256)
+        break;
+    case MZ_HASH_SHA224:
+        sha->error = CC_SHA224_Init(&sha->ctx256);
+        break;
+    case MZ_HASH_SHA256:
         sha->error = CC_SHA256_Init(&sha->ctx256);
-    else
+        break;
+    case MZ_HASH_SHA384:
+        sha->error = CC_SHA384_Init(&sha->ctx512);
+        break;
+    case MZ_HASH_SHA512:
+        sha->error = CC_SHA512_Init(&sha->ctx512);
+        break;
+    default:
         return MZ_PARAM_ERROR;
+    }
 
     if (!sha->error)
         return MZ_HASH_ERROR;
@@ -73,10 +96,23 @@ int32_t mz_crypt_sha_update(void *handle, const void *buf, int32_t size) {
     if (sha == NULL || buf == NULL || !sha->initialized)
         return MZ_PARAM_ERROR;
 
-    if (sha->algorithm == MZ_HASH_SHA1)
+    switch (sha->algorithm) {
+    case MZ_HASH_SHA1:
         sha->error = CC_SHA1_Update(&sha->ctx1, buf, size);
-    else
+        break;
+    case MZ_HASH_SHA224:
+        sha->error = CC_SHA224_Update(&sha->ctx256, buf, size);
+        break;
+    case MZ_HASH_SHA256:
         sha->error = CC_SHA256_Update(&sha->ctx256, buf, size);
+        break;
+    case MZ_HASH_SHA384:
+        sha->error = CC_SHA384_Update(&sha->ctx512, buf, size);
+        break;
+    case MZ_HASH_SHA512:
+        sha->error = CC_SHA512_Update(&sha->ctx512, buf, size);
+        break;
+    }
 
     if (!sha->error)
         return MZ_HASH_ERROR;
@@ -89,15 +125,25 @@ int32_t mz_crypt_sha_end(void *handle, uint8_t *digest, int32_t digest_size) {
 
     if (sha == NULL || digest == NULL || !sha->initialized)
         return MZ_PARAM_ERROR;
+    if (digest_size < mz_crypt_sha_digest_size[sha->algorithm - MZ_HASH_SHA1])
+        return MZ_PARAM_ERROR;
 
-    if (sha->algorithm == MZ_HASH_SHA1) {
-        if (digest_size < MZ_HASH_SHA1_SIZE)
-            return MZ_BUF_ERROR;
+    switch (sha->algorithm) {
+    case MZ_HASH_SHA1:
         sha->error = CC_SHA1_Final(digest, &sha->ctx1);
-    } else {
-        if (digest_size < MZ_HASH_SHA256_SIZE)
-            return MZ_BUF_ERROR;
+        break;
+    case MZ_HASH_SHA224:
+        sha->error = CC_SHA224_Final(digest, &sha->ctx256);
+        break;
+    case MZ_HASH_SHA256:
         sha->error = CC_SHA256_Final(digest, &sha->ctx256);
+        break;
+    case MZ_HASH_SHA384:
+        sha->error = CC_SHA384_Final(digest, &sha->ctx512);
+        break;
+    case MZ_HASH_SHA512:
+        sha->error = CC_SHA512_Final(digest, &sha->ctx512);
+        break;
     }
 
     if (!sha->error)
@@ -108,7 +154,8 @@ int32_t mz_crypt_sha_end(void *handle, uint8_t *digest, int32_t digest_size) {
 
 void mz_crypt_sha_set_algorithm(void *handle, uint16_t algorithm) {
     mz_crypt_sha *sha = (mz_crypt_sha *)handle;
-    sha->algorithm = algorithm;
+    if (MZ_HASH_SHA1 <= algorithm && algorithm <= MZ_HASH_SHA512)
+        sha->algorithm = algorithm;
 }
 
 void *mz_crypt_sha_create(void **handle) {

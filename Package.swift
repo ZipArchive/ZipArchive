@@ -24,6 +24,7 @@ let package = Package(
                 .define("HAVE_STDINT_H"),
                 .define("HAVE_WZAES"),
                 .define("HAVE_ZLIB"),
+                .define("ZLIB_COMPAT")
             ],
             linkerSettings: [
                 .linkedLibrary("z"),

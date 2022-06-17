@@ -886,6 +886,7 @@
 					HAVE_STDINT_H,
 					HAVE_WZAES,
 					HAVE_ZLIB,
+					ZLIB_COMPAT,
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -947,6 +948,7 @@
 					HAVE_STDINT_H,
 					HAVE_WZAES,
 					HAVE_ZLIB,
+					ZLIB_COMPAT,
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

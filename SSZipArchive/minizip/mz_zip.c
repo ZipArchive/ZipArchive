@@ -2230,6 +2230,16 @@ int32_t mz_zip_entry_seek_local_header(void *handle) {
     return mz_stream_seek(zip->stream, zip->file_info.disk_offset + zip->disk_offset_shift, MZ_SEEK_SET);
 }
 
+int32_t mz_zip_entry_get_compress_stream(void *handle, void **compress_stream) {
+    mz_zip *zip = (mz_zip *)handle;
+    if (zip == NULL || compress_stream == NULL)
+        return MZ_PARAM_ERROR;
+    *compress_stream = zip->compress_stream;
+    if (*compress_stream == NULL)
+        return MZ_EXIST_ERROR;
+    return MZ_OK;
+}
+
 int32_t mz_zip_entry_close(void *handle) {
     return mz_zip_entry_close_raw(handle, UINT64_MAX, 0);
 }
