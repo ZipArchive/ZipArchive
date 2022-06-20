@@ -54,7 +54,7 @@ We do not release a Carthage pre-built package. Developers are encouraged to bui
 1. Add the `SSZipArchive` and `minizip` folders to your project.
 2. Add the `libz` and `libiconv` libraries to your target.
 3. Add the `Security` framework to your target.
-4. Add the following GCC_PREPROCESSOR_DEFINITIONS: `HAVE_INTTYPES_H HAVE_PKCRYPT HAVE_STDINT_H HAVE_WZAES HAVE_ZLIB $(inherited)`.
+4. Add the following GCC_PREPROCESSOR_DEFINITIONS: `HAVE_INTTYPES_H HAVE_PKCRYPT HAVE_STDINT_H HAVE_WZAES HAVE_ZLIB ZLIB_COMPAT $(inherited)`.
 
 SSZipArchive requires ARC.
 
@@ -87,7 +87,7 @@ SSZipArchive.unzipFileAtPath(zipPath, toDestination: unzipPath)
 
 ## License
 
-SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [minizip-ng (formally minizip)](https://github.com/zlib-ng/minizip-ng) 3.0.4 is licensed under the [Zlib license](https://www.zlib.net/zlib_license.html).
+SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/ssziparchive/raw/master/LICENSE) and our slightly modified version of [minizip-ng (formally minizip)](https://github.com/zlib-ng/minizip-ng) 3.0.6 is licensed under the [Zlib license](https://www.zlib.net/zlib_license.html).
 
 ## Acknowledgments
 
