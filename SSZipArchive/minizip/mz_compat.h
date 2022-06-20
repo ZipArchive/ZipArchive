@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 #ifndef MAX_WBITS
-#define MAX_WBITS     15 //removed () to surpress warning about ambigious expansion of marco -SSZipArchive
+#define MAX_WBITS     15 //removed () to surpress warning about ambigious expansion of macro -SSZipArchive
 #endif
 
 #ifndef DEF_MEM_LEVEL
@@ -158,7 +158,7 @@ typedef const char *zipcharpc;
 #define ZIP_INTERNALERROR               (-104)
 
 #ifndef Z_DEFLATED
-#define Z_DEFLATED                      8 //removed () to surpress warning about ambigious expansion of marco -SSZipArchive
+#define Z_DEFLATED                      8 //removed () to surpress warning about ambigious expansion of macro -SSZipArchive
 #endif
 
 
