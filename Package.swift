@@ -10,6 +10,7 @@ let package = Package(
         .tvOS("15.4"),
         .macOS(.v10_15),
         .watchOS("8.4"),
+        .macCatalyst("13.0")
     ],
     products: [
         .library(name: "ZipArchive", targets: ["ZipArchive"]),
