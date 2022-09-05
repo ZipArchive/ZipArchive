@@ -2,10 +2,9 @@
 #
 xcuserdata/
 *.xccheckout
-*.moved-aside
 
 # AppCode
-.idea
+.idea/
 
 # macOS
 .DS_Store
@@ -14,7 +13,7 @@ xcuserdata/
 #
 # We recommend against adding the Pods directory to your .gitignore. However
 # you should judge for yourself, the pros and cons are mentioned at:
-# http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 Pods/
 
 # Carthage
@@ -22,3 +21,6 @@ Pods/
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
 **/Carthage/Checkouts
 **/Carthage/Build
+
+# Swift Package Manager
+.build/
