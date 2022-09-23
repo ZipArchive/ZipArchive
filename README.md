@@ -97,3 +97,6 @@ SSZipArchive is protected under the [MIT license](https://github.com/samsoffes/s
 * Thank you [@johnezang](https://github.com/johnezang) for all his amazing help along the way.
 * Thank you [@nmoinvaz](https://github.com/nmoinvaz) for minizip-ng (formally minizip), the core of ZipArchive.
 * Thank you to [all the contributors](https://github.com/ZipArchive/ZipArchive/graphs/contributors).
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=ZipArchive/ZipArchive&type=Timeline)](https://star-history.com/#ZipArchive/ZipArchive&Timeline)
