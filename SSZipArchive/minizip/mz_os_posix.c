@@ -34,11 +34,7 @@
 #  include <sys/random.h>
 #endif
 #if defined(HAVE_LIBBSD)
-#  include <sys/types.h>
-#  ifndef __u_char_defined
-     typedef unsigned char  u_char;
-#  endif
-#  include <bsd/stdlib.h> /* arc4random_buf */
+#  include <stdlib.h> /* arc4random_buf */
 #endif
 
 /***************************************************************************/
@@ -117,7 +113,22 @@ void mz_os_utf8_string_delete(uint8_t **string) {
 
 /***************************************************************************/
 
-#if defined(HAVE_ARC4RANDOM_BUF)
+#if defined(HAVE_GETRANDOM)
+int32_t mz_os_rand(uint8_t *buf, int32_t size) {
+    int32_t left = size;
+    int32_t written = 0;
+
+    while (left > 0) {
+        written = getrandom(buf, left, 0);
+        if (written < 0)
+            return MZ_INTERNAL_ERROR;
+
+        buf += written;
+        left -= written;
+    }
+    return size - left;
+}
+#elif defined(HAVE_ARC4RANDOM_BUF)
 int32_t mz_os_rand(uint8_t *buf, int32_t size) {
     if (size < 0)
         return 0;
@@ -136,21 +147,6 @@ int32_t mz_os_rand(uint8_t *buf, int32_t size) {
     }
     for (; left > 0; left--, buf++) {
         *buf = arc4random() & 0xFF;
-    }
-    return size - left;
-}
-#elif defined(HAVE_GETRANDOM)
-int32_t mz_os_rand(uint8_t *buf, int32_t size) {
-    int32_t left = size;
-    int32_t written = 0;
-
-    while (left > 0) {
-        written = getrandom(buf, left, 0);
-        if (written < 0)
-            return MZ_INTERNAL_ERROR;
-
-        buf += written;
-        left -= written;
     }
     return size - left;
 }
@@ -222,8 +218,7 @@ int32_t mz_os_get_file_date(const char *path, time_t *modified_date, time_t *acc
         /* Not all systems allow stat'ing a file with / appended */
         len = strlen(path);
         name = (char *)malloc(len + 1);
-        strncpy(name, path, len);
-        name[len - 1] = 0;
+        strncpy(name, path, len + 1);
         mz_path_remove_slash(name);
 
         if (stat(name, &path_stat) == 0) {

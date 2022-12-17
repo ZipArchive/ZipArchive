@@ -188,6 +188,7 @@ static int32_t mz_zip_search_zip64_eocd(void *stream, const int64_t end_central_
     return err;
 }
 
+#ifdef HAVE_PKCRYPT
 /* Get PKWARE traditional encryption verifier */
 static uint16_t mz_zip_get_pk_verify(uint32_t dos_date, uint64_t crc, uint16_t flag)
 {
@@ -197,6 +198,7 @@ static uint16_t mz_zip_get_pk_verify(uint32_t dos_date, uint64_t crc, uint16_t f
         return ((dos_date >> 16) & 0xff) << 8 | ((dos_date >> 8) & 0xff);
     return ((crc >> 16) & 0xff) << 8 | ((crc >> 24) & 0xff);
 }
+#endif
 
 /* Get info about the current file in the zip file */
 static int32_t mz_zip_entry_read_header(void *stream, uint8_t local, mz_zip_file *file_info, void *file_extra_stream) {
@@ -787,8 +789,26 @@ static int32_t mz_zip_entry_write_header(void *stream, uint8_t local, mz_zip_fil
     }
 
     if (err == MZ_OK) {
-        if (mz_stream_write(stream, filename, filename_length) != filename_length)
-            err = MZ_WRITE_ERROR;
+        const char *backslash = NULL;
+        const char *next = filename;
+        int32_t left = filename_length;
+        
+        /* Ensure all slashes are written as forward slashes according to 4.4.17.1 */
+        while ((err == MZ_OK) && (backslash = strrchr(next, '\\')) != NULL) {
+            int32_t part_length = (int32_t)(backslash - next);
+
+            if (mz_stream_write(stream, next, part_length) != part_length ||
+                mz_stream_write(stream, "/", 1) != 1) 
+                err = MZ_WRITE_ERROR;
+
+            left -= part_length + 1;
+            next = backslash + 1;
+        }
+
+        if (err == MZ_OK && left > 0) {
+            if (mz_stream_write(stream, next, left) != left)
+                err = MZ_WRITE_ERROR;
+        }
 
         /* Ensure that directories have a slash appended to them for compatibility */
         if (err == MZ_OK && write_end_slash)
@@ -2500,11 +2520,11 @@ int32_t mz_zip_attrib_convert(uint8_t src_sys, uint32_t src_attrib, uint8_t targ
         if ((target_sys == MZ_HOST_SYSTEM_UNIX) || (target_sys == MZ_HOST_SYSTEM_OSX_DARWIN) || (target_sys == MZ_HOST_SYSTEM_RISCOS))
             return mz_zip_attrib_win32_to_posix(src_attrib, target_attrib);
     } else if ((src_sys == MZ_HOST_SYSTEM_UNIX) || (src_sys == MZ_HOST_SYSTEM_OSX_DARWIN) || (src_sys == MZ_HOST_SYSTEM_RISCOS)) {
-        if ((target_sys == MZ_HOST_SYSTEM_UNIX) || (target_sys == MZ_HOST_SYSTEM_OSX_DARWIN) || (target_sys == MZ_HOST_SYSTEM_RISCOS)) {
-            /* If high bytes are set, it contains unix specific attributes */
-            if ((src_attrib >> 16) != 0)
-                src_attrib >>= 16;
+        /* If high bytes are set, it contains unix specific attributes */
+        if ((src_attrib >> 16) != 0)
+            src_attrib >>= 16;
 
+        if ((target_sys == MZ_HOST_SYSTEM_UNIX) || (target_sys == MZ_HOST_SYSTEM_OSX_DARWIN) || (target_sys == MZ_HOST_SYSTEM_RISCOS)) {
             *target_attrib = src_attrib;
             return MZ_OK;
         }
