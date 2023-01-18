@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26F458C92978287400A7988C /* SSZipEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F458C82978287400A7988C /* SSZipEntry.m */; };
 		3775F3492276B14400A1840B /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */; };
 		3775F34A2276B14400A1840B /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */; };
 		3775F34B2276B14400A1840B /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */; };
@@ -154,6 +155,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		26F458C82978287400A7988C /* SSZipEntry.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSZipEntry.m; sourceTree = "<group>"; };
+		26F458CA297828A200A7988C /* SSZipEntry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSZipEntry.h; sourceTree = "<group>"; };
 		3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_pkcrypt.c; sourceTree = "<group>"; };
 		3775F3282276B14100A1840B /* mz_compat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_compat.c; sourceTree = "<group>"; };
 		3775F32A2276B14100A1840B /* mz_strm_os.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_strm_os.h; sourceTree = "<group>"; };
@@ -302,6 +305,8 @@
 			children = (
 				B423AE481C0DF7950004A2F1 /* SSZipArchive.h */,
 				93CE5D5D227FE5C50003464F /* SSZipCommon.h */,
+				26F458CA297828A200A7988C /* SSZipEntry.h */,
+				26F458C82978287400A7988C /* SSZipEntry.m */,
 				B423AE491C0DF7950004A2F1 /* SSZipArchive.m */,
 				B423AE3D1C0DF7950004A2F1 /* Info.plist */,
 				579FC27523292ABA007FEA3C /* include */,
@@ -675,6 +680,7 @@
 				3775F3852276B14400A1840B /* mz_strm_mem.c in Sources */,
 				3775F3D52276B14400A1840B /* mz_strm_wzaes.c in Sources */,
 				3775F3A52276B14400A1840B /* mz_zip.c in Sources */,
+				26F458C92978287400A7988C /* SSZipEntry.m in Sources */,
 				3775F36D2276B14400A1840B /* mz_crypt.c in Sources */,
 				3775F38D2276B14400A1840B /* mz_strm_split.c in Sources */,
 				3775F3492276B14400A1840B /* mz_strm_pkcrypt.c in Sources */,
