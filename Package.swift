@@ -26,6 +26,7 @@ let package = Package(
                 .define("HAVE_ZLIB"),
             ],
             linkerSettings: [
+                .unsafeFlags(["-Xlinker", "-no_application_extension"]),
                 .linkedLibrary("z"),
                 .linkedLibrary("iconv"),
                 .linkedFramework("Security"),
