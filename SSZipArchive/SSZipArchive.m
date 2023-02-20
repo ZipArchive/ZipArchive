@@ -31,6 +31,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 @interface NSString (SSZipArchive)
 - (NSString *)_sanitizedPath;
+- (BOOL)_escapesTargetDirectory:(NSString *)targetDirectory;
 @end
 
 @interface SSZipArchive ()
@@ -291,6 +292,32 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         progressHandler:(void (^_Nullable)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
       completionHandler:(void (^_Nullable)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
 {
+    return [self unzipFileAtPath:path
+                   toDestination:destination
+              preserveAttributes:preserveAttributes
+                       overwrite:overwrite
+         symlinksValidWithin:destination
+                  nestedZipLevel:nestedZipLevel
+                        password:password
+                           error:error
+                        delegate:delegate
+                 progressHandler:progressHandler
+               completionHandler:completionHandler];
+}
+
+
++ (BOOL)unzipFileAtPath:(NSString *)path
+          toDestination:(NSString *)destination
+     preserveAttributes:(BOOL)preserveAttributes
+              overwrite:(BOOL)overwrite
+    symlinksValidWithin:(nullable NSString *)symlinksValidWithin
+         nestedZipLevel:(NSInteger)nestedZipLevel
+               password:(nullable NSString *)password
+                  error:(NSError **)error
+               delegate:(nullable id<SSZipArchiveDelegate>)delegate
+        progressHandler:(void (^_Nullable)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
+      completionHandler:(void (^_Nullable)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler
+{
     // Guard against empty strings
     if (path.length == 0 || destination.length == 0)
     {
@@ -525,6 +552,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                        toDestination:fullPath.stringByDeletingLastPathComponent
                                   preserveAttributes:preserveAttributes
                                            overwrite:overwrite
+                                 symlinksValidWithin:symlinksValidWithin
                                       nestedZipLevel:nestedZipLevel - 1
                                             password:password
                                                error:nil
@@ -637,34 +665,47 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                     break;
                 }
                 
-                // Check if the symlink exists and delete it if we're overwriting
-                if (overwrite)
-                {
-                    if ([fileManager fileExistsAtPath:fullPath])
-                    {
-                        NSError *localError = nil;
-                        BOOL removeSuccess = [fileManager removeItemAtPath:fullPath error:&localError];
-                        if (!removeSuccess)
-                        {
-                            NSString *message = [NSString stringWithFormat:@"Failed to delete existing symbolic link at \"%@\"", localError.localizedDescription];
-                            NSLog(@"[SSZipArchive] %@", message);
-                            success = NO;
-                            unzippingError = [NSError errorWithDomain:SSZipArchiveErrorDomain code:localError.code userInfo:@{NSLocalizedDescriptionKey: message}];
-                        }
-                    }
+                // compose symlink full path
+                NSString *symlinkFullDestinationPath = destinationPath;
+                if (![symlinkFullDestinationPath isAbsolutePath]) {
+                    symlinkFullDestinationPath = [[fullPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:destinationPath];
                 }
                 
-                // Create the symbolic link (making sure it stays relative if it was relative before)
-                int symlinkError = symlink([destinationPath cStringUsingEncoding:NSUTF8StringEncoding],
-                                           [fullPath cStringUsingEncoding:NSUTF8StringEncoding]);
-                
-                if (symlinkError != 0)
-                {
-                    // Bubble the error up to the completion handler
-                    NSString *message = [NSString stringWithFormat:@"Failed to create symbolic link at \"%@\" to \"%@\" - symlink() error code: %d", fullPath, destinationPath, errno];
+                if (symlinksValidWithin != nil && [symlinkFullDestinationPath _escapesTargetDirectory: symlinksValidWithin]) {
+                    NSString *message = [NSString stringWithFormat:@"Symlink escapes target directory \"~%@ -> %@\"", strPath, destinationPath];
                     NSLog(@"[SSZipArchive] %@", message);
                     success = NO;
-                    unzippingError = [NSError errorWithDomain:NSPOSIXErrorDomain code:symlinkError userInfo:@{NSLocalizedDescriptionKey: message}];
+                    unzippingError = [NSError errorWithDomain:SSZipArchiveErrorDomain code:SSZipArchiveErrorCodeSymlinkEscapesTargetDirectory userInfo:@{NSLocalizedDescriptionKey: message}];
+                } else {
+                    // Check if the symlink exists and delete it if we're overwriting
+                    if (overwrite)
+                    {
+                        if ([fileManager fileExistsAtPath:fullPath])
+                        {
+                            NSError *localError = nil;
+                            BOOL removeSuccess = [fileManager removeItemAtPath:fullPath error:&localError];
+                            if (!removeSuccess)
+                            {
+                                NSString *message = [NSString stringWithFormat:@"Failed to delete existing symbolic link at \"%@\"", localError.localizedDescription];
+                                NSLog(@"[SSZipArchive] %@", message);
+                                success = NO;
+                                unzippingError = [NSError errorWithDomain:SSZipArchiveErrorDomain code:localError.code userInfo:@{NSLocalizedDescriptionKey: message}];
+                            }
+                        }
+                    }
+                    
+                    // Create the symbolic link (making sure it stays relative if it was relative before)
+                    int symlinkError = symlink([destinationPath cStringUsingEncoding:NSUTF8StringEncoding],
+                                               [fullPath cStringUsingEncoding:NSUTF8StringEncoding]);
+                    
+                    if (symlinkError != 0)
+                    {
+                        // Bubble the error up to the completion handler
+                        NSString *message = [NSString stringWithFormat:@"Failed to create symbolic link at \"%@\" to \"%@\" - symlink() error code: %d", fullPath, destinationPath, errno];
+                        NSLog(@"[SSZipArchive] %@", message);
+                        success = NO;
+                        unzippingError = [NSError errorWithDomain:NSPOSIXErrorDomain code:symlinkError userInfo:@{NSLocalizedDescriptionKey: message}];
+                    }
                 }
             }
             
@@ -1428,6 +1469,28 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
 #endif
     
     return strPath;
+}
+
+/// Detects if the path represented in this string is pointing outside of the targetDirectory passed as argument.
+///
+/// Helps detecting and avoiding a security vulnerability described here:
+/// https://nvd.nist.gov/vuln/detail/CVE-2022-36943
+- (BOOL)_escapesTargetDirectory:(NSString *)targetDirectory {
+    NSString *standardizedPath = [[self stringByStandardizingPath] stringByResolvingSymlinksInPath];
+    NSString *standardizedTargetPath = [[targetDirectory stringByStandardizingPath] stringByResolvingSymlinksInPath];
+    
+    NSArray *targetPathComponents = [standardizedTargetPath pathComponents];
+    NSArray *pathComponents = [standardizedPath pathComponents];
+    
+    if (pathComponents.count < targetPathComponents.count) return YES;
+    
+    for (int idx = 0; idx < targetPathComponents.count; idx++) {
+        if (![pathComponents[idx] isEqual: targetPathComponents[idx]]) {
+            return YES;
+        }
+    }
+    
+    return NO;
 }
 
 @end
