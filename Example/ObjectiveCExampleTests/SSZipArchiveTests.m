@@ -363,7 +363,7 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *outputPath = [self _cachesPath:@"SymbolicLink"];
 
     id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
-    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath preserveAttributes:YES overwrite:YES symlinksValidWithin:nil nestedZipLevel:0 password:nil error:nil delegate:delegate progressHandler:nil completionHandler:nil];
     XCTAssertTrue(success, @"unzip failure");
     
     NSString *testSymlink = [outputPath stringByAppendingPathComponent:@"SymbolicLink/Xcode.app"];
@@ -372,6 +372,21 @@ int twentyMB = 20 * 1024 * 1024;
     NSDictionary *info = [[NSFileManager defaultManager] attributesOfItemAtPath: testSymlink error: &error];
     BOOL fileIsSymbolicLink = info[NSFileType] == NSFileTypeSymbolicLink;
     XCTAssertTrue(fileIsSymbolicLink, @"Symbolic links should persist from the original archive to the outputted files.");
+}
+
+- (void)testUnzippingWithSymlinkedFileEscapingOutputDirectory {
+
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"SymbolicLink" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"SymbolicLink"];
+
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    NSError *error = nil;
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:nil error:&error delegate:delegate];
+    
+    XCTAssertFalse(success, @"Escaping symlink unpacked");
+    XCTAssertNotNil(error, @"Error not reported");
+    XCTAssertEqualObjects(error.domain, SSZipArchiveErrorDomain, @"Invalid error domain");
+    XCTAssertEqual(error.code, SSZipArchiveErrorCodeSymlinkEscapesTargetDirectory, @"Invalid error code");
 }
 
 - (void)testUnzippingWithRelativeSymlink {
