@@ -16,12 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const SSZipArchiveErrorDomain;
 typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
-    SSZipArchiveErrorCodeFailedOpenZipFile      = -1,
-    SSZipArchiveErrorCodeFailedOpenFileInZip    = -2,
-    SSZipArchiveErrorCodeFileInfoNotLoadable    = -3,
-    SSZipArchiveErrorCodeFileContentNotReadable = -4,
-    SSZipArchiveErrorCodeFailedToWriteFile      = -5,
-    SSZipArchiveErrorCodeInvalidArguments       = -6,
+    SSZipArchiveErrorCodeFailedOpenZipFile             = -1,
+    SSZipArchiveErrorCodeFailedOpenFileInZip           = -2,
+    SSZipArchiveErrorCodeFileInfoNotLoadable           = -3,
+    SSZipArchiveErrorCodeFileContentNotReadable        = -4,
+    SSZipArchiveErrorCodeFailedToWriteFile             = -5,
+    SSZipArchiveErrorCodeInvalidArguments              = -6,
+    SSZipArchiveErrorCodeSymlinkEscapesTargetDirectory = -7,
 };
 
 @protocol SSZipArchiveDelegate;
@@ -76,6 +77,18 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
           toDestination:(NSString *)destination
      preserveAttributes:(BOOL)preserveAttributes
               overwrite:(BOOL)overwrite
+         nestedZipLevel:(NSInteger)nestedZipLevel
+               password:(nullable NSString *)password
+                  error:(NSError **)error
+               delegate:(nullable id<SSZipArchiveDelegate>)delegate
+        progressHandler:(void (^_Nullable)(NSString *entry, unz_file_info zipInfo, long entryNumber, long total))progressHandler
+      completionHandler:(void (^_Nullable)(NSString *path, BOOL succeeded, NSError * _Nullable error))completionHandler;
+
++ (BOOL)unzipFileAtPath:(NSString *)path
+          toDestination:(NSString *)destination
+     preserveAttributes:(BOOL)preserveAttributes
+              overwrite:(BOOL)overwrite
+    symlinksValidWithin:(nullable NSString *)symlinksValidWithin
          nestedZipLevel:(NSInteger)nestedZipLevel
                password:(nullable NSString *)password
                   error:(NSError **)error
