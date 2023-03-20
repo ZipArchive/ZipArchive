@@ -14,8 +14,8 @@
 /***************************************************************************/
 
 /* MZ_VERSION */
-#define MZ_VERSION                      ("3.0.4")
-#define MZ_VERSION_BUILD                (030004)
+#define MZ_VERSION                      ("3.0.7")
+#define MZ_VERSION_BUILD                (030007)
 
 /* MZ_ERROR */
 #define MZ_OK                           (0)  /* zlib */
@@ -126,8 +126,14 @@
 #define MZ_HASH_MD5_SIZE                (16)
 #define MZ_HASH_SHA1                    (20)
 #define MZ_HASH_SHA1_SIZE               (20)
+#define MZ_HASH_SHA224                  (22)
+#define MZ_HASH_SHA224_SIZE             (28)
 #define MZ_HASH_SHA256                  (23)
 #define MZ_HASH_SHA256_SIZE             (32)
+#define MZ_HASH_SHA384                  (24)
+#define MZ_HASH_SHA384_SIZE             (48)
+#define MZ_HASH_SHA512                  (25)
+#define MZ_HASH_SHA512_SIZE             (64)
 #define MZ_HASH_MAX_SIZE                (256)
 
 /* MZ_ENCODING */

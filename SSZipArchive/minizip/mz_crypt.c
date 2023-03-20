@@ -14,29 +14,15 @@
 #include "mz_crypt.h"
 
 #if defined(HAVE_ZLIB)
-#  include "zlib.h"
-#  if defined(ZLIBNG_VERNUM) && !defined(ZLIB_COMPAT)
+#  if !defined(ZLIB_COMPAT)
 #    include "zlib-ng.h"
+#    define ZLIB_PREFIX(x) zng_ ## x
+#  else
+#    include "zlib.h"
+#    define ZLIB_PREFIX(x) x
 #  endif
 #elif defined(HAVE_LZMA)
 #  include "lzma.h"
-#endif
-
-/***************************************************************************/
-/* Define z_crc_t in zlib 1.2.5 and less or if using zlib-ng */
-
-#if defined(HAVE_ZLIB) && defined(ZLIBNG_VERNUM)
-#  if defined(ZLIB_COMPAT)
-#    define ZLIB_PREFIX(x) x
-#  else
-#    define ZLIB_PREFIX(x) zng_ ## x
-#  endif
-   typedef uint32_t z_crc_t;
-#elif defined(HAVE_ZLIB)
-#  define ZLIB_PREFIX(x) x
-#  if (ZLIB_VERNUM < 0x1270)
-     typedef unsigned long z_crc_t;
-#  endif
 #endif
 
 /***************************************************************************/
@@ -49,6 +35,12 @@ int32_t mz_crypt_rand(uint8_t *buf, int32_t size) {
 
 uint32_t mz_crypt_crc32_update(uint32_t value, const uint8_t *buf, int32_t size) {
 #if defined(HAVE_ZLIB)
+   /* Define z_crc_t in zlib 1.2.5 and less or if using zlib-ng */
+#  if (ZLIB_VERNUM < 0x1270)
+    typedef unsigned long z_crc_t;
+#  else
+    typedef uint32_t z_crc_t;
+#  endif
     return (uint32_t)ZLIB_PREFIX(crc32)((z_crc_t)value, buf, (uInt)size);
 #elif defined(HAVE_LZMA)
     return (uint32_t)lzma_crc32(buf, (size_t)size, (uint32_t)value);

@@ -41,8 +41,9 @@ extern "C" {
                                          (MZ_VERSION_MADEBY_ZIP_VERSION))
 
 #define MZ_PATH_SLASH_UNIX              ('/')
+#define MZ_PATH_SLASH_WINDOWS           ('\\')
 #if defined(_WIN32)
-#  define MZ_PATH_SLASH_PLATFORM        ('\\')
+#  define MZ_PATH_SLASH_PLATFORM        (MZ_PATH_SLASH_WINDOWS)
 #else
 #  define MZ_PATH_SLASH_PLATFORM        (MZ_PATH_SLASH_UNIX)
 #endif

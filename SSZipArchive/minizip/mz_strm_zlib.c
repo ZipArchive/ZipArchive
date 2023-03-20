@@ -13,14 +13,15 @@
 #include "mz_strm.h"
 #include "mz_strm_zlib.h"
 
-#include "zlib.h"
-#if defined(ZLIBNG_VERNUM) && !defined(ZLIB_COMPAT)
+#if !defined(ZLIB_COMPAT)
 #  include "zlib-ng.h"
+#else
+#  include "zlib.h"
 #endif
 
 /***************************************************************************/
 
-#if defined(ZLIBNG_VERNUM) && !defined(ZLIB_COMPAT)
+#if !defined(ZLIB_COMPAT)
 #  define ZLIB_PREFIX(x) zng_ ## x
    typedef zng_stream zlib_stream;
 #else
