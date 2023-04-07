@@ -1163,7 +1163,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 // directory
                 if (![fileManager enumeratorAtPath:fullFilePath].nextObject) {
                     // empty directory
-                    success &= [zipArchive writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:password];
+                    success &= [zipArchive writeFolderAtPath:fullFilePath withFolderName:fileName withPassword:nil];
                 }
             }
             if (progressHandler) {
