@@ -1448,7 +1448,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo)
     strPath = [NSURL URLWithString:strPath].standardizedURL.absoluteString;
     
     // Remove the "file:///" scheme
-    strPath = [strPath substringFromIndex:8];
+    strPath = strPath.length < 8 ? @"" : [strPath substringFromIndex:8];
     
     // Remove the percent-encoding
 #if (__MAC_OS_X_VERSION_MIN_REQUIRED >= 1090 || __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000 || __WATCH_OS_VERSION_MIN_REQUIRED >= 20000 || __TV_OS_VERSION_MIN_REQUIRED >= 90000)
