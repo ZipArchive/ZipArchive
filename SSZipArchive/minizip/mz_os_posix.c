@@ -1,7 +1,7 @@
 /* mz_os_posix.c -- System functions for posix
    part of the minizip-ng project
 
-   Copyright (C) 2010-2021 Nathan Moinvaziri
+   Copyright (C) Nathan Moinvaziri
      https://github.com/zlib-ng/minizip-ng
 
    This program is distributed under the terms of the same license as zlib.
@@ -49,7 +49,7 @@ uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
     uint8_t *string_utf8 = NULL;
     uint8_t *string_utf8_ptr = NULL;
 
-    if (string == NULL)
+    if (!string)
         return NULL;
 
     if (encoding == MZ_ENCODING_CODEPAGE_437)
@@ -71,12 +71,10 @@ uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
 
     string_length = strlen(string);
     string_utf8_size = string_length * 2;
-    string_utf8 = (uint8_t *)MZ_ALLOC((int32_t)(string_utf8_size + 1));
+    string_utf8 = (uint8_t *)calloc((int32_t)(string_utf8_size + 1), sizeof(char));
     string_utf8_ptr = string_utf8;
 
     if (string_utf8) {
-        memset(string_utf8, 0, string_utf8_size + 1);
-
         result = iconv(cd, (char **)&string, &string_length,
                 (char **)&string_utf8_ptr, &string_utf8_size);
     }
@@ -84,7 +82,7 @@ uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
     iconv_close(cd);
 
     if (result == (size_t)-1) {
-        MZ_FREE(string_utf8);
+        free(string_utf8);
         string_utf8 = NULL;
     }
 
@@ -92,21 +90,13 @@ uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
 }
 #else
 uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
-    size_t string_length = 0;
-    uint8_t *string_copy = NULL;
-
-    string_length = strlen(string);
-    string_copy = (uint8_t *)MZ_ALLOC((int32_t)(string_length + 1));
-    strncpy((char *)string_copy, string, string_length);
-    string_copy[string_length] = 0;
-
-    return string_copy;
+    return (uint8_t *)strdup(string);
 }
 #endif
 
 void mz_os_utf8_string_delete(uint8_t **string) {
-    if (string != NULL) {
-        MZ_FREE(*string);
+    if (string) {
+        free(*string);
         *string = NULL;
     }
 }
@@ -209,25 +199,22 @@ int64_t mz_os_get_file_size(const char *path) {
 int32_t mz_os_get_file_date(const char *path, time_t *modified_date, time_t *accessed_date, time_t *creation_date) {
     struct stat path_stat;
     char *name = NULL;
-    size_t len = 0;
     int32_t err = MZ_INTERNAL_ERROR;
 
     memset(&path_stat, 0, sizeof(path_stat));
 
     if (strcmp(path, "-") != 0) {
         /* Not all systems allow stat'ing a file with / appended */
-        len = strlen(path);
-        name = (char *)malloc(len + 1);
-        strncpy(name, path, len + 1);
+        name = strdup(path);
         mz_path_remove_slash(name);
 
         if (stat(name, &path_stat) == 0) {
-            if (modified_date != NULL)
+            if (modified_date)
                 *modified_date = path_stat.st_mtime;
-            if (accessed_date != NULL)
+            if (accessed_date)
                 *accessed_date = path_stat.st_atime;
             /* Creation date not supported */
-            if (creation_date != NULL)
+            if (creation_date)
                 *creation_date = 0;
 
             err = MZ_OK;
@@ -290,13 +277,13 @@ DIR* mz_os_open_dir(const char *path) {
 }
 
 struct dirent* mz_os_read_dir(DIR *dir) {
-    if (dir == NULL)
+    if (!dir)
         return NULL;
     return readdir(dir);
 }
 
 int32_t mz_os_close_dir(DIR *dir) {
-    if (dir == NULL)
+    if (!dir)
         return MZ_PARAM_ERROR;
     if (closedir(dir) == -1)
         return MZ_INTERNAL_ERROR;
