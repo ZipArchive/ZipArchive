@@ -1,7 +1,7 @@
 /* mz_compat.h -- Backwards compatible interface for older versions
    part of the minizip-ng project
 
-   Copyright (C) 2010-2021 Nathan Moinvaziri
+   Copyright (C) Nathan Moinvaziri
      https://github.com/zlib-ng/minizip-ng
    Copyright (C) 1998-2010 Gilles Vollant
      https://www.winimage.com/zLibDll/minizip.html
@@ -34,11 +34,9 @@ extern "C" {
 #  endif
 #endif
 #endif
-
 #ifndef MAX_WBITS
-#define MAX_WBITS     15 //removed () to surpress warning about ambigious expansion of macro -SSZipArchive
+#define MAX_WBITS     15 //removed () to suppress warning about ambiguous expansion of macro -SSZipArchive
 #endif
-
 #ifndef DEF_MEM_LEVEL
 #define DEF_MEM_LEVEL (8)
 #endif
@@ -158,10 +156,8 @@ typedef const char *zipcharpc;
 #define ZIP_INTERNALERROR               (-104)
 
 #ifndef Z_DEFLATED
-#define Z_DEFLATED                      8 //removed () to surpress warning about ambigious expansion of macro -SSZipArchive
+#define Z_DEFLATED                      8 //removed () to suppress warning about ambiguous expansion of macro -SSZipArchive
 #endif
-
-
 #define Z_BZIP2ED                       (12)
 
 #define APPEND_STATUS_CREATE            (0)

@@ -637,6 +637,8 @@ int twentyMB = 20 * 1024 * 1024;
       @"..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp\\test.txt": @"tmp/test.txt",
       // relative path
       @"a/b/../c.txt": @"a/c.txt",
+      // path traversal with slash (#680)
+      @"/..": @"",
       // path traversal without slash
       @"..": @"",
       // permissions override

@@ -1,13 +1,12 @@
 /* mz_strm_split.c -- Stream for split files
    part of the minizip-ng project
 
-   Copyright (C) 2010-2021 Nathan Moinvaziri
+   Copyright (C) Nathan Moinvaziri
      https://github.com/zlib-ng/minizip-ng
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
 */
-
 
 #include "mz.h"
 #include "mz_os.h"
@@ -53,7 +52,6 @@ typedef struct mz_stream_split_s {
     int64_t     total_out_disk;
     int32_t     mode;
     char        *path_cd;
-    uint32_t    path_cd_size;
     char        *path_disk;
     uint32_t    path_disk_size;
     int32_t     number_disk;
@@ -67,7 +65,7 @@ typedef struct mz_stream_split_s {
 #if 0
 #  define mz_stream_split_print printf
 #else
-#  define mz_stream_split_print(fmt,...)
+#  define mz_stream_split_print(fmt, ...)
 #endif
 
 /***************************************************************************/
@@ -79,7 +77,6 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk) {
     int32_t i = 0;
     int32_t err = MZ_OK;
     int16_t disk_part = 0;
-
 
     /* Check if we are reading or writing a disk part or the cd disk */
     if (number_disk >= 0) {
@@ -183,23 +180,18 @@ int32_t mz_stream_split_open(void *stream, const char *path, int32_t mode) {
     int32_t number_disk = 0;
 
     split->mode = mode;
+    split->path_cd = strdup(path);
 
-    split->path_cd_size = (uint32_t)strlen(path) + 1;
-    split->path_cd = (char *)MZ_ALLOC(split->path_cd_size);
-
-    if (split->path_cd == NULL)
+    if (!split->path_cd)
         return MZ_MEM_ERROR;
-
-    strncpy(split->path_cd, path, split->path_cd_size - 1);
-    split->path_cd[split->path_cd_size - 1] = 0;
 
     mz_stream_split_print("Split - Open - %s (disk %" PRId32 ")\n", split->path_cd, number_disk);
 
     split->path_disk_size = (uint32_t)strlen(path) + 10;
-    split->path_disk = (char *)MZ_ALLOC(split->path_disk_size);
+    split->path_disk = (char *)malloc(split->path_disk_size);
 
-    if (split->path_disk == NULL) {
-        MZ_FREE(split->path_cd);
+    if (!split->path_disk) {
+        free(split->path_cd);
         return MZ_MEM_ERROR;
     }
 
@@ -287,6 +279,8 @@ int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size) {
                 err = mz_stream_split_goto_disk(stream, number_disk);
                 if (err != MZ_OK)
                     return err;
+
+                position = 0;
             }
 
             if (split->number_disk != -1) {
@@ -308,10 +302,9 @@ int32_t mz_stream_split_write(void *stream, const void *buf, int32_t size) {
         split->total_out += written;
         split->total_out_disk += written;
 
-        if (position == split->current_disk_size) {
-            split->current_disk_size += written;
-            position = split->current_disk_size;
-        }
+        position += written;
+        if (position > split->current_disk_size)
+            split->current_disk_size = position;
     }
 
     return size - bytes_left;
@@ -406,12 +399,10 @@ int32_t mz_stream_split_set_prop_int64(void *stream, int32_t prop, int64_t value
 void *mz_stream_split_create(void **stream) {
     mz_stream_split *split = NULL;
 
-    split = (mz_stream_split *)MZ_ALLOC(sizeof(mz_stream_split));
-    if (split != NULL) {
-        memset(split, 0, sizeof(mz_stream_split));
+    split = (mz_stream_split *)calloc(1, sizeof(mz_stream_split));
+    if (split)
         split->stream.vtbl = &mz_stream_split_vtbl;
-    }
-    if (stream != NULL)
+    if (stream)
         *stream = split;
 
     return split;
@@ -419,16 +410,16 @@ void *mz_stream_split_create(void **stream) {
 
 void mz_stream_split_delete(void **stream) {
     mz_stream_split *split = NULL;
-    if (stream == NULL)
+    if (!stream)
         return;
     split = (mz_stream_split *)*stream;
-    if (split != NULL) {
+    if (split) {
         if (split->path_cd)
-            MZ_FREE(split->path_cd);
+            free(split->path_cd);
         if (split->path_disk)
-            MZ_FREE(split->path_disk);
+            free(split->path_disk);
 
-        MZ_FREE(split);
+        free(split);
     }
     *stream = NULL;
 }

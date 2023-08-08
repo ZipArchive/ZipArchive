@@ -1,7 +1,7 @@
 /* mz.h -- Errors codes, zip flags and magic
    part of the minizip-ng project
 
-   Copyright (C) 2010-2021 Nathan Moinvaziri
+   Copyright (C) Nathan Moinvaziri
      https://github.com/zlib-ng/minizip-ng
 
    This program is distributed under the terms of the same license as zlib.
@@ -14,8 +14,8 @@
 /***************************************************************************/
 
 /* MZ_VERSION */
-#define MZ_VERSION                      ("3.0.7")
-#define MZ_VERSION_BUILD                (030007)
+#define MZ_VERSION                      ("3.0.9")
+#define MZ_VERSION_BUILD                (030009)
 
 /* MZ_ERROR */
 #define MZ_OK                           (0)  /* zlib */
@@ -146,13 +146,6 @@
 /* MZ_UTILITY */
 #define MZ_UNUSED(SYMBOL)               ((void)SYMBOL)
 
-#ifndef MZ_CUSTOM_ALLOC
-#define MZ_ALLOC(SIZE)                  (malloc((SIZE)))
-#endif
-#ifndef MZ_CUSTOM_FREE
-#define MZ_FREE(PTR)                    (free(PTR))
-#endif
-
 #if defined(_WIN32) && defined(MZ_EXPORTS)
 #define MZ_EXPORT __declspec(dllexport)
 #else
@@ -175,25 +168,25 @@
 #endif
 
 #ifndef INT8_MAX
-typedef signed char        int8_t;
+typedef signed char int8_t;
 #endif
 #ifndef INT16_MAX
-typedef short              int16_t;
+typedef short int16_t;
 #endif
 #ifndef INT32_MAX
-typedef int                int32_t;
+typedef int int32_t;
 #endif
 #ifndef INT64_MAX
-typedef long long          int64_t;
+typedef long long int64_t;
 #endif
 #ifndef UINT8_MAX
-typedef unsigned char      uint8_t;
+typedef unsigned char uint8_t;
 #endif
 #ifndef UINT16_MAX
-typedef unsigned short     uint16_t;
+typedef unsigned short uint16_t;
 #endif
 #ifndef UINT32_MAX
-typedef unsigned int       uint32_t;
+typedef unsigned int uint32_t;
 #endif
 #ifndef UINT64_MAX
 typedef unsigned long long uint64_t;
@@ -208,13 +201,13 @@ typedef unsigned long long uint64_t;
 #endif
 
 #ifndef PRId8
-#  define PRId8  "hhd"
+#  define PRId8 "hhd"
 #endif
 #ifndef PRIu8
-#  define PRIu8  "hhu"
+#  define PRIu8 "hhu"
 #endif
 #ifndef PRIx8
-#  define PRIx8  "hhx"
+#  define PRIx8 "hhx"
 #endif
 #ifndef PRId16
 #  define PRId16 "hd"
@@ -257,22 +250,22 @@ typedef unsigned long long uint64_t;
 #endif
 
 #ifndef INT16_MAX
-#  define INT16_MAX   32767
+#  define INT16_MAX 32767
 #endif
 #ifndef INT32_MAX
-#  define INT32_MAX   2147483647L
+#  define INT32_MAX 2147483647L
 #endif
 #ifndef INT64_MAX
-#  define INT64_MAX   9223372036854775807LL
+#  define INT64_MAX 9223372036854775807LL
 #endif
 #ifndef UINT16_MAX
-#  define UINT16_MAX  65535U
+#  define UINT16_MAX 65535U
 #endif
 #ifndef UINT32_MAX
-#  define UINT32_MAX  4294967295UL
+#  define UINT32_MAX 4294967295UL
 #endif
 #ifndef UINT64_MAX
-#  define UINT64_MAX  18446744073709551615ULL
+#  define UINT64_MAX 18446744073709551615ULL
 #endif
 
 /***************************************************************************/
