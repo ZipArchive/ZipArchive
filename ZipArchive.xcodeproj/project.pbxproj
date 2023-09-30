@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		330100232AC89AA8001431B0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 330100222AC89AA8001431B0 /* PrivacyInfo.xcprivacy */; };
+		330100242AC89AA8001431B0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 330100222AC89AA8001431B0 /* PrivacyInfo.xcprivacy */; };
+		330100252AC89AA8001431B0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 330100222AC89AA8001431B0 /* PrivacyInfo.xcprivacy */; };
+		330100262AC89AA8001431B0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 330100222AC89AA8001431B0 /* PrivacyInfo.xcprivacy */; };
 		3775F3492276B14400A1840B /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */; };
 		3775F34A2276B14400A1840B /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */; };
 		3775F34B2276B14400A1840B /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */; };
@@ -154,6 +158,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		330100222AC89AA8001431B0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_pkcrypt.c; sourceTree = "<group>"; };
 		3775F3282276B14100A1840B /* mz_compat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_compat.c; sourceTree = "<group>"; };
 		3775F32A2276B14100A1840B /* mz_strm_os.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_strm_os.h; sourceTree = "<group>"; };
@@ -250,6 +255,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		330100212AC89A8A001431B0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				330100222AC89AA8001431B0 /* PrivacyInfo.xcprivacy */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		3775F4242276C5C000A1840B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -300,6 +313,7 @@
 		B423AE251C0DF7950004A2F1 /* SSZipArchive */ = {
 			isa = PBXGroup;
 			children = (
+				330100212AC89A8A001431B0 /* Supporting Files */,
 				B423AE481C0DF7950004A2F1 /* SSZipArchive.h */,
 				93CE5D5D227FE5C50003464F /* SSZipCommon.h */,
 				B423AE491C0DF7950004A2F1 /* SSZipArchive.m */,
@@ -571,6 +585,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				330100252AC89AA8001431B0 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -578,6 +593,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				330100262AC89AA8001431B0 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,6 +601,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				330100242AC89AA8001431B0 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -592,6 +609,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				330100232AC89AA8001431B0 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
