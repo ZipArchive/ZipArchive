@@ -19,6 +19,8 @@ let package = Package(
         .target(
             name: "ZipArchive",
             path: "SSZipArchive",
+            resources: [
+                .process("Supporting Files/PrivacyInfo.xcprivacy")],
             cSettings: [
                 .define("HAVE_INTTYPES_H"),
                 .define("HAVE_PKCRYPT"),
