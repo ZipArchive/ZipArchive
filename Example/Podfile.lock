@@ -1,5 +1,5 @@
 PODS:
-  - SSZipArchive (2.5.4)
+  - SSZipArchive (2.5.5)
 
 DEPENDENCIES:
   - SSZipArchive (from `..`)
@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: ".."
 
 SPEC CHECKSUMS:
-  SSZipArchive: 285b618a158ebc421039c22db5b77d345c7c03db
+  SSZipArchive: c69881e8ac5521f0e622291387add5f60f30f3c4
 
 PODFILE CHECKSUM: 570af5c3534cb262ca98be3dedfff7caa40f00ed
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.14.3
