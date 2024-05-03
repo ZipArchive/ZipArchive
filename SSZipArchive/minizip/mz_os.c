@@ -17,6 +17,7 @@
 #include "mz_strm_os.h"
 
 #include <ctype.h> /* tolower */
+#include <string.h>
 
 /***************************************************************************/
 

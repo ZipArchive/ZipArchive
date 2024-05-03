@@ -20,7 +20,7 @@ extern "C" {
 uint32_t mz_crypt_crc32_update(uint32_t value, const uint8_t *buf, int32_t size);
 
 int32_t  mz_crypt_pbkdf2(uint8_t *password, int32_t password_length, uint8_t *salt,
-            int32_t salt_length, uint16_t iteration_count, uint8_t *key, uint16_t key_length);
+            int32_t salt_length, uint32_t iteration_count, uint8_t *key, uint16_t key_length);
 
 /***************************************************************************/
 

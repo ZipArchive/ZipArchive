@@ -104,13 +104,13 @@ uint32_t mz_crypt_crc32_update(uint32_t value, const uint8_t *buf, int32_t size)
 
 #if defined(HAVE_WZAES)
 int32_t  mz_crypt_pbkdf2(uint8_t *password, int32_t password_length, uint8_t *salt,
-    int32_t salt_length, uint16_t iteration_count, uint8_t *key, uint16_t key_length) {
+    int32_t salt_length, uint32_t iteration_count, uint8_t *key, uint16_t key_length) {
     void *hmac1 = NULL;
     void *hmac2 = NULL;
     void *hmac3 = NULL;
     int32_t err = MZ_OK;
     uint16_t i = 0;
-    uint16_t j = 0;
+    uint32_t j = 0;
     uint16_t k = 0;
     uint16_t block_count = 0;
     uint8_t uu[MZ_HASH_SHA1_SIZE];
