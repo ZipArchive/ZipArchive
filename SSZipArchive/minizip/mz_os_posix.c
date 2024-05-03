@@ -90,7 +90,7 @@ uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
 }
 #else
 uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
-    return strdup(string);
+    return (uint8_t *)strdup(string);
 }
 #endif
 
@@ -199,7 +199,6 @@ int64_t mz_os_get_file_size(const char *path) {
 int32_t mz_os_get_file_date(const char *path, time_t *modified_date, time_t *accessed_date, time_t *creation_date) {
     struct stat path_stat;
     char *name = NULL;
-    size_t len = 0;
     int32_t err = MZ_INTERNAL_ERROR;
 
     memset(&path_stat, 0, sizeof(path_stat));
