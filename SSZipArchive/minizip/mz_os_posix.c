@@ -17,7 +17,7 @@
 #if defined(HAVE_ICONV)
 #include <iconv.h>
 #endif
-
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -90,7 +90,7 @@ uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
 }
 #else
 uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
-    return (uint8_t *)strdup(string);
+    return strdup(string);
 }
 #endif
 
@@ -199,6 +199,7 @@ int64_t mz_os_get_file_size(const char *path) {
 int32_t mz_os_get_file_date(const char *path, time_t *modified_date, time_t *accessed_date, time_t *creation_date) {
     struct stat path_stat;
     char *name = NULL;
+    size_t len = 0;
     int32_t err = MZ_INTERNAL_ERROR;
 
     memset(&path_stat, 0, sizeof(path_stat));
@@ -342,8 +343,15 @@ uint64_t mz_os_ms_time(void) {
 
     ts.tv_sec = mts.tv_sec;
     ts.tv_nsec = mts.tv_nsec;
-#else
+#elif !defined(_POSIX_MONOTONIC_CLOCK) || _POSIX_MONOTONIC_CLOCK < 0
+    clock_gettime(CLOCK_REALTIME, &ts);
+#elif _POSIX_MONOTONIC_CLOCK > 0
     clock_gettime(CLOCK_MONOTONIC, &ts);
+#else
+    if (sysconf(_SC_MONOTONIC_CLOCK) > 0)
+        clock_gettime(CLOCK_MONOTONIC, &ts);
+    else
+        clock_gettime(CLOCK_REALTIME, &ts);
 #endif
 
     return ((uint64_t)ts.tv_sec * 1000) + ((uint64_t)ts.tv_nsec / 1000000);

@@ -106,8 +106,10 @@ int32_t mz_stream_wzaes_open(void *stream, const char *path, int32_t mode) {
     mz_crypt_pbkdf2((uint8_t *)password, password_length, salt_value, salt_length,
         MZ_AES_KEYING_ITERATIONS, kbuf, 2 * key_length + MZ_AES_PW_VERIFY_SIZE);
 
-    /* Initialize the encryption nonce and buffer pos */
+    /* Initialize the buffer pos */
     wzaes->crypt_pos = MZ_AES_BLOCK_SIZE;
+
+    /* Use fixed zeroed IV/nonce for CTR mode */
     memset(wzaes->nonce, 0, sizeof(wzaes->nonce));
 
     /* Initialize for encryption using key 1 */
@@ -171,7 +173,7 @@ static int32_t mz_stream_wzaes_ctr_encrypt(void *stream, uint8_t *buf, int32_t s
             while (j < 8 && !++wzaes->nonce[j])
                 j += 1;
 
-            /* Encrypt the nonce to form next xor buffer */
+            /* Encrypt the nonce using ECB mode to form next xor buffer */
             memcpy(wzaes->crypt_block, wzaes->nonce, MZ_AES_BLOCK_SIZE);
             mz_crypt_aes_encrypt(wzaes->aes, wzaes->crypt_block, sizeof(wzaes->crypt_block));
             pos = 0;
