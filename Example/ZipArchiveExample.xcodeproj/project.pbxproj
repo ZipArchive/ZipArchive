@@ -71,6 +71,7 @@
 		37FF0CB91F853459006E4361 /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
 		37FF0CBA1F853459006E4361 /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
 		57AA942E1C28397000858D82 /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57AA942D1C28397000858D82 /* ZipArchive.framework */; };
+		5CE44B849569EE560A91F4E9 /* Pods_core_ObjectiveCExampleTests_watchOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57A53C905D9BA6730E90C3A8 /* Pods_core_ObjectiveCExampleTests_watchOS.framework */; };
 		5FBB318220AF99BC003BA18F /* PathTraversal.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5FBB318120AF99BC003BA18F /* PathTraversal.zip */; };
 		5FBB318320AF99C9003BA18F /* PathTraversal.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5FBB318120AF99BC003BA18F /* PathTraversal.zip */; };
 		5FBB318420AF99CF003BA18F /* PathTraversal.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5FBB318120AF99BC003BA18F /* PathTraversal.zip */; };
@@ -104,13 +105,61 @@
 		8DFE1A351BDAA10100709011 /* 6.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A251BDAA10100709011 /* 6.m4a */; };
 		8DFE1A361BDAA10100709011 /* 7.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A261BDAA10100709011 /* 7.m4a */; };
 		C2E3098D50AA6A2F41F8AB39 /* Pods_core_SwiftExample_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D745CAB61B0334919B9281E8 /* Pods_core_SwiftExample_macOS.framework */; };
+		C8345BE62BE568C200B60352 /* SSZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE1A071BDA9FF300709011 /* SSZipArchiveTests.m */; };
+		C8345BE72BE568C200B60352 /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
+		C8345BE82BE568C200B60352 /* CollectingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE1A131BDAA0A800709011 /* CollectingDelegate.m */; };
+		C8345BE92BE568C200B60352 /* CancelDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB21F8533E0006E4361 /* CancelDelegate.m */; };
+		C8345BED2BE568C200B60352 /* PathTraversal.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5FBB318120AF99BC003BA18F /* PathTraversal.zip */; };
+		C8345BEE2BE568C200B60352 /* 6.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A251BDAA10100709011 /* 6.m4a */; };
+		C8345BEF2BE568C200B60352 /* hello.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A161BDAA10100709011 /* hello.zip */; };
+		C8345BF02BE568C200B60352 /* PermissionsTestApp.app in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A181BDAA10100709011 /* PermissionsTestApp.app */; };
+		C8345BF12BE568C200B60352 /* Empty.zip in Resources */ = {isa = PBXBuildFile; fileRef = 3754B1311F88961800A58AA0 /* Empty.zip */; };
+		C8345BF22BE568C200B60352 /* TestArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1B1BDAA10100709011 /* TestArchive.zip */; };
+		C8345BF32BE568C200B60352 /* 5.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A241BDAA10100709011 /* 5.m4a */; };
+		C8345BF42BE568C200B60352 /* 3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A221BDAA10100709011 /* 3.m4a */; };
+		C8345BF52BE568C200B60352 /* RelativeSymbolicLink.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A191BDAA10100709011 /* RelativeSymbolicLink.zip */; };
+		C8345BF62BE568C200B60352 /* Unicode.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1D1BDAA10100709011 /* Unicode.zip */; };
+		C8345BF72BE568C200B60352 /* IncorrectHeaders.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A171BDAA10100709011 /* IncorrectHeaders.zip */; };
+		C8345BF82BE568C200B60352 /* TestPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1C1BDAA10100709011 /* TestPasswordArchive.zip */; };
+		C8345BF92BE568C200B60352 /* 4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A231BDAA10100709011 /* 4.m4a */; };
+		C8345BFA2BE568C200B60352 /* 7.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A261BDAA10100709011 /* 7.m4a */; };
+		C8345BFB2BE568C200B60352 /* 2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A211BDAA10100709011 /* 2.m4a */; };
+		C8345BFC2BE568C200B60352 /* SymbolicLink.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1A1BDAA10100709011 /* SymbolicLink.zip */; };
+		C8345BFD2BE568C200B60352 /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A201BDAA10100709011 /* 1.m4a */; };
+		C8345BFE2BE568C200B60352 /* 0.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1F1BDAA10100709011 /* 0.m4a */; };
+		C8345BFF2BE568C200B60352 /* TestAESPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37CC960B2294F95600E71C3C /* TestAESPasswordArchive.zip */; };
+		C85BEF492BE55EA400ABAB8F /* SSZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE1A071BDA9FF300709011 /* SSZipArchiveTests.m */; };
+		C85BEF4A2BE55EA400ABAB8F /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
+		C85BEF4B2BE55EA400ABAB8F /* CollectingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE1A131BDAA0A800709011 /* CollectingDelegate.m */; };
+		C85BEF4C2BE55EA400ABAB8F /* CancelDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB21F8533E0006E4361 /* CancelDelegate.m */; };
+		C85BEF502BE55EA400ABAB8F /* PathTraversal.zip in Resources */ = {isa = PBXBuildFile; fileRef = 5FBB318120AF99BC003BA18F /* PathTraversal.zip */; };
+		C85BEF512BE55EA400ABAB8F /* 6.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A251BDAA10100709011 /* 6.m4a */; };
+		C85BEF522BE55EA400ABAB8F /* hello.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A161BDAA10100709011 /* hello.zip */; };
+		C85BEF532BE55EA400ABAB8F /* PermissionsTestApp.app in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A181BDAA10100709011 /* PermissionsTestApp.app */; };
+		C85BEF542BE55EA400ABAB8F /* Empty.zip in Resources */ = {isa = PBXBuildFile; fileRef = 3754B1311F88961800A58AA0 /* Empty.zip */; };
+		C85BEF552BE55EA400ABAB8F /* TestArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1B1BDAA10100709011 /* TestArchive.zip */; };
+		C85BEF562BE55EA400ABAB8F /* 5.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A241BDAA10100709011 /* 5.m4a */; };
+		C85BEF572BE55EA400ABAB8F /* 3.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A221BDAA10100709011 /* 3.m4a */; };
+		C85BEF582BE55EA400ABAB8F /* RelativeSymbolicLink.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A191BDAA10100709011 /* RelativeSymbolicLink.zip */; };
+		C85BEF592BE55EA400ABAB8F /* Unicode.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1D1BDAA10100709011 /* Unicode.zip */; };
+		C85BEF5A2BE55EA400ABAB8F /* IncorrectHeaders.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A171BDAA10100709011 /* IncorrectHeaders.zip */; };
+		C85BEF5B2BE55EA400ABAB8F /* TestPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1C1BDAA10100709011 /* TestPasswordArchive.zip */; };
+		C85BEF5C2BE55EA400ABAB8F /* 4.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A231BDAA10100709011 /* 4.m4a */; };
+		C85BEF5D2BE55EA400ABAB8F /* 7.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A261BDAA10100709011 /* 7.m4a */; };
+		C85BEF5E2BE55EA400ABAB8F /* 2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A211BDAA10100709011 /* 2.m4a */; };
+		C85BEF5F2BE55EA400ABAB8F /* SymbolicLink.zip in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1A1BDAA10100709011 /* SymbolicLink.zip */; };
+		C85BEF602BE55EA400ABAB8F /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A201BDAA10100709011 /* 1.m4a */; };
+		C85BEF612BE55EA400ABAB8F /* 0.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1F1BDAA10100709011 /* 0.m4a */; };
+		C85BEF622BE55EA400ABAB8F /* TestAESPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37CC960B2294F95600E71C3C /* TestAESPasswordArchive.zip */; };
 		CC425A5DF3AE73723F6582F1 /* Pods_core_ObjectiveCExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F55AA2EC4D572A3D0AF90BA /* Pods_core_ObjectiveCExample.framework */; };
+		CF62025A6B48857633D59BA3 /* Pods_core_ObjectiveCExampleTests_visionOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3A1FA27B403DD333FFAFDA2 /* Pods_core_ObjectiveCExampleTests_visionOS.framework */; };
 		D2885233B35CC10CEC374D53 /* Pods_core_ObjectiveCExampleTests_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B24D4343DEE4228CB2E5423 /* Pods_core_ObjectiveCExampleTests_macOS.framework */; };
 		EACE0D328EB96FA347E3BBB7 /* Pods_core_ObjectiveCExampleTests_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DE06FF5ED20D6135954A07F /* Pods_core_ObjectiveCExampleTests_tvOS.framework */; };
 		F7D6D86D1CFB2C4900DA6DA6 /* Sample Data in Resources */ = {isa = PBXBuildFile; fileRef = F7D6D86C1CFB2C4900DA6DA6 /* Sample Data */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F5B2FA612253A8A5D7BEE28 /* Pods-core-ObjectiveCExampleTests_visionOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_visionOS.debug.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExampleTests_visionOS/Pods-core-ObjectiveCExampleTests_visionOS.debug.xcconfig"; sourceTree = "<group>"; };
 		1B9035B1B236217729CB7D16 /* Pods-core-ObjectiveCExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExample.debug.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExample/Pods-core-ObjectiveCExample.debug.xcconfig"; sourceTree = "<group>"; };
 		1DE06FF5ED20D6135954A07F /* Pods_core_ObjectiveCExampleTests_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExampleTests_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B4B24761C21500E00CC99E5 /* SwiftExampleCarthage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftExampleCarthage.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,10 +183,12 @@
 		37FF0CB71F853459006E4361 /* ProgressDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProgressDelegate.m; sourceTree = "<group>"; };
 		3BB772F308CFA3E4767C2658 /* Pods-core-SwiftExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-SwiftExample.release.xcconfig"; path = "Target Support Files/Pods-core-SwiftExample/Pods-core-SwiftExample.release.xcconfig"; sourceTree = "<group>"; };
 		48D5C61C213E97A4B17BACFA /* Pods_core_ObjectiveCExampleTests_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExampleTests_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		57A53C905D9BA6730E90C3A8 /* Pods_core_ObjectiveCExampleTests_watchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExampleTests_watchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		57AA942D1C28397000858D82 /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipArchive.framework; path = Carthage/Build/iOS/ZipArchive.framework; sourceTree = "<group>"; };
 		5FBB318120AF99BC003BA18F /* PathTraversal.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = PathTraversal.zip; sourceTree = "<group>"; };
 		5FF701DB4FB59433B4BD84C3 /* Pods-core-ObjectiveCExampleTests_tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_tvOS.debug.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExampleTests_tvOS/Pods-core-ObjectiveCExampleTests_tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		71C8D36D6550EF30DECFB890 /* Pods-core-ObjectiveCExampleTests_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_iOS.release.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExampleTests_iOS/Pods-core-ObjectiveCExampleTests_iOS.release.xcconfig"; sourceTree = "<group>"; };
+		7FC823CA134884B43B6C0C91 /* Pods-core-ObjectiveCExampleTests_visionOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_visionOS.release.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExampleTests_visionOS/Pods-core-ObjectiveCExampleTests_visionOS.release.xcconfig"; sourceTree = "<group>"; };
 		8BE6F8A03ACEE48A4A0B6EA5 /* Pods-core-ObjectiveCExampleTests_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_iOS.debug.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExampleTests_iOS/Pods-core-ObjectiveCExampleTests_iOS.debug.xcconfig"; sourceTree = "<group>"; };
 		8D9AE8B01FE79EABEDC1DA87 /* Pods_core_SwiftExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_SwiftExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DFE19091BDA74F800709011 /* SwiftExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -179,10 +230,15 @@
 		8DFE1A251BDAA10100709011 /* 6.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 6.m4a; sourceTree = "<group>"; };
 		8DFE1A261BDAA10100709011 /* 7.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = 7.m4a; sourceTree = "<group>"; };
 		8F55AA2EC4D572A3D0AF90BA /* Pods_core_ObjectiveCExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		92F48D7C38A622F433292827 /* Pods-core-ObjectiveCExampleTests_watchOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_watchOS.debug.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExampleTests_watchOS/Pods-core-ObjectiveCExampleTests_watchOS.debug.xcconfig"; sourceTree = "<group>"; };
 		9AA4CAF9BE9A956B2CB426D8 /* Pods-core-ObjectiveCExampleTests_macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_macOS.release.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExampleTests_macOS/Pods-core-ObjectiveCExampleTests_macOS.release.xcconfig"; sourceTree = "<group>"; };
 		9B24D4343DEE4228CB2E5423 /* Pods_core_ObjectiveCExampleTests_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExampleTests_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4B6FDB4D840506270E7881C /* Pods-core-ObjectiveCExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExample.release.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExample/Pods-core-ObjectiveCExample.release.xcconfig"; sourceTree = "<group>"; };
+		B3A1FA27B403DD333FFAFDA2 /* Pods_core_ObjectiveCExampleTests_visionOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_ObjectiveCExampleTests_visionOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0E7CEB707BDE066D061076E /* Pods-core-ObjectiveCExampleTests_watchOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_watchOS.release.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExampleTests_watchOS/Pods-core-ObjectiveCExampleTests_watchOS.release.xcconfig"; sourceTree = "<group>"; };
 		C803DFAF3E5379795284135A /* Pods-core-SwiftExample_macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-SwiftExample_macOS.debug.xcconfig"; path = "Target Support Files/Pods-core-SwiftExample_macOS/Pods-core-SwiftExample_macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		C8345C042BE568C200B60352 /* ObjectiveCExampleTests_visionOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_visionOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C85BEF672BE55EA400ABAB8F /* ObjectiveCExampleTests_watchOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_watchOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D269B6DE92A452B8E2CDF98D /* Pods-core-SwiftExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-SwiftExample.debug.xcconfig"; path = "Target Support Files/Pods-core-SwiftExample/Pods-core-SwiftExample.debug.xcconfig"; sourceTree = "<group>"; };
 		D745CAB61B0334919B9281E8 /* Pods_core_SwiftExample_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_SwiftExample_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7D6D86C1CFB2C4900DA6DA6 /* Sample Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Sample Data"; sourceTree = "<group>"; };
@@ -245,6 +301,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C8345BEA2BE568C200B60352 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF62025A6B48857633D59BA3 /* Pods_core_ObjectiveCExampleTests_visionOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C85BEF4D2BE55EA400ABAB8F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5CE44B849569EE560A91F4E9 /* Pods_core_ObjectiveCExampleTests_watchOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -298,6 +370,8 @@
 				8DFE19091BDA74F800709011 /* SwiftExample.app */,
 				2B4B24761C21500E00CC99E5 /* SwiftExampleCarthage.app */,
 				37329A022273057300FEA32A /* SwiftExample_macOS.app */,
+				C85BEF672BE55EA400ABAB8F /* ObjectiveCExampleTests_watchOS.xctest */,
+				C8345C042BE568C200B60352 /* ObjectiveCExampleTests_visionOS.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -387,12 +461,15 @@
 				9AA4CAF9BE9A956B2CB426D8 /* Pods-core-ObjectiveCExampleTests_macOS.release.xcconfig */,
 				5FF701DB4FB59433B4BD84C3 /* Pods-core-ObjectiveCExampleTests_tvOS.debug.xcconfig */,
 				3562B8AAFD15D1657D5EFE76 /* Pods-core-ObjectiveCExampleTests_tvOS.release.xcconfig */,
+				0F5B2FA612253A8A5D7BEE28 /* Pods-core-ObjectiveCExampleTests_visionOS.debug.xcconfig */,
+				7FC823CA134884B43B6C0C91 /* Pods-core-ObjectiveCExampleTests_visionOS.release.xcconfig */,
+				92F48D7C38A622F433292827 /* Pods-core-ObjectiveCExampleTests_watchOS.debug.xcconfig */,
+				C0E7CEB707BDE066D061076E /* Pods-core-ObjectiveCExampleTests_watchOS.release.xcconfig */,
 				D269B6DE92A452B8E2CDF98D /* Pods-core-SwiftExample.debug.xcconfig */,
 				3BB772F308CFA3E4767C2658 /* Pods-core-SwiftExample.release.xcconfig */,
 				C803DFAF3E5379795284135A /* Pods-core-SwiftExample_macOS.debug.xcconfig */,
 				31C482431F08926C4CF26EEE /* Pods-core-SwiftExample_macOS.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -404,6 +481,8 @@
 				48D5C61C213E97A4B17BACFA /* Pods_core_ObjectiveCExampleTests_iOS.framework */,
 				9B24D4343DEE4228CB2E5423 /* Pods_core_ObjectiveCExampleTests_macOS.framework */,
 				1DE06FF5ED20D6135954A07F /* Pods_core_ObjectiveCExampleTests_tvOS.framework */,
+				B3A1FA27B403DD333FFAFDA2 /* Pods_core_ObjectiveCExampleTests_visionOS.framework */,
+				57A53C905D9BA6730E90C3A8 /* Pods_core_ObjectiveCExampleTests_watchOS.framework */,
 				8D9AE8B01FE79EABEDC1DA87 /* Pods_core_SwiftExample.framework */,
 				D745CAB61B0334919B9281E8 /* Pods_core_SwiftExample_macOS.framework */,
 			);
@@ -545,6 +624,44 @@
 			productReference = 8DFE1A031BDA9FF300709011 /* ObjectiveCExampleTests_iOS.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		C8345BE32BE568C200B60352 /* ObjectiveCExampleTests_visionOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C8345C012BE568C200B60352 /* Build configuration list for PBXNativeTarget "ObjectiveCExampleTests_visionOS" */;
+			buildPhases = (
+				C8345BE42BE568C200B60352 /* [CP] Check Pods Manifest.lock */,
+				C8345BE52BE568C200B60352 /* Sources */,
+				C8345BEA2BE568C200B60352 /* Frameworks */,
+				C8345BEC2BE568C200B60352 /* Resources */,
+				C8345C002BE568C200B60352 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ObjectiveCExampleTests_visionOS;
+			productName = ObjectiveCExampleTests_tvOS;
+			productReference = C8345C042BE568C200B60352 /* ObjectiveCExampleTests_visionOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		C85BEF462BE55EA400ABAB8F /* ObjectiveCExampleTests_watchOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C85BEF642BE55EA400ABAB8F /* Build configuration list for PBXNativeTarget "ObjectiveCExampleTests_watchOS" */;
+			buildPhases = (
+				C85BEF472BE55EA400ABAB8F /* [CP] Check Pods Manifest.lock */,
+				C85BEF482BE55EA400ABAB8F /* Sources */,
+				C85BEF4D2BE55EA400ABAB8F /* Frameworks */,
+				C85BEF4F2BE55EA400ABAB8F /* Resources */,
+				C85BEF632BE55EA400ABAB8F /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ObjectiveCExampleTests_watchOS;
+			productName = ObjectiveCExampleTests_tvOS;
+			productReference = C85BEF672BE55EA400ABAB8F /* ObjectiveCExampleTests_watchOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -581,6 +698,12 @@
 						CreatedOnToolsVersion = 7.1;
 						ProvisioningStyle = Automatic;
 					};
+					C8345BE32BE568C200B60352 = {
+						ProvisioningStyle = Automatic;
+					};
+					C85BEF462BE55EA400ABAB8F = {
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 8DFE19E51BDA9FF300709011 /* Build configuration list for PBXProject "ZipArchiveExample" */;
@@ -600,6 +723,8 @@
 				8DFE1A021BDA9FF300709011 /* ObjectiveCExampleTests_iOS */,
 				3773ADAD1F7F44D8009A4B2D /* ObjectiveCExampleTests_macOS */,
 				3793E6D61F7F5F93000B1A19 /* ObjectiveCExampleTests_tvOS */,
+				C8345BE32BE568C200B60352 /* ObjectiveCExampleTests_visionOS */,
+				C85BEF462BE55EA400ABAB8F /* ObjectiveCExampleTests_watchOS */,
 				8DFE19081BDA74F800709011 /* SwiftExample */,
 				37329A012273057300FEA32A /* SwiftExample_macOS */,
 				2B4B24641C21500E00CC99E5 /* SwiftExampleCarthage */,
@@ -727,6 +852,58 @@
 				8DFE1A2B1BDAA10100709011 /* SymbolicLink.zip in Resources */,
 				8DFE1A291BDAA10100709011 /* PermissionsTestApp.app in Resources */,
 				37CC960C2294F96100E71C3C /* TestAESPasswordArchive.zip in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C8345BEC2BE568C200B60352 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C8345BED2BE568C200B60352 /* PathTraversal.zip in Resources */,
+				C8345BEE2BE568C200B60352 /* 6.m4a in Resources */,
+				C8345BEF2BE568C200B60352 /* hello.zip in Resources */,
+				C8345BF02BE568C200B60352 /* PermissionsTestApp.app in Resources */,
+				C8345BF12BE568C200B60352 /* Empty.zip in Resources */,
+				C8345BF22BE568C200B60352 /* TestArchive.zip in Resources */,
+				C8345BF32BE568C200B60352 /* 5.m4a in Resources */,
+				C8345BF42BE568C200B60352 /* 3.m4a in Resources */,
+				C8345BF52BE568C200B60352 /* RelativeSymbolicLink.zip in Resources */,
+				C8345BF62BE568C200B60352 /* Unicode.zip in Resources */,
+				C8345BF72BE568C200B60352 /* IncorrectHeaders.zip in Resources */,
+				C8345BF82BE568C200B60352 /* TestPasswordArchive.zip in Resources */,
+				C8345BF92BE568C200B60352 /* 4.m4a in Resources */,
+				C8345BFA2BE568C200B60352 /* 7.m4a in Resources */,
+				C8345BFB2BE568C200B60352 /* 2.m4a in Resources */,
+				C8345BFC2BE568C200B60352 /* SymbolicLink.zip in Resources */,
+				C8345BFD2BE568C200B60352 /* 1.m4a in Resources */,
+				C8345BFE2BE568C200B60352 /* 0.m4a in Resources */,
+				C8345BFF2BE568C200B60352 /* TestAESPasswordArchive.zip in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C85BEF4F2BE55EA400ABAB8F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C85BEF502BE55EA400ABAB8F /* PathTraversal.zip in Resources */,
+				C85BEF512BE55EA400ABAB8F /* 6.m4a in Resources */,
+				C85BEF522BE55EA400ABAB8F /* hello.zip in Resources */,
+				C85BEF532BE55EA400ABAB8F /* PermissionsTestApp.app in Resources */,
+				C85BEF542BE55EA400ABAB8F /* Empty.zip in Resources */,
+				C85BEF552BE55EA400ABAB8F /* TestArchive.zip in Resources */,
+				C85BEF562BE55EA400ABAB8F /* 5.m4a in Resources */,
+				C85BEF572BE55EA400ABAB8F /* 3.m4a in Resources */,
+				C85BEF582BE55EA400ABAB8F /* RelativeSymbolicLink.zip in Resources */,
+				C85BEF592BE55EA400ABAB8F /* Unicode.zip in Resources */,
+				C85BEF5A2BE55EA400ABAB8F /* IncorrectHeaders.zip in Resources */,
+				C85BEF5B2BE55EA400ABAB8F /* TestPasswordArchive.zip in Resources */,
+				C85BEF5C2BE55EA400ABAB8F /* 4.m4a in Resources */,
+				C85BEF5D2BE55EA400ABAB8F /* 7.m4a in Resources */,
+				C85BEF5E2BE55EA400ABAB8F /* 2.m4a in Resources */,
+				C85BEF5F2BE55EA400ABAB8F /* SymbolicLink.zip in Resources */,
+				C85BEF602BE55EA400ABAB8F /* 1.m4a in Resources */,
+				C85BEF612BE55EA400ABAB8F /* 0.m4a in Resources */,
+				C85BEF622BE55EA400ABAB8F /* TestAESPasswordArchive.zip in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -926,6 +1103,86 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-core-SwiftExample_macOS/Pods-core-SwiftExample_macOS-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		C8345BE42BE568C200B60352 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-core-ObjectiveCExampleTests_visionOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C8345C002BE568C200B60352 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-core-ObjectiveCExampleTests_visionOS/Pods-core-ObjectiveCExampleTests_visionOS-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SSZipArchive-visionOS/SSZipArchive.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-core-ObjectiveCExampleTests_visionOS/Pods-core-ObjectiveCExampleTests_visionOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C85BEF472BE55EA400ABAB8F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-core-ObjectiveCExampleTests_watchOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C85BEF632BE55EA400ABAB8F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-core-ObjectiveCExampleTests_watchOS/Pods-core-ObjectiveCExampleTests_watchOS-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SSZipArchive-watchOS/SSZipArchive.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-core-ObjectiveCExampleTests_watchOS/Pods-core-ObjectiveCExampleTests_watchOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		D0DFCD28F5F6FDDAA2685A0B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1058,6 +1315,28 @@
 				37FF0CB81F853459006E4361 /* ProgressDelegate.m in Sources */,
 				8DFE1A081BDA9FF300709011 /* SSZipArchiveTests.m in Sources */,
 				37FF0CB31F8533E0006E4361 /* CancelDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C8345BE52BE568C200B60352 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C8345BE62BE568C200B60352 /* SSZipArchiveTests.m in Sources */,
+				C8345BE72BE568C200B60352 /* ProgressDelegate.m in Sources */,
+				C8345BE82BE568C200B60352 /* CollectingDelegate.m in Sources */,
+				C8345BE92BE568C200B60352 /* CancelDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C85BEF482BE55EA400ABAB8F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C85BEF492BE55EA400ABAB8F /* SSZipArchiveTests.m in Sources */,
+				C85BEF4A2BE55EA400ABAB8F /* ProgressDelegate.m in Sources */,
+				C85BEF4B2BE55EA400ABAB8F /* CollectingDelegate.m in Sources */,
+				C85BEF4C2BE55EA400ABAB8F /* CancelDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1202,6 +1481,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = SwiftExample_macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -1222,6 +1502,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = ObjectiveCExampleTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
@@ -1347,6 +1628,8 @@
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TVOS_DEPLOYMENT_TARGET = 15.4;
+				WATCHOS_DEPLOYMENT_TARGET = 8.4;
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = Debug;
 		};
@@ -1410,6 +1693,8 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TVOS_DEPLOYMENT_TARGET = 15.4;
 				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.4;
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = Release;
 		};
@@ -1467,6 +1752,70 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ziparchive.ObjectiveCExampleTests-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		C8345C022BE568C200B60352 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0F5B2FA612253A8A5D7BEE28 /* Pods-core-ObjectiveCExampleTests_visionOS.debug.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ObjectiveCExampleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ziparchive.ObjectiveCExampleTests-visionOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = xros;
+				TARGETED_DEVICE_FAMILY = 7;
+			};
+			name = Debug;
+		};
+		C8345C032BE568C200B60352 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7FC823CA134884B43B6C0C91 /* Pods-core-ObjectiveCExampleTests_visionOS.release.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ObjectiveCExampleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ziparchive.ObjectiveCExampleTests-visionOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = xros;
+				TARGETED_DEVICE_FAMILY = 7;
+			};
+			name = Release;
+		};
+		C85BEF652BE55EA400ABAB8F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 92F48D7C38A622F433292827 /* Pods-core-ObjectiveCExampleTests_watchOS.debug.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ObjectiveCExampleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ziparchive.ObjectiveCExampleTests-watchOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Debug;
+		};
+		C85BEF662BE55EA400ABAB8F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C0E7CEB707BDE066D061076E /* Pods-core-ObjectiveCExampleTests_watchOS.release.xcconfig */;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_STYLE = Automatic;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ObjectiveCExampleTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.ziparchive.ObjectiveCExampleTests-watchOS";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				TARGETED_DEVICE_FAMILY = 4;
 			};
 			name = Release;
 		};
@@ -1541,6 +1890,24 @@
 			buildConfigurations = (
 				8DFE1A101BDA9FF300709011 /* Debug */,
 				8DFE1A111BDA9FF300709011 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C8345C012BE568C200B60352 /* Build configuration list for PBXNativeTarget "ObjectiveCExampleTests_visionOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C8345C022BE568C200B60352 /* Debug */,
+				C8345C032BE568C200B60352 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C85BEF642BE55EA400ABAB8F /* Build configuration list for PBXNativeTarget "ObjectiveCExampleTests_watchOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C85BEF652BE55EA400ABAB8F /* Debug */,
+				C85BEF662BE55EA400ABAB8F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

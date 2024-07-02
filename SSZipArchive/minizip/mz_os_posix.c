@@ -17,7 +17,7 @@
 #if defined(HAVE_ICONV)
 #include <iconv.h>
 #endif
-
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -342,8 +342,15 @@ uint64_t mz_os_ms_time(void) {
 
     ts.tv_sec = mts.tv_sec;
     ts.tv_nsec = mts.tv_nsec;
-#else
+#elif !defined(_POSIX_MONOTONIC_CLOCK) || _POSIX_MONOTONIC_CLOCK < 0
+    clock_gettime(CLOCK_REALTIME, &ts);
+#elif _POSIX_MONOTONIC_CLOCK > 0
     clock_gettime(CLOCK_MONOTONIC, &ts);
+#else
+    if (sysconf(_SC_MONOTONIC_CLOCK) > 0)
+        clock_gettime(CLOCK_MONOTONIC, &ts);
+    else
+        clock_gettime(CLOCK_REALTIME, &ts);
 #endif
 
     return ((uint64_t)ts.tv_sec * 1000) + ((uint64_t)ts.tv_nsec / 1000000);

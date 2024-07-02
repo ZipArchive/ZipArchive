@@ -23,6 +23,14 @@ abstract_target 'core' do
     platform :tvos, '15.4'
   end
 
+  target 'ObjectiveCExampleTests_visionOS' do
+    platform :visionos, '1.0'
+  end
+
+  target 'ObjectiveCExampleTests_watchOS' do
+    platform :watchos, '8.4'
+  end
+
   target 'SwiftExample' do
     platform :ios, '15.5'
   end
