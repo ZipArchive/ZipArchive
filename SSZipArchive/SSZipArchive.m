@@ -930,6 +930,70 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return success;
 }
 
++ (BOOL)createZipFileAtURL:(NSURL *)url
+           withItemsAtURLs:(NSArray<NSURL *> *)items
+          compressionLevel:(int)compressionLevel
+                  password:(nullable NSString *)password
+                       AES:(BOOL)aes
+           progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
+                shouldStop:(BOOL(^ _Nullable)(void))shouldStop {
+  SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath: url.path];
+  BOOL success = [zipArchive open];
+  if (success) {
+    // use a local fileManager (queue/thread compatibility)
+    NSFileManager *fileManager = [[NSFileManager alloc] init];
+    NSUInteger total = items.count, complete = 0;
+    for (NSURL *itemURL in items) {
+      if ([itemURL isEqual:url]) {
+        NSLog(@"[SSZipArchive] the archive url and the file url: %@ are the same, which is forbidden.", itemURL);
+        continue;
+      }
+
+      NSString *fullFilePath = itemURL.path;
+      NSString *fileName = itemURL.lastPathComponent;
+
+      BOOL isDir;
+      [fileManager fileExistsAtPath:itemURL.path isDirectory:&isDir];
+
+      if (isDir) {
+        NSDirectoryEnumerator<NSURL *> *enumerator = [fileManager enumeratorAtURL:itemURL
+                                                       includingPropertiesForKeys:@[NSURLIsDirectoryKey]
+                                                                          options:NSDirectoryEnumerationProducesRelativePathURLs
+                                                                     errorHandler:nil];
+        NSArray<NSURL *> *items = enumerator.allObjects;
+        for (NSURL *relItemURL in items) {
+          if (shouldStop && shouldStop()) {
+            success = false;
+            break;
+          }
+
+          NSURL *fileURL = [itemURL URLByAppendingPathComponent:relItemURL.relativePath];
+
+          NSNumber *isDir;
+          if ([fileURL getResourceValue:&isDir forKey:NSURLIsDirectoryKey error:nil] == YES && isDir.boolValue == NO) {
+            success &= [zipArchive writeFileAtPath:fileURL.path withFileName:relItemURL.relativePath compressionLevel:compressionLevel password:password AES:aes];
+          }
+        }
+      } else {
+        // file
+        success &= [zipArchive writeFileAtPath:fullFilePath withFileName:fileName compressionLevel:compressionLevel password:password AES:aes];
+      }
+      if (!success) break;
+
+      if (progressHandler) {
+        complete++;
+        progressHandler(complete, total);
+      }
+      if (shouldStop && shouldStop()) {
+        success = false;
+        break;
+      }
+    }
+    success &= [zipArchive close];
+  }
+  return success;
+}
+
 + (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(nullable NSString *)password keepSymlinks:(BOOL)keeplinks {
     if (!keeplinks) {
         return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:password];
