@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1530"
+   LastUpgradeVersion = "1600"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES"
-      buildArchitectures = "Automatic">
+      buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -16,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C8DEE3642BE59172005150F4"
-               BuildableName = "ZipArchive-visionos.framework"
+               BuildableName = "ZipArchive.framework"
                BlueprintName = "ZipArchive-visionos"
                ReferencedContainer = "container:ZipArchive.xcodeproj">
             </BuildableReference>
@@ -51,7 +50,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C8DEE3642BE59172005150F4"
-            BuildableName = "ZipArchive-visionos.framework"
+            BuildableName = "ZipArchive.framework"
             BlueprintName = "ZipArchive-visionos"
             ReferencedContainer = "container:ZipArchive.xcodeproj">
          </BuildableReference>
