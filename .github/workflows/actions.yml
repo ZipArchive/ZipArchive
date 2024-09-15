@@ -9,13 +9,15 @@ on:
     tags:
       - '*'
 jobs:
+  # available images: https://github.com/actions/runner-images
+  
   # oldest targets
-  macos-11:
+  macos-12:
     runs-on: ${{matrix.OS}}
     strategy:
       fail-fast: false
       matrix:
-        OS: [macOS-11]
+        OS: [macOS-12]
         SDK: ["macosx"]
     steps:
     - uses: actions/checkout@v4
@@ -26,17 +28,16 @@ jobs:
         popd  
     - name: Build and test
       run: |
-        echo "Disabling modern build system as a workaround for target issue in Xcode 10+"
-        USEMODERNBUILDSYSTEM="-UseModernBuildSystem=NO"
         if [ ${{ matrix.SDK }} == "macosx" ]; then
           SCHEME="ObjectiveCExample_macOS"
-          SDK="macosx"
-          DESTINATION="platform=macosx"
+          PLATFORM="macOS"
+          ARCH="x86_64"
+          DESTINATION="platform=$PLATFORM,arch=$ARCH"
         fi
         
         # build and test
         CONFIGURATION="Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES"
-        xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -sdk $SDK -destination "$DESTINATION" -configuration $CONFIGURATION $USEMODERNBUILDSYSTEM test
+        xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -destination "$DESTINATION" -configuration $CONFIGURATION test
 
   # newest targets
   macos-14:
@@ -49,7 +50,7 @@ jobs:
     steps:
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.3.0'
+        xcode-version: '15.4.0'
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
@@ -89,4 +90,4 @@ jobs:
 
         # build and test
         CONFIGURATION="Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES"
-        xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -sdk $SDK -destination "$DESTINATION" -configuration $CONFIGURATION $USEMODERNBUILDSYSTEM test
+        xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -sdk $SDK -destination "$DESTINATION" -configuration $CONFIGURATION test
