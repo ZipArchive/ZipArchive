@@ -40,7 +40,7 @@ The following steps should be taken by project maintainers when they update mini
 
 Note: These should not be changed unless you have issues compiling or we bump the min os versions. 
 
-HAVE_INTTYPES_H HAVE_PKCRYPT HAVE_STDINT_H HAVE_WZAES HAVE_ZLIB ZLIB_COMPAT
+HAVE_ARC4RANDOM_BUF HAVE_INTTYPES_H HAVE_PKCRYPT HAVE_STDINT_H HAVE_WZAES HAVE_ZLIB ZLIB_COMPAT
 
 With the exception of the last two: "MZ_ZIP_SIGNING" "_POSIX_C_SOURCE=200112L"
 
