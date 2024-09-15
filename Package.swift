@@ -23,6 +23,7 @@ let package = Package(
             resources: [
                 .process("Supporting Files/PrivacyInfo.xcprivacy")],
             cSettings: [
+            	.define("HAVE_ARC4RANDOM_BUF"),
                 .define("HAVE_INTTYPES_H"),
                 .define("HAVE_PKCRYPT"),
                 .define("HAVE_STDINT_H"),
