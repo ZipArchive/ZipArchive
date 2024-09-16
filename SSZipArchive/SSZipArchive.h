@@ -147,7 +147,7 @@ typedef NS_ENUM(NSInteger, SSZipArchiveErrorCode) {
 - (BOOL)writeFile:(NSString *)path withPassword:(nullable NSString *)password;
 - (BOOL)writeFileAtPath:(NSString *)path withFileName:(nullable NSString *)fileName withPassword:(nullable NSString *)password;
 - (BOOL)writeFileAtPath:(NSString *)path withFileName:(nullable NSString *)fileName compressionLevel:(int)compressionLevel password:(nullable NSString *)password AES:(BOOL)aes;
-///write symlink files
+/// write symlink files
 - (BOOL)writeSymlinkFileAtPath:(NSString *)path withFileName:(nullable NSString *)fileName compressionLevel:(int)compressionLevel password:(nullable NSString *)password AES:(BOOL)aes;
 /// write data
 - (BOOL)writeData:(NSData *)data filename:(nullable NSString *)filename withPassword:(nullable NSString *)password;

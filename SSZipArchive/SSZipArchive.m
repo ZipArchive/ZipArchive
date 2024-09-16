@@ -811,8 +811,19 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     BOOL success = [zipArchive open];
     if (success) {
         NSUInteger total = paths.count, complete = 0;
+        // use a local fileManager (queue/thread compatibility)
+        NSFileManager *fileManager = [[NSFileManager alloc] init];
         for (NSString *filePath in paths) {
-            success &= [zipArchive writeFile:filePath withPassword:password];
+            BOOL isDir;
+            [fileManager fileExistsAtPath:filePath isDirectory:&isDir];
+            if (!isDir) {
+                // file
+                success &= [zipArchive writeFile:filePath withPassword:password];
+            } else {
+                // directory
+                // we ignore its content, to allow for archiving this path only
+                success &= [zipArchive writeFolderAtPath:filePath withFolderName:filePath.lastPathComponent withPassword:password];
+            }
             if (progressHandler) {
                 complete++;
                 progressHandler(complete, total);
@@ -861,9 +872,16 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
         NSDirectoryEnumerator *dirEnumerator = [fileManager enumeratorAtPath:directoryPath];
         NSArray<NSString *> *allObjects = dirEnumerator.allObjects;
         NSUInteger total = allObjects.count, complete = 0;
-        if (keepParentDirectory && !total) {
-            allObjects = @[@""];
-            total = 1;
+        if (!total) {
+            // <https://github.com/ZipArchive/ZipArchive/issues/621> let's check if it's an actual directory.
+            BOOL isDir;
+            [fileManager fileExistsAtPath:directoryPath isDirectory:&isDir];
+            if (!isDir) {
+                success = NO;
+            } else if (keepParentDirectory) {
+                allObjects = @[@""];
+                total = 1;
+            }
         }
         for (__strong NSString *fileName in allObjects) {
             NSString *fullFilePath = [directoryPath stringByAppendingPathComponent:fileName];
