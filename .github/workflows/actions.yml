@@ -40,17 +40,17 @@ jobs:
         xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -destination "$DESTINATION" -configuration $CONFIGURATION test
 
   # newest targets
-  macos-14:
+  macos-15:
     runs-on: ${{matrix.OS}}
     strategy:
       fail-fast: false
       matrix:
-        OS: [macOS-14]
+        OS: [macOS-15]
         SDK: ["appletvsimulator", "iphonesimulator", "watchsimulator", "xrsimulator"]
     steps:
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '15.4.0'
+        xcode-version: '16.0.0'
     - uses: actions/checkout@v4
     - name: Install dependencies
       run: |
@@ -70,7 +70,7 @@ jobs:
           SCHEME="ObjectiveCExample_iOS"
           SDK="iphonesimulator"
           PLATFORM="iOS Simulator"
-          DEVICE="iPhone 15 Pro Max"
+          DEVICE="iPhone 16 Pro Max"
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
         if [ ${{ matrix.SDK }} == "watchsimulator" ]; then
