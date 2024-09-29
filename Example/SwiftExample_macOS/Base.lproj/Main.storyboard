@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23094"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -711,9 +711,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tal-c0-sro">
-                                <rect key="frame" x="201" y="275" width="79" height="30"/>
+                                <rect key="frame" x="20" y="275" width="440" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="79" id="CKu-9R-5ta"/>
                                     <constraint firstAttribute="height" constant="30" id="wIn-uX-JEV"/>
                                 </constraints>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="password" drawsBackground="YES" id="RWe-ft-4qe">
@@ -723,29 +722,29 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Uwd-kM-cdh">
-                                <rect key="frame" x="-6" y="230" width="492" height="41"/>
+                                <rect key="frame" x="-7" y="230" width="494" height="42"/>
+                                <buttonCell key="cell" type="push" title="Zip sample" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fMW-6O-Atl">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="hhJ-gH-P2p"/>
                                     <constraint firstAttribute="height" constant="30" id="lTd-Qc-rpO"/>
                                 </constraints>
-                                <buttonCell key="cell" type="push" title="Zip" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fMW-6O-Atl">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
                                 <connections>
                                     <action selector="zipPressed:" target="BYZ-38-t0r" id="hIW-b6-i3P"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XUJ-IR-RIS">
-                                <rect key="frame" x="-6" y="188" width="492" height="41"/>
+                                <rect key="frame" x="-7" y="188" width="494" height="42"/>
+                                <buttonCell key="cell" type="push" title="Unzip sample" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fMW-6O-Atm">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="n3V-mh-8DF"/>
                                     <constraint firstAttribute="height" constant="30" id="qhR-CU-FfP"/>
                                 </constraints>
-                                <buttonCell key="cell" type="push" title="Unzip" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fMW-6O-Atm">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
                                 <connections>
                                     <action selector="unzipPressed:" target="BYZ-38-t0r" id="JwI-5d-7RG"/>
                                 </connections>
@@ -784,35 +783,35 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eBZ-O6-RzO">
-                                <rect key="frame" x="-6" y="65" width="492" height="41"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="0ex-aN-DIQ"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="txy-TI-75r"/>
-                                </constraints>
+                                <rect key="frame" x="-7" y="65" width="494" height="42"/>
                                 <buttonCell key="cell" type="push" title="Has Password?" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fMW-6O-Atn">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="0ex-aN-DIQ"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="160" id="txy-TI-75r"/>
+                                </constraints>
                                 <connections>
                                     <action selector="hasPasswordPressed:" target="BYZ-38-t0r" id="2J4-Op-bD0"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Lbq-oS-Rlj">
-                                <rect key="frame" x="-6" y="35" width="492" height="41"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="ZiT-HC-U9a"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="yqn-M8-xyZ"/>
-                                </constraints>
+                                <rect key="frame" x="-7" y="35" width="494" height="42"/>
                                 <buttonCell key="cell" type="push" title="Reset" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fMW-6O-Ato">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="ZiT-HC-U9a"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="yqn-M8-xyZ"/>
+                                </constraints>
                                 <connections>
                                     <action selector="resetPressed:" target="BYZ-38-t0r" id="OzP-ro-bDg"/>
                                 </connections>
                             </button>
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qIR-CS-5vG">
-                                <rect key="frame" x="-2" y="17" width="484" height="17"/>
+                                <rect key="frame" x="-2" y="18" width="484" height="16"/>
                                 <textFieldCell key="cell" title="Info" id="Q7A-Pk-Qcn">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -842,6 +841,7 @@
                             <constraint firstItem="qIR-CS-5vG" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="hqx-Xl-4bB"/>
                             <constraint firstItem="Lbq-oS-Rlj" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="jKc-Aq-m6a"/>
                             <constraint firstItem="Uwd-kM-cdh" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="kMN-I0-AMR"/>
+                            <constraint firstItem="Tal-c0-sro" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="pqV-gl-lop"/>
                             <constraint firstItem="09F-6Q-slx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="rLi-aF-EpY"/>
                             <constraint firstItem="qIR-CS-5vG" firstAttribute="top" secondItem="Lbq-oS-Rlj" secondAttribute="bottom" constant="8" symbolic="YES" id="vz1-CN-8KX"/>
                             <constraint firstItem="PSK-Jd-Mwc" firstAttribute="top" secondItem="09F-6Q-slx" secondAttribute="bottom" constant="8" symbolic="YES" id="waq-c1-rAn"/>
