@@ -128,6 +128,11 @@
 		C8345BFD2BE568C200B60352 /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A201BDAA10100709011 /* 1.m4a */; };
 		C8345BFE2BE568C200B60352 /* 0.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1F1BDAA10100709011 /* 0.m4a */; };
 		C8345BFF2BE568C200B60352 /* TestAESPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37CC960B2294F95600E71C3C /* TestAESPasswordArchive.zip */; };
+		C854B8F32CA9F43C002B775E /* PasswordArchiveWithFolder.zip in Resources */ = {isa = PBXBuildFile; fileRef = C854B8F22CA9F43C002B775E /* PasswordArchiveWithFolder.zip */; };
+		C854B8F42CA9F43C002B775E /* PasswordArchiveWithFolder.zip in Resources */ = {isa = PBXBuildFile; fileRef = C854B8F22CA9F43C002B775E /* PasswordArchiveWithFolder.zip */; };
+		C854B8F52CA9F43C002B775E /* PasswordArchiveWithFolder.zip in Resources */ = {isa = PBXBuildFile; fileRef = C854B8F22CA9F43C002B775E /* PasswordArchiveWithFolder.zip */; };
+		C854B8F62CA9F43C002B775E /* PasswordArchiveWithFolder.zip in Resources */ = {isa = PBXBuildFile; fileRef = C854B8F22CA9F43C002B775E /* PasswordArchiveWithFolder.zip */; };
+		C854B8F72CA9F43C002B775E /* PasswordArchiveWithFolder.zip in Resources */ = {isa = PBXBuildFile; fileRef = C854B8F22CA9F43C002B775E /* PasswordArchiveWithFolder.zip */; };
 		C85BEF492BE55EA400ABAB8F /* SSZipArchiveTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE1A071BDA9FF300709011 /* SSZipArchiveTests.m */; };
 		C85BEF4A2BE55EA400ABAB8F /* ProgressDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 37FF0CB71F853459006E4361 /* ProgressDelegate.m */; };
 		C85BEF4B2BE55EA400ABAB8F /* CollectingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFE1A131BDAA0A800709011 /* CollectingDelegate.m */; };
@@ -238,6 +243,7 @@
 		C0E7CEB707BDE066D061076E /* Pods-core-ObjectiveCExampleTests_watchOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-ObjectiveCExampleTests_watchOS.release.xcconfig"; path = "Target Support Files/Pods-core-ObjectiveCExampleTests_watchOS/Pods-core-ObjectiveCExampleTests_watchOS.release.xcconfig"; sourceTree = "<group>"; };
 		C803DFAF3E5379795284135A /* Pods-core-SwiftExample_macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-SwiftExample_macOS.debug.xcconfig"; path = "Target Support Files/Pods-core-SwiftExample_macOS/Pods-core-SwiftExample_macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		C8345C042BE568C200B60352 /* ObjectiveCExampleTests_visionOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_visionOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C854B8F22CA9F43C002B775E /* PasswordArchiveWithFolder.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = PasswordArchiveWithFolder.zip; sourceTree = "<group>"; };
 		C85BEF672BE55EA400ABAB8F /* ObjectiveCExampleTests_watchOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_watchOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D269B6DE92A452B8E2CDF98D /* Pods-core-SwiftExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-SwiftExample.debug.xcconfig"; path = "Target Support Files/Pods-core-SwiftExample/Pods-core-SwiftExample.debug.xcconfig"; sourceTree = "<group>"; };
 		D745CAB61B0334919B9281E8 /* Pods_core_SwiftExample_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_SwiftExample_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -430,6 +436,7 @@
 				37CC960B2294F95600E71C3C /* TestAESPasswordArchive.zip */,
 				8DFE1A1B1BDAA10100709011 /* TestArchive.zip */,
 				8DFE1A1C1BDAA10100709011 /* TestPasswordArchive.zip */,
+				C854B8F22CA9F43C002B775E /* PasswordArchiveWithFolder.zip */,
 				8DFE1A1D1BDAA10100709011 /* Unicode.zip */,
 			);
 			path = Fixtures;
@@ -773,6 +780,7 @@
 				3773ADBA1F7F4D13009A4B2D /* RelativeSymbolicLink.zip in Resources */,
 				3773ADB81F7F4D13009A4B2D /* hello.zip in Resources */,
 				3773ADC71F7F4D1C009A4B2D /* 7.m4a in Resources */,
+				C854B8F32CA9F43C002B775E /* PasswordArchiveWithFolder.zip in Resources */,
 				3773ADC61F7F4D1C009A4B2D /* 6.m4a in Resources */,
 				3773ADBC1F7F4D13009A4B2D /* TestArchive.zip in Resources */,
 				3773ADBD1F7F4D13009A4B2D /* TestPasswordArchive.zip in Resources */,
@@ -799,6 +807,7 @@
 				3793E6E51F7F6052000B1A19 /* 4.m4a in Resources */,
 				3793E6E81F7F6052000B1A19 /* 7.m4a in Resources */,
 				3793E6E31F7F6052000B1A19 /* 2.m4a in Resources */,
+				C854B8F42CA9F43C002B775E /* PasswordArchiveWithFolder.zip in Resources */,
 				3793E6EC1F7F6059000B1A19 /* SymbolicLink.zip in Resources */,
 				3793E6E21F7F6052000B1A19 /* 1.m4a in Resources */,
 				3793E6E11F7F6052000B1A19 /* 0.m4a in Resources */,
@@ -848,6 +857,7 @@
 				8DFE1A2C1BDAA10100709011 /* TestArchive.zip in Resources */,
 				8DFE1A271BDAA10100709011 /* hello.zip in Resources */,
 				8DFE1A361BDAA10100709011 /* 7.m4a in Resources */,
+				C854B8F52CA9F43C002B775E /* PasswordArchiveWithFolder.zip in Resources */,
 				8DFE1A351BDAA10100709011 /* 6.m4a in Resources */,
 				8DFE1A2B1BDAA10100709011 /* SymbolicLink.zip in Resources */,
 				8DFE1A291BDAA10100709011 /* PermissionsTestApp.app in Resources */,
@@ -874,6 +884,7 @@
 				C8345BF92BE568C200B60352 /* 4.m4a in Resources */,
 				C8345BFA2BE568C200B60352 /* 7.m4a in Resources */,
 				C8345BFB2BE568C200B60352 /* 2.m4a in Resources */,
+				C854B8F62CA9F43C002B775E /* PasswordArchiveWithFolder.zip in Resources */,
 				C8345BFC2BE568C200B60352 /* SymbolicLink.zip in Resources */,
 				C8345BFD2BE568C200B60352 /* 1.m4a in Resources */,
 				C8345BFE2BE568C200B60352 /* 0.m4a in Resources */,
@@ -900,6 +911,7 @@
 				C85BEF5C2BE55EA400ABAB8F /* 4.m4a in Resources */,
 				C85BEF5D2BE55EA400ABAB8F /* 7.m4a in Resources */,
 				C85BEF5E2BE55EA400ABAB8F /* 2.m4a in Resources */,
+				C854B8F72CA9F43C002B775E /* PasswordArchiveWithFolder.zip in Resources */,
 				C85BEF5F2BE55EA400ABAB8F /* SymbolicLink.zip in Resources */,
 				C85BEF602BE55EA400ABAB8F /* 1.m4a in Resources */,
 				C85BEF612BE55EA400ABAB8F /* 0.m4a in Resources */,

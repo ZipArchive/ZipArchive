@@ -24,6 +24,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 #define API_AVAILABLE(...)
 #endif
 
+static bool filenameIsDirectory(const char *filename, uint16_t size)
+{
+    char lastChar = filename[size - 1];
+    return lastChar == '/' || lastChar == '\\';
+}
+
 @interface NSData(SSZipArchive)
 - (NSString *)_base64RFC4648 API_AVAILABLE(macos(10.9), ios(7.0), watchos(2.0), tvos(9.0));
 - (NSString *)_hexString;
@@ -124,14 +130,26 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
             unz_file_info fileInfo = {};
             ret = unzGetCurrentFileInfo(zip, &fileInfo, NULL, 0, NULL, 0, NULL, 0);
-            if (ret != UNZ_OK) {
+            char *filename = (char *)malloc(fileInfo.size_filename + 1);
+            if (ret == UNZ_OK && filename != NULL) {
+                ret = unzGetCurrentFileInfo(zip, &fileInfo, filename, fileInfo.size_filename + 1, NULL, 0, NULL, 0);
+            }
+            if (ret != UNZ_OK || filename == NULL) {
                 if (error) {
                     *error = [NSError errorWithDomain:SSZipArchiveErrorDomain
                                                  code:SSZipArchiveErrorCodeFileInfoNotLoadable
                                              userInfo:@{NSLocalizedDescriptionKey: @"failed to retrieve info for file"}];
                 }
                 passwordValid = NO;
+                if (filename != NULL) {
+                    free(filename);
+                }
                 break;
+            }
+            BOOL isDirectory = filenameIsDirectory(filename, fileInfo.size_filename);
+            free(filename);
+            if (isDirectory) {
+                // file is a directory, skip to next file
             } else if ((fileInfo.flag & 1) == 1) {
                 unsigned char buffer[10] = {0};
                 int readBytes = unzReadCurrentFile(zip, buffer, (unsigned)MIN(10UL,fileInfo.uncompressed_size));
@@ -470,10 +488,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             }
             
             // Check if it contains directory
-            BOOL isDirectory = NO;
-            if (filename[fileInfo.size_filename-1] == '/' || filename[fileInfo.size_filename-1] == '\\') {
-                isDirectory = YES;
-            }
+            BOOL isDirectory = filenameIsDirectory(filename, fileInfo.size_filename);
             free(filename);
             
             // Sanitize paths in the file name.

@@ -290,6 +290,13 @@ int twentyMB = 20 * 1024 * 1024;
     XCTAssertFalse(fileHasInvalidValidPassword, @"Invalid password reports true.");
 }
 
+- (void)testIsPasswordValidForDirectory {
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"PasswordArchiveWithFolder" ofType:@"zip"];
+
+    BOOL fileHasValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd" error:nil];
+    XCTAssertTrue(fileHasValidPassword, @"is Password Valid");
+}
+
 - (void)testIsFilePasswordProtectedAtPath {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     
