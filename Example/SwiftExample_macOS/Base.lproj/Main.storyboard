@@ -710,7 +710,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField focusRingType="none" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tal-c0-sro">
+                            <textField textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tal-c0-sro">
                                 <rect key="frame" x="20" y="275" width="440" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="wIn-uX-JEV"/>
@@ -749,7 +749,7 @@
                                     <action selector="unzipPressed:" target="BYZ-38-t0r" id="JwI-5d-7RG"/>
                                 </connections>
                             </button>
-                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="09F-6Q-slx">
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="09F-6Q-slx">
                                 <rect key="frame" x="-2" y="167" width="484" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20.5" id="7Um-gt-CyL"/>
@@ -760,7 +760,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PSK-Jd-Mwc">
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PSK-Jd-Mwc">
                                 <rect key="frame" x="-2" y="138" width="484" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20.5" id="Nja-Ev-jV2"/>
@@ -771,7 +771,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pW5-rw-iqM">
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pW5-rw-iqM">
                                 <rect key="frame" x="-2" y="110" width="484" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20.5" id="7yV-Kc-xWR"/>
@@ -810,7 +810,7 @@
                                     <action selector="resetPressed:" target="BYZ-38-t0r" id="OzP-ro-bDg"/>
                                 </connections>
                             </button>
-                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qIR-CS-5vG">
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qIR-CS-5vG">
                                 <rect key="frame" x="-2" y="18" width="484" height="16"/>
                                 <textFieldCell key="cell" title="Info" id="Q7A-Pk-Qcn">
                                     <font key="font" metaFont="system"/>
