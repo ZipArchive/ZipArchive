@@ -264,6 +264,7 @@ int twentyMB = 20 * 1024 * 1024;
     
     NSError *error = nil;
     id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    // correct password is "passw0rd", so "passw0rd123" should be incorrect
     BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:@"passw0rd123" error:&error delegate:delegate];
     XCTAssertFalse(success, @"unzip failure");
     
@@ -275,6 +276,21 @@ int twentyMB = 20 * 1024 * 1024;
     XCTAssertFalse([fileManager fileExistsAtPath:testPath], @"LICENSE not unzipped");
 }
 
+- (void)testUnzippingWithInvalidPassword2 {
+    XCTSkip("https://github.com/ZipArchive/ZipArchive/issues/633");
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestPasswordArchive2" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"Password"];
+    
+    NSError *error = nil;
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    // correct password is "aaabbb", so "1989" should be incorrect
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath overwrite:YES password:@"1989" error:&error delegate:delegate];
+    XCTAssertFalse(success, @"unzip failure");
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *testPath = [outputPath stringByAppendingPathComponent:@"test.txt"];
+    XCTAssertFalse([fileManager fileExistsAtPath:testPath], @"test.txt not unzipped");
+}
 
 - (void)testIsPasswordInvalidForArchiveAtPath {
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestPasswordArchive" ofType:@"zip"];
@@ -287,6 +303,21 @@ int twentyMB = 20 * 1024 * 1024;
     
     BOOL fileHasInvalidValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"passw0rd123" error:&error];
     
+    XCTAssertFalse(fileHasInvalidValidPassword, @"Invalid password reports true.");
+}
+
+- (void)testIsPasswordInvalidForArchiveAtPath2 {
+    XCTSkip("https://github.com/ZipArchive/ZipArchive/issues/633");
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestPasswordArchive2" ofType:@"zip"];
+
+    NSError *error = nil;
+
+    BOOL fileHasValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"aaabbb" error:&error];
+
+    XCTAssertTrue(fileHasValidPassword, @"Valid password reports false.");
+
+    BOOL fileHasInvalidValidPassword = [SSZipArchive isPasswordValidForArchiveAtPath:zipPath password:@"1989" error:&error];
+
     XCTAssertFalse(fileHasInvalidValidPassword, @"Invalid password reports true.");
 }
 
