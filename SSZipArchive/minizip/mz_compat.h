@@ -8,9 +8,6 @@
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
- 
- WARNING: Be very careful updating/overwriting this file.
- It has specific changes for SSZipArchive support with some structs moved to SSZipCommon for public access
 */
 
 #ifndef MZ_COMPAT_H
@@ -35,7 +32,7 @@ extern "C" {
 #endif
 #endif
 #ifndef MAX_WBITS
-#define MAX_WBITS     15 //removed () to suppress warning about ambiguous expansion of macro -SSZipArchive
+#define MAX_WBITS     (15)
 #endif
 #ifndef DEF_MEM_LEVEL
 #define DEF_MEM_LEVEL (8)
@@ -124,11 +121,10 @@ ZEXPORT void fill_memory_filefunc(zlib_filefunc_def *pzlib_filefunc_def);
 
 /***************************************************************************/
 
-
-// SSZipArchive 2.x+ uses dos_date
+// ZipArchive 2.x uses dos_date
 #define MZ_COMPAT_VERSION 120
 
-#if MZ_COMPAT_VERSION <= 110
+#if !defined(MZ_COMPAT_VERSION) || MZ_COMPAT_VERSION <= 110
 #define mz_dos_date dosDate
 #else
 #define mz_dos_date dos_date
@@ -138,10 +134,10 @@ typedef struct tm tm_unz;
 typedef struct tm tm_zip;
 
 typedef struct {
-    uint32_t    mz_dos_date;
-    struct tm   tmz_date;
-    uint16_t    internal_fa;        /* internal file attributes        2 bytes */
-    uint32_t    external_fa;        /* external file attributes        4 bytes */
+    struct tm     tmz_date;           /* date in understandable format           */
+    unsigned long mz_dos_date;        /* if dos_date == 0, tmz_date is used      */
+    unsigned long internal_fa;        /* internal file attributes        2 bytes */
+    unsigned long external_fa;        /* external file attributes        4 bytes */
 } zip_fileinfo;
 
 typedef const char *zipcharpc;
@@ -156,7 +152,7 @@ typedef const char *zipcharpc;
 #define ZIP_INTERNALERROR               (-104)
 
 #ifndef Z_DEFLATED
-#define Z_DEFLATED                      8 //removed () to suppress warning about ambiguous expansion of macro -SSZipArchive
+#define Z_DEFLATED                      (8)
 #endif
 #define Z_BZIP2ED                       (12)
 
@@ -182,6 +178,10 @@ ZEXPORT void*   zipGetStream_MZ(zipFile file);
 ZEXPORT int     zipOpenNewFileInZip(zipFile file, const char *filename, const zip_fileinfo *zipfi,
     const void *extrafield_local, uint16_t size_extrafield_local, const void *extrafield_global,
     uint16_t size_extrafield_global, const char *comment, int compression_method, int level);
+ZEXPORT int     zipOpenNewFileInZip64(zipFile file, const char *filename, const zip_fileinfo *zipfi,
+    const void *extrafield_local, uint16_t size_extrafield_local, const void *extrafield_global,
+    uint16_t size_extrafield_global, const char *comment, int compression_method, int level,
+    int zip64);
 ZEXPORT int     zipOpenNewFileInZip_64(zipFile file, const char *filename, const zip_fileinfo *zipfi,
     const void *extrafield_local, uint16_t size_extrafield_local, const void *extrafield_global,
     uint16_t size_extrafield_global, const char *comment, int compression_method, int level,
@@ -218,12 +218,12 @@ ZEXPORT int     zipOpenNewFileInZip5(zipFile file, const char *filename, const z
     const void *extrafield_local, uint16_t size_extrafield_local, const void *extrafield_global,
     uint16_t size_extrafield_global, const char *comment, int compression_method, int level,
     int raw, int windowBits, int memLevel, int strategy, const char *password,
-    unsigned long crc_for_crypting, signed char aes, unsigned long version_madeby, unsigned long flag_base, int zip64);
+    unsigned long crc_for_crypting, unsigned long version_madeby, unsigned long flag_base, int zip64);
 
 ZEXPORT int     zipWriteInFileInZip(zipFile file, const void *buf, uint32_t len);
 
-ZEXPORT int     zipCloseFileInZipRaw(zipFile file, unsigned long uncompressed_size, uint32_t crc32);
-ZEXPORT int     zipCloseFileInZipRaw64(zipFile file, uint64_t uncompressed_size, uint32_t crc32);
+ZEXPORT int     zipCloseFileInZipRaw(zipFile file, unsigned long uncompressed_size, unsigned long crc32);
+ZEXPORT int     zipCloseFileInZipRaw64(zipFile file, uint64_t uncompressed_size, unsigned long crc32);
 ZEXPORT int     zipCloseFileInZip(zipFile file);
 ZEXPORT int     zipCloseFileInZip64(zipFile file);
 
@@ -258,7 +258,16 @@ typedef void *unzFile;
 
 /***************************************************************************/
 
-typedef int (*unzFileNameComparer)(unzFile file, const char *filename1, const char *filename2);
+#if !defined(MZ_COMPAT_VERSION) || MZ_COMPAT_VERSION < 110
+/* Possible values:
+   0 - Uses OS default, e.g. Windows ignores case.
+   1 - Is case sensitive.
+   >= 2 - Ignore case.
+*/
+typedef int unzFileNameCase;
+#else
+typedef int (*unzFileNameComparer)(unzFile file, const char* filename1, const char* filename2);
+#endif
 typedef int (*unzIteratorFunction)(unzFile file);
 typedef int (*unzIteratorFunction2)(unzFile file, unz_file_info64 *pfile_info, char *filename,
     uint16_t filename_size, void *extrafield, uint16_t extrafield_size, char *comment,
@@ -299,7 +308,11 @@ ZEXPORT int     unzGetCurrentFileInfo64(unzFile file, unz_file_info64 * pfile_in
 
 ZEXPORT int     unzGoToFirstFile(unzFile file);
 ZEXPORT int     unzGoToNextFile(unzFile file);
-ZEXPORT int     unzLocateFile(unzFile file, const char *filename, unzFileNameComparer filename_compare_func);
+#if !defined(MZ_COMPAT_VERSION) || MZ_COMPAT_VERSION < 110
+ZEXPORT int     unzLocateFile(unzFile file, const char *filename, unzFileNameCase filename_case);
+#else
+ZEXPORT int     unzLocateFile(unzFile file, const char* filename, unzFileNameComparer filename_compare_func);
+#endif
 
 ZEXPORT int     unzGetLocalExtrafield(unzFile file, void *buf, unsigned int len);
 

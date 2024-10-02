@@ -307,15 +307,10 @@ int32_t mz_stream_pkcrypt_set_prop_int64(void *stream, int32_t prop, int64_t val
     return MZ_OK;
 }
 
-void *mz_stream_pkcrypt_create(void **stream) {
-    mz_stream_pkcrypt *pkcrypt = NULL;
-
-    pkcrypt = (mz_stream_pkcrypt *)calloc(1, sizeof(mz_stream_pkcrypt));
+void *mz_stream_pkcrypt_create(void) {
+    mz_stream_pkcrypt *pkcrypt = (mz_stream_pkcrypt *)calloc(1, sizeof(mz_stream_pkcrypt));
     if (pkcrypt)
         pkcrypt->stream.vtbl = &mz_stream_pkcrypt_vtbl;
-    if (stream)
-        *stream = pkcrypt;
-
     return pkcrypt;
 }
 

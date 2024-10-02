@@ -34,7 +34,7 @@ void    mz_stream_mem_get_buffer_length(void *stream, int32_t *length);
 void    mz_stream_mem_set_buffer_limit(void *stream, int32_t limit);
 void    mz_stream_mem_set_grow_size(void *stream, int32_t grow_size);
 
-void*   mz_stream_mem_create(void **stream);
+void*   mz_stream_mem_create(void);
 void    mz_stream_mem_delete(void **stream);
 
 void*   mz_stream_mem_get_interface(void);
