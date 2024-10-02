@@ -8,6 +8,9 @@
 
    This program is distributed under the terms of the same license as zlib.
    See the accompanying LICENSE file for the full text of the license.
+ 
+ WARNING: Be very careful updating/overwriting this file.
+ It has specific changes for SSZipArchive support with some structs moved to SSZipCommon for public access
 */
 
 #ifndef MZ_COMPAT_H
@@ -32,7 +35,7 @@ extern "C" {
 #endif
 #endif
 #ifndef MAX_WBITS
-#define MAX_WBITS     (15)
+#define MAX_WBITS     15 //removed () to suppress warning about ambiguous expansion of macro -SSZipArchive
 #endif
 #ifndef DEF_MEM_LEVEL
 #define DEF_MEM_LEVEL (8)
@@ -121,6 +124,7 @@ ZEXPORT void fill_memory_filefunc(zlib_filefunc_def *pzlib_filefunc_def);
 
 /***************************************************************************/
 
+
 // ZipArchive 2.x uses dos_date
 #define MZ_COMPAT_VERSION 120
 
@@ -152,7 +156,7 @@ typedef const char *zipcharpc;
 #define ZIP_INTERNALERROR               (-104)
 
 #ifndef Z_DEFLATED
-#define Z_DEFLATED                      (8)
+#define Z_DEFLATED                      8 //removed () to suppress warning about ambiguous expansion of macro -SSZipArchive
 #endif
 #define Z_BZIP2ED                       (12)
 
