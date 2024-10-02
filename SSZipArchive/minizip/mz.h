@@ -14,8 +14,8 @@
 /***************************************************************************/
 
 /* MZ_VERSION */
-#define MZ_VERSION                      ("3.0.10")
-#define MZ_VERSION_BUILD                (03000a)
+#define MZ_VERSION                      ("4.0.7")
+#define MZ_VERSION_BUILD                (0x040007)
 
 /* MZ_ERROR */
 #define MZ_OK                           (0)  /* zlib */
@@ -112,13 +112,14 @@
 
 /* MZ_AES */
 #define MZ_AES_VERSION                  (1)
-#define MZ_AES_ENCRYPTION_MODE_128      (0x01)
-#define MZ_AES_ENCRYPTION_MODE_192      (0x02)
-#define MZ_AES_ENCRYPTION_MODE_256      (0x03)
-#define MZ_AES_KEY_LENGTH(MODE)         (8 * (MODE & 3) + 8)
+#define MZ_AES_MODE_ECB                 (0)
+#define MZ_AES_MODE_CBC                 (1)
+#define MZ_AES_MODE_GCM                 (2)
+#define MZ_AES_STRENGTH_128             (1)
+#define MZ_AES_STRENGTH_192             (2)
+#define MZ_AES_STRENGTH_256             (3)
 #define MZ_AES_KEY_LENGTH_MAX           (32)
 #define MZ_AES_BLOCK_SIZE               (16)
-#define MZ_AES_HEADER_SIZE(MODE)        ((4 * (MODE & 3) + 4) + 2)
 #define MZ_AES_FOOTER_SIZE              (10)
 
 /* MZ_HASH */

@@ -40,14 +40,14 @@
 /***************************************************************************/
 
 #if defined(HAVE_ICONV)
-uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
+char *mz_os_utf8_string_create(const char *string, int32_t encoding) {
     iconv_t cd;
     const char *from_encoding = NULL;
     size_t result = 0;
     size_t string_length = 0;
     size_t string_utf8_size = 0;
-    uint8_t *string_utf8 = NULL;
-    uint8_t *string_utf8_ptr = NULL;
+    char *string_utf8 = NULL;
+    char *string_utf8_ptr = NULL;
 
     if (!string)
         return NULL;
@@ -71,7 +71,7 @@ uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
 
     string_length = strlen(string);
     string_utf8_size = string_length * 2;
-    string_utf8 = (uint8_t *)calloc((int32_t)(string_utf8_size + 1), sizeof(char));
+    string_utf8 = (char *)calloc((int32_t)(string_utf8_size + 1), sizeof(char));
     string_utf8_ptr = string_utf8;
 
     if (string_utf8) {
@@ -89,12 +89,12 @@ uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
     return string_utf8;
 }
 #else
-uint8_t *mz_os_utf8_string_create(const char *string, int32_t encoding) {
-    return (uint8_t *)strdup(string);
+char *mz_os_utf8_string_create(const char *string, int32_t encoding) {
+    return strdup(string);
 }
 #endif
 
-void mz_os_utf8_string_delete(uint8_t **string) {
+void mz_os_utf8_string_delete(char **string) {
     if (string) {
         free(*string);
         *string = NULL;

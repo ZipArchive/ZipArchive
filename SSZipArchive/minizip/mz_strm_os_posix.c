@@ -176,15 +176,10 @@ int32_t mz_stream_os_error(void *stream) {
     return posix->error;
 }
 
-void *mz_stream_os_create(void **stream) {
-    mz_stream_posix *posix = NULL;
-
-    posix = (mz_stream_posix *)calloc(1, sizeof(mz_stream_posix));
+void *mz_stream_os_create(void) {
+    mz_stream_posix *posix = (mz_stream_posix *)calloc(1, sizeof(mz_stream_posix));
     if (posix)
         posix->stream.vtbl = &mz_stream_os_vtbl;
-    if (stream)
-        *stream = posix;
-
     return posix;
 }
 

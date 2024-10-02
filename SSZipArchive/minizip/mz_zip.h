@@ -48,7 +48,7 @@ typedef struct mz_zip_file_s {
 
     uint16_t zip64;                     /* zip64 extension mode */
     uint16_t aes_version;               /* winzip aes extension if not 0 */
-    uint8_t  aes_encryption_mode;       /* winzip aes encryption mode */
+    uint8_t  aes_strength;              /* winzip aes encryption strength */
     uint16_t pk_verify;                 /* pkware encryption verifier */
 
 } mz_zip_file, mz_zip_entry;
@@ -59,7 +59,7 @@ typedef int32_t (*mz_zip_locate_entry_cb)(void *handle, void *userdata, mz_zip_f
 
 /***************************************************************************/
 
-void *  mz_zip_create(void **handle);
+void *  mz_zip_create(void);
 /* Create zip instance for opening */
 
 void    mz_zip_delete(void **handle);

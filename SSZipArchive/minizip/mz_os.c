@@ -68,7 +68,7 @@ int32_t mz_path_remove_slash(char *path) {
 
 int32_t mz_path_has_slash(const char *path) {
     int32_t path_len = (int32_t)strlen(path);
-    if (path[path_len - 1] != '\\' && path[path_len - 1] != '/')
+    if (path_len > 0 && path[path_len - 1] != '\\' && path[path_len - 1] != '/')
         return MZ_EXIST_ERROR;
     return MZ_OK;
 }
@@ -171,11 +171,11 @@ int32_t mz_path_resolve(const char *path, char *output, int32_t max_output) {
                     if ((*check == 0) || (*check == '\\' || *check == '/')) {
                         source += (check - source);
 
-                        /* Search backwards for previous slash */
+                        /* Search backwards for previous slash or the start of the output string */
                         if (target != output) {
                             target -= 1;
                             do {
-                                if ((*target == '\\') || (*target == '/'))
+                                if ((target == output) ||(*target == '\\') || (*target == '/'))
                                     break;
 
                                 target -= 1;
@@ -283,6 +283,9 @@ int32_t mz_dir_make(const char *path) {
     char *match = NULL;
     char hold = 0;
 
+    if (!*path)
+        return MZ_OK;
+
     current_dir = strdup(path);
     if (!current_dir)
         return MZ_MEM_ERROR;
@@ -320,10 +323,11 @@ int32_t mz_file_get_crc(const char *path, uint32_t *result_crc) {
     int32_t err = MZ_OK;
     uint8_t buf[16384];
 
-    mz_stream_os_create(&stream);
+    stream = mz_stream_os_create();
+    if (!stream)
+        return MZ_MEM_ERROR;
 
     err = mz_stream_os_open(stream, path, MZ_OPEN_MODE_READ);
-
     if (err == MZ_OK) {
         do {
             read = mz_stream_os_read(stream, buf, sizeof(buf));
