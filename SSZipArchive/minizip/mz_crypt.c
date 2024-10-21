@@ -121,9 +121,14 @@ int32_t  mz_crypt_pbkdf2(uint8_t *password, int32_t password_length, uint8_t *sa
 
     memset(key, 0, key_length);
 
-    mz_crypt_hmac_create(&hmac1);
-    mz_crypt_hmac_create(&hmac2);
-    mz_crypt_hmac_create(&hmac3);
+    hmac1 = mz_crypt_hmac_create();
+    hmac2 = mz_crypt_hmac_create();
+    hmac3 = mz_crypt_hmac_create();
+
+    if (!hmac1 || !hmac2 || !hmac3) {
+        err = MZ_MEM_ERROR;
+        goto pbkdf2_cleanup;
+    }
 
     mz_crypt_hmac_set_algorithm(hmac1, MZ_HASH_SHA1);
     mz_crypt_hmac_set_algorithm(hmac2, MZ_HASH_SHA1);
@@ -174,6 +179,7 @@ int32_t  mz_crypt_pbkdf2(uint8_t *password, int32_t password_length, uint8_t *sa
             key[k++] = ux[j++];
     }
 
+pbkdf2_cleanup:
     /* hmac3 uses the same provider as hmac2, so it must be deleted
        before the context is destroyed. */
     mz_crypt_hmac_delete(&hmac3);
