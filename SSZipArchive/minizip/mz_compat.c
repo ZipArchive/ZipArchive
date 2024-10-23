@@ -990,8 +990,10 @@ int unzGetCurrentFileInfo(unzFile file, unz_file_info *pfile_info, char *filenam
         pfile_info->flag = file_info->flag;
         pfile_info->compression_method = file_info->compression_method;
         pfile_info->mz_dos_date = mz_zip_time_t_to_dos_date(file_info->modified_date);
-        mz_zip_time_t_to_tm(file_info->modified_date, &pfile_info->tmu_date);
-        pfile_info->tmu_date.tm_year += 1900;
+        // [ZipArchive] disabled for performances: we don't need the tmu_date field because we already set the mz_dos_date field:
+        // https://github.com/madler/zlib/blob/643e17b7498d12ab8d15565662880579692f769d/contrib/minizip/zip.h#L102
+        //mz_zip_time_t_to_tm(file_info->modified_date, &pfile_info->tmu_date);
+        //pfile_info->tmu_date.tm_year += 1900;
         pfile_info->crc = file_info->crc;
 
         pfile_info->size_filename = file_info->filename_size;
@@ -1051,8 +1053,10 @@ int unzGetCurrentFileInfo64(unzFile file, unz_file_info64 * pfile_info, char *fi
         pfile_info->flag = file_info->flag;
         pfile_info->compression_method = file_info->compression_method;
         pfile_info->mz_dos_date = mz_zip_time_t_to_dos_date(file_info->modified_date);
-        mz_zip_time_t_to_tm(file_info->modified_date, &pfile_info->tmu_date);
-        pfile_info->tmu_date.tm_year += 1900;
+        // [ZipArchive] disabled for performances: we don't need the tmu_date field because we already set the mz_dos_date field:
+        // https://github.com/madler/zlib/blob/643e17b7498d12ab8d15565662880579692f769d/contrib/minizip/zip.h#L102
+        //mz_zip_time_t_to_tm(file_info->modified_date, &pfile_info->tmu_date);
+        //pfile_info->tmu_date.tm_year += 1900;
         pfile_info->crc = file_info->crc;
 
         pfile_info->size_filename = file_info->filename_size;

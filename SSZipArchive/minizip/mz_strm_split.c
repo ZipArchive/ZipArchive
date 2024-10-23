@@ -104,8 +104,13 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk) {
     mz_stream_split_print("Split - Goto disk - %s (disk %" PRId32 ")\n", split->path_disk, number_disk);
 
     /* If disk part doesn't exist during reading then return MZ_EXIST_ERROR */
-    if (disk_part == MZ_OPEN_MODE_READ)
-        err = mz_os_file_exists(split->path_disk);
+    if (disk_part == MZ_OPEN_MODE_READ) {
+        if (strcmp(split->path_disk, split->path_cd) == 0) {
+            err = MZ_EXIST_ERROR;
+        } else {
+            err = mz_os_file_exists(split->path_disk);
+        }
+    }
 
     if (err == MZ_OK)
         err = mz_stream_open(split->stream.base, split->path_disk, split->mode);
@@ -241,7 +246,6 @@ int32_t mz_stream_split_read(void *stream, void *buf, int32_t size) {
             err = mz_stream_split_goto_disk(stream, split->current_disk + 1);
             if (err == MZ_EXIST_ERROR) {
                 split->current_disk = -1;
-                break;
             }
             if (err != MZ_OK)
                 return err;

@@ -12,6 +12,7 @@
 - (instancetype)init
 {
     self = super.init;
+    fileInfos = [NSMutableArray array];
     progressEvents = [NSMutableArray array];
     return self;
 }
@@ -27,6 +28,7 @@
 - (BOOL)zipArchiveShouldUnzipFileAtIndex:(NSInteger)fileIndex totalFiles:(NSInteger)totalFiles archivePath:(NSString *)archivePath fileInfo:(unz_file_info)fileInfo
 {
     NSLog(@"*** zipArchiveShouldUnzipFileAtIndex: `%d` totalFiles: `%d` archivePath: `%@` fileInfo:", (int)fileIndex, (int)totalFiles, archivePath);
+    [fileInfos addObject:[NSValue value:&fileInfo withObjCType:@encode(unz_file_info)]];
     return YES;
 }
 

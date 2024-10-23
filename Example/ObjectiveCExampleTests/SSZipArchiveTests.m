@@ -221,6 +221,14 @@ int twentyMB = 20 * 1024 * 1024;
     XCTAssertTrue(619 == [delegate->progressEvents[1] intValue]);
     XCTAssertTrue(1114 == [delegate->progressEvents[2] intValue]);
     XCTAssertTrue(1436 == [delegate->progressEvents[3] intValue]);
+
+    XCTAssertTrue(2 == [delegate->fileInfos count], @"Expected 2 files");
+    unz_file_info info;
+    [delegate->fileInfos[0] getValue:&info];
+    // This test is to ensure that ZipArchive 2.x keeps support of `dos_date` instead of `dosDate`, despite the legacy name at:
+    // https://github.com/madler/zlib/blame/643e17b7498d12ab8d15565662880579692f769d/contrib/minizip/unzip.h#L138
+    // In ZipArchive 3, we should hide this outdated structure from public.
+    XCTAssertNotEqual(info.dos_date, 0);
 }
 
 

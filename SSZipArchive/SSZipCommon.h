@@ -22,7 +22,7 @@ typedef struct unz_file_info_s
     unsigned long version_needed;       /* version needed to extract       2 bytes */
     unsigned long flag;                 /* general purpose bit flag        2 bytes */
     unsigned long compression_method;   /* compression method              2 bytes */
-    unsigned long dosDate;          	/* last mod file date in Dos fmt   4 bytes */
+    unsigned long dos_date;             /* last mod file date in Dos fmt   4 bytes */
     unsigned long crc;                  /* crc-32                          4 bytes */
     unsigned long compressed_size;      /* compressed size                 4 bytes */
     unsigned long uncompressed_size;    /* uncompressed size               4 bytes */

@@ -17,7 +17,8 @@
 @interface ProgressDelegate : NSObject <SSZipArchiveDelegate>
 {
 @public
-    NSMutableArray *progressEvents;
+    NSMutableArray<NSValue*> *fileInfos;
+    NSMutableArray<NSNumber*> *progressEvents;
 }
 
 @end

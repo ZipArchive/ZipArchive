@@ -124,6 +124,10 @@ ZEXPORT void fill_memory_filefunc(zlib_filefunc_def *pzlib_filefunc_def);
 
 /***************************************************************************/
 
+
+// SSZipArchive 2.x+ uses dos_date
+#define MZ_COMPAT_VERSION 120
+
 #if !defined(MZ_COMPAT_VERSION) || MZ_COMPAT_VERSION <= 110
 #define mz_dos_date dosDate
 #else
