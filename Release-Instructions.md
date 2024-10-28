@@ -37,7 +37,7 @@ The following steps should be taken by project maintainers when they update mini
 5. Look at the file `./CMakeFiles/minizip.dir/flags.make` it will give you the following information:
 - The list of compiler flags that we need to include (we have to either include zlib-ng or use ZLIB_COMPAT)
 
-HAVE_ARC4RANDOM_BUF HAVE_INTTYPES_H HAVE_PKCRYPT HAVE_STDINT_H HAVE_WZAES HAVE_ZLIB ZLIB_COMPAT
+HAVE_ARC4RANDOM_BUF HAVE_ICONV HAVE_INTTYPES_H HAVE_PKCRYPT HAVE_STDINT_H HAVE_WZAES HAVE_ZLIB ZLIB_COMPAT
 
 Ignoring the ones starting with an underscore, like: "_BSD_SOURCE" "_DARWIN_C_SOURCE" "_DEFAULT_SOURCE" "_POSIX_C_SOURCE=200809L"
 
