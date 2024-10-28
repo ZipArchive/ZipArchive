@@ -397,10 +397,10 @@ int32_t mz_stream_set_prop_int64(void *stream, int32_t prop, int64_t value) {
     return strm->vtbl->set_prop_int64(stream, prop, value);
 }
 
-void *mz_stream_create(void **stream, mz_stream_vtbl *vtbl) {
-    if (!stream || !vtbl || !vtbl->create)
+void *mz_stream_create(mz_stream_vtbl *vtbl) {
+    if (!vtbl || !vtbl->create)
         return NULL;
-    return vtbl->create(stream);
+    return vtbl->create();
 }
 
 void mz_stream_delete(void **stream) {
@@ -533,15 +533,10 @@ static mz_stream_vtbl mz_stream_raw_vtbl = {
 
 /***************************************************************************/
 
-void *mz_stream_raw_create(void **stream) {
-    mz_stream_raw *raw = NULL;
-
-    raw = (mz_stream_raw *)calloc(1, sizeof(mz_stream_raw));
+void *mz_stream_raw_create(void) {
+    mz_stream_raw *raw = (mz_stream_raw *)calloc(1, sizeof(mz_stream_raw));
     if (raw)
         raw->stream.vtbl = &mz_stream_raw_vtbl;
-    if (stream)
-        *stream = raw;
-
     return raw;
 }
 

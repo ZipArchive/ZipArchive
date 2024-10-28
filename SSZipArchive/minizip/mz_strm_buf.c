@@ -356,15 +356,10 @@ int32_t mz_stream_buffered_error(void *stream) {
     return mz_stream_error(buffered->stream.base);
 }
 
-void *mz_stream_buffered_create(void **stream) {
-    mz_stream_buffered *buffered = NULL;
-
-    buffered = (mz_stream_buffered *)calloc(1, sizeof(mz_stream_buffered));
+void *mz_stream_buffered_create(void) {
+    mz_stream_buffered *buffered = (mz_stream_buffered *)calloc(1, sizeof(mz_stream_buffered));
     if (buffered)
         buffered->stream.vtbl = &mz_stream_buffered_vtbl;
-    if (stream)
-        *stream = buffered;
-
     return buffered;
 }
 

@@ -237,17 +237,12 @@ void mz_stream_mem_set_grow_size(void *stream, int32_t grow_size) {
     mem->grow_size = grow_size;
 }
 
-void *mz_stream_mem_create(void **stream) {
-    mz_stream_mem *mem = NULL;
-
-    mem = (mz_stream_mem *)calloc(1, sizeof(mz_stream_mem));
+void *mz_stream_mem_create(void) {
+    mz_stream_mem *mem = (mz_stream_mem *)calloc(1, sizeof(mz_stream_mem));
     if (mem) {
         mem->stream.vtbl = &mz_stream_mem_vtbl;
         mem->grow_size = 4096;
     }
-    if (stream)
-        *stream = mem;
-
     return mem;
 }
 
