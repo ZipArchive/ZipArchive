@@ -34,8 +34,6 @@ typedef struct unz_file_info_s
     unsigned long internal_fa;          /* internal file attributes        2 bytes */
     unsigned long external_fa;          /* external file attributes        4 bytes */
 
-    struct tm tmu_date;
-
     uint64_t disk_offset;
 } unz_file_info;
 
