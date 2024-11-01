@@ -51,6 +51,12 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
     zipFile _zip;
 }
 
+NSObject<SSZipArchiveDelegate>* SSZipArchive_zipDelegate;
+
++ (void)setZipDelegate:(NSObject<SSZipArchiveDelegate> *)delegate{
+    SSZipArchive_zipDelegate = delegate;
+}
+
 #pragma mark - Password check
 
 + (BOOL)isFilePasswordProtectedAtPath:(NSString *)path {
@@ -925,8 +931,15 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
                 complete++;
                 progressHandler(complete, total);
             }
+            if (SSZipArchive_zipDelegate) {
+                if (SSZipArchive_zipDelegate.zipArchiveShouldStopZipProcess) {
+                    success = NO;
+                    break;
+                }
+            }
         }
         success &= [zipArchive close];
+        SSZipArchive_zipDelegate = nil;
     }
     return success;
 }
