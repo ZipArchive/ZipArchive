@@ -16,7 +16,7 @@ NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
 
 #define CHUNK 16384
 
-int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes, int zip64);
+int _zipOpenEntry(_Nonnull zipFile entry, NSString *name, const mz_zip_file *zipfi, int16_t level, NSString *password, BOOL aes, int zip64);
 BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
 
 #ifndef API_AVAILABLE
@@ -1034,7 +1034,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
         fileName = path.lastPathComponent;
     }
     
-    zip_fileinfo zipInfo = {};    
+    mz_zip_file zipInfo = {};
     [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
     
     //unpdate zipInfo.external_fa
@@ -1090,7 +1090,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
 {
     NSAssert((_zip != NULL), @"Attempting to write to an archive which was never opened");
     
-    zip_fileinfo zipInfo = {};
+    mz_zip_file zipInfo = {};
     
     [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
     
@@ -1127,7 +1127,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
         fileName = path.lastPathComponent;
     }
     
-    zip_fileinfo zipInfo = {};
+    mz_zip_file zipInfo = {};
     
     [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
     
@@ -1165,7 +1165,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
     if (!data) {
         return NO;
     }
-    zip_fileinfo zipInfo = {};
+    mz_zip_file zipInfo = {};
     [SSZipArchive zipInfo:&zipInfo setDate:[NSDate date]];
     
     int error = _zipOpenEntry(_zip, filename, &zipInfo, compressionLevel, password, aes, 1);
@@ -1230,11 +1230,12 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
 // Testing availability of @available (https://stackoverflow.com/a/46927445/1033581)
 #if __clang_major__ < 9
     // Xcode 8-
-    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_9_2) {
+    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_9_2)
 #else
     // Xcode 9+
-    if (@available(macOS 10.10, iOS 8.0, watchOS 2.0, tvOS 9.0, *)) {
+    if (@available(macOS 10.10, iOS 8.0, watchOS 2.0, tvOS 9.0, *))
 #endif
+    {
         // supported encodings are in [NSString availableStringEncodings]
         [NSString stringEncodingForData:data encodingOptions:nil convertedString:&strPath usedLossyConversion:nil];
     } else {
@@ -1257,7 +1258,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
     return strPath;
 }
 
-+ (void)zipInfo:(zip_fileinfo *)zipInfo setAttributesOfItemAtPath:(NSString *)path
++ (void)zipInfo:(mz_zip_file *)zipInfo setAttributesOfItemAtPath:(NSString *)path
 {
     NSDictionary *attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error: nil];
     if (attr)
@@ -1268,6 +1269,12 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
             [self zipInfo:zipInfo setDate:fileDate];
         }
         
+        NSNumber *fileSize = (NSNumber *)[attr objectForKey:NSFileSize];
+        if (fileSize)
+        {
+            zipInfo->uncompressed_size = fileSize.longLongValue;
+        }
+
         // Write permissions into the external attributes, for details on this see here: https://unix.stackexchange.com/a/14727
         // Get the permissions value from the files attributes
         NSNumber *permissionsValue = (NSNumber *)[attr objectForKey:NSFilePosixPermissions];
@@ -1289,8 +1296,9 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
     }
 }
 
-+ (void)zipInfo:(zip_fileinfo *)zipInfo setDate:(NSDate *)date
++ (void)zipInfo:(mz_zip_file *)zipInfo setDate:(NSDate *)date
 {
+    // NSDate* to `struct tm`
     NSCalendar *currentCalendar = SSZipArchive._gregorian;
     NSCalendarUnit flags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
     NSDateComponents *components = [currentCalendar components:flags fromDate:date];
@@ -1303,7 +1311,12 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
     tmz_date.tm_mon = (unsigned int)components.month - 1;
     // ISO/IEC 9899 struct tm is 0-indexed for AD 1900 but NSDateComponents for gregorianCalendar is 1-indexed for AD 1
     tmz_date.tm_year = (unsigned int)components.year - 1900;
-    zipInfo->mz_dos_date = mz_zip_tm_to_dosdate(&tmz_date);
+
+    // `struct tm` to dos date
+    uint64_t dos_date = mz_zip_tm_to_dosdate(&tmz_date);
+
+    // dos date to `time_t`
+    zipInfo->modified_date = mz_zip_dosdate_to_time_t(dos_date);
 }
 
 + (NSCalendar *)_gregorian
@@ -1352,8 +1365,15 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
 
 @end
 
-int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int level, NSString *password, BOOL aes, int zip64)
+int _zipOpenEntry(_Nonnull zipFile entry, NSString *name, const mz_zip_file *zipfi, int16_t level, NSString *password, BOOL aes, int zip64)
 {
+    const char *filename = name.fileSystemRepresentation;
+    /* The filename length must fit in 16 bits. */
+    if (filename && strlen(filename) > 0xffff)
+        return ZIP_PARAMERROR;
+
+    mz_zip_file file_info = {};
+
     // "version made by" and "general purpose bit flag" are documented in the .ZIP File Format Specification:
     // https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
     // older versions at https://support.pkware.com/pkzip/application-note-archives
@@ -1365,13 +1385,29 @@ int _zipOpenEntry(zipFile entry, NSString *name, const zip_fileinfo *zipfi, int 
     // Normally, the lower bit should be the version of the .ZIP File Format Specification,
     // so possible values would be: 10, 20, 45, 52, 62, 63,
     // but for general compatibility we adopt 30 (same as /usr/bin/zip).
-    uint16_t version_made_by = (3 << 8) + 30;
+    file_info.version_madeby = (3 << 8) + 30;
     
     // "general purpose bit flag"
     // We always want unicode encoding, as opposed to IBM Code Page 437.
-    uint16_t general_purpose_bit_flag = 1 << 11; // MZ_ZIP_FLAG_UTF8
-    
-    return zipOpenNewFileInZip5(entry, name.fileSystemRepresentation, zipfi, NULL, 0, NULL, 0, NULL, Z_DEFLATED, level, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password.UTF8String, 0, aes, version_made_by, general_purpose_bit_flag, zip64);
+    file_info.flag = 1 << 11; // MZ_ZIP_FLAG_UTF8
+
+    if (zipfi) {
+        file_info.uncompressed_size = zipfi->uncompressed_size;
+        file_info.modified_date = zipfi->modified_date;
+        file_info.external_fa = zipfi->external_fa;
+        file_info.internal_fa = zipfi->internal_fa;
+    }
+
+    file_info.compression_method = Z_DEFLATED;
+    file_info.filename = filename ?: "-";
+    // We favor AUTO as some programs (like Microsoft Word) aren't compatible with forced zip64.
+    file_info.zip64 = zip64 ? MZ_ZIP64_AUTO : MZ_ZIP64_DISABLE;
+
+    const char *c_password = password.UTF8String;
+    if (aes && c_password)
+        file_info.aes_version = MZ_AES_VERSION;
+
+    return mz_zip_entry_write_open(zipGetHandle_MZ(entry), &file_info, level, 0, c_password);
 }
 
 #pragma mark - Private tools for file info
