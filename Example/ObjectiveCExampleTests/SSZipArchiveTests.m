@@ -27,6 +27,10 @@
 - (NSString *)_sanitizedPath;
 @end
 
+@interface SSZipArchive (XCTest)
++ (NSDate *)_dateWithMSDOSFormat:(UInt32)msdosDateTime;
+@end
+
 @implementation SSZipArchiveTests
 
 int twentyMB = 20 * 1024 * 1024;
@@ -285,7 +289,6 @@ int twentyMB = 20 * 1024 * 1024;
 }
 
 - (void)testUnzippingWithInvalidPassword2 {
-    XCTSkip("https://github.com/ZipArchive/ZipArchive/issues/633");
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestPasswordArchive2" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Password"];
     
@@ -315,7 +318,6 @@ int twentyMB = 20 * 1024 * 1024;
 }
 
 - (void)testIsPasswordInvalidForArchiveAtPath2 {
-    XCTSkip("https://github.com/ZipArchive/ZipArchive/issues/633");
     NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"TestPasswordArchive2" ofType:@"zip"];
 
     NSError *error = nil;
@@ -744,6 +746,66 @@ int twentyMB = 20 * 1024 * 1024;
         //NSLog(@"%@", str);
         XCTAssertTrue([tests[str] isEqualToString:[str _sanitizedPath]], @"Path should be sanitized for traversal");
     }
+}
+
+- (void)testDateSanitation {
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSDateComponents *components = [[NSDateComponents alloc] init];
+    struct tm ptm;
+
+    /* Test min date is in year 1979 */
+
+    UInt32 dos_date_min = 1;
+    NSDate *minDate = [SSZipArchive _dateWithMSDOSFormat:dos_date_min];
+
+    components.year = 1979;
+    components.month = 11;
+    components.day = 30;
+    components.hour = 0;
+    components.minute = 0;
+    components.second = 2;
+    NSDate *gregorianMinDate = [gregorian dateFromComponents:components];
+    XCTAssertEqual(minDate, gregorianMinDate);
+
+    /* Test our implementation is equivalent to `[NSDate dateWithTimeIntervalSince1970:mz_zip_dosdate_to_time_t(msdosDateTime)]` */
+
+    // fixed mz_zip_dosdate_to_time_t implementation (https://github.com/zlib-ng/minizip-ng/pull/820)
+    uint64_t date_min = (uint64_t)(dos_date_min >> 16);
+    ptm.tm_mday  = (int16_t)(date_min & 0x1f);
+    ptm.tm_mon   = (int16_t)(((date_min & 0x1E0) / 0x20) - 1);
+    ptm.tm_year  = (int16_t)(((date_min & 0x0FE00) / 0x0200) + 80);
+    ptm.tm_hour  = (int16_t)((dos_date_min & 0xF800) / 0x800);
+    ptm.tm_min   = (int16_t)((dos_date_min & 0x7E0) / 0x20);
+    ptm.tm_sec   = (int16_t)(2 * (dos_date_min & 0x1f));
+    ptm.tm_isdst = -1;
+    XCTAssertEqual(minDate, [NSDate dateWithTimeIntervalSince1970:mktime(&ptm)]);
+
+    /* Test max date is in year 2108 */
+
+    UInt32 dos_date_max = -1;
+    NSDate *maxDate = [SSZipArchive _dateWithMSDOSFormat:dos_date_max];
+
+    components.year = 2108;
+    components.month = 4;
+    components.day = 1;
+    components.hour = 8;
+    components.minute = 4;
+    components.second = 2;
+    NSDate *gregorianMaxDate = [gregorian dateFromComponents:components];
+    XCTAssertEqual(maxDate, gregorianMaxDate);
+
+    /* Test our implementation is equivalent to `[NSDate dateWithTimeIntervalSince1970:mz_zip_dosdate_to_time_t(msdosDateTime)]` */
+
+    // fixed mz_zip_dosdate_to_time_t implementation (https://github.com/zlib-ng/minizip-ng/pull/820)
+    uint64_t date_max = (uint64_t)(dos_date_max >> 16);
+    ptm.tm_mday  = (int16_t)(date_max & 0x1f);
+    ptm.tm_mon   = (int16_t)(((date_max & 0x1E0) / 0x20) - 1);
+    ptm.tm_year  = (int16_t)(((date_max & 0x0FE00) / 0x0200) + 80);
+    ptm.tm_hour  = (int16_t)((dos_date_max & 0xF800) / 0x800);
+    ptm.tm_min   = (int16_t)((dos_date_max & 0x7E0) / 0x20);
+    ptm.tm_sec   = (int16_t)(2 * (dos_date_max & 0x1f));
+    ptm.tm_isdst = -1;
+    XCTAssertEqual(maxDate, [NSDate dateWithTimeIntervalSince1970:mktime(&ptm)]);
 }
 
 // This tests whether the payload size of the zip file containing 4.8Gb of files with compression 0 is correct,
