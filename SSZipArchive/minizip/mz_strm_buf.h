@@ -28,10 +28,10 @@ int32_t mz_stream_buffered_seek(void *stream, int64_t offset, int32_t origin);
 int32_t mz_stream_buffered_close(void *stream);
 int32_t mz_stream_buffered_error(void *stream);
 
-void*   mz_stream_buffered_create(void);
-void    mz_stream_buffered_delete(void **stream);
+void *mz_stream_buffered_create(void);
+void mz_stream_buffered_delete(void **stream);
 
-void*   mz_stream_buffered_get_interface(void);
+void *mz_stream_buffered_get_interface(void);
 
 /***************************************************************************/
 

@@ -768,7 +768,7 @@ int twentyMB = 20 * 1024 * 1024;
 
     /* Test our implementation is equivalent to `[NSDate dateWithTimeIntervalSince1970:mz_zip_dosdate_to_time_t(msdosDateTime)]` */
 
-    // fixed mz_zip_dosdate_to_time_t implementation (https://github.com/zlib-ng/minizip-ng/pull/820)
+    // copy of mz_zip_dosdate_to_time_t implementation
     uint64_t date_min = (uint64_t)(dos_date_min >> 16);
     ptm.tm_mday  = (int16_t)(date_min & 0x1f);
     ptm.tm_mon   = (int16_t)(((date_min & 0x1E0) / 0x20) - 1);
@@ -795,7 +795,7 @@ int twentyMB = 20 * 1024 * 1024;
 
     /* Test our implementation is equivalent to `[NSDate dateWithTimeIntervalSince1970:mz_zip_dosdate_to_time_t(msdosDateTime)]` */
 
-    // fixed mz_zip_dosdate_to_time_t implementation (https://github.com/zlib-ng/minizip-ng/pull/820)
+    // copy of mz_zip_dosdate_to_time_t implementation
     uint64_t date_max = (uint64_t)(dos_date_max >> 16);
     ptm.tm_mday  = (int16_t)(date_max & 0x1f);
     ptm.tm_mon   = (int16_t)(((date_max & 0x1E0) / 0x20) - 1);

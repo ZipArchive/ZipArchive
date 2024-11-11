@@ -26,18 +26,18 @@ int32_t mz_stream_mem_seek(void *stream, int64_t offset, int32_t origin);
 int32_t mz_stream_mem_close(void *stream);
 int32_t mz_stream_mem_error(void *stream);
 
-void    mz_stream_mem_set_buffer(void *stream, void *buf, int32_t size);
+void mz_stream_mem_set_buffer(void *stream, void *buf, int32_t size);
 int32_t mz_stream_mem_get_buffer(void *stream, const void **buf);
 int32_t mz_stream_mem_get_buffer_at(void *stream, int64_t position, const void **buf);
 int32_t mz_stream_mem_get_buffer_at_current(void *stream, const void **buf);
-void    mz_stream_mem_get_buffer_length(void *stream, int32_t *length);
-void    mz_stream_mem_set_buffer_limit(void *stream, int32_t limit);
-void    mz_stream_mem_set_grow_size(void *stream, int32_t grow_size);
+void mz_stream_mem_get_buffer_length(void *stream, int32_t *length);
+void mz_stream_mem_set_buffer_limit(void *stream, int32_t limit);
+void mz_stream_mem_set_grow_size(void *stream, int32_t grow_size);
 
-void*   mz_stream_mem_create(void);
-void    mz_stream_mem_delete(void **stream);
+void *mz_stream_mem_create(void);
+void mz_stream_mem_delete(void **stream);
 
-void*   mz_stream_mem_get_interface(void);
+void *mz_stream_mem_get_interface(void);
 
 /***************************************************************************/
 

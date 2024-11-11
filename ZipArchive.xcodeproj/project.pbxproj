@@ -15,10 +15,6 @@
 		3775F34A2276B14400A1840B /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */; };
 		3775F34B2276B14400A1840B /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */; };
 		3775F34C2276B14400A1840B /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */; };
-		3775F3552276B14400A1840B /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3282276B14100A1840B /* mz_compat.c */; };
-		3775F3562276B14400A1840B /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3282276B14100A1840B /* mz_compat.c */; };
-		3775F3572276B14400A1840B /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3282276B14100A1840B /* mz_compat.c */; };
-		3775F3582276B14400A1840B /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3282276B14100A1840B /* mz_compat.c */; };
 		3775F35D2276B14400A1840B /* mz_strm_os.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F32A2276B14100A1840B /* mz_strm_os.h */; };
 		3775F35E2276B14400A1840B /* mz_strm_os.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F32A2276B14100A1840B /* mz_strm_os.h */; };
 		3775F35F2276B14400A1840B /* mz_strm_os.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F32A2276B14100A1840B /* mz_strm_os.h */; };
@@ -63,10 +59,6 @@
 		3775F38E2276B14400A1840B /* mz_strm_split.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3362276B14200A1840B /* mz_strm_split.c */; };
 		3775F38F2276B14400A1840B /* mz_strm_split.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3362276B14200A1840B /* mz_strm_split.c */; };
 		3775F3902276B14400A1840B /* mz_strm_split.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3362276B14200A1840B /* mz_strm_split.c */; };
-		3775F3912276B14400A1840B /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F3372276B14200A1840B /* mz_compat.h */; };
-		3775F3922276B14400A1840B /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F3372276B14200A1840B /* mz_compat.h */; };
-		3775F3932276B14400A1840B /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F3372276B14200A1840B /* mz_compat.h */; };
-		3775F3942276B14400A1840B /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F3372276B14200A1840B /* mz_compat.h */; };
 		3775F3952276B14400A1840B /* mz_zip_rw.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F3382276B14200A1840B /* mz_zip_rw.h */; };
 		3775F3962276B14400A1840B /* mz_zip_rw.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F3382276B14200A1840B /* mz_zip_rw.h */; };
 		3775F3972276B14400A1840B /* mz_zip_rw.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F3382276B14200A1840B /* mz_zip_rw.h */; };
@@ -155,6 +147,36 @@
 		B423AE6B1C0DF7950004A2F1 /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE481C0DF7950004A2F1 /* SSZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B423AE6C1C0DF7950004A2F1 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = B423AE491C0DF7950004A2F1 /* SSZipArchive.m */; };
 		B423AE6D1C0DF7950004A2F1 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C8BD22DD2CE2B27B00843A77 /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22DA2CE2B27B00843A77 /* zip.h */; };
+		C8BD22DE2CE2B27B00843A77 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22D62CE2B27B00843A77 /* ioapi.h */; };
+		C8BD22DF2CE2B27B00843A77 /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22D82CE2B27B00843A77 /* unzip.h */; };
+		C8BD22E02CE2B27B00843A77 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22D92CE2B27B00843A77 /* unzip.c */; };
+		C8BD22E12CE2B27B00843A77 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22DB2CE2B27B00843A77 /* zip.c */; };
+		C8BD22E22CE2B27B00843A77 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22D72CE2B27B00843A77 /* ioapi.c */; };
+		C8BD22E32CE2B27B00843A77 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22D92CE2B27B00843A77 /* unzip.c */; };
+		C8BD22E42CE2B27B00843A77 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22DB2CE2B27B00843A77 /* zip.c */; };
+		C8BD22E52CE2B27B00843A77 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22D72CE2B27B00843A77 /* ioapi.c */; };
+		C8BD22E62CE2B27B00843A77 /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22DA2CE2B27B00843A77 /* zip.h */; };
+		C8BD22E72CE2B27B00843A77 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22D62CE2B27B00843A77 /* ioapi.h */; };
+		C8BD22E82CE2B27B00843A77 /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22D82CE2B27B00843A77 /* unzip.h */; };
+		C8BD22E92CE2B27B00843A77 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22D92CE2B27B00843A77 /* unzip.c */; };
+		C8BD22EA2CE2B27B00843A77 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22DB2CE2B27B00843A77 /* zip.c */; };
+		C8BD22EB2CE2B27B00843A77 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22D72CE2B27B00843A77 /* ioapi.c */; };
+		C8BD22EC2CE2B27B00843A77 /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22DA2CE2B27B00843A77 /* zip.h */; };
+		C8BD22ED2CE2B27B00843A77 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22D62CE2B27B00843A77 /* ioapi.h */; };
+		C8BD22EE2CE2B27B00843A77 /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22D82CE2B27B00843A77 /* unzip.h */; };
+		C8BD22EF2CE2B27B00843A77 /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22DA2CE2B27B00843A77 /* zip.h */; };
+		C8BD22F02CE2B27B00843A77 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22D62CE2B27B00843A77 /* ioapi.h */; };
+		C8BD22F12CE2B27B00843A77 /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22D82CE2B27B00843A77 /* unzip.h */; };
+		C8BD22F22CE2B27B00843A77 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22D92CE2B27B00843A77 /* unzip.c */; };
+		C8BD22F32CE2B27B00843A77 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22DB2CE2B27B00843A77 /* zip.c */; };
+		C8BD22F42CE2B27B00843A77 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22D72CE2B27B00843A77 /* ioapi.c */; };
+		C8BD22F52CE2B27B00843A77 /* zip.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22DA2CE2B27B00843A77 /* zip.h */; };
+		C8BD22F62CE2B27B00843A77 /* ioapi.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22D62CE2B27B00843A77 /* ioapi.h */; };
+		C8BD22F72CE2B27B00843A77 /* unzip.h in Headers */ = {isa = PBXBuildFile; fileRef = C8BD22D82CE2B27B00843A77 /* unzip.h */; };
+		C8BD22F82CE2B27B00843A77 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22D92CE2B27B00843A77 /* unzip.c */; };
+		C8BD22F92CE2B27B00843A77 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22DB2CE2B27B00843A77 /* zip.c */; };
+		C8BD22FA2CE2B27B00843A77 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = C8BD22D72CE2B27B00843A77 /* ioapi.c */; };
 		C8DEE3662BE59172005150F4 /* mz_os_posix.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F33E2276B14300A1840B /* mz_os_posix.c */; };
 		C8DEE3672BE59172005150F4 /* mz_strm_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3342276B14200A1840B /* mz_strm_mem.c */; };
 		C8DEE3682BE59172005150F4 /* mz_strm_wzaes.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3482276B14400A1840B /* mz_strm_wzaes.c */; };
@@ -164,7 +186,6 @@
 		C8DEE36C2BE59172005150F4 /* mz_strm_split.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3362276B14200A1840B /* mz_strm_split.c */; };
 		C8DEE36D2BE59172005150F4 /* mz_strm_pkcrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */; };
 		C8DEE36E2BE59172005150F4 /* mz_strm.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3462276B14300A1840B /* mz_strm.c */; };
-		C8DEE36F2BE59172005150F4 /* mz_compat.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3282276B14100A1840B /* mz_compat.c */; };
 		C8DEE3702BE59172005150F4 /* mz_crypt_apple.c in Sources */ = {isa = PBXBuildFile; fileRef = 378439B1227ABC7B000BC165 /* mz_crypt_apple.c */; };
 		C8DEE3712BE59172005150F4 /* mz_strm_zlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F33A2276B14200A1840B /* mz_strm_zlib.c */; };
 		C8DEE3722BE59172005150F4 /* mz_zip_rw.c in Sources */ = {isa = PBXBuildFile; fileRef = 3775F3332276B14200A1840B /* mz_zip_rw.c */; };
@@ -189,7 +210,6 @@
 		C8DEE3872BE59172005150F4 /* mz_strm_os.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F32A2276B14100A1840B /* mz_strm_os.h */; };
 		C8DEE3882BE59172005150F4 /* mz_zip_rw.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F3382276B14200A1840B /* mz_zip_rw.h */; };
 		C8DEE3892BE59172005150F4 /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CE5D5D227FE5C50003464F /* SSZipCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C8DEE38A2BE59172005150F4 /* mz_compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F3372276B14200A1840B /* mz_compat.h */; };
 		C8DEE38B2BE59172005150F4 /* mz_strm_wzaes.h in Headers */ = {isa = PBXBuildFile; fileRef = 3775F3322276B14200A1840B /* mz_strm_wzaes.h */; };
 		C8DEE38D2BE59172005150F4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 330100222AC89AA8001431B0 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
@@ -197,7 +217,6 @@
 /* Begin PBXFileReference section */
 		330100222AC89AA8001431B0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_pkcrypt.c; sourceTree = "<group>"; };
-		3775F3282276B14100A1840B /* mz_compat.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_compat.c; sourceTree = "<group>"; };
 		3775F32A2276B14100A1840B /* mz_strm_os.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_strm_os.h; sourceTree = "<group>"; };
 		3775F32B2276B14200A1840B /* mz_os.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_os.c; sourceTree = "<group>"; };
 		3775F32C2276B14200A1840B /* mz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz.h; sourceTree = "<group>"; };
@@ -209,7 +228,6 @@
 		3775F3342276B14200A1840B /* mz_strm_mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_mem.c; sourceTree = "<group>"; };
 		3775F3352276B14200A1840B /* mz_strm_pkcrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_strm_pkcrypt.h; sourceTree = "<group>"; };
 		3775F3362276B14200A1840B /* mz_strm_split.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_split.c; sourceTree = "<group>"; };
-		3775F3372276B14200A1840B /* mz_compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_compat.h; sourceTree = "<group>"; };
 		3775F3382276B14200A1840B /* mz_zip_rw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mz_zip_rw.h; sourceTree = "<group>"; };
 		3775F3392276B14200A1840B /* mz_strm_buf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_buf.c; sourceTree = "<group>"; };
 		3775F33A2276B14200A1840B /* mz_strm_zlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mz_strm_zlib.c; sourceTree = "<group>"; };
@@ -246,6 +264,12 @@
 		B423AE481C0DF7950004A2F1 /* SSZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipArchive.h; sourceTree = "<group>"; };
 		B423AE491C0DF7950004A2F1 /* SSZipArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchive.m; sourceTree = "<group>"; };
 		B423AE4A1C0DF7950004A2F1 /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
+		C8BD22D62CE2B27B00843A77 /* ioapi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
+		C8BD22D72CE2B27B00843A77 /* ioapi.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
+		C8BD22D82CE2B27B00843A77 /* unzip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
+		C8BD22D92CE2B27B00843A77 /* unzip.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
+		C8BD22DA2CE2B27B00843A77 /* zip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
+		C8BD22DB2CE2B27B00843A77 /* zip.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
 		C8DEE3912BE59172005150F4 /* ZipArchive.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ZipArchive.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -376,37 +400,49 @@
 		B423AE3E1C0DF7950004A2F1 /* minizip */ = {
 			isa = PBXGroup;
 			children = (
-				3775F3282276B14100A1840B /* mz_compat.c */,
-				3775F3372276B14200A1840B /* mz_compat.h */,
-				378439B1227ABC7B000BC165 /* mz_crypt_apple.c */,
-				3775F32E2276B14200A1840B /* mz_crypt.c */,
-				3775F33F2276B14300A1840B /* mz_crypt.h */,
-				3775F33E2276B14300A1840B /* mz_os_posix.c */,
-				3775F32B2276B14200A1840B /* mz_os.c */,
-				3775F32F2276B14200A1840B /* mz_os.h */,
-				3775F3392276B14200A1840B /* mz_strm_buf.c */,
-				3775F33D2276B14300A1840B /* mz_strm_buf.h */,
-				3775F3342276B14200A1840B /* mz_strm_mem.c */,
-				3775F3422276B14300A1840B /* mz_strm_mem.h */,
-				3775F3432276B14300A1840B /* mz_strm_os_posix.c */,
-				3775F32A2276B14100A1840B /* mz_strm_os.h */,
-				3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */,
-				3775F3352276B14200A1840B /* mz_strm_pkcrypt.h */,
-				3775F3362276B14200A1840B /* mz_strm_split.c */,
-				3775F3312276B14200A1840B /* mz_strm_split.h */,
-				3775F3482276B14400A1840B /* mz_strm_wzaes.c */,
-				3775F3322276B14200A1840B /* mz_strm_wzaes.h */,
-				3775F33A2276B14200A1840B /* mz_strm_zlib.c */,
-				3775F3452276B14300A1840B /* mz_strm_zlib.h */,
-				3775F3462276B14300A1840B /* mz_strm.c */,
-				3775F33B2276B14200A1840B /* mz_strm.h */,
-				3775F3332276B14200A1840B /* mz_zip_rw.c */,
-				3775F3382276B14200A1840B /* mz_zip_rw.h */,
-				3775F33C2276B14300A1840B /* mz_zip.c */,
-				3775F3412276B14300A1840B /* mz_zip.h */,
+				C8BD22DC2CE2B27B00843A77 /* compat */,
 				3775F32C2276B14200A1840B /* mz.h */,
+				3775F33F2276B14300A1840B /* mz_crypt.h */,
+				3775F32E2276B14200A1840B /* mz_crypt.c */,
+				378439B1227ABC7B000BC165 /* mz_crypt_apple.c */,
+				3775F32F2276B14200A1840B /* mz_os.h */,
+				3775F32B2276B14200A1840B /* mz_os.c */,
+				3775F33E2276B14300A1840B /* mz_os_posix.c */,
+				3775F33B2276B14200A1840B /* mz_strm.h */,
+				3775F3462276B14300A1840B /* mz_strm.c */,
+				3775F33D2276B14300A1840B /* mz_strm_buf.h */,
+				3775F3392276B14200A1840B /* mz_strm_buf.c */,
+				3775F3422276B14300A1840B /* mz_strm_mem.h */,
+				3775F3342276B14200A1840B /* mz_strm_mem.c */,
+				3775F32A2276B14100A1840B /* mz_strm_os.h */,
+				3775F3432276B14300A1840B /* mz_strm_os_posix.c */,
+				3775F3352276B14200A1840B /* mz_strm_pkcrypt.h */,
+				3775F3252276B14100A1840B /* mz_strm_pkcrypt.c */,
+				3775F3312276B14200A1840B /* mz_strm_split.h */,
+				3775F3362276B14200A1840B /* mz_strm_split.c */,
+				3775F3322276B14200A1840B /* mz_strm_wzaes.h */,
+				3775F3482276B14400A1840B /* mz_strm_wzaes.c */,
+				3775F3452276B14300A1840B /* mz_strm_zlib.h */,
+				3775F33A2276B14200A1840B /* mz_strm_zlib.c */,
+				3775F3412276B14300A1840B /* mz_zip.h */,
+				3775F33C2276B14300A1840B /* mz_zip.c */,
+				3775F3382276B14200A1840B /* mz_zip_rw.h */,
+				3775F3332276B14200A1840B /* mz_zip_rw.c */,
 			);
 			path = minizip;
+			sourceTree = "<group>";
+		};
+		C8BD22DC2CE2B27B00843A77 /* compat */ = {
+			isa = PBXGroup;
+			children = (
+				C8BD22D62CE2B27B00843A77 /* ioapi.h */,
+				C8BD22D72CE2B27B00843A77 /* ioapi.c */,
+				C8BD22D82CE2B27B00843A77 /* unzip.h */,
+				C8BD22D92CE2B27B00843A77 /* unzip.c */,
+				C8BD22DA2CE2B27B00843A77 /* zip.h */,
+				C8BD22DB2CE2B27B00843A77 /* zip.c */,
+			);
+			path = compat;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -422,6 +458,9 @@
 				3775F3732276B14400A1840B /* mz_os.h in Headers */,
 				3775F3672276B14400A1840B /* mz.h in Headers */,
 				3775F3B32276B14400A1840B /* mz_crypt.h in Headers */,
+				C8BD22F52CE2B27B00843A77 /* zip.h in Headers */,
+				C8BD22F62CE2B27B00843A77 /* ioapi.h in Headers */,
+				C8BD22F72CE2B27B00843A77 /* unzip.h in Headers */,
 				3775F37B2276B14400A1840B /* mz_strm_split.h in Headers */,
 				3775F3BB2276B14400A1840B /* mz_zip.h in Headers */,
 				3775F3BF2276B14400A1840B /* mz_strm_mem.h in Headers */,
@@ -429,7 +468,6 @@
 				3775F38B2276B14400A1840B /* mz_strm_pkcrypt.h in Headers */,
 				3775F35F2276B14400A1840B /* mz_strm_os.h in Headers */,
 				3775F3972276B14400A1840B /* mz_zip_rw.h in Headers */,
-				3775F3932276B14400A1840B /* mz_compat.h in Headers */,
 				93CE5D60227FE5C50003464F /* SSZipCommon.h in Headers */,
 				3775F37F2276B14400A1840B /* mz_strm_wzaes.h in Headers */,
 				37952C341F63B71400DD6677 /* ZipArchive.h in Headers */,
@@ -446,6 +484,9 @@
 				3775F3742276B14400A1840B /* mz_os.h in Headers */,
 				3775F3682276B14400A1840B /* mz.h in Headers */,
 				3775F3B42276B14400A1840B /* mz_crypt.h in Headers */,
+				C8BD22DD2CE2B27B00843A77 /* zip.h in Headers */,
+				C8BD22DE2CE2B27B00843A77 /* ioapi.h in Headers */,
+				C8BD22DF2CE2B27B00843A77 /* unzip.h in Headers */,
 				3775F37C2276B14400A1840B /* mz_strm_split.h in Headers */,
 				3775F3BC2276B14400A1840B /* mz_zip.h in Headers */,
 				3775F3C02276B14400A1840B /* mz_strm_mem.h in Headers */,
@@ -455,7 +496,6 @@
 				3775F3602276B14400A1840B /* mz_strm_os.h in Headers */,
 				3775F3982276B14400A1840B /* mz_zip_rw.h in Headers */,
 				93CE5D61227FE5C50003464F /* SSZipCommon.h in Headers */,
-				3775F3942276B14400A1840B /* mz_compat.h in Headers */,
 				3775F3802276B14400A1840B /* mz_strm_wzaes.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,6 +510,9 @@
 				3775F3722276B14400A1840B /* mz_os.h in Headers */,
 				3775F3662276B14400A1840B /* mz.h in Headers */,
 				3775F3B22276B14400A1840B /* mz_crypt.h in Headers */,
+				C8BD22EF2CE2B27B00843A77 /* zip.h in Headers */,
+				C8BD22F02CE2B27B00843A77 /* ioapi.h in Headers */,
+				C8BD22F12CE2B27B00843A77 /* unzip.h in Headers */,
 				3775F37A2276B14400A1840B /* mz_strm_split.h in Headers */,
 				3775F3BA2276B14400A1840B /* mz_zip.h in Headers */,
 				3775F3BE2276B14400A1840B /* mz_strm_mem.h in Headers */,
@@ -479,7 +522,6 @@
 				3775F35E2276B14400A1840B /* mz_strm_os.h in Headers */,
 				3775F3962276B14400A1840B /* mz_zip_rw.h in Headers */,
 				93CE5D5F227FE5C50003464F /* SSZipCommon.h in Headers */,
-				3775F3922276B14400A1840B /* mz_compat.h in Headers */,
 				3775F37E2276B14400A1840B /* mz_strm_wzaes.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -494,6 +536,9 @@
 				3775F3A92276B14400A1840B /* mz_strm_buf.h in Headers */,
 				3775F3712276B14400A1840B /* mz_os.h in Headers */,
 				3775F3652276B14400A1840B /* mz.h in Headers */,
+				C8BD22E62CE2B27B00843A77 /* zip.h in Headers */,
+				C8BD22E72CE2B27B00843A77 /* ioapi.h in Headers */,
+				C8BD22E82CE2B27B00843A77 /* unzip.h in Headers */,
 				3775F3B12276B14400A1840B /* mz_crypt.h in Headers */,
 				3775F3792276B14400A1840B /* mz_strm_split.h in Headers */,
 				3775F3B92276B14400A1840B /* mz_zip.h in Headers */,
@@ -503,7 +548,6 @@
 				3775F3892276B14400A1840B /* mz_strm_pkcrypt.h in Headers */,
 				3775F35D2276B14400A1840B /* mz_strm_os.h in Headers */,
 				3775F3952276B14400A1840B /* mz_zip_rw.h in Headers */,
-				3775F3912276B14400A1840B /* mz_compat.h in Headers */,
 				3775F37D2276B14400A1840B /* mz_strm_wzaes.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -518,6 +562,9 @@
 				C8DEE37E2BE59172005150F4 /* mz_os.h in Headers */,
 				C8DEE37F2BE59172005150F4 /* mz.h in Headers */,
 				C8DEE3802BE59172005150F4 /* mz_crypt.h in Headers */,
+				C8BD22EC2CE2B27B00843A77 /* zip.h in Headers */,
+				C8BD22ED2CE2B27B00843A77 /* ioapi.h in Headers */,
+				C8BD22EE2CE2B27B00843A77 /* unzip.h in Headers */,
 				C8DEE3812BE59172005150F4 /* mz_strm_split.h in Headers */,
 				C8DEE3822BE59172005150F4 /* mz_zip.h in Headers */,
 				C8DEE3832BE59172005150F4 /* mz_strm_mem.h in Headers */,
@@ -527,7 +574,6 @@
 				C8DEE3872BE59172005150F4 /* mz_strm_os.h in Headers */,
 				C8DEE3882BE59172005150F4 /* mz_zip_rw.h in Headers */,
 				C8DEE3892BE59172005150F4 /* SSZipCommon.h in Headers */,
-				C8DEE38A2BE59172005150F4 /* mz_compat.h in Headers */,
 				C8DEE38B2BE59172005150F4 /* mz_strm_wzaes.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -727,9 +773,11 @@
 				3775F36F2276B14400A1840B /* mz_crypt.c in Sources */,
 				3775F38F2276B14400A1840B /* mz_strm_split.c in Sources */,
 				37952C331F63B70000DD6677 /* SSZipArchive.m in Sources */,
+				C8BD22F82CE2B27B00843A77 /* unzip.c in Sources */,
+				C8BD22F92CE2B27B00843A77 /* zip.c in Sources */,
+				C8BD22FA2CE2B27B00843A77 /* ioapi.c in Sources */,
 				3775F34B2276B14400A1840B /* mz_strm_pkcrypt.c in Sources */,
 				3775F3CF2276B14400A1840B /* mz_strm.c in Sources */,
-				3775F3572276B14400A1840B /* mz_compat.c in Sources */,
 				378439B4227ABC7B000BC165 /* mz_crypt_apple.c in Sources */,
 				3775F39F2276B14400A1840B /* mz_strm_zlib.c in Sources */,
 				3775F3832276B14400A1840B /* mz_zip_rw.c in Sources */,
@@ -750,9 +798,11 @@
 				3775F3A82276B14400A1840B /* mz_zip.c in Sources */,
 				3775F3702276B14400A1840B /* mz_crypt.c in Sources */,
 				3775F3902276B14400A1840B /* mz_strm_split.c in Sources */,
+				C8BD22E02CE2B27B00843A77 /* unzip.c in Sources */,
+				C8BD22E12CE2B27B00843A77 /* zip.c in Sources */,
+				C8BD22E22CE2B27B00843A77 /* ioapi.c in Sources */,
 				3775F34C2276B14400A1840B /* mz_strm_pkcrypt.c in Sources */,
 				3775F3D02276B14400A1840B /* mz_strm.c in Sources */,
-				3775F3582276B14400A1840B /* mz_compat.c in Sources */,
 				378439B5227ABC7B000BC165 /* mz_crypt_apple.c in Sources */,
 				3775F3A02276B14400A1840B /* mz_strm_zlib.c in Sources */,
 				3775F3842276B14400A1840B /* mz_zip_rw.c in Sources */,
@@ -773,9 +823,11 @@
 				3775F36E2276B14400A1840B /* mz_crypt.c in Sources */,
 				3775F38E2276B14400A1840B /* mz_strm_split.c in Sources */,
 				AFF75A2F1C37280200F450AC /* SSZipArchive.m in Sources */,
+				C8BD22F22CE2B27B00843A77 /* unzip.c in Sources */,
+				C8BD22F32CE2B27B00843A77 /* zip.c in Sources */,
+				C8BD22F42CE2B27B00843A77 /* ioapi.c in Sources */,
 				3775F34A2276B14400A1840B /* mz_strm_pkcrypt.c in Sources */,
 				3775F3CE2276B14400A1840B /* mz_strm.c in Sources */,
-				3775F3562276B14400A1840B /* mz_compat.c in Sources */,
 				378439B3227ABC7B000BC165 /* mz_crypt_apple.c in Sources */,
 				3775F39E2276B14400A1840B /* mz_strm_zlib.c in Sources */,
 				3775F3822276B14400A1840B /* mz_zip_rw.c in Sources */,
@@ -796,8 +848,10 @@
 				3775F36D2276B14400A1840B /* mz_crypt.c in Sources */,
 				3775F38D2276B14400A1840B /* mz_strm_split.c in Sources */,
 				3775F3492276B14400A1840B /* mz_strm_pkcrypt.c in Sources */,
+				C8BD22E32CE2B27B00843A77 /* unzip.c in Sources */,
+				C8BD22E42CE2B27B00843A77 /* zip.c in Sources */,
+				C8BD22E52CE2B27B00843A77 /* ioapi.c in Sources */,
 				3775F3CD2276B14400A1840B /* mz_strm.c in Sources */,
-				3775F3552276B14400A1840B /* mz_compat.c in Sources */,
 				3775F39D2276B14400A1840B /* mz_strm_zlib.c in Sources */,
 				378439B2227ABC7B000BC165 /* mz_crypt_apple.c in Sources */,
 				3775F3812276B14400A1840B /* mz_zip_rw.c in Sources */,
@@ -819,9 +873,11 @@
 				C8DEE36A2BE59172005150F4 /* mz_zip.c in Sources */,
 				C8DEE36B2BE59172005150F4 /* mz_crypt.c in Sources */,
 				C8DEE36C2BE59172005150F4 /* mz_strm_split.c in Sources */,
+				C8BD22E92CE2B27B00843A77 /* unzip.c in Sources */,
+				C8BD22EA2CE2B27B00843A77 /* zip.c in Sources */,
+				C8BD22EB2CE2B27B00843A77 /* ioapi.c in Sources */,
 				C8DEE36D2BE59172005150F4 /* mz_strm_pkcrypt.c in Sources */,
 				C8DEE36E2BE59172005150F4 /* mz_strm.c in Sources */,
-				C8DEE36F2BE59172005150F4 /* mz_compat.c in Sources */,
 				C8DEE3702BE59172005150F4 /* mz_crypt_apple.c in Sources */,
 				C8DEE3712BE59172005150F4 /* mz_strm_zlib.c in Sources */,
 				C8DEE3722BE59172005150F4 /* mz_zip_rw.c in Sources */,

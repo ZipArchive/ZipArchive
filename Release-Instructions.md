@@ -43,6 +43,6 @@ Ignoring the ones starting with an underscore, like: "_BSD_SOURCE" "_DARWIN_C_SO
 
 6. Set those flags in SSZipArchive.podspec (for CocoaPods) and in ZipArchive.xcodeproj (for Carthage)
 
-7. Replace the .h and .c files with the latest ones, except for `mz_compat.h`, which is customized to expose some struct in SSZipCommon.h and to provide support for optional aes.
+7. Replace the .h and .c files with the latest ones, except for `compat/*.{c,h}`, which are customized to expose some struct in SSZipCommon.h.
 
-Note: we can also use `cmake -G Xcode . -DMZ_BZIP2=OFF -DMZ_LIBCOMP=OFF -DMZ_LZMA=OFF -DMZ_OPENSSL=OFF -DMZ_ZLIB=ON -DMZ_ZSTD=OFF` to get the list of files to include in an xcodeproj of its own, from where we can remove unneeded `zip.h` and `unzip.h`.
+Note: we can also use `cmake -G Xcode . -DMZ_BZIP2=OFF -DMZ_LIBCOMP=OFF -DMZ_LZMA=OFF -DMZ_OPENSSL=OFF -DMZ_ZLIB=ON -DMZ_ZSTD=OFF` to get the list of files to include in an xcodeproj of its own.

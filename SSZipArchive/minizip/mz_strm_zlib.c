@@ -21,53 +21,43 @@
 /***************************************************************************/
 
 #if !defined(ZLIB_COMPAT)
-#  define ZLIB_PREFIX(x) zng_ ## x
-   typedef zng_stream zlib_stream;
+#  define ZLIB_PREFIX(x) zng_##x
+typedef zng_stream zlib_stream;
 #else
 #  define ZLIB_PREFIX(x) x
-   typedef z_stream zlib_stream;
+typedef z_stream zlib_stream;
 #endif
 
 #if !defined(DEF_MEM_LEVEL)
 #  if MAX_MEM_LEVEL >= 8
 #    define DEF_MEM_LEVEL 8
 #  else
-#    define DEF_MEM_LEVEL  MAX_MEM_LEVEL
+#    define DEF_MEM_LEVEL MAX_MEM_LEVEL
 #  endif
 #endif
 
 /***************************************************************************/
 
 static mz_stream_vtbl mz_stream_zlib_vtbl = {
-    mz_stream_zlib_open,
-    mz_stream_zlib_is_open,
-    mz_stream_zlib_read,
-    mz_stream_zlib_write,
-    mz_stream_zlib_tell,
-    mz_stream_zlib_seek,
-    mz_stream_zlib_close,
-    mz_stream_zlib_error,
-    mz_stream_zlib_create,
-    mz_stream_zlib_delete,
-    mz_stream_zlib_get_prop_int64,
-    mz_stream_zlib_set_prop_int64
-};
+    mz_stream_zlib_open,   mz_stream_zlib_is_open, mz_stream_zlib_read,           mz_stream_zlib_write,
+    mz_stream_zlib_tell,   mz_stream_zlib_seek,    mz_stream_zlib_close,          mz_stream_zlib_error,
+    mz_stream_zlib_create, mz_stream_zlib_delete,  mz_stream_zlib_get_prop_int64, mz_stream_zlib_set_prop_int64};
 
 /***************************************************************************/
 
 typedef struct mz_stream_zlib_s {
-    mz_stream   stream;
+    mz_stream stream;
     zlib_stream zstream;
-    uint8_t     buffer[INT16_MAX];
-    int32_t     buffer_len;
-    int64_t     total_in;
-    int64_t     total_out;
-    int64_t     max_total_in;
-    int8_t      initialized;
-    int16_t     level;
-    int32_t     window_bits;
-    int32_t     mode;
-    int32_t     error;
+    uint8_t buffer[INT16_MAX];
+    int32_t buffer_len;
+    int64_t total_in;
+    int64_t total_out;
+    int64_t max_total_in;
+    int8_t initialized;
+    int16_t level;
+    int32_t window_bits;
+    int32_t mode;
+    int32_t error;
 } mz_stream_zlib;
 
 /***************************************************************************/
@@ -94,8 +84,8 @@ int32_t mz_stream_zlib_open(void *stream, const char *path, int32_t mode) {
         zlib->zstream.next_out = zlib->buffer;
         zlib->zstream.avail_out = sizeof(zlib->buffer);
 
-        zlib->error = ZLIB_PREFIX(deflateInit2)(&zlib->zstream, (int8_t)zlib->level, Z_DEFLATED,
-            zlib->window_bits, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY);
+        zlib->error = ZLIB_PREFIX(deflateInit2)(&zlib->zstream, (int8_t)zlib->level, Z_DEFLATED, zlib->window_bits,
+                                                DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY);
 #endif
     } else if (mode & MZ_OPEN_MODE_READ) {
 #ifdef MZ_ZIP_NO_DECOMPRESSION
@@ -365,7 +355,7 @@ int32_t mz_stream_zlib_set_prop_int64(void *stream, int32_t prop, int64_t value)
 }
 
 void *mz_stream_zlib_create(void) {
-    mz_stream_zlib *zlib = zlib = (mz_stream_zlib *)calloc(1, sizeof(mz_stream_zlib));
+    mz_stream_zlib *zlib = (mz_stream_zlib *)calloc(1, sizeof(mz_stream_zlib));
     if (zlib) {
         zlib->stream.vtbl = &mz_stream_zlib_vtbl;
         zlib->level = Z_DEFAULT_COMPRESSION;
