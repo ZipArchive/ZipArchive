@@ -1341,7 +1341,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
 {
     // the whole `_dateWithMSDOSFormat:` method is equivalent but faster than this one line,
     // essentially because `mktime` is slow:
-    //NSDate *date = [NSDate dateWithTimeIntervalSince1970:dosdate_to_time_t(msdosDateTime)];
+    //NSDate *date = [NSDate dateWithTimeIntervalSince1970:mz_zip_dosdate_to_time_t(msdosDateTime)];
     static const UInt32 kYearMask = 0xFE000000;
     static const UInt32 kMonthMask = 0x1E00000;
     static const UInt32 kDayMask = 0x1F0000;
@@ -1360,6 +1360,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
     components.second = (msdosDateTime & kSecondMask) * 2;
     
     NSDate *date = [self._gregorian dateFromComponents:components];
+    NSAssert(date != nil, @"Failed to convert %u to date", msdosDateTime);
     return date;
 }
 
