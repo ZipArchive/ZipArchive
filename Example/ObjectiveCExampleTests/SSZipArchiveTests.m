@@ -125,14 +125,14 @@ int twentyMB = 20 * 1024 * 1024;
 }
 
 - (void)testMultipleZippping{
-    NSArray *inputPaths = @[[[NSBundle bundleForClass: [self class]]pathForResource:@"0" ofType:@"m4a"],
-                            [[NSBundle bundleForClass: [self class]]pathForResource:@"1" ofType:@"m4a"],
-                            [[NSBundle bundleForClass: [self class]]pathForResource:@"2" ofType:@"m4a"],
-                            [[NSBundle bundleForClass: [self class]]pathForResource:@"3" ofType:@"m4a"],
-                            [[NSBundle bundleForClass: [self class]]pathForResource:@"4" ofType:@"m4a"],
-                            [[NSBundle bundleForClass: [self class]]pathForResource:@"5" ofType:@"m4a"],
-                            [[NSBundle bundleForClass: [self class]]pathForResource:@"6" ofType:@"m4a"],
-                            [[NSBundle bundleForClass: [self class]]pathForResource:@"7" ofType:@"m4a"]
+    NSArray *inputPaths = @[[[NSBundle bundleForClass:[self class]] pathForResource:@"0" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]] pathForResource:@"1" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]] pathForResource:@"2" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]] pathForResource:@"3" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]] pathForResource:@"4" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]] pathForResource:@"5" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]] pathForResource:@"6" ofType:@"m4a"],
+                            [[NSBundle bundleForClass:[self class]] pathForResource:@"7" ofType:@"m4a"]
                             ];
     NSString *outputPath = [self _cachesPath:@"Zipped"];
 
@@ -353,7 +353,7 @@ int twentyMB = 20 * 1024 * 1024;
 
 - (void)testZippingAndUnzippingWithUnicodePassword {
     
-    /********** Zipping ********/
+    /**** Zipping **/
     
     // use extracted files from [-testUnzipping]
     [self testUnzipping];
@@ -369,7 +369,7 @@ int twentyMB = 20 * 1024 * 1024;
     XCTAssertTrue(success, @"create zip failure");
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
     
-    /********** Unzipping ********/
+    /**** Unzipping **/
     
     outputPath = [self _cachesPath:@"UnicodePassword"];
     
@@ -612,8 +612,7 @@ int twentyMB = 20 * 1024 * 1024;
     // File we're going to test permissions on before and after zipping
     NSString *targetFile = @"/Contents/MacOS/TestProject";
 
-
-    /********** Zipping ********/
+    /**** Zipping **/
 
     // The .app file we're going to zip up
     NSString *inputFile = [[NSBundle bundleForClass: [self class]] pathForResource:@"PermissionsTestApp" ofType:@"app"];
@@ -633,7 +632,7 @@ int twentyMB = 20 * 1024 * 1024;
     BOOL success = [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputFile];
     XCTAssertTrue(success, @"create zip failure");
 
-    /********** Un-zipping *******/
+    /**** Un-zipping **/
 
     // Using this newly created zip file, unzip it
     success = [SSZipArchive unzipFileAtPath:archivePath toDestination:outputDir];
@@ -941,7 +940,7 @@ int twentyMB = 20 * 1024 * 1024;
 
 #pragma mark - Private
 
-// Returns 20Mb of data
+/// Returns 20Mb of data
 -(NSData*)get20MbNSData {
     NSMutableData* theData = [NSMutableData dataWithCapacity:twentyMB];
     for (long long int i = 0; i < twentyMB/4; i++) {
@@ -981,6 +980,5 @@ int twentyMB = 20 * 1024 * 1024;
     }
 
     return [ms copy];
-
 }
 @end
