@@ -980,7 +980,8 @@ static int32_t mz_zip_read_cd(void *handle) {
         if (err == MZ_OK)
             err = mz_stream_read_uint16(zip->stream, &value16);
         number_entry_cd = value16;
-        if (number_entry_cd != zip->number_entry)
+        /* When recover is enabled, we can ignore incorrect number of entries */
+        if (number_entry_cd != zip->number_entry && !zip->recover)
             err = MZ_FORMAT_ERROR;
         /* Size of the central directory */
         if (err == MZ_OK)

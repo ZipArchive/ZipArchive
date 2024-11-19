@@ -168,6 +168,19 @@ int twentyMB = 20 * 1024 * 1024;
     XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"LICENSE unzipped");
 }
 
+- (void)testUnzippingIncorrectNumberEntries {
+    NSString *zipPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"IncorrectNumberEntries" ofType:@"zip"];
+    NSString *outputPath = [self _cachesPath:@"IncorrectNumberEntries"];
+
+    id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
+    BOOL success = [SSZipArchive unzipFileAtPath:zipPath toDestination:outputPath delegate:delegate];
+    XCTAssertTrue(success, @"unzip failure");
+
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *testPath = [outputPath stringByAppendingPathComponent:@"hello"];
+    XCTAssertTrue([fileManager fileExistsAtPath:testPath], @"hello unzipped");
+}
+
 - (void)testSmallFileUnzipping {
     NSString *zipPath = [[NSBundle bundleForClass: [self class]] pathForResource:@"TestArchive" ofType:@"zip"];
     NSString *outputPath = [self _cachesPath:@"Regular"];
