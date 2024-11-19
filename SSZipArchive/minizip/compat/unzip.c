@@ -140,6 +140,8 @@ unzFile unzOpen_MZ(void *stream) {
     if (!handle)
         return NULL;
 
+    mz_zip_set_recover(handle, 1);
+
     err = mz_zip_open(handle, stream, MZ_OPEN_MODE_READ);
     if (err != MZ_OK) {
         mz_zip_delete(&handle);

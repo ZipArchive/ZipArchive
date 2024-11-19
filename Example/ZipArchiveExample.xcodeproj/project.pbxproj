@@ -161,6 +161,11 @@
 		C85BEF602BE55EA400ABAB8F /* 1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A201BDAA10100709011 /* 1.m4a */; };
 		C85BEF612BE55EA400ABAB8F /* 0.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 8DFE1A1F1BDAA10100709011 /* 0.m4a */; };
 		C85BEF622BE55EA400ABAB8F /* TestAESPasswordArchive.zip in Resources */ = {isa = PBXBuildFile; fileRef = 37CC960B2294F95600E71C3C /* TestAESPasswordArchive.zip */; };
+		C8BD235F2CEC57A500843A77 /* IncorrectNumberEntries.zip in Resources */ = {isa = PBXBuildFile; fileRef = C8BD235E2CEC57A500843A77 /* IncorrectNumberEntries.zip */; };
+		C8BD23602CEC57A500843A77 /* IncorrectNumberEntries.zip in Resources */ = {isa = PBXBuildFile; fileRef = C8BD235E2CEC57A500843A77 /* IncorrectNumberEntries.zip */; };
+		C8BD23612CEC57A500843A77 /* IncorrectNumberEntries.zip in Resources */ = {isa = PBXBuildFile; fileRef = C8BD235E2CEC57A500843A77 /* IncorrectNumberEntries.zip */; };
+		C8BD23622CEC57A500843A77 /* IncorrectNumberEntries.zip in Resources */ = {isa = PBXBuildFile; fileRef = C8BD235E2CEC57A500843A77 /* IncorrectNumberEntries.zip */; };
+		C8BD23632CEC57A500843A77 /* IncorrectNumberEntries.zip in Resources */ = {isa = PBXBuildFile; fileRef = C8BD235E2CEC57A500843A77 /* IncorrectNumberEntries.zip */; };
 		CC425A5DF3AE73723F6582F1 /* Pods_core_ObjectiveCExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F55AA2EC4D572A3D0AF90BA /* Pods_core_ObjectiveCExample.framework */; };
 		CF62025A6B48857633D59BA3 /* Pods_core_ObjectiveCExampleTests_visionOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3A1FA27B403DD333FFAFDA2 /* Pods_core_ObjectiveCExampleTests_visionOS.framework */; };
 		D2885233B35CC10CEC374D53 /* Pods_core_ObjectiveCExampleTests_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B24D4343DEE4228CB2E5423 /* Pods_core_ObjectiveCExampleTests_macOS.framework */; };
@@ -251,6 +256,7 @@
 		C854B8F22CA9F43C002B775E /* PasswordArchiveWithFolder.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = PasswordArchiveWithFolder.zip; sourceTree = "<group>"; };
 		C854FAF62C98771900862934 /* TestPasswordArchive2.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = TestPasswordArchive2.zip; sourceTree = "<group>"; };
 		C85BEF672BE55EA400ABAB8F /* ObjectiveCExampleTests_watchOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjectiveCExampleTests_watchOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C8BD235E2CEC57A500843A77 /* IncorrectNumberEntries.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = IncorrectNumberEntries.zip; sourceTree = "<group>"; };
 		D269B6DE92A452B8E2CDF98D /* Pods-core-SwiftExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-core-SwiftExample.debug.xcconfig"; path = "Target Support Files/Pods-core-SwiftExample/Pods-core-SwiftExample.debug.xcconfig"; sourceTree = "<group>"; };
 		D745CAB61B0334919B9281E8 /* Pods_core_SwiftExample_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_core_SwiftExample_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7D6D86C1CFB2C4900DA6DA6 /* Sample Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Sample Data"; sourceTree = "<group>"; };
@@ -435,6 +441,7 @@
 				3754B1311F88961800A58AA0 /* Empty.zip */,
 				8DFE1A161BDAA10100709011 /* hello.zip */,
 				8DFE1A171BDAA10100709011 /* IncorrectHeaders.zip */,
+				C8BD235E2CEC57A500843A77 /* IncorrectNumberEntries.zip */,
 				5FBB318120AF99BC003BA18F /* PathTraversal.zip */,
 				8DFE1A181BDAA10100709011 /* PermissionsTestApp.app */,
 				8DFE1A191BDAA10100709011 /* RelativeSymbolicLink.zip */,
@@ -773,6 +780,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FBB318420AF99CF003BA18F /* PathTraversal.zip in Resources */,
+				C8BD23632CEC57A500843A77 /* IncorrectNumberEntries.zip in Resources */,
 				3773ADC31F7F4D1C009A4B2D /* 3.m4a in Resources */,
 				3773ADC21F7F4D1C009A4B2D /* 2.m4a in Resources */,
 				3773ADC41F7F4D1C009A4B2D /* 4.m4a in Resources */,
@@ -801,6 +809,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FBB318520AF99D4003BA18F /* PathTraversal.zip in Resources */,
+				C8BD23602CEC57A500843A77 /* IncorrectNumberEntries.zip in Resources */,
 				3793E6E71F7F6052000B1A19 /* 6.m4a in Resources */,
 				3793E6E91F7F6059000B1A19 /* hello.zip in Resources */,
 				3793E6F01F7F605C000B1A19 /* PermissionsTestApp.app in Resources */,
@@ -852,6 +861,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FBB318320AF99C9003BA18F /* PathTraversal.zip in Resources */,
+				C8BD235F2CEC57A500843A77 /* IncorrectNumberEntries.zip in Resources */,
 				8DFE1A321BDAA10100709011 /* 3.m4a in Resources */,
 				8DFE1A311BDAA10100709011 /* 2.m4a in Resources */,
 				8DFE1A331BDAA10100709011 /* 4.m4a in Resources */,
@@ -880,6 +890,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8345BED2BE568C200B60352 /* PathTraversal.zip in Resources */,
+				C8BD23612CEC57A500843A77 /* IncorrectNumberEntries.zip in Resources */,
 				C8345BEE2BE568C200B60352 /* 6.m4a in Resources */,
 				C8345BEF2BE568C200B60352 /* hello.zip in Resources */,
 				C8345BF02BE568C200B60352 /* PermissionsTestApp.app in Resources */,
@@ -908,6 +919,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C85BEF502BE55EA400ABAB8F /* PathTraversal.zip in Resources */,
+				C8BD23622CEC57A500843A77 /* IncorrectNumberEntries.zip in Resources */,
 				C85BEF512BE55EA400ABAB8F /* 6.m4a in Resources */,
 				C85BEF522BE55EA400ABAB8F /* hello.zip in Resources */,
 				C85BEF532BE55EA400ABAB8F /* PermissionsTestApp.app in Resources */,
