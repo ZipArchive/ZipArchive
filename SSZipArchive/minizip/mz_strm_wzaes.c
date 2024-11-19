@@ -27,38 +27,28 @@
 /***************************************************************************/
 
 static mz_stream_vtbl mz_stream_wzaes_vtbl = {
-    mz_stream_wzaes_open,
-    mz_stream_wzaes_is_open,
-    mz_stream_wzaes_read,
-    mz_stream_wzaes_write,
-    mz_stream_wzaes_tell,
-    mz_stream_wzaes_seek,
-    mz_stream_wzaes_close,
-    mz_stream_wzaes_error,
-    mz_stream_wzaes_create,
-    mz_stream_wzaes_delete,
-    mz_stream_wzaes_get_prop_int64,
-    mz_stream_wzaes_set_prop_int64
-};
+    mz_stream_wzaes_open,   mz_stream_wzaes_is_open, mz_stream_wzaes_read,           mz_stream_wzaes_write,
+    mz_stream_wzaes_tell,   mz_stream_wzaes_seek,    mz_stream_wzaes_close,          mz_stream_wzaes_error,
+    mz_stream_wzaes_create, mz_stream_wzaes_delete,  mz_stream_wzaes_get_prop_int64, mz_stream_wzaes_set_prop_int64};
 
 /***************************************************************************/
 
 typedef struct mz_stream_wzaes_s {
-    mz_stream       stream;
-    int32_t         mode;
-    int32_t         error;
-    int16_t         initialized;
-    uint8_t         buffer[UINT16_MAX];
-    int64_t         total_in;
-    int64_t         max_total_in;
-    int64_t         total_out;
-    uint8_t         strength;
-    const char      *password;
-    void            *aes;
-    uint32_t        crypt_pos;
-    uint8_t         crypt_block[MZ_AES_BLOCK_SIZE];
-    void            *hmac;
-    uint8_t         nonce[MZ_AES_BLOCK_SIZE];
+    mz_stream stream;
+    int32_t mode;
+    int32_t error;
+    int16_t initialized;
+    uint8_t buffer[UINT16_MAX];
+    int64_t total_in;
+    int64_t max_total_in;
+    int64_t total_out;
+    uint8_t strength;
+    const char *password;
+    void *aes;
+    uint32_t crypt_pos;
+    uint8_t crypt_block[MZ_AES_BLOCK_SIZE];
+    void *hmac;
+    uint8_t nonce[MZ_AES_BLOCK_SIZE];
 } mz_stream_wzaes;
 
 /***************************************************************************/
@@ -103,8 +93,8 @@ int32_t mz_stream_wzaes_open(void *stream, const char *path, int32_t mode) {
     }
 
     /* Derive the encryption and authentication keys and the password verifier */
-    mz_crypt_pbkdf2((uint8_t *)password, password_length, salt_value, salt_length,
-        MZ_AES_KEYING_ITERATIONS, kbuf, 2 * key_length + MZ_AES_PW_VERIFY_SIZE);
+    mz_crypt_pbkdf2((uint8_t *)password, password_length, salt_value, salt_length, MZ_AES_KEYING_ITERATIONS, kbuf,
+                    2 * key_length + MZ_AES_PW_VERIFY_SIZE);
 
     /* Initialize the buffer pos */
     wzaes->crypt_pos = MZ_AES_BLOCK_SIZE;

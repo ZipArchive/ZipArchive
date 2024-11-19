@@ -27,38 +27,28 @@
 /***************************************************************************/
 
 static mz_stream_vtbl mz_stream_split_vtbl = {
-    mz_stream_split_open,
-    mz_stream_split_is_open,
-    mz_stream_split_read,
-    mz_stream_split_write,
-    mz_stream_split_tell,
-    mz_stream_split_seek,
-    mz_stream_split_close,
-    mz_stream_split_error,
-    mz_stream_split_create,
-    mz_stream_split_delete,
-    mz_stream_split_get_prop_int64,
-    mz_stream_split_set_prop_int64
-};
+    mz_stream_split_open,   mz_stream_split_is_open, mz_stream_split_read,           mz_stream_split_write,
+    mz_stream_split_tell,   mz_stream_split_seek,    mz_stream_split_close,          mz_stream_split_error,
+    mz_stream_split_create, mz_stream_split_delete,  mz_stream_split_get_prop_int64, mz_stream_split_set_prop_int64};
 
 /***************************************************************************/
 
 typedef struct mz_stream_split_s {
-    mz_stream   stream;
-    int32_t     is_open;
-    int64_t     disk_size;
-    int64_t     total_in;
-    int64_t     total_in_disk;
-    int64_t     total_out;
-    int64_t     total_out_disk;
-    int32_t     mode;
-    char        *path_cd;
-    char        *path_disk;
-    uint32_t    path_disk_size;
-    int32_t     number_disk;
-    int32_t     current_disk;
-    int64_t     current_disk_size;
-    int32_t     reached_end;
+    mz_stream stream;
+    int32_t is_open;
+    int64_t disk_size;
+    int64_t total_in;
+    int64_t total_in_disk;
+    int64_t total_out;
+    int64_t total_out_disk;
+    int32_t mode;
+    char *path_cd;
+    char *path_disk;
+    uint32_t path_disk_size;
+    int32_t number_disk;
+    int32_t current_disk;
+    int64_t current_disk_size;
+    int32_t reached_end;
 } mz_stream_split;
 
 /***************************************************************************/
@@ -92,8 +82,7 @@ static int32_t mz_stream_split_open_disk(void *stream, int32_t number_disk) {
         for (i = (int32_t)strlen(split->path_disk) - 1; i >= 0; i -= 1) {
             if (split->path_disk[i] != '.')
                 continue;
-            snprintf(&split->path_disk[i], split->path_disk_size - (uint32_t)i,
-                ".z%02" PRId32, number_disk + 1);
+            snprintf(&split->path_disk[i], split->path_disk_size - (uint32_t)i, ".z%02" PRId32, number_disk + 1);
             break;
         }
     } else {
@@ -243,10 +232,11 @@ int32_t mz_stream_split_read(void *stream, void *buf, int32_t size) {
         if (read == 0) {
             if (split->current_disk < 0) /* No more disks to goto */
                 break;
+            if (size != bytes_left) /* Report read from previous disk before switching */
+                break;
             err = mz_stream_split_goto_disk(stream, split->current_disk + 1);
-            if (err == MZ_EXIST_ERROR) {
+            if (err == MZ_EXIST_ERROR)
                 split->current_disk = -1;
-            }
             if (err != MZ_OK)
                 return err;
         }

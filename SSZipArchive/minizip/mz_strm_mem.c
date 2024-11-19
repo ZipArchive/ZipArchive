@@ -22,31 +22,29 @@
 
 /***************************************************************************/
 
-static mz_stream_vtbl mz_stream_mem_vtbl = {
-    mz_stream_mem_open,
-    mz_stream_mem_is_open,
-    mz_stream_mem_read,
-    mz_stream_mem_write,
-    mz_stream_mem_tell,
-    mz_stream_mem_seek,
-    mz_stream_mem_close,
-    mz_stream_mem_error,
-    mz_stream_mem_create,
-    mz_stream_mem_delete,
-    NULL,
-    NULL
-};
+static mz_stream_vtbl mz_stream_mem_vtbl = {mz_stream_mem_open,
+                                            mz_stream_mem_is_open,
+                                            mz_stream_mem_read,
+                                            mz_stream_mem_write,
+                                            mz_stream_mem_tell,
+                                            mz_stream_mem_seek,
+                                            mz_stream_mem_close,
+                                            mz_stream_mem_error,
+                                            mz_stream_mem_create,
+                                            mz_stream_mem_delete,
+                                            NULL,
+                                            NULL};
 
 /***************************************************************************/
 
 typedef struct mz_stream_mem_s {
-    mz_stream   stream;
-    int32_t     mode;
-    uint8_t     *buffer;    /* Memory buffer pointer */
-    int32_t     size;       /* Size of the memory buffer */
-    int32_t     limit;      /* Furthest we've written */
-    int32_t     position;   /* Current position in the memory */
-    int32_t     grow_size;  /* Size to grow when full */
+    mz_stream stream;
+    int32_t mode;
+    uint8_t *buffer;   /* Memory buffer pointer */
+    int32_t size;      /* Size of the memory buffer */
+    int32_t limit;     /* Furthest we've written */
+    int32_t position;  /* Current position in the memory */
+    int32_t grow_size; /* Size to grow when full */
 } mz_stream_mem;
 
 /***************************************************************************/
@@ -211,7 +209,7 @@ int32_t mz_stream_mem_get_buffer(void *stream, const void **buf) {
 
 int32_t mz_stream_mem_get_buffer_at(void *stream, int64_t position, const void **buf) {
     mz_stream_mem *mem = (mz_stream_mem *)stream;
-    if (!buf || position < 0 || !mem->buffer|| mem->size < position)
+    if (!buf || position < 0 || !mem->buffer || mem->size < position)
         return MZ_SEEK_ERROR;
     *buf = mem->buffer + position;
     return MZ_OK;

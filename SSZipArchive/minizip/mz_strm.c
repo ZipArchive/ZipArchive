@@ -158,8 +158,8 @@ int32_t mz_stream_copy_to_end(void *target, void *source) {
     return mz_stream_copy_stream_to_end(target, NULL, source, NULL);
 }
 
-int32_t mz_stream_copy_stream(void *target, mz_stream_write_cb write_cb, void *source,
-    mz_stream_read_cb read_cb, int32_t len) {
+int32_t mz_stream_copy_stream(void *target, mz_stream_write_cb write_cb, void *source, mz_stream_read_cb read_cb,
+                              int32_t len) {
     uint8_t buf[16384];
     int32_t bytes_to_copy = 0;
     int32_t read = 0;
@@ -187,7 +187,7 @@ int32_t mz_stream_copy_stream(void *target, mz_stream_write_cb write_cb, void *s
 }
 
 int32_t mz_stream_copy_stream_to_end(void *target, mz_stream_write_cb write_cb, void *source,
-    mz_stream_read_cb read_cb) {
+                                     mz_stream_read_cb read_cb) {
     uint8_t buf[16384];
     int32_t read = 0;
     int32_t written = 0;
@@ -253,8 +253,10 @@ int32_t mz_stream_find(void *stream, const void *find, int32_t find_size, int64_
     start_pos = mz_stream_tell(stream);
 
     while (read_pos < max_seek) {
-        if (read_size > (int32_t)(max_seek - read_pos - buf_pos) && (max_seek - read_pos - buf_pos) < (int64_t)sizeof(buf))
+        if (read_size > (int32_t)(max_seek - read_pos - buf_pos) &&
+            (max_seek - read_pos - buf_pos) < (int64_t)sizeof(buf)) {
             read_size = (int32_t)(max_seek - read_pos - buf_pos);
+        }
 
         read = mz_stream_read(stream, buf + buf_pos, read_size);
         if ((read <= 0) || (read + buf_pos < find_size))
@@ -376,7 +378,7 @@ int32_t mz_stream_set_base(void *stream, void *base) {
     return MZ_OK;
 }
 
-void* mz_stream_get_interface(void *stream) {
+void *mz_stream_get_interface(void *stream) {
     mz_stream *strm = (mz_stream *)stream;
     if (!strm || !strm->vtbl)
         return NULL;
@@ -416,10 +418,10 @@ void mz_stream_delete(void **stream) {
 /***************************************************************************/
 
 typedef struct mz_stream_raw_s {
-    mz_stream   stream;
-    int64_t     total_in;
-    int64_t     total_out;
-    int64_t     max_total_in;
+    mz_stream stream;
+    int64_t total_in;
+    int64_t total_out;
+    int64_t max_total_in;
 } mz_stream_raw;
 
 /***************************************************************************/
@@ -517,19 +519,9 @@ int32_t mz_stream_raw_set_prop_int64(void *stream, int32_t prop, int64_t value) 
 /***************************************************************************/
 
 static mz_stream_vtbl mz_stream_raw_vtbl = {
-    mz_stream_raw_open,
-    mz_stream_raw_is_open,
-    mz_stream_raw_read,
-    mz_stream_raw_write,
-    mz_stream_raw_tell,
-    mz_stream_raw_seek,
-    mz_stream_raw_close,
-    mz_stream_raw_error,
-    mz_stream_raw_create,
-    mz_stream_raw_delete,
-    mz_stream_raw_get_prop_int64,
-    mz_stream_raw_set_prop_int64
-};
+    mz_stream_raw_open,   mz_stream_raw_is_open, mz_stream_raw_read,           mz_stream_raw_write,
+    mz_stream_raw_tell,   mz_stream_raw_seek,    mz_stream_raw_close,          mz_stream_raw_error,
+    mz_stream_raw_create, mz_stream_raw_delete,  mz_stream_raw_get_prop_int64, mz_stream_raw_set_prop_int64};
 
 /***************************************************************************/
 

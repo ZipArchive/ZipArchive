@@ -11,7 +11,7 @@ let package = Package(
         .macOS(.v10_15),
         .visionOS("1.0"),
         .watchOS("8.4"),
-        .macCatalyst("13.0")
+        .macCatalyst("13.0"),
     ],
     products: [
         .library(name: "ZipArchive", targets: ["ZipArchive"]),
@@ -30,7 +30,8 @@ let package = Package(
                 .define("HAVE_STDINT_H"),
                 .define("HAVE_WZAES"),
                 .define("HAVE_ZLIB"),
-                .define("ZLIB_COMPAT")
+                .define("ZLIB_COMPAT"),
+                .headerSearchPath("minizip"),
             ],
             linkerSettings: [
                 .linkedLibrary("z"),

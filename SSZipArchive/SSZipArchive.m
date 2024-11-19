@@ -6,10 +6,12 @@
 //
 
 #import "SSZipArchive.h"
-#include "minizip/mz_compat.h"
+#include "minizip/compat/ioapi.h"
+#include "minizip/compat/unzip.h"
+#include "minizip/compat/zip.h"
+#include "minizip/mz.h"
 #include "minizip/mz_zip.h"
 #include "minizip/mz_os.h"
-#include <zlib.h>
 #include <sys/stat.h>
 
 NSString *const SSZipArchiveErrorDomain = @"SSZipArchiveErrorDomain";
@@ -1270,7 +1272,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
         }
         
         NSNumber *fileSize = (NSNumber *)[attr objectForKey:NSFileSize];
-        if (fileSize)
+        if (fileSize != nil)
         {
             zipInfo->uncompressed_size = fileSize.longLongValue;
         }

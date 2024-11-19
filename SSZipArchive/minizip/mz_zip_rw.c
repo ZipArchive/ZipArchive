@@ -30,39 +30,35 @@
 /***************************************************************************/
 
 typedef struct mz_zip_reader_s {
-    void        *zip_handle;
-    void        *file_stream;
-    void        *buffered_stream;
-    void        *split_stream;
-    void        *mem_stream;
-    void        *hash;
-    uint16_t    hash_algorithm;
-    uint16_t    hash_digest_size;
+    void *zip_handle;
+    void *file_stream;
+    void *buffered_stream;
+    void *split_stream;
+    void *mem_stream;
+    void *hash;
+    uint16_t hash_algorithm;
+    uint16_t hash_digest_size;
     mz_zip_file *file_info;
-    const char  *pattern;
-    uint8_t     pattern_ignore_case;
-    const char  *password;
-    void        *overwrite_userdata;
-    mz_zip_reader_overwrite_cb
-                overwrite_cb;
-    void        *password_userdata;
-    mz_zip_reader_password_cb
-                password_cb;
-    void        *progress_userdata;
-    mz_zip_reader_progress_cb
-                progress_cb;
-    uint32_t    progress_cb_interval_ms;
-    void        *entry_userdata;
-    mz_zip_reader_entry_cb
-                entry_cb;
-    uint8_t     raw;
-    uint8_t     buffer[UINT16_MAX];
-    int32_t     encoding;
-    uint8_t     sign_required;
-    uint8_t     cd_verified;
-    uint8_t     cd_zipped;
-    uint8_t     entry_verified;
-    uint8_t     recover;
+    const char *pattern;
+    uint8_t pattern_ignore_case;
+    const char *password;
+    void *overwrite_userdata;
+    mz_zip_reader_overwrite_cb overwrite_cb;
+    void *password_userdata;
+    mz_zip_reader_password_cb password_cb;
+    void *progress_userdata;
+    mz_zip_reader_progress_cb progress_cb;
+    uint32_t progress_cb_interval_ms;
+    void *entry_userdata;
+    mz_zip_reader_entry_cb entry_cb;
+    uint8_t raw;
+    uint8_t buffer[UINT16_MAX];
+    int32_t encoding;
+    uint8_t sign_required;
+    uint8_t cd_verified;
+    uint8_t cd_zipped;
+    uint8_t entry_verified;
+    uint8_t recover;
 } mz_zip_reader;
 
 /***************************************************************************/
@@ -282,9 +278,10 @@ int32_t mz_zip_reader_unzip_cd(void *handle) {
         mz_stream_mem_open(cd_mem_stream, NULL, MZ_OPEN_MODE_CREATE);
 
     err = mz_stream_seek(cd_mem_stream, 0, MZ_SEEK_SET);
-    if (err == MZ_OK)
+    if (err == MZ_OK) {
         err = mz_stream_copy_stream(cd_mem_stream, NULL, handle, mz_zip_reader_entry_read,
-            (int32_t)cd_info->uncompressed_size);
+                                    (int32_t)cd_info->uncompressed_size);
+    }
 
     if (err == MZ_OK) {
         reader->cd_zipped = 1;
@@ -394,8 +391,7 @@ int32_t mz_zip_reader_entry_open(void *handle) {
 
     /* Check if we need a password and ask for it if we need to */
     if (!password && reader->password_cb && (reader->file_info->flag & MZ_ZIP_FLAG_ENCRYPTED)) {
-        reader->password_cb(handle, reader->password_userdata, reader->file_info,
-            password_buf, sizeof(password_buf));
+        reader->password_cb(handle, reader->password_userdata, reader->file_info, password_buf, sizeof(password_buf));
 
         password = password_buf;
     }
@@ -480,7 +476,7 @@ int32_t mz_zip_reader_entry_get_hash(void *handle, uint16_t algorithm, uint8_t *
         return MZ_MEM_ERROR;
 
     mz_stream_mem_set_buffer(file_extra_stream, (void *)reader->file_info->extrafield,
-        reader->file_info->extrafield_size);
+                             reader->file_info->extrafield_size);
 
     do {
         err = mz_zip_extrafield_find(file_extra_stream, MZ_ZIP_EXTENSION_HASH, INT32_MAX, NULL);
@@ -521,7 +517,7 @@ int32_t mz_zip_reader_entry_get_first_hash(void *handle, uint16_t *algorithm, ui
         return MZ_MEM_ERROR;
 
     mz_stream_mem_set_buffer(file_extra_stream, (void *)reader->file_info->extrafield,
-        reader->file_info->extrafield_size);
+                             reader->file_info->extrafield_size);
 
     err = mz_zip_extrafield_find(file_extra_stream, MZ_ZIP_EXTENSION_HASH, INT32_MAX, NULL);
     if (err == MZ_OK)
@@ -650,7 +646,6 @@ int32_t mz_zip_reader_entry_save_file(void *handle, const char *path) {
     int32_t err_attrib = 0;
     int32_t err = MZ_OK;
     int32_t err_cb = MZ_OK;
-    size_t path_length = 0;
     char *pathwfs = NULL;
     char *directory = NULL;
 
@@ -659,27 +654,22 @@ int32_t mz_zip_reader_entry_save_file(void *handle, const char *path) {
     if (!reader->file_info || !path)
         return MZ_PARAM_ERROR;
 
-    path_length = strlen(path);
-
     /* Convert to forward slashes for unix which doesn't like backslashes */
-    pathwfs = (char *)calloc(path_length + 1, sizeof(char));
+    pathwfs = (char *)strdup(path);
     if (!pathwfs)
         return MZ_MEM_ERROR;
-    strncat(pathwfs, path, path_length);
     mz_path_convert_slashes(pathwfs, MZ_PATH_SLASH_UNIX);
 
     if (reader->entry_cb)
         reader->entry_cb(handle, reader->entry_userdata, reader->file_info, pathwfs);
 
-    directory = (char *)calloc(path_length + 1, sizeof(char));
+    directory = (char *)strdup(pathwfs);
     if (!directory)
         return MZ_MEM_ERROR;
-    strncat(directory, pathwfs, path_length);
     mz_path_remove_filename(directory);
 
     /* If it is a directory entry then create a directory instead of writing file */
-    if ((mz_zip_entry_is_dir(reader->zip_handle) == MZ_OK) &&
-        (mz_zip_entry_is_symlink(reader->zip_handle) != MZ_OK)) {
+    if ((mz_zip_entry_is_dir(reader->zip_handle) == MZ_OK) && (mz_zip_entry_is_symlink(reader->zip_handle) != MZ_OK)) {
         err = mz_dir_make(directory);
         goto save_cleanup;
     }
@@ -694,8 +684,7 @@ int32_t mz_zip_reader_entry_save_file(void *handle, const char *path) {
     }
 
     /* If symbolic link then properly construct destination path and link path */
-    if ((mz_zip_entry_is_symlink(reader->zip_handle) == MZ_OK) &&
-        (mz_path_has_slash(pathwfs) == MZ_OK)) {
+    if ((mz_zip_entry_is_symlink(reader->zip_handle) == MZ_OK) && (mz_path_has_slash(pathwfs) == MZ_OK)) {
         mz_path_remove_slash(pathwfs);
         mz_path_remove_filename(directory);
     }
@@ -759,8 +748,8 @@ int32_t mz_zip_reader_entry_save_file(void *handle, const char *path) {
 
     if (err == MZ_OK) {
         /* Set the time of the file that has been created */
-        mz_os_set_file_date(pathwfs, reader->file_info->modified_date,
-            reader->file_info->accessed_date, reader->file_info->creation_date);
+        mz_os_set_file_date(pathwfs, reader->file_info->modified_date, reader->file_info->accessed_date,
+                            reader->file_info->creation_date);
     }
 
     if (err == MZ_OK) {
@@ -829,7 +818,7 @@ int32_t mz_zip_reader_save_all(void *handle, const char *destination_dir) {
     char *path = NULL;
     char *utf8_name = NULL;
     char *resolved_name = NULL;
-    char* new_alloc = NULL;
+    char *new_alloc = NULL;
 
     err = mz_zip_reader_goto_first_entry(handle);
 
@@ -859,7 +848,7 @@ int32_t mz_zip_reader_save_all(void *handle, const char *destination_dir) {
         }
         utf8_name = new_alloc;
         new_alloc = (char *)realloc(resolved_name, resolved_name_size);
-        if ( !new_alloc) {
+        if (!new_alloc) {
             err = MZ_MEM_ERROR;
             goto save_all_cleanup;
         }
@@ -1028,38 +1017,34 @@ void mz_zip_reader_delete(void **handle) {
 /***************************************************************************/
 
 typedef struct mz_zip_writer_s {
-    void        *zip_handle;
-    void        *file_stream;
-    void        *buffered_stream;
-    void        *split_stream;
-    void        *hash;
-    uint16_t    hash_algorithm;
-    void        *mem_stream;
-    void        *file_extra_stream;
+    void *zip_handle;
+    void *file_stream;
+    void *buffered_stream;
+    void *split_stream;
+    void *hash;
+    uint16_t hash_algorithm;
+    void *mem_stream;
+    void *file_extra_stream;
     mz_zip_file file_info;
-    void        *overwrite_userdata;
-    mz_zip_writer_overwrite_cb
-                overwrite_cb;
-    void        *password_userdata;
-    mz_zip_writer_password_cb
-                password_cb;
-    void        *progress_userdata;
-    mz_zip_writer_progress_cb
-                progress_cb;
-    uint32_t    progress_cb_interval_ms;
-    void        *entry_userdata;
-    mz_zip_writer_entry_cb
-                entry_cb;
-    const char  *password;
-    const char  *comment;
-    uint16_t    compress_method;
-    int16_t     compress_level;
-    uint8_t     follow_links;
-    uint8_t     store_links;
-    uint8_t     zip_cd;
-    uint8_t     aes;
-    uint8_t     raw;
-    uint8_t     buffer[UINT16_MAX];
+    void *overwrite_userdata;
+    mz_zip_writer_overwrite_cb overwrite_cb;
+    void *password_userdata;
+    mz_zip_writer_password_cb password_cb;
+    void *progress_userdata;
+    mz_zip_writer_progress_cb progress_cb;
+    uint32_t progress_cb_interval_ms;
+    void *entry_userdata;
+    mz_zip_writer_entry_cb entry_cb;
+    const char *password;
+    const char *comment;
+    uint16_t compress_method;
+    int16_t compress_level;
+    uint8_t follow_links;
+    uint8_t store_links;
+    uint8_t zip_cd;
+    uint8_t aes;
+    uint8_t raw;
+    uint8_t buffer[UINT16_MAX];
 } mz_zip_writer;
 
 /***************************************************************************/
@@ -1108,8 +1093,7 @@ int32_t mz_zip_writer_zip_cd(void *handle) {
 
     err = mz_zip_writer_entry_open(handle, &cd_file);
     if (err == MZ_OK) {
-        mz_stream_copy_stream(handle, mz_zip_writer_entry_write, cd_mem_stream,
-            NULL, (int32_t)cd_mem_length);
+        mz_stream_copy_stream(handle, mz_zip_writer_entry_write, cd_mem_stream, NULL, (int32_t)cd_mem_length);
 
         mz_stream_seek(cd_mem_stream, 0, MZ_SEEK_SET);
         mz_stream_mem_set_buffer_limit(cd_mem_stream, 0);
@@ -1326,8 +1310,7 @@ int32_t mz_zip_writer_entry_open(void *handle, mz_zip_file *file_info) {
 
     /* Check if we need a password and ask for it if we need to */
     if (!password && writer->password_cb && (writer->file_info.flag & MZ_ZIP_FLAG_ENCRYPTED)) {
-        writer->password_cb(handle, writer->password_userdata, &writer->file_info,
-            password_buf, sizeof(password_buf));
+        writer->password_cb(handle, writer->password_userdata, &writer->file_info, password_buf, sizeof(password_buf));
         password = password_buf;
     }
 
@@ -1349,8 +1332,10 @@ int32_t mz_zip_writer_entry_open(void *handle, mz_zip_file *file_info) {
 #endif
 
     /* Open entry in zip */
-    err = mz_zip_entry_write_open(writer->zip_handle, &writer->file_info, writer->compress_level,
-        writer->raw, password);
+    if (err == MZ_OK) {
+        err = mz_zip_entry_write_open(writer->zip_handle, &writer->file_info, writer->compress_level, writer->raw,
+                                      password);
+    }
 
     return err;
 }
@@ -1368,14 +1353,14 @@ int32_t mz_zip_writer_entry_close(void *handle) {
         uint16_t hash_digest_size = 0;
 
         switch (writer->hash_algorithm) {
-            case MZ_HASH_SHA1:
-                hash_digest_size = MZ_HASH_SHA1_SIZE;
-                break;
-            case MZ_HASH_SHA256:
-                hash_digest_size = MZ_HASH_SHA256_SIZE;
-                break;
-            default:
-                return MZ_PARAM_ERROR;
+        case MZ_HASH_SHA1:
+            hash_digest_size = MZ_HASH_SHA1_SIZE;
+            break;
+        case MZ_HASH_SHA256:
+            hash_digest_size = MZ_HASH_SHA256_SIZE;
+            break;
+        default:
+            return MZ_PARAM_ERROR;
         }
 
         mz_crypt_sha_end(writer->hash, hash_digest, hash_digest_size);
@@ -1400,9 +1385,10 @@ int32_t mz_zip_writer_entry_close(void *handle) {
                 err = MZ_WRITE_ERROR;
         }
 
-        if ((writer->file_info.extrafield) && (writer->file_info.extrafield_size > 0))
+        if (writer->file_info.extrafield && writer->file_info.extrafield_size > 0) {
             mz_stream_mem_write(writer->file_extra_stream, writer->file_info.extrafield,
-                writer->file_info.extrafield_size);
+                                writer->file_info.extrafield_size);
+        }
 
         /* Update extra field for central directory after adding extra fields */
         mz_stream_mem_get_buffer(writer->file_extra_stream, (const void **)&extrafield);
@@ -1602,8 +1588,7 @@ int32_t mz_zip_writer_add_file(void *handle, const char *path, const char *filen
     if (writer->aes)
         file_info.aes_version = MZ_AES_VERSION;
 
-    mz_os_get_file_date(path, &file_info.modified_date, &file_info.accessed_date,
-        &file_info.creation_date);
+    mz_os_get_file_date(path, &file_info.modified_date, &file_info.accessed_date, &file_info.creation_date);
     mz_os_get_file_attribs(path, &src_attrib);
 
     src_sys = MZ_HOST_SYSTEM(file_info.version_madeby);
@@ -1639,8 +1624,8 @@ int32_t mz_zip_writer_add_file(void *handle, const char *path, const char *filen
     return err;
 }
 
-int32_t mz_zip_writer_add_path(void *handle, const char *path, const char *root_path,
-    uint8_t include_path, uint8_t recursive) {
+int32_t mz_zip_writer_add_path(void *handle, const char *path, const char *root_path, uint8_t include_path,
+                               uint8_t recursive) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
     DIR *dir = NULL;
     struct dirent *entry = NULL;

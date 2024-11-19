@@ -136,12 +136,12 @@ int32_t mz_path_resolve(const char *path, char *output, int32_t max_output) {
 
     while (*source != 0 && max_output > 1) {
         check = source;
-        if ((*check == '\\') || (*check == '/'))
+        if (*check == '\\' || *check == '/')
             check += 1;
 
-        if ((source == path) || (target == output) || (check != source)) {
+        if (source == path || target == output || check != source) {
             /* Skip double paths */
-            if ((*check == '\\') || (*check == '/')) {
+            if (*check == '\\' || *check == '/') {
                 source += 1;
                 continue;
             }
@@ -149,7 +149,7 @@ int32_t mz_path_resolve(const char *path, char *output, int32_t max_output) {
                 check += 1;
 
                 /* Remove . if at end of string and not at the beginning */
-                if ((*check == 0) && (source != path && target != output)) {
+                if (*check == 0 && source != path && target != output) {
                     /* Copy last slash */
                     *target = *source;
                     target += 1;
@@ -158,7 +158,7 @@ int32_t mz_path_resolve(const char *path, char *output, int32_t max_output) {
                     continue;
                 }
                 /* Remove . if not at end of string */
-                else if ((*check == '\\') || (*check == '/')) {
+                else if (*check == '\\' || *check == '/') {
                     source += (check - source);
                     /* Skip slash if at beginning of string */
                     if (target == output && *source != 0)
@@ -168,14 +168,14 @@ int32_t mz_path_resolve(const char *path, char *output, int32_t max_output) {
                 /* Go to parent directory .. */
                 else if (*check == '.') {
                     check += 1;
-                    if ((*check == 0) || (*check == '\\' || *check == '/')) {
+                    if (*check == 0 || (*check == '\\' || *check == '/')) {
                         source += (check - source);
 
                         /* Search backwards for previous slash or the start of the output string */
                         if (target != output) {
                             target -= 1;
                             do {
-                                if ((target == output) ||(*target == '\\') || (*target == '/'))
+                                if (target == output || *target == '\\' || *target == '/')
                                     break;
 
                                 target -= 1;
@@ -183,9 +183,9 @@ int32_t mz_path_resolve(const char *path, char *output, int32_t max_output) {
                             } while (target > output);
                         }
 
-                        if ((target == output) && (*source != 0))
+                        if ((target == output) && *source != 0)
                             source += 1;
-                        if ((*target == '\\' || *target == '/') && (*source == 0))
+                        if ((*target == '\\' || *target == '/') && *source == 0)
                             target += 1;
 
                         *target = 0;

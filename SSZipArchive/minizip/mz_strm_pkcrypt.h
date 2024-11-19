@@ -26,16 +26,16 @@ int32_t mz_stream_pkcrypt_seek(void *stream, int64_t offset, int32_t origin);
 int32_t mz_stream_pkcrypt_close(void *stream);
 int32_t mz_stream_pkcrypt_error(void *stream);
 
-void    mz_stream_pkcrypt_set_password(void *stream, const char *password);
-void    mz_stream_pkcrypt_set_verify(void *stream, uint8_t verify1, uint8_t verify2, uint16_t version);
-void    mz_stream_pkcrypt_get_verify(void *stream, uint8_t *verify1, uint8_t *verify2, uint16_t *version);
+void mz_stream_pkcrypt_set_password(void *stream, const char *password);
+void mz_stream_pkcrypt_set_verify(void *stream, uint8_t verify1, uint8_t verify2, uint16_t version);
+void mz_stream_pkcrypt_get_verify(void *stream, uint8_t *verify1, uint8_t *verify2, uint16_t *version);
 int32_t mz_stream_pkcrypt_get_prop_int64(void *stream, int32_t prop, int64_t *value);
 int32_t mz_stream_pkcrypt_set_prop_int64(void *stream, int32_t prop, int64_t value);
 
-void*   mz_stream_pkcrypt_create(void);
-void    mz_stream_pkcrypt_delete(void **stream);
+void *mz_stream_pkcrypt_create(void);
+void mz_stream_pkcrypt_delete(void **stream);
 
-void*   mz_stream_pkcrypt_get_interface(void);
+void *mz_stream_pkcrypt_get_interface(void);
 
 /***************************************************************************/
 

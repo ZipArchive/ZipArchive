@@ -15,7 +15,7 @@
 #include <stdio.h> /* rename */
 #include <errno.h>
 #if defined(HAVE_ICONV)
-#include <iconv.h>
+#  include <iconv.h>
 #endif
 #include <string.h>
 #include <sys/types.h>
@@ -75,8 +75,7 @@ char *mz_os_utf8_string_create(const char *string, int32_t encoding) {
     string_utf8_ptr = string_utf8;
 
     if (string_utf8) {
-        result = iconv(cd, (char **)&string, &string_length,
-                (char **)&string_utf8_ptr, &string_utf8_size);
+        result = iconv(cd, (char **)&string, &string_length, (char **)&string_utf8_ptr, &string_utf8_size);
     }
 
     iconv_close(cd);
@@ -147,7 +146,7 @@ int32_t mz_os_rand(uint8_t *buf, int32_t size) {
 
     /* Ensure different random header each time */
     if (++calls == 1) {
-        #define PI_SEED 3141592654UL
+#  define PI_SEED 3141592654UL
         srand((unsigned)(time(NULL) ^ PI_SEED));
     }
 
@@ -272,11 +271,11 @@ int32_t mz_os_make_dir(const char *path) {
     return MZ_OK;
 }
 
-DIR* mz_os_open_dir(const char *path) {
+DIR *mz_os_open_dir(const char *path) {
     return opendir(path);
 }
 
-struct dirent* mz_os_read_dir(DIR *dir) {
+struct dirent *mz_os_read_dir(DIR *dir) {
     if (!dir)
         return NULL;
     return readdir(dir);

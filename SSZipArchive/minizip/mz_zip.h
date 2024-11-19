@@ -23,34 +23,31 @@ extern "C" {
 /***************************************************************************/
 
 typedef struct mz_zip_file_s {
-    uint16_t version_madeby;            /* version made by */
-    uint16_t version_needed;            /* version needed to extract */
-    uint16_t flag;                      /* general purpose bit flag */
-    uint16_t compression_method;        /* compression method */
-    time_t   modified_date;             /* last modified date in unix time */
-    time_t   accessed_date;             /* last accessed date in unix time */
-    time_t   creation_date;             /* creation date in unix time */
-    uint32_t crc;                       /* crc-32 */
-    int64_t  compressed_size;           /* compressed size */
-    int64_t  uncompressed_size;         /* uncompressed size */
-    uint16_t filename_size;             /* filename length */
-    uint16_t extrafield_size;           /* extra field length */
-    uint16_t comment_size;              /* file comment length */
-    uint32_t disk_number;               /* disk number start */
-    int64_t  disk_offset;               /* relative offset of local header */
-    uint16_t internal_fa;               /* internal file attributes */
-    uint32_t external_fa;               /* external file attributes */
-
-    const char     *filename;           /* filename utf8 null-terminated string */
-    const uint8_t  *extrafield;         /* extrafield data */
-    const char     *comment;            /* comment utf8 null-terminated string */
-    const char     *linkname;           /* sym-link filename utf8 null-terminated string */
-
-    uint16_t zip64;                     /* zip64 extension mode */
-    uint16_t aes_version;               /* winzip aes extension if not 0 */
-    uint8_t  aes_strength;              /* winzip aes encryption strength */
-    uint16_t pk_verify;                 /* pkware encryption verifier */
-
+    uint16_t version_madeby;     /* version made by */
+    uint16_t version_needed;     /* version needed to extract */
+    uint16_t flag;               /* general purpose bit flag */
+    uint16_t compression_method; /* compression method */
+    time_t modified_date;        /* last modified date in unix time */
+    time_t accessed_date;        /* last accessed date in unix time */
+    time_t creation_date;        /* creation date in unix time */
+    uint32_t crc;                /* crc-32 */
+    int64_t compressed_size;     /* compressed size */
+    int64_t uncompressed_size;   /* uncompressed size */
+    uint16_t filename_size;      /* filename length */
+    uint16_t extrafield_size;    /* extra field length */
+    uint16_t comment_size;       /* file comment length */
+    uint32_t disk_number;        /* disk number start */
+    int64_t disk_offset;         /* relative offset of local header */
+    uint16_t internal_fa;        /* internal file attributes */
+    uint32_t external_fa;        /* external file attributes */
+    const char *filename;        /* filename utf8 null-terminated string */
+    const uint8_t *extrafield;   /* extrafield data */
+    const char *comment;         /* comment utf8 null-terminated string */
+    const char *linkname;        /* sym-link filename utf8 null-terminated string */
+    uint16_t zip64;              /* zip64 extension mode */
+    uint16_t aes_version;        /* winzip aes extension if not 0 */
+    uint8_t aes_strength;        /* winzip aes encryption strength */
+    uint16_t pk_verify;          /* pkware encryption verifier */
 } mz_zip_file, mz_zip_entry;
 
 /***************************************************************************/
@@ -59,10 +56,10 @@ typedef int32_t (*mz_zip_locate_entry_cb)(void *handle, void *userdata, mz_zip_f
 
 /***************************************************************************/
 
-void *  mz_zip_create(void);
+void *mz_zip_create(void);
 /* Create zip instance for opening */
 
-void    mz_zip_delete(void **handle);
+void mz_zip_delete(void **handle);
 /* Delete zip object */
 
 int32_t mz_zip_open(void *handle, void *stream, int32_t mode);
@@ -121,19 +118,17 @@ int32_t mz_zip_entry_read_open(void *handle, uint8_t raw, const char *password);
 int32_t mz_zip_entry_read(void *handle, void *buf, int32_t len);
 /* Read bytes from the current file in the zip file */
 
-int32_t mz_zip_entry_read_close(void *handle, uint32_t *crc32, int64_t *compressed_size,
-    int64_t *uncompressed_size);
+int32_t mz_zip_entry_read_close(void *handle, uint32_t *crc32, int64_t *compressed_size, int64_t *uncompressed_size);
 /* Close the current file for reading and get data descriptor values */
 
-int32_t mz_zip_entry_write_open(void *handle, const mz_zip_file *file_info,
-    int16_t compress_level, uint8_t raw, const char *password);
+int32_t mz_zip_entry_write_open(void *handle, const mz_zip_file *file_info, int16_t compress_level, uint8_t raw,
+                                const char *password);
 /* Open for writing the current file in the zip file */
 
 int32_t mz_zip_entry_write(void *handle, const void *buf, int32_t len);
 /* Write bytes from the current file in the zip file */
 
-int32_t mz_zip_entry_write_close(void *handle, uint32_t crc32, int64_t compressed_size,
-    int64_t uncompressed_size);
+int32_t mz_zip_entry_write_close(void *handle, uint32_t crc32, int64_t compressed_size, int64_t uncompressed_size);
 /* Close the current file for writing and set data descriptor values */
 
 int32_t mz_zip_entry_seek_local_header(void *handle);
@@ -194,8 +189,7 @@ int32_t mz_zip_attrib_is_dir(uint32_t attrib, int32_t version_madeby);
 int32_t mz_zip_attrib_is_symlink(uint32_t attrib, int32_t version_madeby);
 /* Checks to see if the attribute is a symbolic link based on platform */
 
-int32_t mz_zip_attrib_convert(uint8_t src_sys, uint32_t src_attrib, uint8_t target_sys,
-    uint32_t *target_attrib);
+int32_t mz_zip_attrib_convert(uint8_t src_sys, uint32_t src_attrib, uint8_t target_sys, uint32_t *target_attrib);
 /* Converts file attributes from one host system to another */
 
 int32_t mz_zip_attrib_posix_to_win32(uint32_t posix_attrib, uint32_t *win32_attrib);
@@ -209,8 +203,7 @@ int32_t mz_zip_attrib_win32_to_posix(uint32_t win32_attrib, uint32_t *posix_attr
 int32_t mz_zip_extrafield_find(void *stream, uint16_t type, int32_t max_seek, uint16_t *length);
 /* Seeks to extra field by its type and returns its length */
 
-int32_t mz_zip_extrafield_contains(const uint8_t *extrafield, int32_t extrafield_size,
-    uint16_t type, uint16_t *length);
+int32_t mz_zip_extrafield_contains(const uint8_t *extrafield, int32_t extrafield_size, uint16_t type, uint16_t *length);
 /* Gets whether an extrafield exists and its size */
 
 int32_t mz_zip_extrafield_read(void *stream, uint16_t *type, uint16_t *length);
@@ -221,13 +214,16 @@ int32_t mz_zip_extrafield_write(void *stream, uint16_t type, uint16_t length);
 
 /***************************************************************************/
 
-int32_t  mz_zip_dosdate_to_tm(uint64_t dos_date, struct tm *ptm);
+int32_t mz_zip_dosdate_to_tm(uint64_t dos_date, struct tm *ptm);
 /* Convert dos date/time format to struct tm */
 
-time_t   mz_zip_dosdate_to_time_t(uint64_t dos_date);
+time_t mz_zip_dosdate_to_time_t(uint64_t dos_date);
 /* Convert dos date/time format to time_t */
 
-int32_t  mz_zip_time_t_to_tm(time_t unix_time, struct tm *ptm);
+time_t mz_zip_tm_to_time_t(struct tm *ptm);
+/* Convert time struct to time_t */
+
+int32_t mz_zip_time_t_to_tm(time_t unix_time, struct tm *ptm);
 /* Convert time_t to time struct */
 
 uint32_t mz_zip_time_t_to_dos_date(time_t unix_time);
@@ -236,21 +232,20 @@ uint32_t mz_zip_time_t_to_dos_date(time_t unix_time);
 uint32_t mz_zip_tm_to_dosdate(const struct tm *ptm);
 /* Convert struct tm to dos date/time format */
 
-int32_t  mz_zip_ntfs_to_unix_time(uint64_t ntfs_time, time_t *unix_time);
+int32_t mz_zip_ntfs_to_unix_time(uint64_t ntfs_time, time_t *unix_time);
 /* Convert ntfs time to unix time */
 
-int32_t  mz_zip_unix_to_ntfs_time(time_t unix_time, uint64_t *ntfs_time);
+int32_t mz_zip_unix_to_ntfs_time(time_t unix_time, uint64_t *ntfs_time);
 /* Convert unix time to ntfs time */
 
 /***************************************************************************/
 
-int32_t  mz_zip_path_compare(const char *path1, const char *path2, uint8_t ignore_case);
+int32_t mz_zip_path_compare(const char *path1, const char *path2, uint8_t ignore_case);
 /* Compare two paths without regard to slashes */
 
 /***************************************************************************/
 
-const
-char*    mz_zip_get_compression_method_string(int32_t compression_method);
+const char *mz_zip_get_compression_method_string(int32_t compression_method);
 /* Gets a string representing the compression method */
 
 /***************************************************************************/
