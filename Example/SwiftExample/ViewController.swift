@@ -17,9 +17,11 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var globalCommentField: UITextField!
     @IBOutlet weak var zipButton: UIButton!
     @IBOutlet weak var unzipButton: UIButton!
     @IBOutlet weak var hasPasswordButton: UIButton!
+    @IBOutlet weak var readGlobalCommentButton: UIButton!
     @IBOutlet weak var resetButton: UIButton!
 
     @IBOutlet weak var file1: UILabel!
@@ -46,6 +48,7 @@ class ViewController: UIViewController {
         zipPath = tempZipPath()
         print("Zip path:", zipPath!)
         let password = passwordField.text ?? ""
+        let globalComment = globalCommentField.text?.isEmpty == false ? globalCommentField.text : nil
 
         let success = SSZipArchive.createZipFile(atPath: zipPath!,
                                                  withContentsOfDirectory: samplePath,
@@ -53,12 +56,14 @@ class ViewController: UIViewController {
                                                  compressionLevel: -1,
                                                  password: !password.isEmpty ? password : nil,
                                                  aes: true,
+                                                 globalComment: globalComment,
                                                  progressHandler: nil)
         if success {
             print("Success zip")
             info.text = "Success zip"
             unzipButton.isEnabled = true
             hasPasswordButton.isEnabled = true
+            readGlobalCommentButton.isEnabled = true
         } else {
             print("No success zip")
             info.text = "No success zip"
@@ -133,6 +138,20 @@ class ViewController: UIViewController {
         }
     }
 
+    @IBAction func hasReadGlobalCommentPressed(_: UIButton) {
+        guard let zipPath = zipPath else {
+            return
+        }
+
+        if let globalComment = SSZipArchive.readGlobalCommentOfArchive(atPath: zipPath, error: nil) {
+            print("Archive has global comment: \(globalComment)")
+            info.text = "Archive has global comment: \(globalComment)"
+        } else {
+            print("Archive has no global comment.")
+            info.text = "Archive has no global comment."
+        }
+    }
+
     @IBAction func resetPressed(_: UIButton) {
         file1.text = ""
         file2.text = ""
@@ -141,6 +160,7 @@ class ViewController: UIViewController {
         zipButton.isEnabled = true
         unzipButton.isEnabled = false
         hasPasswordButton.isEnabled = false
+        readGlobalCommentButton.isEnabled = false
         resetButton.isEnabled = false
     }
 
