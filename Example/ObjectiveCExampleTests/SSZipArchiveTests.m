@@ -136,7 +136,7 @@ int twentyMB = 20 * 1024 * 1024;
                             ];
     NSString *outputPath = [self _cachesPath:@"Zipped"];
 
-    // this is a monster
+    // ~Comment from August 2013 (4cd142a39c9f18556a845e0bb545166f818058b0), meaning iPhone 4/5 on iOS 6/7~
     // if testing on iOS, within 30 loops it will fail; however, on OS X, it may take about 900 loops
     for (int test = 0; test < 20; test++)
     {
@@ -827,7 +827,7 @@ int twentyMB = 20 * 1024 * 1024;
     long long int iterations = 240;
     NSString *unpackPath = [self _cachesPath:@"Unpacked/testFile"];
     NSNumber *goldenSize = [NSNumber numberWithLongLong:iterations * twentyMB];
-    NSData *data = [self get20MbNSData];
+    NSData *data = [self getRandomNSData:twentyMB];
     NSString *filenName = @"TestFile.zip";
     NSString *filePath = [NSString stringWithFormat:@"%@%@", [self _cachesPath:@""], filenName];
     NSString *password = @"TestPW";
@@ -953,14 +953,11 @@ int twentyMB = 20 * 1024 * 1024;
 
 #pragma mark - Private
 
-/// Returns 20Mb of data
--(NSData*)get20MbNSData {
-    NSMutableData* theData = [NSMutableData dataWithCapacity:twentyMB];
-    for (long long int i = 0; i < twentyMB/4; i++) {
-        u_int32_t randomBits = arc4random();
-        [theData appendBytes:(void *)&randomBits length:4];
-    }
-    return theData;
+/// Returns sizeInBytes of random data
+- (NSData*)getRandomNSData:(size_t)sizeInBytes {
+    void *buff = malloc(sizeInBytes);
+    arc4random_buf(buff, sizeInBytes);
+    return [NSData dataWithBytesNoCopy:buff length:sizeInBytes freeWhenDone:YES];
 }
 
 
