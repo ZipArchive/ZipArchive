@@ -232,6 +232,58 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
     return [NSNumber numberWithUnsignedLongLong:totalSize];
 }
 
++ (nullable NSString *)readGlobalCommentOfArchiveAtPath:(NSString *)path error:(NSError **)error
+{
+    if (path.length == 0)
+    {
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"received invalid argument(s)"};
+        NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                           code:SSZipArchiveErrorCodeInvalidArguments
+                                       userInfo:userInfo];
+        if (error) {
+            *error = err;
+        }
+        return nil;
+    }
+
+    zipFile zip = unzOpen(path.fileSystemRepresentation);
+    if (zip == NULL)
+    {
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"failed to open zip file"};
+        NSError *err = [NSError errorWithDomain:SSZipArchiveErrorDomain
+                                           code:SSZipArchiveErrorCodeFailedOpenZipFile
+                                       userInfo:userInfo];
+        if (error) {
+            *error = err;
+        }
+        return nil;
+    }
+
+    @try {
+        return [self readGlobalCommentOfZip:zip];
+    } @finally {
+        unzClose(zip);
+    }
+}
+
++ (nullable NSString *)readGlobalCommentOfZip:(zipFile)zip
+{
+    unz_global_info globalInfo = {};
+    unzGetGlobalInfo(zip, &globalInfo);
+
+    NSString *globalComment = nil;
+    if (globalInfo.size_comment > 0) {
+        // Reserve enough memory for the comment plus a null-terminating byte.
+        NSMutableData *commentData = [[NSMutableData alloc] initWithLength:globalInfo.size_comment + 1];
+        char *mutableCommentBytes = commentData.mutableBytes;
+        unzGetGlobalComment(zip, mutableCommentBytes, commentData.length);
+        globalComment = [[NSString alloc] initWithBytes:mutableCommentBytes
+                                                 length:commentData.length - 1
+                                               encoding:NSUTF8StringEncoding];
+    }
+    return globalComment;
+}
+
 #pragma mark - Unzipping
 
 + (BOOL)unzipFileAtPath:(NSString *)path toDestination:(NSString *)destination
@@ -407,6 +459,10 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
     // Message delegate
     if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:zipInfo:)]) {
         [delegate zipArchiveWillUnzipArchiveAtPath:path zipInfo:globalInfo];
+    }
+    if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:zipInfo:globalComment:)]) {
+        NSString *globalComment = [[self class] readGlobalCommentOfZip:zip];
+        [delegate zipArchiveWillUnzipArchiveAtPath:path zipInfo:globalInfo globalComment:globalComment];
     }
     if ([delegate respondsToSelector:@selector(zipArchiveProgressEvent:total:)]) {
         [delegate zipArchiveProgressEvent:currentPosition total:fileSize];
@@ -806,23 +862,23 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
 }
 
 #pragma mark - Zipping
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withGlobalComment:(nullable NSString *)globalComment
 {
-    return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:nil];
+    return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:nil withGlobalComment:globalComment];
 }
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath {
-    return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath withPassword:nil];
-}
-
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory {
-    return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory withPassword:nil];
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath withGlobalComment:(nullable NSString *)globalComment {
+    return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath withPassword:nil withGlobalComment:globalComment];
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password {
-    return [self createZipFileAtPath:path withFilesAtPaths:paths withPassword:password progressHandler:nil];
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withGlobalComment:(nullable NSString *)globalComment {
+    return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory withPassword:nil withGlobalComment:globalComment];
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password withGlobalComment:(nullable NSString *)globalComment {
+    return [self createZipFileAtPath:path withFilesAtPaths:paths withPassword:password withGlobalComment:globalComment progressHandler:nil];
+}
+
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(NSString *)password withGlobalComment:(nullable NSString *)globalComment progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
 {
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
     BOOL success = [zipArchive open];
@@ -846,21 +902,22 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
                 progressHandler(complete, total);
             }
         }
-        success &= [zipArchive close];
+        success &= [zipArchive closeSettingGlobalComment:globalComment];
     }
     return success;
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath withPassword:(nullable NSString *)password {
-    return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:NO withPassword:password];
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath withPassword:(nullable NSString *)password withGlobalComment:(nullable NSString *)globalComment {
+    return [SSZipArchive createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:NO withPassword:password withGlobalComment:globalComment];
 }
 
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password {
++ (BOOL)createZipFileAtPath:(NSString *)path withContentsOfDirectory:(NSString *)directoryPath keepParentDirectory:(BOOL)keepParentDirectory withPassword:(nullable NSString *)password withGlobalComment:(nullable NSString *)globalComment {
     return [SSZipArchive createZipFileAtPath:path
                      withContentsOfDirectory:directoryPath
                          keepParentDirectory:keepParentDirectory
                                 withPassword:password
+                           withGlobalComment:globalComment
                           andProgressHandler:nil
             ];
 }
@@ -869,8 +926,9 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
     withContentsOfDirectory:(NSString *)directoryPath
         keepParentDirectory:(BOOL)keepParentDirectory
                withPassword:(nullable NSString *)password
+          withGlobalComment:(nullable NSString *)globalComment
          andProgressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
-    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory compressionLevel:Z_DEFAULT_COMPRESSION password:password AES:YES progressHandler:progressHandler];
+    return [self createZipFileAtPath:path withContentsOfDirectory:directoryPath keepParentDirectory:keepParentDirectory compressionLevel:Z_DEFAULT_COMPRESSION password:password AES:YES globalComment:globalComment progressHandler:progressHandler];
 }
 
 + (BOOL)createZipFileAtPath:(NSString *)path
@@ -879,6 +937,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
            compressionLevel:(int)compressionLevel
                    password:(nullable NSString *)password
                         AES:(BOOL)aes
+              globalComment:(nullable NSString *)globalComment
             progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler {
     
     SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
@@ -928,14 +987,14 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
                 progressHandler(complete, total);
             }
         }
-        success &= [zipArchive close];
+        success &= [zipArchive closeSettingGlobalComment:globalComment];
     }
     return success;
 }
 
-+ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(nullable NSString *)password keepSymlinks:(BOOL)keeplinks {
++ (BOOL)createZipFileAtPath:(NSString *)path withFilesAtPaths:(NSArray<NSString *> *)paths withPassword:(nullable NSString *)password withGlobalComment:(nullable NSString *)globalComment keepSymlinks:(BOOL)keeplinks {
     if (!keeplinks) {
-        return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:password];
+        return [SSZipArchive createZipFileAtPath:path withFilesAtPaths:paths withPassword:password withGlobalComment:globalComment];
     } else {
         SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
         BOOL success = [zipArchive open];
@@ -960,6 +1019,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
            compressionLevel:(int)compressionLevel
                    password:(nullable NSString *)password
                         AES:(BOOL)aes
+              globalComment:(nullable NSString *)globalComment
             progressHandler:(void(^ _Nullable)(NSUInteger entryNumber, NSUInteger total))progressHandler
                keepSymlinks:(BOOL)keeplinks {
     if (!keeplinks) {
@@ -969,6 +1029,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
                                 compressionLevel:compressionLevel
                                         password:password
                                              AES:aes
+                                   globalComment:globalComment
                                  progressHandler:progressHandler];
     } else {
         SSZipArchive *zipArchive = [[SSZipArchive alloc] initWithPath:path];
@@ -1014,7 +1075,7 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
                     progressHandler(complete, total);
                 }
             }
-            success &= [zipArchive close];
+            success &= [zipArchive closeSettingGlobalComment:globalComment];
         }
         return success;
     }    
@@ -1182,6 +1243,14 @@ static bool filenameIsDirectory(const char *filename, uint16_t size)
 {
     NSAssert((_zip != NULL), @"[SSZipArchive] Attempting to close an archive which was never opened");
     int error = zipClose(_zip, NULL);
+    _zip = nil;
+    return error == ZIP_OK;
+}
+
+- (BOOL)closeSettingGlobalComment:(nullable NSString *)globalComment
+{
+    NSAssert((_zip != NULL), @"[SSZipArchive] Attempting to close an archive which was never opened");
+    int error = zipClose(_zip, globalComment.UTF8String);
     _zip = nil;
     return error == ZIP_OK;
 }

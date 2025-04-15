@@ -16,9 +16,11 @@ import Cocoa
 class ViewController: NSViewController {
 
     @IBOutlet weak var passwordField: NSTextField!
+    @IBOutlet weak var globalCommentField: NSTextField!
     @IBOutlet weak var zipButton: NSButton!
     @IBOutlet weak var unzipButton: NSButton!
     @IBOutlet weak var hasPasswordButton: NSButton!
+    @IBOutlet weak var readGlobalCommentButton: NSButton!
     @IBOutlet weak var resetButton: NSButton!
     
     @IBOutlet weak var file1: NSTextField!
@@ -51,13 +53,15 @@ class ViewController: NSViewController {
         zipPath = tempZipPath()
         print("Zip path:", zipPath!)
         let password = passwordField.stringValue
-        
+        let globalComment = globalCommentField.stringValue
+
         let success = SSZipArchive.createZipFile(atPath: zipPath!,
                                                  withContentsOfDirectory: samplePath,
                                                  keepParentDirectory: false,
                                                  compressionLevel: -1,
                                                  password: !password.isEmpty ? password : nil,
                                                  aes: true,
+                                                 globalComment: !globalComment.isEmpty ? globalComment : nil,
                                                  progressHandler: nil)
         if success {
             print("Success zip")
@@ -137,7 +141,21 @@ class ViewController: NSViewController {
             info.stringValue = "No, it's not password protected."
         }
     }
-    
+
+    @IBAction func hasReadGlobalCommentPressed(_: NSButton) {
+        guard let zipPath = zipPath else {
+            return
+        }
+
+        if let globalComment = SSZipArchive.readGlobalCommentOfArchive(atPath: zipPath, error: nil) {
+            print("Archive has global comment: \(globalComment)")
+            info.stringValue = "Archive has global comment: \(globalComment)"
+        } else {
+            print("Archive has no global comment.")
+            info.stringValue = "Archive has no global comment."
+        }
+    }
+
     @IBAction func resetPressed(_: NSButton) {
         file1.stringValue = ""
         file2.stringValue = ""

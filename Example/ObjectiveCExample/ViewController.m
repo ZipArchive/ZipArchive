@@ -56,6 +56,7 @@
                                     compressionLevel:-1
                                             password:password.length > 0 ? password : nil
                                                  AES:YES
+                                       globalComment:nil
                                      progressHandler:nil];
     if (success) {
         NSLog(@"Success zip");
