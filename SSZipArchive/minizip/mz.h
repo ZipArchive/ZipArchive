@@ -14,143 +14,142 @@
 /***************************************************************************/
 
 /* MZ_VERSION */
-#define MZ_VERSION                      ("4.0.7")
-#define MZ_VERSION_BUILD                (0x040007)
+#define MZ_VERSION       ("4.0.9")
+#define MZ_VERSION_BUILD (0x040009)
 
 /* MZ_ERROR */
-#define MZ_OK                           (0)  /* zlib */
-#define MZ_STREAM_ERROR                 (-1) /* zlib */
-#define MZ_DATA_ERROR                   (-3) /* zlib */
-#define MZ_MEM_ERROR                    (-4) /* zlib */
-#define MZ_BUF_ERROR                    (-5) /* zlib */
-#define MZ_VERSION_ERROR                (-6) /* zlib */
+#define MZ_OK             (0)  /* zlib */
+#define MZ_STREAM_ERROR   (-1) /* zlib */
+#define MZ_DATA_ERROR     (-3) /* zlib */
+#define MZ_MEM_ERROR      (-4) /* zlib */
+#define MZ_BUF_ERROR      (-5) /* zlib */
+#define MZ_VERSION_ERROR  (-6) /* zlib */
 
-#define MZ_END_OF_LIST                  (-100)
-#define MZ_END_OF_STREAM                (-101)
+#define MZ_END_OF_LIST    (-100)
+#define MZ_END_OF_STREAM  (-101)
 
-#define MZ_PARAM_ERROR                  (-102)
-#define MZ_FORMAT_ERROR                 (-103)
-#define MZ_INTERNAL_ERROR               (-104)
-#define MZ_CRC_ERROR                    (-105)
-#define MZ_CRYPT_ERROR                  (-106)
-#define MZ_EXIST_ERROR                  (-107)
-#define MZ_PASSWORD_ERROR               (-108)
-#define MZ_SUPPORT_ERROR                (-109)
-#define MZ_HASH_ERROR                   (-110)
-#define MZ_OPEN_ERROR                   (-111)
-#define MZ_CLOSE_ERROR                  (-112)
-#define MZ_SEEK_ERROR                   (-113)
-#define MZ_TELL_ERROR                   (-114)
-#define MZ_READ_ERROR                   (-115)
-#define MZ_WRITE_ERROR                  (-116)
-#define MZ_SIGN_ERROR                   (-117)
-#define MZ_SYMLINK_ERROR                (-118)
+#define MZ_PARAM_ERROR    (-102)
+#define MZ_FORMAT_ERROR   (-103)
+#define MZ_INTERNAL_ERROR (-104)
+#define MZ_CRC_ERROR      (-105)
+#define MZ_CRYPT_ERROR    (-106)
+#define MZ_EXIST_ERROR    (-107)
+#define MZ_PASSWORD_ERROR (-108)
+#define MZ_SUPPORT_ERROR  (-109)
+#define MZ_HASH_ERROR     (-110)
+#define MZ_OPEN_ERROR     (-111)
+#define MZ_CLOSE_ERROR    (-112)
+#define MZ_SEEK_ERROR     (-113)
+#define MZ_TELL_ERROR     (-114)
+#define MZ_READ_ERROR     (-115)
+#define MZ_WRITE_ERROR    (-116)
+#define MZ_SIGN_ERROR     (-117)
+#define MZ_SYMLINK_ERROR  (-118)
 
 /* MZ_OPEN */
-#define MZ_OPEN_MODE_READ               (0x01)
-#define MZ_OPEN_MODE_WRITE              (0x02)
-#define MZ_OPEN_MODE_READWRITE          (MZ_OPEN_MODE_READ | MZ_OPEN_MODE_WRITE)
-#define MZ_OPEN_MODE_APPEND             (0x04)
-#define MZ_OPEN_MODE_CREATE             (0x08)
-#define MZ_OPEN_MODE_EXISTING           (0x10)
+#define MZ_OPEN_MODE_READ      (0x01)
+#define MZ_OPEN_MODE_WRITE     (0x02)
+#define MZ_OPEN_MODE_READWRITE (MZ_OPEN_MODE_READ | MZ_OPEN_MODE_WRITE)
+#define MZ_OPEN_MODE_APPEND    (0x04)
+#define MZ_OPEN_MODE_CREATE    (0x08)
+#define MZ_OPEN_MODE_EXISTING  (0x10)
 
 /* MZ_SEEK */
-#define MZ_SEEK_SET                     (0)
-#define MZ_SEEK_CUR                     (1)
-#define MZ_SEEK_END                     (2)
+#define MZ_SEEK_SET (0)
+#define MZ_SEEK_CUR (1)
+#define MZ_SEEK_END (2)
 
 /* MZ_COMPRESS */
-#define MZ_COMPRESS_METHOD_STORE        (0)
-#define MZ_COMPRESS_METHOD_DEFLATE      (8)
-#define MZ_COMPRESS_METHOD_BZIP2        (12)
-#define MZ_COMPRESS_METHOD_LZMA         (14)
-#define MZ_COMPRESS_METHOD_ZSTD         (93)
-#define MZ_COMPRESS_METHOD_XZ           (95)
-#define MZ_COMPRESS_METHOD_AES          (99)
+#define MZ_COMPRESS_METHOD_STORE   (0)
+#define MZ_COMPRESS_METHOD_DEFLATE (8)
+#define MZ_COMPRESS_METHOD_BZIP2   (12)
+#define MZ_COMPRESS_METHOD_LZMA    (14)
+#define MZ_COMPRESS_METHOD_ZSTD    (93)
+#define MZ_COMPRESS_METHOD_XZ      (95)
+#define MZ_COMPRESS_METHOD_AES     (99)
 
-#define MZ_COMPRESS_LEVEL_DEFAULT       (-1)
-#define MZ_COMPRESS_LEVEL_FAST          (2)
-#define MZ_COMPRESS_LEVEL_NORMAL        (6)
-#define MZ_COMPRESS_LEVEL_BEST          (9)
+#define MZ_COMPRESS_LEVEL_DEFAULT  (-1)
+#define MZ_COMPRESS_LEVEL_FAST     (2)
+#define MZ_COMPRESS_LEVEL_NORMAL   (6)
+#define MZ_COMPRESS_LEVEL_BEST     (9)
 
 /* MZ_ZIP_FLAG */
-#define MZ_ZIP_FLAG_ENCRYPTED           (1 << 0)
-#define MZ_ZIP_FLAG_LZMA_EOS_MARKER     (1 << 1)
-#define MZ_ZIP_FLAG_DEFLATE_MAX         (1 << 1)
-#define MZ_ZIP_FLAG_DEFLATE_NORMAL      (0)
-#define MZ_ZIP_FLAG_DEFLATE_FAST        (1 << 2)
-#define MZ_ZIP_FLAG_DEFLATE_SUPER_FAST  (MZ_ZIP_FLAG_DEFLATE_FAST | \
-                                         MZ_ZIP_FLAG_DEFLATE_MAX)
-#define MZ_ZIP_FLAG_DATA_DESCRIPTOR     (1 << 3)
-#define MZ_ZIP_FLAG_UTF8                (1 << 11)
-#define MZ_ZIP_FLAG_MASK_LOCAL_INFO     (1 << 13)
+#define MZ_ZIP_FLAG_ENCRYPTED          (1 << 0)
+#define MZ_ZIP_FLAG_LZMA_EOS_MARKER    (1 << 1)
+#define MZ_ZIP_FLAG_DEFLATE_MAX        (1 << 1)
+#define MZ_ZIP_FLAG_DEFLATE_NORMAL     (0)
+#define MZ_ZIP_FLAG_DEFLATE_FAST       (1 << 2)
+#define MZ_ZIP_FLAG_DEFLATE_SUPER_FAST (MZ_ZIP_FLAG_DEFLATE_FAST | MZ_ZIP_FLAG_DEFLATE_MAX)
+#define MZ_ZIP_FLAG_DATA_DESCRIPTOR    (1 << 3)
+#define MZ_ZIP_FLAG_UTF8               (1 << 11)
+#define MZ_ZIP_FLAG_MASK_LOCAL_INFO    (1 << 13)
 
 /* MZ_ZIP_EXTENSION */
-#define MZ_ZIP_EXTENSION_ZIP64          (0x0001)
-#define MZ_ZIP_EXTENSION_NTFS           (0x000a)
-#define MZ_ZIP_EXTENSION_AES            (0x9901)
-#define MZ_ZIP_EXTENSION_UNIX1          (0x000d)
-#define MZ_ZIP_EXTENSION_SIGN           (0x10c5)
-#define MZ_ZIP_EXTENSION_HASH           (0x1a51)
-#define MZ_ZIP_EXTENSION_CDCD           (0xcdcd)
+#define MZ_ZIP_EXTENSION_ZIP64 (0x0001)
+#define MZ_ZIP_EXTENSION_NTFS  (0x000a)
+#define MZ_ZIP_EXTENSION_AES   (0x9901)
+#define MZ_ZIP_EXTENSION_UNIX1 (0x000d)
+#define MZ_ZIP_EXTENSION_SIGN  (0x10c5)
+#define MZ_ZIP_EXTENSION_HASH  (0x1a51)
+#define MZ_ZIP_EXTENSION_CDCD  (0xcdcd)
 
 /* MZ_ZIP64 */
-#define MZ_ZIP64_AUTO                   (0)
-#define MZ_ZIP64_FORCE                  (1)
-#define MZ_ZIP64_DISABLE                (2)
+#define MZ_ZIP64_AUTO    (0)
+#define MZ_ZIP64_FORCE   (1)
+#define MZ_ZIP64_DISABLE (2)
 
 /* MZ_HOST_SYSTEM */
-#define MZ_HOST_SYSTEM(VERSION_MADEBY)  ((uint8_t)(VERSION_MADEBY >> 8))
-#define MZ_HOST_SYSTEM_MSDOS            (0)
-#define MZ_HOST_SYSTEM_UNIX             (3)
-#define MZ_HOST_SYSTEM_WINDOWS_NTFS     (10)
-#define MZ_HOST_SYSTEM_RISCOS           (13)
-#define MZ_HOST_SYSTEM_OSX_DARWIN       (19)
+#define MZ_HOST_SYSTEM(VERSION_MADEBY) ((uint8_t)(VERSION_MADEBY >> 8))
+#define MZ_HOST_SYSTEM_MSDOS           (0)
+#define MZ_HOST_SYSTEM_UNIX            (3)
+#define MZ_HOST_SYSTEM_WINDOWS_NTFS    (10)
+#define MZ_HOST_SYSTEM_RISCOS          (13)
+#define MZ_HOST_SYSTEM_OSX_DARWIN      (19)
 
 /* MZ_PKCRYPT */
-#define MZ_PKCRYPT_HEADER_SIZE          (12)
+#define MZ_PKCRYPT_HEADER_SIZE (12)
 
 /* MZ_AES */
-#define MZ_AES_VERSION                  (1)
-#define MZ_AES_MODE_ECB                 (0)
-#define MZ_AES_MODE_CBC                 (1)
-#define MZ_AES_MODE_GCM                 (2)
-#define MZ_AES_STRENGTH_128             (1)
-#define MZ_AES_STRENGTH_192             (2)
-#define MZ_AES_STRENGTH_256             (3)
-#define MZ_AES_KEY_LENGTH_MAX           (32)
-#define MZ_AES_BLOCK_SIZE               (16)
-#define MZ_AES_FOOTER_SIZE              (10)
+#define MZ_AES_VERSION        (1)
+#define MZ_AES_MODE_ECB       (0)
+#define MZ_AES_MODE_CBC       (1)
+#define MZ_AES_MODE_GCM       (2)
+#define MZ_AES_STRENGTH_128   (1)
+#define MZ_AES_STRENGTH_192   (2)
+#define MZ_AES_STRENGTH_256   (3)
+#define MZ_AES_KEY_LENGTH_MAX (32)
+#define MZ_AES_BLOCK_SIZE     (16)
+#define MZ_AES_FOOTER_SIZE    (10)
 
 /* MZ_HASH */
-#define MZ_HASH_MD5                     (10)
-#define MZ_HASH_MD5_SIZE                (16)
-#define MZ_HASH_SHA1                    (20)
-#define MZ_HASH_SHA1_SIZE               (20)
-#define MZ_HASH_SHA224                  (22)
-#define MZ_HASH_SHA224_SIZE             (28)
-#define MZ_HASH_SHA256                  (23)
-#define MZ_HASH_SHA256_SIZE             (32)
-#define MZ_HASH_SHA384                  (24)
-#define MZ_HASH_SHA384_SIZE             (48)
-#define MZ_HASH_SHA512                  (25)
-#define MZ_HASH_SHA512_SIZE             (64)
-#define MZ_HASH_MAX_SIZE                (256)
+#define MZ_HASH_MD5         (10)
+#define MZ_HASH_MD5_SIZE    (16)
+#define MZ_HASH_SHA1        (20)
+#define MZ_HASH_SHA1_SIZE   (20)
+#define MZ_HASH_SHA224      (22)
+#define MZ_HASH_SHA224_SIZE (28)
+#define MZ_HASH_SHA256      (23)
+#define MZ_HASH_SHA256_SIZE (32)
+#define MZ_HASH_SHA384      (24)
+#define MZ_HASH_SHA384_SIZE (48)
+#define MZ_HASH_SHA512      (25)
+#define MZ_HASH_SHA512_SIZE (64)
+#define MZ_HASH_MAX_SIZE    (256)
 
 /* MZ_ENCODING */
-#define MZ_ENCODING_CODEPAGE_437        (437)
-#define MZ_ENCODING_CODEPAGE_932        (932)
-#define MZ_ENCODING_CODEPAGE_936        (936)
-#define MZ_ENCODING_CODEPAGE_950        (950)
-#define MZ_ENCODING_UTF8                (65001)
+#define MZ_ENCODING_CODEPAGE_437 (437)
+#define MZ_ENCODING_CODEPAGE_932 (932)
+#define MZ_ENCODING_CODEPAGE_936 (936)
+#define MZ_ENCODING_CODEPAGE_950 (950)
+#define MZ_ENCODING_UTF8         (65001)
 
 /* MZ_UTILITY */
-#define MZ_UNUSED(SYMBOL)               ((void)SYMBOL)
+#define MZ_UNUSED(SYMBOL) ((void)SYMBOL)
 
 #if defined(_WIN32) && defined(MZ_EXPORTS)
-#define MZ_EXPORT __declspec(dllexport)
+#  define MZ_EXPORT __declspec(dllexport)
 #else
-#define MZ_EXPORT
+#  define MZ_EXPORT
 #endif
 
 /***************************************************************************/

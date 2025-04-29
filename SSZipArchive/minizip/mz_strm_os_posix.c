@@ -186,8 +186,7 @@ void mz_stream_os_delete(void **stream) {
     if (!stream)
         return;
     posix = (mz_stream_posix *)*stream;
-    if (posix)
-        free(posix);
+    free(posix);
     *stream = NULL;
 }
 

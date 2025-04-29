@@ -23,9 +23,9 @@
 
 /***************************************************************************/
 
-#define MZ_DEFAULT_PROGRESS_INTERVAL    (1000u)
+#define MZ_DEFAULT_PROGRESS_INTERVAL (1000u)
 
-#define MZ_ZIP_CD_FILENAME              ("__cdcd__")
+#define MZ_ZIP_CD_FILENAME           ("__cdcd__")
 
 /***************************************************************************/
 
@@ -39,7 +39,7 @@ typedef struct mz_zip_reader_s {
     uint16_t hash_algorithm;
     uint16_t hash_digest_size;
     mz_zip_file *file_info;
-    const char *pattern;
+    char *pattern;
     uint8_t pattern_ignore_case;
     const char *password;
     void *overwrite_userdata;
@@ -228,6 +228,11 @@ int32_t mz_zip_reader_close(void *handle) {
     if (reader->mem_stream) {
         mz_stream_close(reader->mem_stream);
         mz_stream_delete(&reader->mem_stream);
+    }
+
+    if (reader->pattern) {
+        free(reader->pattern);
+        reader->pattern = NULL;
     }
 
     return err;
@@ -435,8 +440,8 @@ int32_t mz_zip_reader_entry_close(void *handle) {
         mz_crypt_sha_end(reader->hash, computed_hash, sizeof(computed_hash));
         mz_crypt_sha_delete(&reader->hash);
 
-        err_hash = mz_zip_reader_entry_get_hash(handle, reader->hash_algorithm, expected_hash,
-            reader->hash_digest_size);
+        err_hash =
+            mz_zip_reader_entry_get_hash(handle, reader->hash_algorithm, expected_hash, reader->hash_digest_size);
 
         if (err_hash == MZ_OK) {
             /* Verify expected hash against computed hash */
@@ -654,18 +659,18 @@ int32_t mz_zip_reader_entry_save_file(void *handle, const char *path) {
     if (!reader->file_info || !path)
         return MZ_PARAM_ERROR;
 
-    /* Convert to forward slashes for unix which doesn't like backslashes */
     pathwfs = (char *)strdup(path);
     if (!pathwfs)
         return MZ_MEM_ERROR;
-    mz_path_convert_slashes(pathwfs, MZ_PATH_SLASH_UNIX);
 
     if (reader->entry_cb)
         reader->entry_cb(handle, reader->entry_userdata, reader->file_info, pathwfs);
 
     directory = (char *)strdup(pathwfs);
-    if (!directory)
-        return MZ_MEM_ERROR;
+    if (!directory) {
+        err = MZ_MEM_ERROR;
+        goto save_cleanup;
+    }
     mz_path_remove_filename(directory);
 
     /* If it is a directory entry then create a directory instead of writing file */
@@ -754,8 +759,9 @@ int32_t mz_zip_reader_entry_save_file(void *handle, const char *path) {
 
     if (err == MZ_OK) {
         /* Set file attributes for the correct system */
-        err_attrib = mz_zip_attrib_convert(MZ_HOST_SYSTEM(reader->file_info->version_madeby),
-            reader->file_info->external_fa, MZ_VERSION_MADEBY_HOST_SYSTEM, &target_attrib);
+        err_attrib =
+            mz_zip_attrib_convert(MZ_HOST_SYSTEM(reader->file_info->version_madeby), reader->file_info->external_fa,
+                                  MZ_VERSION_MADEBY_HOST_SYSTEM, &target_attrib);
 
         if (err_attrib == MZ_OK)
             mz_os_set_file_attribs(pathwfs, target_attrib);
@@ -814,6 +820,7 @@ int32_t mz_zip_reader_save_all(void *handle, const char *destination_dir) {
     int32_t err = MZ_OK;
     int32_t utf8_name_size = 0;
     int32_t resolved_name_size = 0;
+    int32_t destination_dir_len = 0;
     char *utf8_string = NULL;
     char *path = NULL;
     char *utf8_name = NULL;
@@ -825,6 +832,9 @@ int32_t mz_zip_reader_save_all(void *handle, const char *destination_dir) {
     if (err == MZ_END_OF_LIST)
         return err;
 
+    if (destination_dir)
+        destination_dir_len = (int32_t)strlen(destination_dir) + 1;
+
     while (err == MZ_OK) {
         /* Assume 4 bytes per character needed + 1 for terminating null */
         utf8_name_size = reader->file_info->filename_size * 4 + 1;
@@ -832,7 +842,7 @@ int32_t mz_zip_reader_save_all(void *handle, const char *destination_dir) {
 
         if (destination_dir) {
             /* +1 is for the "/" separator */
-            resolved_name_size += (int)strlen(destination_dir) + 1;
+            resolved_name_size += destination_dir_len;
         }
 
         new_alloc = (char *)realloc(path, resolved_name_size);
@@ -863,7 +873,7 @@ int32_t mz_zip_reader_save_all(void *handle, const char *destination_dir) {
         if ((reader->encoding > 0) && (reader->file_info->flag & MZ_ZIP_FLAG_UTF8) == 0) {
             utf8_string = mz_os_utf8_string_create(reader->file_info->filename, reader->encoding);
             if (utf8_string) {
-                strncpy(utf8_name, (char *)utf8_string, utf8_name_size - 1);
+                strncpy(utf8_name, utf8_string, utf8_name_size - 1);
                 utf8_name[utf8_name_size - 1] = 0;
                 mz_os_utf8_string_delete(&utf8_string);
             }
@@ -900,7 +910,19 @@ save_all_cleanup:
 
 void mz_zip_reader_set_pattern(void *handle, const char *pattern, uint8_t ignore_case) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
-    reader->pattern = pattern;
+    if (!reader)
+        return;
+    free(reader->pattern);
+    reader->pattern = NULL;
+    if (pattern) {
+        /* pattern can be NULL */
+        int32_t pattern_size = (int32_t)strlen(pattern);
+        reader->pattern = (char *)calloc(pattern_size + 1, sizeof(char));
+        if (!reader->pattern)
+        /* Reference: `mz_zip_set_comment`, should return MZ_MEM_ERROR */
+            return;
+        strncpy(reader->pattern, pattern, pattern_size);
+    }
     reader->pattern_ignore_case = ignore_case;
 }
 
@@ -1400,8 +1422,8 @@ int32_t mz_zip_writer_entry_close(void *handle) {
 
     if (err == MZ_OK) {
         if (writer->raw)
-            err = mz_zip_entry_close_raw(writer->zip_handle, writer->file_info.uncompressed_size,
-                writer->file_info.crc);
+            err =
+                mz_zip_entry_close_raw(writer->zip_handle, writer->file_info.uncompressed_size, writer->file_info.crc);
         else
             err = mz_zip_entry_close(writer->zip_handle);
     }
