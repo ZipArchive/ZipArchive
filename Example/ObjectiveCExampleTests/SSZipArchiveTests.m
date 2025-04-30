@@ -733,10 +733,14 @@ int twentyMB = 20 * 1024 * 1024;
 - (void)testPathSanitation {
     NSDictionary<NSString *, NSString *> *tests =
     @{
+      // directory path starting with slash
+      @"/a/": @"/a/",
+      // directory path not starting with slash
+      @"a/": @"a/",
       // path traversal
       @"../../../../../../../../../../../tmp/test.txt": @"tmp/test.txt",
       // path traversal, Windows style
-      @"..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp\\test.txt": @"tmp/test.txt",
+      @"..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp\\test.txt": @"..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\..\\tmp\\test.txt",
       // relative path
       @"a/b/../c.txt": @"a/c.txt",
       // path traversal with slash (#680)
@@ -755,8 +759,7 @@ int twentyMB = 20 * 1024 * 1024;
       @"file:a/../../../usr/bin": @"usr/bin",
       };
     for (NSString *str in tests) {
-        //NSLog(@"%@", str);
-        XCTAssertTrue([tests[str] isEqualToString:[str _sanitizedPath]], @"Path should be sanitized for traversal");
+        XCTAssertTrue([tests[str] isEqualToString:[str _sanitizedPath]], @"Path should be sanitized for traversal: %@", str);
     }
 }
 
