@@ -11,16 +11,16 @@ on:
 jobs:
   # available images: https://github.com/actions/runner-images
   
-  # oldest targets
-  macos-12:
+  # oldest GitHub targets
+  macos-13:
     runs-on: ${{matrix.OS}}
     strategy:
       fail-fast: false
       matrix:
-        OS: [macOS-12]
+        OS: [macOS-13]
         SDK: ["macosx"]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4 # https://github.com/actions/checkout
     - name: Install dependencies
       run: |
         pushd Example
@@ -39,7 +39,7 @@ jobs:
         CONFIGURATION="Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES"
         xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -destination "$DESTINATION" -configuration $CONFIGURATION test
 
-  # newest targets
+  # newest GitHub targets
   macos-15:
     runs-on: ${{matrix.OS}}
     strategy:
@@ -48,10 +48,10 @@ jobs:
         OS: [macOS-15]
         SDK: ["appletvsimulator", "iphonesimulator", "watchsimulator", "xrsimulator"]
     steps:
-    - uses: maxim-lobanov/setup-xcode@v1
+    - uses: maxim-lobanov/setup-xcode@v1 # https://github.com/maxim-lobanov/setup-xcode
       with:
-        xcode-version: '16.0.0'
-    - uses: actions/checkout@v4
+        xcode-version: latest-stable
+    - uses: actions/checkout@v4 # https://github.com/actions/checkout
     - name: Install dependencies
       run: |
         pushd Example
