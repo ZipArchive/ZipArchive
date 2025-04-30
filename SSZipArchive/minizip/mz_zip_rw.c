@@ -1659,7 +1659,7 @@ int32_t mz_zip_writer_add_path(void *handle, const char *path, const char *root_
     char full_path[1024];
     char path_dir[1024];
 
-    if (strrchr(path, '*')) {
+    if (strrchr(path, '*') && mz_os_file_exists(path) != MZ_OK) {
         strncpy(path_dir, path, sizeof(path_dir) - 1);
         path_dir[sizeof(path_dir) - 1] = 0;
         mz_path_remove_filename(path_dir);
