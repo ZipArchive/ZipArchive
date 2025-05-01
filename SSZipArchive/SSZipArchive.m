@@ -1058,7 +1058,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     mz_zip_file zipInfo = {};
     [SSZipArchive zipInfo:&zipInfo setAttributesOfItemAtPath:path];
     
-    //unpdate zipInfo.external_fa
+    //update zipInfo.external_fa
     uint32_t target_attrib = 0;
     uint32_t src_attrib = 0;
     uint32_t src_sys = 0;
