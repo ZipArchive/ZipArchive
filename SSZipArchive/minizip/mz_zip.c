@@ -17,6 +17,7 @@
 
 #include "mz.h"
 #include "mz_crypt.h"
+#include "mz_os.h"
 #include "mz_strm.h"
 #ifdef HAVE_BZIP2
 #  include "mz_strm_bzip.h"
@@ -2294,8 +2295,7 @@ int32_t mz_zip_entry_is_dir(void *handle) {
 
     filename_length = (int32_t)strlen(zip->file_info.filename);
     if (filename_length > 0) {
-        if ((zip->file_info.filename[filename_length - 1] == '/') ||
-            (zip->file_info.filename[filename_length - 1] == '\\'))
+        if (mz_os_is_dir_separator(zip->file_info.filename[filename_length - 1]))
             return MZ_OK;
     }
     return MZ_EXIST_ERROR;
