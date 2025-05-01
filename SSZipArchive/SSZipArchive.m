@@ -1212,6 +1212,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                     general_purpose_flag:(uint16_t)flag
                                     size:(uint16_t)size_filename {
     
+    // tmp encoding override for default.zip
+    int32_t encoding = 0x0A01;
+    if (encoding == 0x0A01) {
+        NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingShiftJIS);
+        return [NSString stringWithCString:filename encoding:encoding];
+    }
+    
     // Respect Language encoding flag only reading filename as UTF-8 when this is set
     // when file entry created on dos system.
     //
