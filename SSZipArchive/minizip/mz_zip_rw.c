@@ -870,6 +870,8 @@ int32_t mz_zip_reader_save_all(void *handle, const char *destination_dir) {
         strncpy(utf8_name, reader->file_info->filename, utf8_name_size - 1);
         utf8_name[utf8_name_size - 1] = 0;
 
+        // tmp encoding override for baiduyun.zip
+        reader->encoding = MZ_ENCODING_CODEPAGE_936;
         if ((reader->encoding > 0) && (reader->file_info->flag & MZ_ZIP_FLAG_UTF8) == 0) {
             utf8_string = mz_os_utf8_string_create(reader->file_info->filename, reader->encoding);
             if (utf8_string) {

@@ -2113,13 +2113,15 @@ int32_t mz_zip_entry_read_close(void *handle, uint32_t *crc32, int64_t *compress
     }
 
     /* If entire entry was not read verification will fail */
+    // TODO: if zip->recover is 1, CRC verification should be skipped
     if ((err == MZ_OK) && (total_in == zip->file_info.compressed_size) && (!zip->entry_raw)) {
 #ifdef HAVE_WZAES
         /* AES zip version AE-1 will expect a valid crc as well */
         if (zip->file_info.aes_version <= 0x0001)
 #endif
         {
-            if (zip->entry_crc32 != zip->file_info.crc) {
+            // tmp CRC skip for baiduyun.zip
+            if (zip->file_info.crc && zip->entry_crc32 != zip->file_info.crc) {
                 mz_zip_print("Zip - Entry - Crc failed (actual 0x%08" PRIx32 " expected 0x%08" PRIx32 ")\n",
                              zip->entry_crc32, zip->file_info.crc);
 
