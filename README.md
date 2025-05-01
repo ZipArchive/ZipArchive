@@ -24,11 +24,17 @@ If you need support for previous versions of ZipArchive for earlier OS support y
 
 We will not support versions of ZipArchive that use dependencies with known vulnerabilities. 
 
+## Alternatives
+
+Konwn popular alternatives to ZipArchive:
+* [Zip](https://github.com/marmelroy/Zip) from marmelroy, Swift, based on minizip-ng too.
+* [ZIPFoundation](https://github.com/weichsel/ZIPFoundation) from weichsel, Swift, direct layer over zlib.
+
 ## Installation and Setup
 
 *The main release branch is configured to support Objective-C and Swift 4+.*
 
-SSZipArchive works on:
+ZipArchive works on:
 - Xcode 12 and above
 - iOS 15.5 and above
 - macOS 10.15 and above
@@ -61,7 +67,7 @@ We do not release a Carthage pre-built package. Developers are encouraged to bui
 3. Add the `Security` framework to your target.
 4. Add the following GCC_PREPROCESSOR_DEFINITIONS: `HAVE_ARC4RANDOM_BUF HAVE_ICONV HAVE_INTTYPES_H HAVE_PKCRYPT HAVE_STDINT_H HAVE_WZAES HAVE_ZLIB ZLIB_COMPAT $(inherited)`.
 
-SSZipArchive requires ARC.
+ZipArchive requires ARC.
 
 ## Usage
 
