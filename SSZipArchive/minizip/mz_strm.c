@@ -537,7 +537,6 @@ void mz_stream_raw_delete(void **stream) {
     if (!stream)
         return;
     raw = (mz_stream_raw *)*stream;
-    if (raw)
-        free(raw);
+    free(raw);
     *stream = NULL;
 }

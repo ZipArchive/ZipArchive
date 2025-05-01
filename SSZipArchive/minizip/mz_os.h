@@ -150,6 +150,9 @@ struct dirent *mz_os_read_dir(DIR *dir);
 int32_t mz_os_close_dir(DIR *dir);
 /* Closes a directory that has been opened for listing */
 
+int32_t mz_os_is_dir_separator(const char c);
+/* Checks to see if character is a directory separator */
+
 int32_t mz_os_is_dir(const char *path);
 /* Checks to see if path is a directory */
 

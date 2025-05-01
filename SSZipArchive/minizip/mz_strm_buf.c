@@ -372,8 +372,7 @@ void mz_stream_buffered_delete(void **stream) {
     if (!stream)
         return;
     buffered = (mz_stream_buffered *)*stream;
-    if (buffered)
-        free(buffered);
+    free(buffered);
     *stream = NULL;
 }
 

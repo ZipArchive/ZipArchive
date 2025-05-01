@@ -369,8 +369,7 @@ void mz_stream_zlib_delete(void **stream) {
     if (!stream)
         return;
     zlib = (mz_stream_zlib *)*stream;
-    if (zlib)
-        free(zlib);
+    free(zlib);
     *stream = NULL;
 }
 

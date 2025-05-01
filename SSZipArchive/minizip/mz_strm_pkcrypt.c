@@ -315,8 +315,7 @@ void mz_stream_pkcrypt_delete(void **stream) {
     if (!stream)
         return;
     pkcrypt = (mz_stream_pkcrypt *)*stream;
-    if (pkcrypt)
-        free(pkcrypt);
+    free(pkcrypt);
     *stream = NULL;
 }
 

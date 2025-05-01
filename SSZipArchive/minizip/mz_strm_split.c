@@ -35,19 +35,19 @@ static mz_stream_vtbl mz_stream_split_vtbl = {
 
 typedef struct mz_stream_split_s {
     mz_stream stream;
-    int32_t is_open;
     int64_t disk_size;
     int64_t total_in;
     int64_t total_in_disk;
     int64_t total_out;
     int64_t total_out_disk;
+    int32_t is_open;
     int32_t mode;
     char *path_cd;
     char *path_disk;
     uint32_t path_disk_size;
     int32_t number_disk;
-    int32_t current_disk;
     int64_t current_disk_size;
+    int32_t current_disk;
     int32_t reached_end;
 } mz_stream_split;
 
@@ -404,11 +404,8 @@ void mz_stream_split_delete(void **stream) {
         return;
     split = (mz_stream_split *)*stream;
     if (split) {
-        if (split->path_cd)
-            free(split->path_cd);
-        if (split->path_disk)
-            free(split->path_disk);
-
+        free(split->path_cd);
+        free(split->path_disk);
         free(split);
     }
     *stream = NULL;
