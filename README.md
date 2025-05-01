@@ -27,8 +27,8 @@ We will not support versions of ZipArchive that use dependencies with known vuln
 ## Alternatives
 
 Konwn popular alternatives to ZipArchive:
-* [Zip](https://github.com/marmelroy/Zip), Swift, based on minizip-ng too.
-* [ZIPFoundation](https://github.com/weichsel/ZIPFoundation), Swift, direct layer over zlib.
+* [Zip](https://github.com/marmelroy/Zip) from marmelroy, Swift, based on minizip-ng too.
+* [ZIPFoundation](https://github.com/weichsel/ZIPFoundation) from weichsel, Swift, direct layer over zlib.
 
 ## Installation and Setup
 
