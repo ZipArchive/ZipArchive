@@ -56,8 +56,8 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *outputPath = [self _cachesPath:@"Zipped"];
 
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
-    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
-    
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withGlobalComment:nil];
+
     XCTAssertTrue(success, @"create zip failure");
     // TODO: Make sure the files are actually zipped. They are, but the test should be better.
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
@@ -78,8 +78,8 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *outputPath = [self _cachesPath:@"Zipped"];
     
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
-    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@"dolphins🐋"];
-    
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@"dolphins🐋" withGlobalComment:nil];
+
     XCTAssertTrue(success, @"create zip failure");
     // TODO: Make sure the files are actually zipped. They are, but the test should be better.
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
@@ -100,14 +100,38 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *outputPath = [self _cachesPath:@"Zipped"];
     
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
-    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@""];
-    
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@"" withGlobalComment:nil];
+
     XCTAssertTrue(success, @"create zip failure");
     // TODO: Make sure the files are actually zipped. They are, but the test should be better.
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
     
     BOOL protected = [SSZipArchive isFilePasswordProtectedAtPath:archivePath];
     XCTAssertTrue(protected, @"has password");
+}
+
+
+- (void)testZippingWithGlobalComment {
+    // use extracted files from [-testUnzipping]
+    [self testUnzipping];
+
+    NSString *inputPath = [self _cachesPath:@"Regular"];
+    NSArray *inputPaths = @[[inputPath stringByAppendingPathComponent:@"Readme.markdown"],
+                            [inputPath stringByAppendingPathComponent:@"LICENSE"]];
+
+    NSString *outputPath = [self _cachesPath:@"Zipped"];
+
+    NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:nil withGlobalComment:@"A Global Comment"];
+
+    XCTAssertTrue(success, @"create zip failure");
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
+
+    NSError *error = nil;
+    NSString *globalComment = [SSZipArchive readGlobalCommentOfArchiveAtPath:archivePath error:&error];
+
+    XCTAssertNil(error, @"read global comment failure");
+    XCTAssertTrue([globalComment isEqualToString:@"A Global Comment"]);
 }
 
 
@@ -119,7 +143,7 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *outputPath = [self _cachesPath:@"FolderZipped"];
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"ArchiveWithFolders.zip"];
 
-    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputPath];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputPath withGlobalComment:nil];
     XCTAssertTrue(success, @"create zip failure");
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Folder Archive created");
 }
@@ -143,7 +167,7 @@ int twentyMB = 20 * 1024 * 1024;
         // Zipping
         NSString *archivePath = [outputPath stringByAppendingPathComponent:[NSString stringWithFormat:@"queue_test_%d.zip", test]];
 
-        BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
+        BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withGlobalComment:nil];
         XCTAssertTrue(success, @"create zip failure");
         
         long long threshold = 510000; // 510kB:size slightly smaller than a successful zip, but much larger than a failed one
@@ -377,8 +401,8 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *outputPath = [self _cachesPath:@"Zipped"];
     
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedUnicodePasswordArchive.zip"];
-    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@"ꊐ⌒Ⅳ🤐"];
-    
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withPassword:@"ꊐ⌒Ⅳ🤐" withGlobalComment:nil];
+
     XCTAssertTrue(success, @"create zip failure");
     XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:archivePath], @"Archive created");
     
@@ -500,7 +524,7 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *zipPath = [workPath stringByAppendingPathComponent:@"UnicodeZipping.zip"];
     [[NSFileManager defaultManager] createFileAtPath:filePath contents:nil attributes:nil];
     
-    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:@[filePath]];
+    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:@[filePath] withGlobalComment:nil];
     XCTAssertTrue(success, @"zip failure");
     
     [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
@@ -519,9 +543,9 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *zipPath = [outputPath stringByAppendingPathComponent:@"Empty.zip"];
     NSString *zipPath2 = [outputPath stringByAppendingPathComponent:@"EmptyWithParentDirectory.zip"];
     
-    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:inputPath keepParentDirectory:NO];
+    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:inputPath keepParentDirectory:NO withGlobalComment:nil];
     XCTAssertTrue(success, @"create zip failure");
-    success = [SSZipArchive createZipFileAtPath:zipPath2 withContentsOfDirectory:inputPath keepParentDirectory:YES];
+    success = [SSZipArchive createZipFileAtPath:zipPath2 withContentsOfDirectory:inputPath keepParentDirectory:YES withGlobalComment:nil];
     XCTAssertTrue(success, @"create zip failure");
     long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:zipPath error:nil][NSFileSize] longLongValue];
     long long fileSize2 = [[[NSFileManager defaultManager] attributesOfItemAtPath:zipPath2 error:nil][NSFileSize] longLongValue];
@@ -534,7 +558,7 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *outputPath = [self _cachesPath:@"ZippingNonDirectory"];
     NSString *zipPath = [outputPath stringByAppendingPathComponent:@"ZippingNonDirectory.zip"];
 
-    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:inputPath];
+    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:inputPath withGlobalComment:nil];
     XCTAssertTrue(!success, @"create zip success");
 }
 
@@ -546,7 +570,7 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *outputPath = [self _cachesPath:@"Zipped"];
     NSString *zipPath = [outputPath stringByAppendingPathComponent:@"EmptyWithParentDirectory.zip"];
     
-    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:inputPath keepParentDirectory:YES withPassword:@"password"];
+    BOOL success = [SSZipArchive createZipFileAtPath:zipPath withContentsOfDirectory:inputPath keepParentDirectory:YES withPassword:@"password" withGlobalComment:nil];
     XCTAssertTrue(success, @"create zip failure");
     
     outputPath = [self _cachesPath:@"EmptyOutput"];
@@ -573,7 +597,7 @@ int twentyMB = 20 * 1024 * 1024;
     // zipping files
     NSString *outputPath = [self _cachesPath:@"Zipped"];
     NSString *zipPath = [outputPath stringByAppendingPathComponent:@"EmptyWithSubdirectory.zip"];
-    success = [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:@[emptySubdirectory]];
+    success = [SSZipArchive createZipFileAtPath:zipPath withFilesAtPaths:@[emptySubdirectory] withGlobalComment:nil];
     XCTAssertTrue(success, @"create zip failure");
 
     // unzipping files
@@ -609,7 +633,7 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *outputPath = [self _cachesPath:@"ZippedDate"];
     NSString *archivePath = [outputPath stringByAppendingPathComponent:@"CreatedArchive.zip"];
 
-    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:inputPaths withGlobalComment:nil];
     XCTAssertTrue(success, @"create zip failure");
     id<SSZipArchiveDelegate> delegate = [ProgressDelegate new];
     success = [SSZipArchive unzipFileAtPath:archivePath toDestination:outputPath delegate:delegate];
@@ -642,7 +666,7 @@ int twentyMB = 20 * 1024 * 1024;
     NSString *archivePath = [outputDir stringByAppendingPathComponent:@"TestAppArchive.zip"];
 
     // Create the zip file using the contents of the .app file as the input
-    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputFile];
+    BOOL success = [SSZipArchive createZipFileAtPath:archivePath withContentsOfDirectory:inputFile withGlobalComment:nil];
     XCTAssertTrue(success, @"create zip failure");
 
     /**** Un-zipping **/
@@ -879,7 +903,7 @@ int twentyMB = 20 * 1024 * 1024;
 
     //zipping
     NSString *archivePath = [outputDir stringByAppendingPathComponent:@"SymlinkZippingWithFilesAtPaths.zip"];
-    success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:files withPassword:nil keepSymlinks:YES];
+    success = [SSZipArchive createZipFileAtPath:archivePath withFilesAtPaths:files withPassword:nil withGlobalComment:nil keepSymlinks:YES];
     XCTAssertTrue(success);
         
     //remove files in directory dir, to make sure what we check is unzipped
@@ -928,6 +952,7 @@ int twentyMB = 20 * 1024 * 1024;
                               compressionLevel:-1
                                       password:nil
                                            AES:YES
+                                  globalComment:nil
                                progressHandler:nil
                                   keepSymlinks:YES];
     XCTAssertTrue(success);
