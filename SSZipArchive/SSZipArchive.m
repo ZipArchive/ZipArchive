@@ -1221,32 +1221,28 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                     general_purpose_flag:(uint16_t)flag
                                     size:(uint16_t)size_filename {
     
-    // Respect Language encoding flag only reading filename as UTF-8 when this is set
-    // when file entry created on dos system.
-    //
+    // Normally the 0x0008 Extra Field is used for the code page.
+    // Otherwise UTF-8 is used when general purpose bit flag 11 is set.
+    // Otherwise it defaults to IBM Code Page 437.
+    // Specs, APPENDIX D - Language Encoding (EFS):
     // https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
-    //   Bit 11: Language encoding flag (EFS).  If this bit is set,
-    //           the filename and comment fields for this file
-    //           MUST be encoded using UTF-8. (see APPENDIX D)
-    uint16_t made_by = version_made_by >> 8;
-    BOOL made_on_dos = made_by == 0;
-    BOOL languageEncoding = (flag & (1 << 11)) != 0;
-    if (!languageEncoding && made_on_dos) {
-        // APPNOTE.TXT D.1:
-        //   D.2 If general purpose bit 11 is unset, the file name and comment should conform
-        //   to the original ZIP character encoding.  If general purpose bit 11 is set, the
-        //   filename and comment must support The Unicode Standard, Version 4.1.0 or
-        //   greater using the character encoding form defined by the UTF-8 storage
-        //   specification.  The Unicode Standard is published by the The Unicode
-        //   Consortium (www.unicode.org).  UTF-8 encoded data stored within ZIP files
-        //   is expected to not include a byte order mark (BOM).
-        
-        //  Code Page 437 corresponds to kCFStringEncodingDOSLatinUS
+    // But we'll purposedly NOT default to IBM Code Page 437.
+    // Because:
+    // - Native apps (unzip, Archive Utility) and popular apps (Keka, The Unarchiver) on macOS do not support CP-437.
+    // - There are archives in the wild from ZipArchive 2.1.5 and older which did not set the proper general purpose bit flag (fixed in ZipArchive 2.2 in May 2019).
+    // - Windows 2.0 (1987) and newer use CP-1252 with characters incompatible with CP-437. So only DOS/MSDOS would have a use case for CP-437, which is reflected by the specs of the Zip format which are from 1989.
+    BOOL madeOnDOS = (version_made_by >> 8) == 0;
+    BOOL utf8Encoding = (flag & (1 << 11)) != 0;
+    if (!utf8Encoding && madeOnDOS) {
+        // In order to convert to CP-437 (kCFStringEncodingDOSLatinUS) here,
+        // we'll need to add an explicit api parameter.
+        /*
         NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingDOSLatinUS);
         NSString* strPath = [NSString stringWithCString:filename encoding:encoding];
         if (strPath) {
             return strPath;
         }
+        */
     }
     
     // attempting unicode encoding
