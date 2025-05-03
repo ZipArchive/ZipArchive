@@ -409,7 +409,7 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     int crc_ret = 0;
     unsigned char buffer[4096] = {0};
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSMutableArray<NSDictionary *> *directoriesModificationDates = [[NSMutableArray alloc] init];
+    NSMutableDictionary<NSString *, NSDictionary<NSString *, id> *> *directoriesModificationDates = [[NSMutableDictionary alloc] init];
     
     // Message delegate
     if ([delegate respondsToSelector:@selector(zipArchiveWillUnzipArchiveAtPath:zipInfo:)]) {
@@ -521,16 +521,30 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
             
             NSString *fullPath = [destination stringByAppendingPathComponent:strPath];
             NSError *err = nil;
-            NSDictionary *directoryAttr;
             if (preserveAttributes) {
-                NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.mz_dos_date];
-                directoryAttr = @{NSFileCreationDate: modDate, NSFileModificationDate: modDate};
-                [directoriesModificationDates addObject: @{@"path": fullPath, @"modDate": modDate}];
+                NSDate *modDate = fileInfo.mz_dos_date != 0 ? [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.mz_dos_date] : NSDate.now;
+                // aggregating files max modification date
+                NSArray<NSString *> *pathComponents = [strPath pathComponents];
+                NSUInteger leadingSlashCount = [pathComponents.firstObject isEqualToString:@"/"] ? 1 : 0;
+                // +1 to ignore the destination root
+                if (pathComponents.count > leadingSlashCount + 1) {
+                    // We strip the leading '/', the trailing '/' and the filename.
+                    pathComponents = [pathComponents subarrayWithRange:NSMakeRange(leadingSlashCount, pathComponents.count - 1 - leadingSlashCount)];
+                    // We enumerate each intermediate directory
+                    for (NSUInteger i = 0; i < pathComponents.count; i++) {
+                        NSString *directory = [[pathComponents subarrayWithRange:NSMakeRange(0, i + 1)] componentsJoinedByString:@"/"];
+                        NSDate *previousDate = directoriesModificationDates[directory][NSFileModificationDate];
+                        // We keep the newest date.
+                        if ([previousDate compare:modDate] != NSOrderedDescending) {
+                            directoriesModificationDates[directory] = @{NSFileModificationDate: modDate};
+                        }
+                    }
+                }
             }
             if (isDirectory) {
-                [fileManager createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:directoryAttr error:&err];
+                [fileManager createDirectoryAtPath:fullPath withIntermediateDirectories:YES attributes:nil error:&err];
             } else {
-                [fileManager createDirectoryAtPath:fullPath.stringByDeletingLastPathComponent withIntermediateDirectories:YES attributes:directoryAttr error:&err];
+                [fileManager createDirectoryAtPath:fullPath.stringByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:&err];
             }
             if (err != nil) {
                 if ([err.domain isEqualToString:NSCocoaErrorDomain] &&
@@ -595,20 +609,17 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                                             delegate:nil
                                      progressHandler:nil
                                    completionHandler:nil]) {
-                            [directoriesModificationDates removeLastObject];
                             [[NSFileManager defaultManager] removeItemAtPath:fullPath error:nil];
                         } else if (preserveAttributes) {
                             
                             // Set the original datetime property
                             if (fileInfo.mz_dos_date != 0) {
-                                NSDate *orgDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.mz_dos_date];
-                                NSDictionary *attr = @{NSFileModificationDate: orgDate};
-                                
-                                if (attr) {
-                                    if (![fileManager setAttributes:attr ofItemAtPath:fullPath error:nil]) {
-                                        // Can't set attributes
-                                        NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting modification date");
-                                    }
+                                NSDate *modDate = [[self class] _dateWithMSDOSFormat:(UInt32)fileInfo.mz_dos_date];
+                                NSDictionary *attr = @{NSFileModificationDate: modDate};
+                                NSError *err = nil;
+                                [fileManager setAttributes:attr ofItemAtPath:fullPath error:&err];
+                                if (err) {
+                                    NSLog(@"[SSZipArchive] Failed to set attributes - whilst setting original date: %@", err.localizedDescription);
                                 }
                             }
                             
@@ -776,15 +787,13 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     // to be set to the present time. So, when we are done, they need to be explicitly set.
     // set the modification date on all of the directories.
     if (success && preserveAttributes) {
-        NSError * err = nil;
-        for (NSDictionary * d in directoriesModificationDates) {
-            if (![[NSFileManager defaultManager] setAttributes:@{NSFileModificationDate: [d objectForKey:@"modDate"]} ofItemAtPath:[d objectForKey:@"path"] error:&err]) {
-                NSLog(@"[SSZipArchive] Set attributes failed for directory: %@.", [d objectForKey:@"path"]);
-            }
+        [directoriesModificationDates enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSDictionary<NSString *,id> * _Nonnull obj, BOOL * _Nonnull stop) {
+            NSError *err = nil;
+            [fileManager setAttributes:obj ofItemAtPath:[destination stringByAppendingPathComponent:key] error:&err];
             if (err) {
                 NSLog(@"[SSZipArchive] Error setting directory file modification date attribute: %@", err.localizedDescription);
             }
-        }
+        }];
     }
     
     // Message delegate
