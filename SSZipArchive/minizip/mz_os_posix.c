@@ -53,21 +53,17 @@ char *mz_os_utf8_string_create(const char *string, int32_t encoding) {
     char *string_utf8 = NULL;
     char *string_utf8_ptr = NULL;
 
-    if (!string)
+    if (!string || encoding <= 0)
         return NULL;
 
-    if (encoding == MZ_ENCODING_CODEPAGE_437)
-        from_encoding = "CP437";
-    else if (encoding == MZ_ENCODING_CODEPAGE_932)
-        from_encoding = "CP932";
-    else if (encoding == MZ_ENCODING_CODEPAGE_936)
-        from_encoding = "CP936";
-    else if (encoding == MZ_ENCODING_CODEPAGE_950)
-        from_encoding = "CP950";
-    else if (encoding == MZ_ENCODING_UTF8)
+    if (encoding == MZ_ENCODING_UTF8)
         from_encoding = "UTF-8";
-    else
-        return NULL;
+    else {
+        /// up to CP2147483647
+        char string_encoding[13];
+        snprintf(string_encoding, sizeof(string_encoding), "CP%03" PRId32, encoding);
+        from_encoding = string_encoding;
+    }
 
     cd = iconv_open("UTF-8", from_encoding);
     if (cd == (iconv_t)-1)
