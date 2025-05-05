@@ -1987,7 +1987,7 @@ int32_t mz_zip_entry_write_open(void *handle, const mz_zip_file *file_info, int1
     if (mz_zip_attrib_is_dir(zip->file_info.external_fa, zip->file_info.version_madeby) == MZ_OK)
         is_dir = 1;
 
-    if (!is_dir) {
+    if (!raw && !is_dir) {
         if (zip->data_descriptor)
             zip->file_info.flag |= MZ_ZIP_FLAG_DATA_DESCRIPTOR;
         if (password)
