@@ -564,6 +564,11 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 continue;
             }
             
+            if ([delegate respondsToSelector: @selector(zipArchiveWillUnzipFileAtIndex:totalFiles:archivePath:unzippedFilePath:)]) {
+                [delegate zipArchiveWillUnzipFileAtIndex: currentFileNumber totalFiles: (NSInteger)globalInfo.number_entry
+                                             archivePath:path unzippedFilePath: fullPath];
+            }
+            
             if (isDirectory && !fileIsSymbolicLink) {
                 // nothing to read/write for a directory
             } else if (!fileIsSymbolicLink) {
