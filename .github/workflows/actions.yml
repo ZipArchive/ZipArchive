@@ -11,16 +11,16 @@ on:
 jobs:
   # available images: https://github.com/actions/runner-images
   
-  # oldest GitHub targets
-  macos-13:
+  # oldest GitHub targets x oldest Apple Security update (https://support.apple.com/100100)
+  macos-14:
     runs-on: ${{matrix.OS}}
     strategy:
       fail-fast: false
       matrix:
-        OS: [macOS-13]
+        OS: [macOS-14]
         SDK: ["macosx"]
     steps:
-    - uses: actions/checkout@v4 # https://github.com/actions/checkout
+    - uses: actions/checkout@v5 # https://github.com/actions/checkout
     - name: Install dependencies
       run: |
         pushd Example
@@ -40,18 +40,18 @@ jobs:
         xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -destination "$DESTINATION" -configuration $CONFIGURATION test
 
   # newest GitHub targets
-  macos-15:
+  macos-26:
     runs-on: ${{matrix.OS}}
     strategy:
       fail-fast: false
       matrix:
-        OS: [macOS-15]
+        OS: [macOS-26]
         SDK: ["appletvsimulator", "iphonesimulator", "watchsimulator", "xrsimulator"]
     steps:
     - uses: maxim-lobanov/setup-xcode@v1 # https://github.com/maxim-lobanov/setup-xcode
       with:
         xcode-version: latest-stable
-    - uses: actions/checkout@v4 # https://github.com/actions/checkout
+    - uses: actions/checkout@v5 # https://github.com/actions/checkout
     - name: Install dependencies
       run: |
         pushd Example
@@ -70,14 +70,14 @@ jobs:
           SCHEME="ObjectiveCExample_iOS"
           SDK="iphonesimulator"
           PLATFORM="iOS Simulator"
-          DEVICE="iPhone 16 Pro Max"
+          DEVICE="iPhone 17 Pro Max"
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
         if [ ${{ matrix.SDK }} == "watchsimulator" ]; then
           SCHEME="ObjectiveCExample_watchOS"
           SDK="watchsimulator"
           PLATFORM="watchOS Simulator"
-          DEVICE="Apple Watch Ultra 2 (49mm)"
+          DEVICE="Apple Watch Ultra 3 (49mm)"
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
         if [ ${{ matrix.SDK }} == "xrsimulator" ]; then
