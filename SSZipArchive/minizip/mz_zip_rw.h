@@ -37,7 +37,7 @@ int32_t mz_zip_reader_open_file(void *handle, const char *path);
 int32_t mz_zip_reader_open_file_in_memory(void *handle, const char *path);
 /* Opens zip file from a file path into memory for faster access */
 
-int32_t mz_zip_reader_open_buffer(void *handle, uint8_t *buf, int32_t len, uint8_t copy);
+int32_t mz_zip_reader_open_buffer(void *handle, const uint8_t *buf, int32_t len, uint8_t copy);
 /* Opens zip file from memory buffer */
 
 int32_t mz_zip_reader_close(void *handle);
@@ -66,7 +66,7 @@ int32_t mz_zip_reader_entry_close(void *handle);
 /* Closes an entry */
 
 int32_t mz_zip_reader_entry_read(void *handle, void *buf, int32_t len);
-/* Reads and entry after being opened */
+/* Reads an entry after being opened */
 
 int32_t mz_zip_reader_entry_get_hash(void *handle, uint16_t algorithm, uint8_t *digest, int32_t digest_size);
 /* Gets a hash algorithm from the entry's extra field */
@@ -197,7 +197,7 @@ int32_t mz_zip_writer_add_process(void *handle, void *stream, mz_stream_read_cb 
 int32_t mz_zip_writer_add_info(void *handle, void *stream, mz_stream_read_cb read_cb, mz_zip_file *file_info);
 /* Adds an entry to the zip based on the info */
 
-int32_t mz_zip_writer_add_buffer(void *handle, void *buf, int32_t len, mz_zip_file *file_info);
+int32_t mz_zip_writer_add_buffer(void *handle, const void *buf, int32_t len, mz_zip_file *file_info);
 /* Adds an entry to the zip with a memory buffer */
 
 int32_t mz_zip_writer_add_file(void *handle, const char *path, const char *filename_in_zip);
@@ -235,6 +235,9 @@ void mz_zip_writer_set_compress_level(void *handle, int16_t compress_level);
 
 void mz_zip_writer_set_follow_links(void *handle, uint8_t follow_links);
 /* Follow symbolic links when traversing directories and files to add */
+
+int32_t mz_zip_writer_get_follow_links(void *handle, uint8_t *follow_links);
+/* Gets whether to follow symbolic links when traversing directories and files to add */
 
 void mz_zip_writer_set_store_links(void *handle, uint8_t store_links);
 /* Store symbolic links in zip file */

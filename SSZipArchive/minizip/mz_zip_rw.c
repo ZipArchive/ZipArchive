@@ -39,7 +39,7 @@ typedef struct mz_zip_reader_s {
     uint16_t hash_algorithm;
     uint16_t hash_digest_size;
     mz_zip_file *file_info;
-    char *pattern;
+    const char *pattern;
     uint8_t pattern_ignore_case;
     const char *password;
     void *overwrite_userdata;
@@ -76,6 +76,8 @@ int32_t mz_zip_reader_open(void *handle, void *stream) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
     int32_t err = MZ_OK;
 
+    if (!reader)
+        return MZ_PARAM_ERROR;
     reader->cd_verified = 0;
     reader->cd_zipped = 0;
 
@@ -88,7 +90,7 @@ int32_t mz_zip_reader_open(void *handle, void *stream) {
     err = mz_zip_open(reader->zip_handle, stream, MZ_OPEN_MODE_READ);
 
     if (err != MZ_OK) {
-        mz_zip_reader_close(handle);
+        mz_zip_reader_close(reader);
         return err;
     }
 
@@ -100,7 +102,9 @@ int32_t mz_zip_reader_open_file(void *handle, const char *path) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
     int32_t err = MZ_OK;
 
-    mz_zip_reader_close(handle);
+    if (!reader)
+        return MZ_PARAM_ERROR;
+    mz_zip_reader_close(reader);
 
     reader->file_stream = mz_stream_os_create();
     if (!reader->file_stream)
@@ -124,7 +128,7 @@ int32_t mz_zip_reader_open_file(void *handle, const char *path) {
 
     err = mz_stream_open(reader->split_stream, path, MZ_OPEN_MODE_READ);
     if (err == MZ_OK)
-        err = mz_zip_reader_open(handle, reader->split_stream);
+        err = mz_zip_reader_open(reader, reader->split_stream);
     return err;
 }
 
@@ -134,7 +138,9 @@ int32_t mz_zip_reader_open_file_in_memory(void *handle, const char *path) {
     int64_t file_size = 0;
     int32_t err = 0;
 
-    mz_zip_reader_close(handle);
+    if (!reader)
+        return MZ_PARAM_ERROR;
+    mz_zip_reader_close(reader);
 
     file_stream = mz_stream_os_create();
     if (!file_stream)
@@ -144,7 +150,7 @@ int32_t mz_zip_reader_open_file_in_memory(void *handle, const char *path) {
 
     if (err != MZ_OK) {
         mz_stream_os_delete(&file_stream);
-        mz_zip_reader_close(handle);
+        mz_zip_reader_close(reader);
         return err;
     }
 
@@ -159,7 +165,7 @@ int32_t mz_zip_reader_open_file_in_memory(void *handle, const char *path) {
 
         mz_stream_os_close(file_stream);
         mz_stream_os_delete(&file_stream);
-        mz_zip_reader_close(handle);
+        mz_zip_reader_close(reader);
         return MZ_MEM_ERROR;
     }
 
@@ -172,18 +178,20 @@ int32_t mz_zip_reader_open_file_in_memory(void *handle, const char *path) {
     mz_stream_os_delete(&file_stream);
 
     if (err == MZ_OK)
-        err = mz_zip_reader_open(handle, reader->mem_stream);
+        err = mz_zip_reader_open(reader, reader->mem_stream);
     if (err != MZ_OK)
-        mz_zip_reader_close(handle);
+        mz_zip_reader_close(reader);
 
     return err;
 }
 
-int32_t mz_zip_reader_open_buffer(void *handle, uint8_t *buf, int32_t len, uint8_t copy) {
+int32_t mz_zip_reader_open_buffer(void *handle, const uint8_t *buf, int32_t len, uint8_t copy) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
     int32_t err = MZ_OK;
 
-    mz_zip_reader_close(handle);
+    if (!reader)
+        return MZ_PARAM_ERROR;
+    mz_zip_reader_close(reader);
 
     reader->mem_stream = mz_stream_mem_create();
     if (!reader->mem_stream)
@@ -196,11 +204,11 @@ int32_t mz_zip_reader_open_buffer(void *handle, uint8_t *buf, int32_t len, uint8
         mz_stream_mem_seek(reader->mem_stream, 0, MZ_SEEK_SET);
     } else {
         mz_stream_mem_open(reader->mem_stream, NULL, MZ_OPEN_MODE_READ);
-        mz_stream_mem_set_buffer(reader->mem_stream, buf, len);
+        mz_stream_mem_set_buffer(reader->mem_stream, (void *)buf, len);
     }
 
     if (err == MZ_OK)
-        err = mz_zip_reader_open(handle, reader->mem_stream);
+        err = mz_zip_reader_open(reader, reader->mem_stream);
 
     return err;
 }
@@ -209,6 +217,8 @@ int32_t mz_zip_reader_close(void *handle) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
     int32_t err = MZ_OK;
 
+    if (!reader)
+        return MZ_PARAM_ERROR;
     if (reader->zip_handle) {
         err = mz_zip_close(reader->zip_handle);
         mz_zip_delete(&reader->zip_handle);
@@ -230,11 +240,6 @@ int32_t mz_zip_reader_close(void *handle) {
         mz_stream_delete(&reader->mem_stream);
     }
 
-    if (reader->pattern) {
-        free(reader->pattern);
-        reader->pattern = NULL;
-    }
-
     return err;
 }
 
@@ -249,17 +254,17 @@ int32_t mz_zip_reader_unzip_cd(void *handle) {
     uint64_t number_entry = 0;
     int32_t err = MZ_OK;
 
-    err = mz_zip_reader_goto_first_entry(handle);
+    err = mz_zip_reader_goto_first_entry(reader);
     if (err != MZ_OK)
         return err;
-    err = mz_zip_reader_entry_get_info(handle, &cd_info);
+    err = mz_zip_reader_entry_get_info(reader, &cd_info);
     if (err != MZ_OK)
         return err;
 
     if (strcmp(cd_info->filename, MZ_ZIP_CD_FILENAME) != 0)
-        return mz_zip_reader_goto_first_entry(handle);
+        return mz_zip_reader_goto_first_entry(reader);
 
-    err = mz_zip_reader_entry_open(handle);
+    err = mz_zip_reader_entry_open(reader);
     if (err != MZ_OK)
         return err;
 
@@ -294,7 +299,7 @@ int32_t mz_zip_reader_unzip_cd(void *handle) {
         mz_zip_set_cd_stream(reader->zip_handle, 0, cd_mem_stream);
         mz_zip_set_number_entry(reader->zip_handle, number_entry);
 
-        err = mz_zip_reader_goto_first_entry(handle);
+        err = mz_zip_reader_goto_first_entry(reader);
     }
 
     reader->cd_verified = reader->entry_verified;
@@ -317,11 +322,11 @@ int32_t mz_zip_reader_goto_first_entry(void *handle) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
     int32_t err = MZ_OK;
 
-    if (mz_zip_reader_is_open(handle) != MZ_OK)
+    if (mz_zip_reader_is_open(reader) != MZ_OK)
         return MZ_PARAM_ERROR;
 
     if (mz_zip_entry_is_open(reader->zip_handle) == MZ_OK)
-        mz_zip_reader_entry_close(handle);
+        mz_zip_reader_entry_close(reader);
 
     if (!reader->pattern)
         err = mz_zip_goto_first_entry(reader->zip_handle);
@@ -339,11 +344,11 @@ int32_t mz_zip_reader_goto_next_entry(void *handle) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
     int32_t err = MZ_OK;
 
-    if (mz_zip_reader_is_open(handle) != MZ_OK)
+    if (mz_zip_reader_is_open(reader) != MZ_OK)
         return MZ_PARAM_ERROR;
 
     if (mz_zip_entry_is_open(reader->zip_handle) == MZ_OK)
-        mz_zip_reader_entry_close(handle);
+        mz_zip_reader_entry_close(reader);
 
     if (!reader->pattern)
         err = mz_zip_goto_next_entry(reader->zip_handle);
@@ -361,8 +366,10 @@ int32_t mz_zip_reader_locate_entry(void *handle, const char *filename, uint8_t i
     mz_zip_reader *reader = (mz_zip_reader *)handle;
     int32_t err = MZ_OK;
 
+    if (!reader)
+        return MZ_PARAM_ERROR;
     if (mz_zip_entry_is_open(reader->zip_handle) == MZ_OK)
-        mz_zip_reader_entry_close(handle);
+        mz_zip_reader_entry_close(reader);
 
     err = mz_zip_locate_entry(reader->zip_handle, filename, ignore_case);
 
@@ -381,6 +388,8 @@ int32_t mz_zip_reader_entry_open(void *handle) {
     const char *password = NULL;
     char password_buf[120];
 
+    if (!reader)
+        return MZ_PARAM_ERROR;
     reader->entry_verified = 0;
 
     if (mz_zip_reader_is_open(reader) != MZ_OK)
@@ -396,7 +405,7 @@ int32_t mz_zip_reader_entry_open(void *handle) {
 
     /* Check if we need a password and ask for it if we need to */
     if (!password && reader->password_cb && (reader->file_info->flag & MZ_ZIP_FLAG_ENCRYPTED)) {
-        reader->password_cb(handle, reader->password_userdata, reader->file_info, password_buf, sizeof(password_buf));
+        reader->password_cb(reader, reader->password_userdata, reader->file_info, password_buf, sizeof(password_buf));
 
         password = password_buf;
     }
@@ -406,7 +415,7 @@ int32_t mz_zip_reader_entry_open(void *handle) {
     if (err != MZ_OK)
         return err;
 
-    if (mz_zip_reader_entry_get_first_hash(handle, &reader->hash_algorithm, &reader->hash_digest_size) == MZ_OK) {
+    if (mz_zip_reader_entry_get_first_hash(reader, &reader->hash_algorithm, &reader->hash_digest_size) == MZ_OK) {
         reader->hash = mz_crypt_sha_create();
         if (!reader->hash)
             return MZ_MEM_ERROR;
@@ -435,13 +444,17 @@ int32_t mz_zip_reader_entry_close(void *handle) {
     int32_t err_hash = MZ_OK;
     uint8_t computed_hash[MZ_HASH_MAX_SIZE];
     uint8_t expected_hash[MZ_HASH_MAX_SIZE];
+#endif
 
+    if (!reader)
+        return MZ_PARAM_ERROR;
+#ifndef MZ_ZIP_NO_CRYPTO
     if (reader->hash) {
         mz_crypt_sha_end(reader->hash, computed_hash, sizeof(computed_hash));
         mz_crypt_sha_delete(&reader->hash);
 
         err_hash =
-            mz_zip_reader_entry_get_hash(handle, reader->hash_algorithm, expected_hash, reader->hash_digest_size);
+            mz_zip_reader_entry_get_hash(reader, reader->hash_algorithm, expected_hash, reader->hash_digest_size);
 
         if (err_hash == MZ_OK) {
             /* Verify expected hash against computed hash */
@@ -460,6 +473,8 @@ int32_t mz_zip_reader_entry_close(void *handle) {
 int32_t mz_zip_reader_entry_read(void *handle, void *buf, int32_t len) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
     int32_t read = 0;
+    if (!reader)
+        return MZ_PARAM_ERROR;
     read = mz_zip_entry_read(reader->zip_handle, buf, len);
 #ifndef MZ_ZIP_NO_CRYPTO
     if (read > 0 && reader->hash)
@@ -476,6 +491,8 @@ int32_t mz_zip_reader_entry_get_hash(void *handle, uint16_t algorithm, uint8_t *
     uint16_t cur_algorithm = 0;
     uint16_t cur_digest_size = 0;
 
+    if (!reader)
+        return MZ_PARAM_ERROR;
     file_extra_stream = mz_stream_mem_create();
     if (!file_extra_stream)
         return MZ_MEM_ERROR;
@@ -543,7 +560,7 @@ int32_t mz_zip_reader_entry_get_first_hash(void *handle, uint16_t *algorithm, ui
 int32_t mz_zip_reader_entry_get_info(void *handle, mz_zip_file **file_info) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
     int32_t err = MZ_OK;
-    if (!file_info || mz_zip_reader_is_open(handle) != MZ_OK)
+    if (!file_info || mz_zip_reader_is_open(reader) != MZ_OK)
         return MZ_PARAM_ERROR;
     *file_info = reader->file_info;
     if (!*file_info)
@@ -553,7 +570,7 @@ int32_t mz_zip_reader_entry_get_info(void *handle, mz_zip_file **file_info) {
 
 int32_t mz_zip_reader_entry_is_dir(void *handle) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
-    if (mz_zip_reader_is_open(handle) != MZ_OK)
+    if (mz_zip_reader_is_open(reader) != MZ_OK)
         return MZ_PARAM_ERROR;
     return mz_zip_entry_is_dir(reader->zip_handle);
 }
@@ -571,17 +588,17 @@ int32_t mz_zip_reader_entry_save_process(void *handle, void *stream, mz_stream_w
 
     /* If the entry isn't open for reading, open it */
     if (mz_zip_entry_is_open(reader->zip_handle) != MZ_OK)
-        err = mz_zip_reader_entry_open(handle);
+        err = mz_zip_reader_entry_open(reader);
 
     if (err != MZ_OK)
         return err;
 
     /* Unzip entry in zip file */
-    read = mz_zip_reader_entry_read(handle, reader->buffer, sizeof(reader->buffer));
+    read = mz_zip_reader_entry_read(reader, reader->buffer, sizeof(reader->buffer));
 
     if (read == 0) {
         /* If we are done close the entry */
-        err = mz_zip_reader_entry_close(handle);
+        err = mz_zip_reader_entry_close(reader);
         if (err != MZ_OK)
             return err;
 
@@ -614,11 +631,11 @@ int32_t mz_zip_reader_entry_save(void *handle, void *stream, mz_stream_write_cb 
 
     /* Update the progress at the beginning */
     if (reader->progress_cb)
-        reader->progress_cb(handle, reader->progress_userdata, reader->file_info, current_pos);
+        reader->progress_cb(reader, reader->progress_userdata, reader->file_info, current_pos);
 
     /* Write data to stream until done */
     while (err == MZ_OK) {
-        written = mz_zip_reader_entry_save_process(handle, stream, write_cb);
+        written = mz_zip_reader_entry_save_process(reader, stream, write_cb);
         if (written == MZ_END_OF_STREAM)
             break;
         if (written > 0)
@@ -630,7 +647,7 @@ int32_t mz_zip_reader_entry_save(void *handle, void *stream, mz_stream_write_cb 
         current_time = mz_os_ms_time();
         if ((current_time - update_time) > reader->progress_cb_interval_ms) {
             if (reader->progress_cb)
-                reader->progress_cb(handle, reader->progress_userdata, reader->file_info, current_pos);
+                reader->progress_cb(reader, reader->progress_userdata, reader->file_info, current_pos);
 
             update_pos = current_pos;
             update_time = current_time;
@@ -639,7 +656,7 @@ int32_t mz_zip_reader_entry_save(void *handle, void *stream, mz_stream_write_cb 
 
     /* Update the progress at the end */
     if (reader->progress_cb && update_pos != current_pos)
-        reader->progress_cb(handle, reader->progress_userdata, reader->file_info, current_pos);
+        reader->progress_cb(reader, reader->progress_userdata, reader->file_info, current_pos);
 
     return err;
 }
@@ -664,7 +681,7 @@ int32_t mz_zip_reader_entry_save_file(void *handle, const char *path) {
         return MZ_MEM_ERROR;
 
     if (reader->entry_cb)
-        reader->entry_cb(handle, reader->entry_userdata, reader->file_info, pathwfs);
+        reader->entry_cb(reader, reader->entry_userdata, reader->file_info, pathwfs);
 
     directory = (char *)strdup(pathwfs);
     if (!directory) {
@@ -681,7 +698,7 @@ int32_t mz_zip_reader_entry_save_file(void *handle, const char *path) {
 
     /* Check if file exists and ask if we want to overwrite */
     if (reader->overwrite_cb && mz_os_file_exists(pathwfs) == MZ_OK) {
-        err_cb = reader->overwrite_cb(handle, reader->overwrite_userdata, reader->file_info, pathwfs);
+        err_cb = reader->overwrite_cb(reader, reader->overwrite_userdata, reader->file_info, pathwfs);
         if (err_cb != MZ_OK)
             goto save_cleanup;
         /* We want to overwrite the file so we delete the existing one */
@@ -717,7 +734,7 @@ int32_t mz_zip_reader_entry_save_file(void *handle, const char *path) {
             err = mz_stream_mem_open(stream, NULL, MZ_OPEN_MODE_CREATE);
 
             if (err == MZ_OK)
-                err = mz_zip_reader_entry_save(handle, stream, mz_stream_write);
+                err = mz_zip_reader_entry_save(reader, stream, mz_stream_write);
 
             if (err == MZ_OK)
                 err = mz_stream_write_uint8(stream, 0);
@@ -746,7 +763,7 @@ int32_t mz_zip_reader_entry_save_file(void *handle, const char *path) {
     err = mz_stream_os_open(stream, pathwfs, MZ_OPEN_MODE_CREATE);
 
     if (err == MZ_OK)
-        err = mz_zip_reader_entry_save(handle, stream, mz_stream_write);
+        err = mz_zip_reader_entry_save(reader, stream, mz_stream_write);
 
     mz_stream_close(stream);
     mz_stream_delete(&stream);
@@ -793,9 +810,9 @@ int32_t mz_zip_reader_entry_save_buffer(void *handle, void *buf, int32_t len) {
 
     mz_stream_mem_set_buffer(mem_stream, buf, len);
 
-    err = mz_stream_mem_open(mem_stream, NULL, MZ_OPEN_MODE_READ);
+    err = mz_stream_mem_open(mem_stream, NULL, MZ_OPEN_MODE_WRITE);
     if (err == MZ_OK)
-        err = mz_zip_reader_entry_save(handle, mem_stream, mz_stream_mem_write);
+        err = mz_zip_reader_entry_save(reader, mem_stream, mz_stream_mem_write);
 
     mz_stream_mem_delete(&mem_stream);
     return err;
@@ -827,7 +844,9 @@ int32_t mz_zip_reader_save_all(void *handle, const char *destination_dir) {
     char *resolved_name = NULL;
     char *new_alloc = NULL;
 
-    err = mz_zip_reader_goto_first_entry(handle);
+    if (!reader)
+        return MZ_PARAM_ERROR;
+    err = mz_zip_reader_goto_first_entry(reader);
 
     if (err == MZ_END_OF_LIST)
         return err;
@@ -889,10 +908,10 @@ int32_t mz_zip_reader_save_all(void *handle, const char *destination_dir) {
         mz_path_combine(path, resolved_name, resolved_name_size);
 
         /* Save file to disk */
-        err = mz_zip_reader_entry_save_file(handle, path);
+        err = mz_zip_reader_entry_save_file(reader, path);
 
         if (err == MZ_OK)
-            err = mz_zip_reader_goto_next_entry(handle);
+            err = mz_zip_reader_goto_next_entry(reader);
     }
 
     if (err == MZ_END_OF_LIST)
@@ -912,33 +931,27 @@ void mz_zip_reader_set_pattern(void *handle, const char *pattern, uint8_t ignore
     mz_zip_reader *reader = (mz_zip_reader *)handle;
     if (!reader)
         return;
-    free(reader->pattern);
-    reader->pattern = NULL;
-    if (pattern) {
-        /* pattern can be NULL */
-        int32_t pattern_size = (int32_t)strlen(pattern);
-        reader->pattern = (char *)calloc(pattern_size + 1, sizeof(char));
-        if (!reader->pattern)
-        /* Reference: `mz_zip_set_comment`, should return MZ_MEM_ERROR */
-            return;
-        strncpy(reader->pattern, pattern, pattern_size);
-    }
+    reader->pattern = pattern;
     reader->pattern_ignore_case = ignore_case;
 }
 
 void mz_zip_reader_set_password(void *handle, const char *password) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
+    if (!reader)
+        return;
     reader->password = password;
 }
 
 void mz_zip_reader_set_raw(void *handle, uint8_t raw) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
+    if (!reader)
+        return;
     reader->raw = raw;
 }
 
 int32_t mz_zip_reader_get_raw(void *handle, uint8_t *raw) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
-    if (!raw)
+    if (!reader || !raw)
         return MZ_PARAM_ERROR;
     *raw = reader->raw;
     return MZ_OK;
@@ -946,7 +959,7 @@ int32_t mz_zip_reader_get_raw(void *handle, uint8_t *raw) {
 
 int32_t mz_zip_reader_get_zip_cd(void *handle, uint8_t *zip_cd) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
-    if (!zip_cd)
+    if (!reader || !zip_cd)
         return MZ_PARAM_ERROR;
     *zip_cd = reader->cd_zipped;
     return MZ_OK;
@@ -971,41 +984,53 @@ int32_t mz_zip_reader_set_recover(void *handle, uint8_t recover) {
 
 void mz_zip_reader_set_encoding(void *handle, int32_t encoding) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
+    if (!reader)
+        return;
     reader->encoding = encoding;
 }
 
 void mz_zip_reader_set_overwrite_cb(void *handle, void *userdata, mz_zip_reader_overwrite_cb cb) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
+    if (!reader)
+        return;
     reader->overwrite_cb = cb;
     reader->overwrite_userdata = userdata;
 }
 
 void mz_zip_reader_set_password_cb(void *handle, void *userdata, mz_zip_reader_password_cb cb) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
+    if (!reader)
+        return;
     reader->password_cb = cb;
     reader->password_userdata = userdata;
 }
 
 void mz_zip_reader_set_progress_cb(void *handle, void *userdata, mz_zip_reader_progress_cb cb) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
+    if (!reader)
+        return;
     reader->progress_cb = cb;
     reader->progress_userdata = userdata;
 }
 
 void mz_zip_reader_set_progress_interval(void *handle, uint32_t milliseconds) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
+    if (!reader)
+        return;
     reader->progress_cb_interval_ms = milliseconds;
 }
 
 void mz_zip_reader_set_entry_cb(void *handle, void *userdata, mz_zip_reader_entry_cb cb) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
+    if (!reader)
+        return;
     reader->entry_cb = cb;
     reader->entry_userdata = userdata;
 }
 
 int32_t mz_zip_reader_get_zip_handle(void *handle, void **zip_handle) {
     mz_zip_reader *reader = (mz_zip_reader *)handle;
-    if (!zip_handle)
+    if (!reader || !zip_handle)
         return MZ_PARAM_ERROR;
     *zip_handle = reader->zip_handle;
     if (!*zip_handle)
@@ -1113,9 +1138,9 @@ int32_t mz_zip_writer_zip_cd(void *handle) {
     mz_stream_mem_get_buffer_length(file_extra_stream, &extrafield_size);
     cd_file.extrafield_size = (uint16_t)extrafield_size;
 
-    err = mz_zip_writer_entry_open(handle, &cd_file);
+    err = mz_zip_writer_entry_open(writer, &cd_file);
     if (err == MZ_OK) {
-        mz_stream_copy_stream(handle, mz_zip_writer_entry_write, cd_mem_stream, NULL, (int32_t)cd_mem_length);
+        mz_stream_copy_stream(writer, mz_zip_writer_entry_write, cd_mem_stream, NULL, (int32_t)cd_mem_length);
 
         mz_stream_seek(cd_mem_stream, 0, MZ_SEEK_SET);
         mz_stream_mem_set_buffer_limit(cd_mem_stream, 0);
@@ -1148,7 +1173,7 @@ static int32_t mz_zip_writer_open_int(void *handle, void *stream, int32_t mode) 
     err = mz_zip_open(writer->zip_handle, stream, mode);
 
     if (err != MZ_OK) {
-        mz_zip_writer_close(handle);
+        mz_zip_writer_close(writer);
         return err;
     }
 
@@ -1156,15 +1181,18 @@ static int32_t mz_zip_writer_open_int(void *handle, void *stream, int32_t mode) 
 }
 
 int32_t mz_zip_writer_open(void *handle, void *stream, uint8_t append) {
+    mz_zip_writer *writer = (mz_zip_writer *)handle;
     int32_t mode = MZ_OPEN_MODE_WRITE;
 
+    if (!writer)
+        return MZ_PARAM_ERROR;
     if (append) {
         mode |= MZ_OPEN_MODE_APPEND;
     } else {
         mode |= MZ_OPEN_MODE_CREATE;
     }
 
-    return mz_zip_writer_open_int(handle, stream, mode);
+    return mz_zip_writer_open_int(writer, stream, mode);
 }
 
 int32_t mz_zip_writer_open_file(void *handle, const char *path, int64_t disk_size, uint8_t append) {
@@ -1174,7 +1202,9 @@ int32_t mz_zip_writer_open_file(void *handle, const char *path, int64_t disk_siz
     int32_t err_cb = 0;
     char directory[320];
 
-    mz_zip_writer_close(handle);
+    if (!writer)
+        return MZ_PARAM_ERROR;
+    mz_zip_writer_close(writer);
 
     if (mz_os_file_exists(path) != MZ_OK) {
         /* If the file doesn't exist, we don't append file */
@@ -1192,7 +1222,7 @@ int32_t mz_zip_writer_open_file(void *handle, const char *path, int64_t disk_siz
         mode |= MZ_OPEN_MODE_APPEND;
     } else {
         if (writer->overwrite_cb)
-            err_cb = writer->overwrite_cb(handle, writer->overwrite_userdata, path);
+            err_cb = writer->overwrite_cb(writer, writer->overwrite_userdata, path);
 
         if (err_cb == MZ_INTERNAL_ERROR)
             return err;
@@ -1225,7 +1255,7 @@ int32_t mz_zip_writer_open_file(void *handle, const char *path, int64_t disk_siz
 
     err = mz_stream_open(writer->split_stream, path, mode);
     if (err == MZ_OK)
-        err = mz_zip_writer_open_int(handle, writer->split_stream, mode);
+        err = mz_zip_writer_open_int(writer, writer->split_stream, mode);
 
     return err;
 }
@@ -1236,7 +1266,9 @@ int32_t mz_zip_writer_open_file_in_memory(void *handle, const char *path) {
     int64_t file_size = 0;
     int32_t err = 0;
 
-    mz_zip_writer_close(handle);
+    if (!writer)
+        return MZ_PARAM_ERROR;
+    mz_zip_writer_close(writer);
 
     file_stream = mz_stream_os_create();
     if (!file_stream)
@@ -1246,7 +1278,7 @@ int32_t mz_zip_writer_open_file_in_memory(void *handle, const char *path) {
 
     if (err != MZ_OK) {
         mz_stream_os_delete(&file_stream);
-        mz_zip_writer_close(handle);
+        mz_zip_writer_close(writer);
         return err;
     }
 
@@ -1260,7 +1292,7 @@ int32_t mz_zip_writer_open_file_in_memory(void *handle, const char *path) {
 
         mz_stream_os_close(file_stream);
         mz_stream_os_delete(&file_stream);
-        mz_zip_writer_close(handle);
+        mz_zip_writer_close(writer);
         return MZ_MEM_ERROR;
     }
 
@@ -1273,9 +1305,9 @@ int32_t mz_zip_writer_open_file_in_memory(void *handle, const char *path) {
     mz_stream_os_delete(&file_stream);
 
     if (err == MZ_OK)
-        err = mz_zip_writer_open(handle, writer->mem_stream, 1);
+        err = mz_zip_writer_open(writer, writer->mem_stream, 1);
     if (err != MZ_OK)
-        mz_zip_writer_close(handle);
+        mz_zip_writer_close(writer);
 
     return err;
 }
@@ -1284,6 +1316,8 @@ int32_t mz_zip_writer_close(void *handle) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
     int32_t err = MZ_OK;
 
+    if (!writer)
+        return MZ_PARAM_ERROR;
     if (writer->zip_handle) {
         mz_zip_set_version_madeby(writer->zip_handle, MZ_VERSION_MADEBY);
         if (writer->comment)
@@ -1322,17 +1356,19 @@ int32_t mz_zip_writer_entry_open(void *handle, mz_zip_file *file_info) {
     const char *password = NULL;
     char password_buf[120];
 
+    if (!writer)
+        return MZ_PARAM_ERROR;
     /* Copy file info to access data upon close */
     memcpy(&writer->file_info, file_info, sizeof(mz_zip_file));
 
     if (writer->entry_cb)
-        writer->entry_cb(handle, writer->entry_userdata, &writer->file_info);
+        writer->entry_cb(writer, writer->entry_userdata, &writer->file_info);
 
     password = writer->password;
 
     /* Check if we need a password and ask for it if we need to */
     if (!password && writer->password_cb && (writer->file_info.flag & MZ_ZIP_FLAG_ENCRYPTED)) {
-        writer->password_cb(handle, writer->password_userdata, &writer->file_info, password_buf, sizeof(password_buf));
+        writer->password_cb(writer, writer->password_userdata, &writer->file_info, password_buf, sizeof(password_buf));
         password = password_buf;
     }
 
@@ -1370,7 +1406,11 @@ int32_t mz_zip_writer_entry_close(void *handle) {
     int32_t extrafield_size = 0;
     int16_t field_length_hash = 0;
     uint8_t hash_digest[MZ_HASH_MAX_SIZE];
+#endif
 
+    if (!writer)
+        return MZ_PARAM_ERROR;
+#ifndef MZ_ZIP_NO_CRYPTO
     if (writer->hash) {
         uint16_t hash_digest_size = 0;
 
@@ -1437,6 +1477,8 @@ int32_t mz_zip_writer_entry_close(void *handle) {
 int32_t mz_zip_writer_entry_write(void *handle, const void *buf, int32_t len) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
     int32_t written = 0;
+    if (!writer)
+        return MZ_PARAM_ERROR;
     written = mz_zip_entry_write(writer->zip_handle, buf, len);
 #ifndef MZ_ZIP_NO_CRYPTO
     if (written > 0 && writer->hash)
@@ -1468,7 +1510,7 @@ int32_t mz_zip_writer_add_process(void *handle, void *stream, mz_stream_read_cb 
         return err;
     }
 
-    written = mz_zip_writer_entry_write(handle, writer->buffer, read);
+    written = mz_zip_writer_entry_write(writer, writer->buffer, read);
     if (written != read)
         return MZ_WRITE_ERROR;
 
@@ -1484,13 +1526,15 @@ int32_t mz_zip_writer_add(void *handle, void *stream, mz_stream_read_cb read_cb)
     int32_t err = MZ_OK;
     int32_t written = 0;
 
+    if (!writer)
+        return MZ_PARAM_ERROR;
     /* Update the progress at the beginning */
     if (writer->progress_cb)
-        writer->progress_cb(handle, writer->progress_userdata, &writer->file_info, current_pos);
+        writer->progress_cb(writer, writer->progress_userdata, &writer->file_info, current_pos);
 
     /* Write data to stream until done */
     while (err == MZ_OK) {
-        written = mz_zip_writer_add_process(handle, stream, read_cb);
+        written = mz_zip_writer_add_process(writer, stream, read_cb);
         if (written == MZ_END_OF_STREAM)
             break;
         if (written > 0)
@@ -1502,7 +1546,7 @@ int32_t mz_zip_writer_add(void *handle, void *stream, mz_stream_read_cb read_cb)
         current_time = mz_os_ms_time();
         if ((current_time - update_time) > writer->progress_cb_interval_ms) {
             if (writer->progress_cb)
-                writer->progress_cb(handle, writer->progress_userdata, &writer->file_info, current_pos);
+                writer->progress_cb(writer, writer->progress_userdata, &writer->file_info, current_pos);
 
             update_pos = current_pos;
             update_time = current_time;
@@ -1511,7 +1555,7 @@ int32_t mz_zip_writer_add(void *handle, void *stream, mz_stream_read_cb read_cb)
 
     /* Update the progress at the end */
     if (writer->progress_cb && update_pos != current_pos)
-        writer->progress_cb(handle, writer->progress_userdata, &writer->file_info, current_pos);
+        writer->progress_cb(writer, writer->progress_userdata, &writer->file_info, current_pos);
 
     return err;
 }
@@ -1520,34 +1564,35 @@ int32_t mz_zip_writer_add_info(void *handle, void *stream, mz_stream_read_cb rea
     mz_zip_writer *writer = (mz_zip_writer *)handle;
     int32_t err = MZ_OK;
 
-    if (mz_zip_writer_is_open(handle) != MZ_OK)
+    if (mz_zip_writer_is_open(writer) != MZ_OK)
         return MZ_PARAM_ERROR;
     if (!file_info)
         return MZ_PARAM_ERROR;
 
     /* Add to zip */
-    err = mz_zip_writer_entry_open(handle, file_info);
+    err = mz_zip_writer_entry_open(writer, file_info);
     if (err != MZ_OK)
         return err;
 
     if (stream) {
         if (mz_zip_attrib_is_dir(writer->file_info.external_fa, writer->file_info.version_madeby) != MZ_OK) {
-            err = mz_zip_writer_add(handle, stream, read_cb);
+            err = mz_zip_writer_add(writer, stream, read_cb);
             if (err != MZ_OK)
                 return err;
         }
     }
 
-    err = mz_zip_writer_entry_close(handle);
+    err = mz_zip_writer_entry_close(writer);
 
     return err;
 }
 
-int32_t mz_zip_writer_add_buffer(void *handle, void *buf, int32_t len, mz_zip_file *file_info) {
+int32_t mz_zip_writer_add_buffer(void *handle, const void *buf, int32_t len, mz_zip_file *file_info) {
+    mz_zip_writer *writer = (mz_zip_writer *)handle;
     void *mem_stream = NULL;
     int32_t err = MZ_OK;
 
-    if (mz_zip_writer_is_open(handle) != MZ_OK)
+    if (mz_zip_writer_is_open(writer) != MZ_OK)
         return MZ_PARAM_ERROR;
     if (!buf)
         return MZ_PARAM_ERROR;
@@ -1557,11 +1602,11 @@ int32_t mz_zip_writer_add_buffer(void *handle, void *buf, int32_t len, mz_zip_fi
     if (!mem_stream)
         return MZ_STREAM_ERROR;
 
-    mz_stream_mem_set_buffer(mem_stream, buf, len);
+    mz_stream_mem_set_buffer(mem_stream, (void *)buf, len);
 
     err = mz_stream_mem_open(mem_stream, NULL, MZ_OPEN_MODE_READ);
     if (err == MZ_OK)
-        err = mz_zip_writer_add_info(handle, mem_stream, mz_stream_mem_read, file_info);
+        err = mz_zip_writer_add_info(writer, mem_stream, mz_stream_mem_read, file_info);
 
     mz_stream_mem_delete(&mem_stream);
     return err;
@@ -1578,7 +1623,7 @@ int32_t mz_zip_writer_add_file(void *handle, const char *path, const char *filen
     char link_path[1024];
     const char *filename = filename_in_zip;
 
-    if (mz_zip_writer_is_open(handle) != MZ_OK)
+    if (mz_zip_writer_is_open(writer) != MZ_OK)
         return MZ_PARAM_ERROR;
     if (!path)
         return MZ_PARAM_ERROR;
@@ -1629,14 +1674,17 @@ int32_t mz_zip_writer_add_file(void *handle, const char *path, const char *filen
         if (err == MZ_OK)
             file_info.linkname = link_path;
     } else if (mz_os_is_dir(path) != MZ_OK) {
+        uint32_t mode = MZ_OPEN_MODE_READ;
         stream = mz_stream_os_create();
         if (!stream)
             return MZ_STREAM_ERROR;
-        err = mz_stream_os_open(stream, path, MZ_OPEN_MODE_READ);
+        if (!writer->follow_links)
+            mode |= MZ_OPEN_MODE_NOFOLLOW;
+        err = mz_stream_os_open(stream, path, mode);
     }
 
     if (err == MZ_OK)
-        err = mz_zip_writer_add_info(handle, stream, mz_stream_read, &file_info);
+        err = mz_zip_writer_add_info(writer, stream, mz_stream_read, &file_info);
 
     if (stream) {
         mz_stream_close(stream);
@@ -1659,6 +1707,8 @@ int32_t mz_zip_writer_add_path(void *handle, const char *path, const char *root_
     char full_path[1024];
     char path_dir[1024];
 
+    if (!writer)
+        return MZ_PARAM_ERROR;
     if (strrchr(path, '*') && mz_os_file_exists(path) != MZ_OK) {
         strncpy(path_dir, path, sizeof(path_dir) - 1);
         path_dir[sizeof(path_dir) - 1] = 0;
@@ -1689,7 +1739,7 @@ int32_t mz_zip_writer_add_path(void *handle, const char *path, const char *root_
         }
 
         if (*filenameinzip != 0)
-            err = mz_zip_writer_add_file(handle, path, filenameinzip);
+            err = mz_zip_writer_add_file(writer, path, filenameinzip);
 
         if (!is_dir)
             return err;
@@ -1719,7 +1769,7 @@ int32_t mz_zip_writer_add_path(void *handle, const char *path, const char *root_
         if ((wildcard_ptr) && (mz_path_compare_wc(entry->d_name, wildcard_ptr, 1) != MZ_OK))
             continue;
 
-        err = mz_zip_writer_add_path(handle, full_path, root_path, include_path, recursive);
+        err = mz_zip_writer_add_path(writer, full_path, root_path, include_path, recursive);
         if (err != MZ_OK)
             break;
     }
@@ -1793,22 +1843,28 @@ int32_t mz_zip_writer_copy_from_reader(void *handle, void *reader) {
 
 void mz_zip_writer_set_password(void *handle, const char *password) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->password = password;
 }
 
 void mz_zip_writer_set_comment(void *handle, const char *comment) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->comment = comment;
 }
 
 void mz_zip_writer_set_raw(void *handle, uint8_t raw) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->raw = raw;
 }
 
 int32_t mz_zip_writer_get_raw(void *handle, uint8_t *raw) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
-    if (!raw)
+    if (!writer || !raw)
         return MZ_PARAM_ERROR;
     *raw = writer->raw;
     return MZ_OK;
@@ -1816,66 +1872,96 @@ int32_t mz_zip_writer_get_raw(void *handle, uint8_t *raw) {
 
 void mz_zip_writer_set_aes(void *handle, uint8_t aes) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->aes = aes;
 }
 
 void mz_zip_writer_set_compress_method(void *handle, uint16_t compress_method) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->compress_method = compress_method;
 }
 
 void mz_zip_writer_set_compress_level(void *handle, int16_t compress_level) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->compress_level = compress_level;
 }
 
 void mz_zip_writer_set_follow_links(void *handle, uint8_t follow_links) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->follow_links = follow_links;
+}
+
+int32_t mz_zip_writer_get_follow_links(void *handle, uint8_t *follow_links) {
+    mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer || !follow_links)
+        return MZ_PARAM_ERROR;
+    *follow_links = writer->follow_links;
+    return MZ_OK;
 }
 
 void mz_zip_writer_set_store_links(void *handle, uint8_t store_links) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->store_links = store_links;
 }
 
 void mz_zip_writer_set_zip_cd(void *handle, uint8_t zip_cd) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->zip_cd = zip_cd;
 }
 
 void mz_zip_writer_set_overwrite_cb(void *handle, void *userdata, mz_zip_writer_overwrite_cb cb) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->overwrite_cb = cb;
     writer->overwrite_userdata = userdata;
 }
 
 void mz_zip_writer_set_password_cb(void *handle, void *userdata, mz_zip_writer_password_cb cb) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->password_cb = cb;
     writer->password_userdata = userdata;
 }
 
 void mz_zip_writer_set_progress_cb(void *handle, void *userdata, mz_zip_writer_progress_cb cb) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->progress_cb = cb;
     writer->progress_userdata = userdata;
 }
 
 void mz_zip_writer_set_progress_interval(void *handle, uint32_t milliseconds) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->progress_cb_interval_ms = milliseconds;
 }
 
 void mz_zip_writer_set_entry_cb(void *handle, void *userdata, mz_zip_writer_entry_cb cb) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
+    if (!writer)
+        return;
     writer->entry_cb = cb;
     writer->entry_userdata = userdata;
 }
 
 int32_t mz_zip_writer_get_zip_handle(void *handle, void **zip_handle) {
     mz_zip_writer *writer = (mz_zip_writer *)handle;
-    if (!zip_handle)
+    if (!writer || !zip_handle)
         return MZ_PARAM_ERROR;
     *zip_handle = writer->zip_handle;
     if (!*zip_handle)

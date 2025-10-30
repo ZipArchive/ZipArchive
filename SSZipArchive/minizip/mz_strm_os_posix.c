@@ -19,6 +19,8 @@
 
 #include <stdio.h> /* fopen, fread.. */
 #include <errno.h>
+#include <unistd.h>  // open, close, ...
+#include <fcntl.h>   // O_NOFOLLOW, ...
 
 /***************************************************************************/
 
@@ -67,20 +69,33 @@ typedef struct mz_stream_posix_s {
 int32_t mz_stream_os_open(void *stream, const char *path, int32_t mode) {
     mz_stream_posix *posix = (mz_stream_posix *)stream;
     const char *mode_fopen = NULL;
+    int mode_open = 0;
+    int fd;
 
     if (!path)
         return MZ_PARAM_ERROR;
 
-    if ((mode & MZ_OPEN_MODE_READWRITE) == MZ_OPEN_MODE_READ)
-        mode_fopen = "rb";
-    else if (mode & MZ_OPEN_MODE_APPEND)
-        mode_fopen = "r+b";
-    else if (mode & MZ_OPEN_MODE_CREATE)
-        mode_fopen = "wb";
-    else
+    if ((mode & MZ_OPEN_MODE_READWRITE) == MZ_OPEN_MODE_READ) {
+        mode_fopen = "r";
+        mode_open = O_RDONLY;
+    } else if (mode & MZ_OPEN_MODE_APPEND) {
+        mode_fopen = "r+";
+        mode_open = O_RDWR;
+    } else if (mode & MZ_OPEN_MODE_CREATE) {
+        mode_fopen = "w";
+        mode_open = O_WRONLY | O_CREAT | O_TRUNC;
+    } else
         return MZ_OPEN_ERROR;
 
-    posix->handle = fopen64(path, mode_fopen);
+    if (mode & MZ_OPEN_MODE_NOFOLLOW)
+        mode_open |= O_NOFOLLOW;
+
+    fd = open(path, mode_open, S_IRUSR | S_IWUSR | S_IRGRP);
+    if (fd != -1) {
+        posix->handle = fdopen(fd, mode_fopen);
+        if (!posix->handle)
+            close(fd);
+    }
     if (!posix->handle) {
         posix->error = errno;
         return MZ_OPEN_ERROR;

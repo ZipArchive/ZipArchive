@@ -51,7 +51,7 @@ typedef void *zipFile;
 
 #define ZIP_OK            (0)
 #define ZIP_EOF           (0)
-#define ZIP_ERRNO         (-1)  /* Z_ERRNO */
+#define ZIP_ERRNO         (-1) /* Z_ERRNO */
 #define ZIP_PARAMERROR    (-102)
 #define ZIP_BADZIPFILE    (-103)
 #define ZIP_INTERNALERROR (-104)

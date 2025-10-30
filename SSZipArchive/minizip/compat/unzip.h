@@ -53,7 +53,7 @@ typedef void *unzFile;
 
 #define UNZ_OK                  (0)
 #define UNZ_END_OF_LIST_OF_FILE (-100)
-#define UNZ_ERRNO               (-1)  /* Z_ERRNO */
+#define UNZ_ERRNO               (-1) /* Z_ERRNO */
 #define UNZ_EOF                 (0)
 #define UNZ_PARAMERROR          (-102)
 #define UNZ_BADZIPFILE          (-103)

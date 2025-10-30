@@ -17,17 +17,18 @@ extern "C" {
 
 /***************************************************************************/
 
-#define MZ_STREAM_PROP_TOTAL_IN        (1)
-#define MZ_STREAM_PROP_TOTAL_IN_MAX    (2)
-#define MZ_STREAM_PROP_TOTAL_OUT       (3)
-#define MZ_STREAM_PROP_TOTAL_OUT_MAX   (4)
-#define MZ_STREAM_PROP_HEADER_SIZE     (5)
-#define MZ_STREAM_PROP_FOOTER_SIZE     (6)
-#define MZ_STREAM_PROP_DISK_SIZE       (7)
-#define MZ_STREAM_PROP_DISK_NUMBER     (8)
-#define MZ_STREAM_PROP_COMPRESS_LEVEL  (9)
-#define MZ_STREAM_PROP_COMPRESS_METHOD (10)
-#define MZ_STREAM_PROP_COMPRESS_WINDOW (11)
+#define MZ_STREAM_PROP_TOTAL_IN         (1)
+#define MZ_STREAM_PROP_TOTAL_IN_MAX     (2)
+#define MZ_STREAM_PROP_TOTAL_OUT        (3)
+#define MZ_STREAM_PROP_TOTAL_OUT_MAX    (4)
+#define MZ_STREAM_PROP_HEADER_SIZE      (5)
+#define MZ_STREAM_PROP_FOOTER_SIZE      (6)
+#define MZ_STREAM_PROP_DISK_SIZE        (7)
+#define MZ_STREAM_PROP_DISK_NUMBER      (8)
+#define MZ_STREAM_PROP_COMPRESS_LEVEL   (9)
+#define MZ_STREAM_PROP_COMPRESS_METHOD  (10)
+#define MZ_STREAM_PROP_COMPRESS_WINDOW  (11)
+#define MZ_STREAM_PROP_COMPRESS_THREADS (12)
 
 /***************************************************************************/
 
