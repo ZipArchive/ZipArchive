@@ -42,6 +42,9 @@ ZipArchive works on:
 - visionOS 1.0 and above
 - watchOS 8.4 and above
 
+### SPM (Swift Package Manager)
+Add a Swift Package reference to https://github.com/ZipArchive/ZipArchive.git (SSZipArchive 2.5.0 and higher or master)
+
 ### CocoaPods
 In your Podfile:  
 `pod 'SSZipArchive'`
@@ -50,9 +53,6 @@ You should define your minimum deployment target explicitly, like:
 `platform :ios, '15.5'`
 
 Recommended CocoaPods version should be at least CocoaPods 1.7.5.
-
-### SPM
-Add a Swift Package reference to https://github.com/ZipArchive/ZipArchive.git (SSZipArchive 2.5.0 and higher or master)
 
 ### Carthage
 In your Cartfile:  
