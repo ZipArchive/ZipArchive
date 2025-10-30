@@ -13,11 +13,11 @@ jobs:
   
   # oldest GitHub targets x oldest Apple Security update (https://support.apple.com/100100)
   macos-14:
-    runs-on: ${{matrix.OS}}
+    runs-on: ${{matrix.IMAGE}}
     strategy:
       fail-fast: false
       matrix:
-        OS: [macOS-14]
+        IMAGE: [macOS-14]
         SDK: ["macosx"]
     steps:
     - uses: actions/checkout@v5 # https://github.com/actions/checkout
@@ -41,12 +41,13 @@ jobs:
 
   # newest GitHub targets
   macos-26:
-    runs-on: ${{matrix.OS}}
+    runs-on: ${{matrix.IMAGE}}
     strategy:
       fail-fast: false
       matrix:
-        OS: [macOS-26]
+        IMAGE: [macOS-26]
         SDK: ["appletvsimulator", "iphonesimulator", "watchsimulator", "xrsimulator"]
+        OS: ["26.1"]
     steps:
     - uses: maxim-lobanov/setup-xcode@v1 # https://github.com/maxim-lobanov/setup-xcode
       with:
@@ -61,33 +62,29 @@ jobs:
       run: |
         if [ ${{ matrix.SDK }} == "appletvsimulator" ]; then
           SCHEME="ObjectiveCExample_tvOS"
-          SDK="appletvsimulator"
           PLATFORM="tvOS Simulator"
           DEVICE="Apple TV 4K (3rd generation) (at 1080p)"
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
         if [ ${{ matrix.SDK }} == "iphonesimulator" ]; then
           SCHEME="ObjectiveCExample_iOS"
-          SDK="iphonesimulator"
           PLATFORM="iOS Simulator"
           DEVICE="iPhone 17 Pro Max"
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
         if [ ${{ matrix.SDK }} == "watchsimulator" ]; then
           SCHEME="ObjectiveCExample_watchOS"
-          SDK="watchsimulator"
           PLATFORM="watchOS Simulator"
           DEVICE="Apple Watch Ultra 3 (49mm)"
           DESTINATION="platform=$PLATFORM,name=$DEVICE"
         fi
         if [ ${{ matrix.SDK }} == "xrsimulator" ]; then
           SCHEME="ObjectiveCExample_visionOS"
-          SDK="xrsimulator"
           PLATFORM="visionOS Simulator"
           DEVICE="Apple Vision Pro"
-          DESTINATION="platform=$PLATFORM,name=$DEVICE"
+          DESTINATION="platform=$PLATFORM,name=$DEVICE,OS=${{ matrix.OS }}"
         fi
 
         # build and test
         CONFIGURATION="Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES"
-        xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -sdk $SDK -destination "$DESTINATION" -configuration $CONFIGURATION test
+        xcodebuild -workspace Example/ZipArchiveExample.xcworkspace -scheme $SCHEME -sdk ${{ matrix.SDK }} -destination "$DESTINATION" -configuration $CONFIGURATION test
