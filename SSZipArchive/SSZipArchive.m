@@ -49,6 +49,12 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     zipFile _zip;
 }
 
+NSObject<SSZipArchiveDelegate>* SSZipArchive_zipDelegate;
+
++ (void)setZipDelegate:(NSObject<SSZipArchiveDelegate> *)delegate{
+    SSZipArchive_zipDelegate = delegate;
+}
+
 #pragma mark - Password check
 
 + (BOOL)isFilePasswordProtectedAtPath:(NSString *)path {
@@ -955,8 +961,15 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
                 complete++;
                 progressHandler(complete, total);
             }
+            if (SSZipArchive_zipDelegate) {
+                if (SSZipArchive_zipDelegate.zipArchiveShouldStopZipProcess) {
+                    success = NO;
+                    break;
+                }
+            }
         }
         success &= [zipArchive close];
+        SSZipArchive_zipDelegate = nil;
     }
     return success;
 }
