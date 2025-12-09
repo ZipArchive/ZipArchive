@@ -1182,6 +1182,37 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     return error == ZIP_OK;
 }
 
+
+// Returns default, readable permissions for a file (e.g. one added with
+// the `writeData` functions below). This mimics the behavior of the UnZip
+// command line utility when unzipping a file with a "non-unix" host, like
+// Darwin, when the `external_fa` is 0.
+// See https://github.com/ZipArchive/ZipArchive/issues/761
+static uint32_t
+defaultExternalFileAttributesForRegularFile(void)
+{
+    // Get the current umask
+    mode_t savedUmask = umask(0);
+    
+    // Restore the umask (we just wanted to read it)
+    umask(savedUmask);
+
+    // Start with rw-rw-rw-
+    mode_t basePermissions = 0666;
+    
+    // Apply the umask, clearing bits according to the mask
+    // This will result in 0644 (rw-r--r--) when umask is 022, as on Darwin
+    mode_t permissions = basePermissions & ~savedUmask;
+
+    // Convert this into an octal by adding the flag for a regular file
+    mode_t st_mode = S_IFREG | permissions;
+
+    // Keep only the POSIX mode bits (the lowest 16 bits) and then shift
+    // since unix file attributes are placed in the high 16 bits of external_fa
+    return ((uint32_t)st_mode & 0xFFFFu) << 16;
+}
+
+
 - (BOOL)writeData:(NSData *)data filename:(nullable NSString *)filename withPassword:(nullable NSString *)password
 {
     return [self writeData:data filename:filename compressionLevel:Z_DEFAULT_COMPRESSION password:password AES:YES];
@@ -1201,6 +1232,10 @@ BOOL _fileIsSymbolicLink(const unz_file_info *fileInfo);
     // Though we don't have a file, the uncompressed size is just the length of the data
     zipInfo.uncompressed_size = data.length;
     
+    // Specify a reasonable value for permissions
+    // See https://github.com/ZipArchive/ZipArchive/issues/761
+    zipInfo.external_fa = defaultExternalFileAttributesForRegularFile();
+
     int error = _zipOpenEntry(_zip, filename, &zipInfo, compressionLevel, password, aes, 1);
     
     zipWriteInFileInZip(_zip, data.bytes, (unsigned int)data.length);
