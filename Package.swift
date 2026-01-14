@@ -15,6 +15,7 @@ let package = Package(
     ],
     products: [
         .library(name: "ZipArchive", targets: ["ZipArchive"]),
+        .library(name: "ZipArchive-Dynamic", type: .dynamic, targets: ["ZipArchive"]),
     ],
     targets: [
         .target(
